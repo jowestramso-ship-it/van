@@ -5,10 +5,10 @@ Interior: 160 in long, 68 in wide, 76 in tall. Open `van-layout.html` for the th
 ## Layout
 
 **Driver side (rear to front)**
-- Bed / couch, 0-75 in: 75 x 27 in, folds up. Mattress top about 22 in (16 in platform + 6 in mattress), storage underneath.
-- Closet, 75-92.5 in: 17.5 in along the wall, 27 in out from the wall, full height (floor to ceiling). Rod runs front to back (hangers turned sideways): about 27 in of rod, roughly 14-18 garments. 17.5 in is a little over a 17 in hanger, so consider 18 in if the dinette allows. Aisle beside it, against the 21 in galley, is 20 in.
+- Bed / couch, 0-74 in: 74 x 27 in, folds up. Mattress top about 22 in (16 in platform + 6 in mattress), storage underneath.
+- Closet, 74-92.5 in: 18.5 in along the wall, 27 in out from the wall, full height (floor to ceiling). Rod runs front to back (hangers turned sideways): about 27 in of rod, roughly 14-18 garments. Aisle beside it, against the 21 in galley, is 20 in.
 - Dinette, 92.5-160 in (67.5 in total), 30 in out from the wall: bench 22.5 in, table 22.5 in (29 in high), bench 22.5 in. Aisle beside it, against the 21 in galley, is 17 in.
-- Wall cabinets, 12 in deep, bottom at 56 in: one over the bed (75 in long), one over the dinette (67.5 in long), split by the full-height closet.
+- Wall cabinets, 12 in deep, bottom at 56 in: one over the bed (74 in long), one over the dinette (67.5 in long), split by the full-height closet.
 
 **Passenger side (rear to front)**
 - Wet bath, 0-36 in: 36 x 24 in, shower curtain as the door (opens onto a 17 in gap in front of the bed).
@@ -36,4 +36,4 @@ Interior: 160 in long, 68 in wide, 76 in tall. Open `van-layout.html` for the th
 - Bed platform height (16 in assumed) and mattress thickness (6 in assumed).
 - Microwave model (18 x 13 x 10.5 in assumed). Needs an inverter of about 2,000 W or more.
 - Headroom in the bath is 66.5 in. A taller roof vent dome or pop-up helps if that is too low.
-- Standard RV jackknife sofa beds open to about 59-69 in x 42 in, which would block the aisle here. The 75 x 27 fold-up bench keeps the aisle. A rock-and-roll bed was suggested as an alternative.
+- Standard RV jackknife sofa beds open to about 59-69 in x 42 in, which would block the aisle here. The 74 x 27 fold-up bench keeps the aisle. A rock-and-roll bed was suggested as an alternative.
