@@ -2,6 +2,13 @@
 
 Interior: 160 in long, 68 in wide, 76 in tall. Open `van-layout.html` for the three scaled drawings (top-down, passenger wall, driver wall). Distances below are measured from the rear doors unless noted.
 
+## Decisions (latest)
+- Sink cabinet (103 to 123) overlapping the sliding door opening (starts at 104) is intentional; no change needed.
+- Fridge door not opening with the bed rolled out (about 1 in clearance) is accepted; no workaround needed.
+- Fresh water tank "back wall" means the passenger wall, where it is drawn.
+- Closet rods run along the wall (as drawn).
+- Still open: cab seat gap height (bulkhead), roof width (assumed 68 in), fan and A/C models, electrical details; to be discussed later.
+
 ## Measuring datum
 Confirmed by the user: everything, including the layout items, is measured from the same zero, 6 in in from the back (the rear lip is not counted), and the cab wall is at 154 in on that scale. So the earlier layout numbers that ran to 160 were wrong; the dinette is now 86.5 to 154 and the closet is 76 to 86.5 (10.5 wide, bar about 78 to 86). The passenger entry is 123 to 154 (31 in clear). Overhead cabinet over the dinette is 86.5 to 154.
 
