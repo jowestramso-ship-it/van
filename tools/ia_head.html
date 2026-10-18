@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Ford Transit Van: Interactive Plan</title>
+<style>
+  :root { --ink: #2C2C2A; --mute: #5F5E5A; --line: #D3D1C7; --panel: #FAF9F5; --ok: #0F6E56; --warn: #BA7517; --bad: #A32D2D; }
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, "Segoe UI", sans-serif; margin: 0; color: var(--ink); background: #fff; }
+  .wrap { max-width: 1380px; margin: 0 auto; padding: 16px; }
+  h1 { font-size: 22px; font-weight: 500; margin: 0 0 4px; }
+  h2 { font-size: 16px; font-weight: 600; margin: 0 0 8px; }
+  .lead { font-size: 15px; line-height: 1.5; color: var(--mute); margin: 0 0 10px; max-width: 900px; }
+  .lead a { color: #185FA5; }
+  button { font: inherit; color: inherit; }
+  .tabs { display: flex; gap: 6px; flex-wrap: wrap; margin: 8px 0; }
+  .tab { padding: 7px 14px; border: 1px solid #B4B2A9; border-radius: 8px; background: #fff; cursor: pointer; font-size: 14px; }
+  .tab[aria-selected="true"] { background: #2C2C2A; color: #fff; border-color: #2C2C2A; }
+  .movers { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin: 6px 0 10px; }
+  .movers .lab { font-size: 13px; color: var(--mute); margin-right: 2px; }
+  .chip { padding: 4px 11px; border: 1px solid #B4B2A9; border-radius: 14px; background: #fff; font-size: 13px; cursor: pointer; }
+  .chip:hover { border-color: #2C2C2A; }
+  .chip[aria-pressed="true"] { background: #EEEDFE; border-color: #534AB7; color: #3C3489; }
+  .chip.all { background: #2C2C2A; border-color: #2C2C2A; color: #fff; }
+  .layout { display: grid; grid-template-columns: minmax(0, 1fr) 350px; gap: 16px; align-items: start; }
+  @media (max-width: 1000px) { .layout { grid-template-columns: minmax(0, 1fr); } }
+  .stage { border: 1px solid var(--line); border-radius: 10px; background: #fff; padding: 4px; }
+  svg#svg { width: 100%; height: auto; display: block; touch-action: manipulation; }
+  svg text { font-family: -apple-system, "Segoe UI", sans-serif; }
+  svg .mv { cursor: pointer; }
+  svg .mv:hover { filter: drop-shadow(0 0 3px rgba(186, 117, 23, .95)); }
+  .card { border: 1px solid var(--line); border-radius: 10px; background: var(--panel); padding: 12px; margin-bottom: 12px; }
+  .checks { list-style: none; margin: 0; padding: 0; }
+  .checks li { font-size: 13.5px; line-height: 1.4; padding: 5px 0 5px 24px; position: relative; border-top: 1px solid #ECEAE0; }
+  .checks li:first-child { border-top: 0; }
+  .checks li::before { position: absolute; left: 2px; top: 5px; font-weight: 700; }
+  .checks li.ok::before { content: "\2713"; color: var(--ok); }
+  .checks li.warn::before { content: "!"; color: var(--warn); left: 6px; }
+  .checks li.bad::before { content: "\2717"; color: var(--bad); }
+  .checks li.bad { color: var(--bad); }
+  details { border-top: 1px solid #ECEAE0; padding: 6px 0; }
+  details:first-of-type { border-top: 0; }
+  summary { cursor: pointer; font-size: 14px; font-weight: 600; padding: 2px 0; }
+  .fld { display: grid; grid-template-columns: 1fr 86px; gap: 8px; align-items: center; margin: 5px 0; font-size: 13.5px; }
+  .fld input[type="number"], .fld select { width: 100%; padding: 4px 6px; border: 1px solid #B4B2A9; border-radius: 6px; font: inherit; background: #fff; }
+  .fld input:disabled { background: #EEEDFE; color: #3C3489; }
+  .fld.chk { grid-template-columns: 18px 1fr; }
+  .fld .unit { color: var(--mute); font-size: 12px; }
+  .row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+  .btn { padding: 6px 12px; border: 1px solid #B4B2A9; border-radius: 8px; background: #fff; cursor: pointer; font-size: 13px; }
+  .btn:hover { border-color: #2C2C2A; }
+  .note { font-size: 12.5px; color: var(--mute); line-height: 1.45; margin: 8px 0 0; }
+  @media (max-width: 760px) { .stage { overflow-x: auto; } svg#svg { min-width: 760px; } }
+  noscript { display: block; padding: 12px; background: #FAEEDA; border-radius: 8px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Ford Transit van: interactive plan</h1>
+  <p class="lead">Click a door, table, the bed, the shower pan or the fridge to open or close it. Change any size on the right and everything redraws, including the walkway checks. Sizes are in inches, measured from the same zero as the static diagrams (6 in in from the rear edge). <a href="sides.html">Static diagrams, photos and the full measurement tables</a></p>
+  <noscript>This page needs JavaScript. The static diagrams are on the other page.</noscript>
+  <div class="tabs" role="tablist" id="tabs"></div>
+  <div class="movers" id="movers"></div>
+  <div class="layout">
+    <div class="stage"><svg id="svg" role="img" aria-label="Interactive van diagram"></svg></div>
+    <aside>
+      <div class="card"><h2>Does it fit?</h2><ul class="checks" id="checks"></ul></div>
+      <div class="card"><h2>Sizes (inches)</h2><div id="sizes"></div>
+        <div class="row"><button class="btn" id="reset" type="button">Reset to the current design</button><button class="btn" id="share" type="button">Copy link with these sizes</button></div>
+        <p class="note" id="sharemsg"></p>
+      </div>
+    </aside>
+  </div>
+</div>
+<script>
