@@ -83,10 +83,11 @@ const PD = [
   { k: 'vanW', g: 'Van', l: 'Inside width', d: 68, s: .5, a: 50, b: 90 },
   { k: 'ceil', g: 'Van', l: 'Ceiling height (bare)', d: 76, s: .5, a: 60, b: 90 },
   { k: 'bedLen', g: 'Bed / couch', l: 'Length', d: 74, s: .5, a: 40, b: 120 },
-  { k: 'bedD', g: 'Bed / couch', l: 'Depth, closed', d: 25, s: .5, a: 15, b: 40 },
-  { k: 'bedBack', g: 'Bed / couch', l: 'Leaf width (flips out in front)', d: 21, s: .5, a: 0, b: 40 },
+  { k: 'bedD', g: 'Bed / couch', l: 'Depth, closed (the couch on its base)', d: 26, s: .5, a: 15, b: 40 },
+  { k: 'bedBack', g: 'Bed / couch', l: 'Leaf width (flips out in front; = back cushion length)', d: 20, s: .5, a: 0, b: 40 },
   { k: 'platform', g: 'Bed / couch', l: 'Seat base (deck 3/4 in lower; the leaf folds onto it)', d: 14, s: .5, a: 6, b: 30 },
-  { k: 'mattress', g: 'Bed / couch', l: 'Mattress thickness', d: 6, s: .5, a: 2, b: 12 },
+  { k: 'mattress', g: 'Bed / couch', l: 'Seat and back cushion thickness', d: 6, s: .5, a: 2, b: 12 },
+  { k: 'legIn', g: 'Bed / couch', l: 'Legs set in from the leaf free edge', d: 3, s: .5, a: 0, b: 10 },
   { k: 'closetW', g: 'Closet', l: 'Width', d: 15, s: .25, a: 8, b: 40 },
   { k: 'closetD', g: 'Closet', l: 'Depth', d: 25, s: .5, a: 10, b: 40 },
   { k: 'rodHi', g: 'Closet', l: 'Upper rod, up from floor', d: 71, s: .5, a: 40, b: 85 },
@@ -98,6 +99,7 @@ const PD = [
   { k: 'benchD', g: 'Dinette', l: 'Bench depth', d: 30, s: .5, a: 15, b: 45 },
   { k: 'seatH', g: 'Dinette', l: 'Seat height', d: 17.5, s: .5, a: 10, b: 26 },
   { k: 'backH', g: 'Dinette', l: 'Backrest top', d: 38, s: .5, a: 20, b: 50 },
+  { k: 'pillowT', g: 'Dinette', l: 'Backrest cushion thickness (lies on the lowered table)', d: 2.9, s: .1, a: 1, b: 8 },
   { k: 'tableAuto', g: 'Dinette', l: 'Table fills the space between the benches', d: true, t: 'c', f: 'tableLen' },
   { k: 'tableLen', g: 'Dinette', l: 'Table length', d: 26, s: .5, a: 10, b: 70 },
   { k: 'tableD', g: 'Dinette', l: 'Table depth', d: 30, s: .5, a: 10, b: 45 },
@@ -113,7 +115,8 @@ const PD = [
   { k: 'counterH', g: 'Passenger side', l: 'Counter height', d: 38, s: .5, a: 30, b: 44 },
   { k: 'cabD', g: 'Passenger side', l: 'Cabinet depth', d: 21, s: .5, a: 12, b: 30 },
   { k: 'flatLen', g: 'Passenger side', l: 'Straight part of the cabinet', d: 30, s: .5, a: 10, b: 70 },
-  { k: 'sinkD', g: 'Passenger side', l: 'Depth at the sink end', d: 15, s: .5, a: 10, b: 24 },
+  { k: 'sinkD', g: 'Passenger side', l: 'Depth at the sink end (includes the 3/4 in door)', d: 15.75, s: .5, a: 10, b: 24 },
+  { k: 'angLen', g: 'Passenger side', l: 'Length of the angled part of the counter front', d: 15, s: .5, a: 3, b: 40 },
   { k: 'sinkW', g: 'Passenger side', l: 'Sink cabinet width', d: 20, s: .5, a: 12, b: 40 },
   { k: 'doorX', g: 'Passenger side', l: 'Sliding door starts at', d: 104, s: .5, a: 80, b: 150 },
   { k: 'flapAuto', g: 'Fold-out table and foot ledge', l: 'Length fits the entry', d: true, t: 'c', f: 'flapLen' },
@@ -127,7 +130,9 @@ const PD = [
   { k: 'tankLen', g: 'Tank and drawers', l: 'Fresh water tank length', d: 41, s: .5, a: 10, b: 70 },
   { k: 'tankH', g: 'Tank and drawers', l: 'Fresh water tank height', d: 15.5, s: .5, a: 6, b: 24 },
   { k: 'drawerD', g: 'Tank and drawers', l: 'Drawer box depth', d: 20, s: .5, a: 8, b: 26 },
-  { k: 'hotH', g: 'Tank and drawers', l: 'Hot water tank height', d: 18.5, s: .5, a: 8, b: 34 }
+  { k: 'hotW', g: 'Tank and drawers', l: 'Hot water tank length along the wall', d: 14, s: .5, a: 6, b: 18 },
+  { k: 'hotD', g: 'Tank and drawers', l: 'Hot water tank depth (out from the wall)', d: 15, s: .5, a: 6, b: 20 },
+  { k: 'hotH', g: 'Tank and drawers', l: 'Hot water tank height', d: 15, s: .5, a: 8, b: 34 }
 ];
 const DEF = {}; PD.forEach(p => DEF[p.k] = p.d);
 let P = Object.assign({}, DEF);
@@ -179,6 +184,7 @@ function layout(P) {
   L.spare = L.gap - L.tableLen;
   const tx = L.bA[1] + Math.max(0, L.spare / 2);
   L.tbl = [tx, tx + L.tableLen];
+  L.tableLow = Math.max(3, P.seatH - P.pillowT);
   L.cabs = [[0, P.bedLen], [L.c1, P.cab]];
   L.doors = [];
   L.cabs.forEach((c, ci) => {
@@ -188,19 +194,22 @@ function layout(P) {
   L.doorZ = [P.cabBot + 0.5, P.cabBot + 0.5 + P.doorH];
   L.batt = [L.c0 - 1 - 21, L.c0 - 1];
   L.pan = P.panW; L.fr = [P.panW, P.panW + P.fridgeW]; L.cabS = L.fr[1];
-  L.slope = 0.4;
-  L.angS = L.cabS + P.flatLen; L.angLen = Math.max(0, (P.cabD - P.sinkD) / L.slope);
+  L.angS = L.cabS + P.flatLen; L.angLen = P.cabD > P.sinkD ? P.angLen : 0;
+  L.slope = L.angLen > 0 ? (P.cabD - P.sinkD) / L.angLen : 0.4;
   L.sinkS = L.angS + L.angLen; L.sinkE = L.sinkS + P.sinkW;
   L.entry = P.cab - L.sinkE;
   L.flapLen = P.flapAuto ? Math.max(1, L.entry - P.flapGap) : P.flapLen;
   L.tankX = [L.cabS + 2, P.tankAuto ? L.sinkS - 2 : L.cabS + 2 + P.tankLen];
   L.tankLen = L.tankX[1] - L.tankX[0];
+  // hot water tank: on the floor of the sink cabinet, against the cab-side end panel and as far forward as the door allows
+  L.hotX = [L.sinkE - .75 - P.hotW, L.sinkE - .75];
+  L.hotY = [Math.max(0, P.sinkD - .75 - P.hotD), Math.max(0, P.sinkD - .75 - P.hotD) + P.hotD];
   return L;
 }
 
 /* ================= animation state ================= */
 // every moving thing has an id; 0 = closed, 1 = open
-const ANIM = {}; const DUR = 520;
+const ANIM = {}; const DUR = 2080;
 const ease = p => p < .5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2;
 function ensure(id) { return ANIM[id] || (ANIM[id] = { from: 0, to: 0, t0: -1e9 }); }
 function valOf(a, now) { const p = clamp((now - a.t0) / DUR, 0, 1); return a.from + (a.to - a.from) * ease(p); }
@@ -218,12 +227,16 @@ function toggleIds(ids) {
   kick();
 }
 function animating(now) { for (const id in ANIM) if (now - ANIM[id].t0 < DUR) return true; return false; }
+// the four legs along the free edge: the end legs 1 in from the ends of the leaf, the others evenly between (about 24 in apart on the 74 in leaf)
+const legXs = P => { const k = (P.bedLen - 3.25) / 3; return [1, 1 + k, 1 + 2 * k, P.bedLen - 2.25]; };
 // the bed makes up in three moves: the back cushion comes off the wall, the leaf flips over the front edge, the legs fold down
 function bedState(s) {
   const th = clamp((s - .25) / .5, 0, 1) * Math.PI;
   return { th, ext: Math.max(0, -Math.cos(th)), lift: Math.sin(th), legs: clamp((s - .72) / .28, 0, 1), back: Math.cos(clamp(s / .45, 0, 1) * Math.PI / 2), flat: clamp((s - .7) / .3, 0, 1) };
 }
-const MOVER_IDS = ['dc0', 'dc1', 'dc2', 'dc3', 'dc4', 'dc5', 'clo_lo', 'clo_hi', 'bed', 'pan', 'flap', 'ledge', 'fridge', 'sd0', 'sd1', 'sd2', 'uL0', 'uL1', 'uR0', 'uR1'];
+// the dinette makes up into a bed: the table lowers, the backrest cushions come off and lie on it
+function dinState(s) { return { tbl: ease(clamp(s / .5, 0, 1)), back: 1 - ease(clamp((s - .15) / .4, 0, 1)), pil: clamp((s - .55) / .45, 0, 1) }; }
+const MOVER_IDS = ['dc0', 'dc1', 'dc2', 'dc3', 'dc4', 'dc5', 'clo_lo', 'clo_hi', 'bed', 'dinette', 'pan', 'flap', 'ledge', 'fridge', 'sd0', 'sd1', 'sd2', 'uL0', 'uL1', 'uR0', 'uR1'];
 MOVER_IDS.forEach(ensure);
 /* ================= elevation views (driver side and passenger side) ================= */
 function mkElev(flip, L) {
@@ -282,15 +295,13 @@ function drawDriver(L, V) {
     let g = box(0, P.bedLen, 0, deck - lt, { stroke: COL.P, sw: 1, dash: '5 3', so: .45 });
     g += box(0, P.bedLen, deck - lt, deck, { fill: COL.G, fo: .25, stroke: COL.G, sw: 1 });
     if (bs.legs > .01) {
-      const psi = bs.legs * Math.PI / 2, LG = deck - lt - .25, pr = LW - 1.5;
-      [1, P.bedLen / 2 - .625, P.bedLen - 2.25].forEach(lx => {
-        const a = deck + pr * sn + lt * cs, b = deck + (pr - LG * Math.cos(psi)) * sn + (lt + LG * Math.sin(psi)) * cs;
+      const psi = bs.legs * Math.PI / 2, tp = lt / 2, LG = deck - tp - .25, pr = LW - P.legIn;
+      legXs(P).forEach(lx => {
+        const a = deck + pr * sn + tp * cs, b = deck + (pr - LG * Math.cos(psi)) * sn + (tp + LG * Math.sin(psi)) * cs;
         g += box(lx, lx + 1.25, Math.min(a, b), Math.max(a, b), { fill: COL.G, fo: .8, stroke: COL.G, sw: 1 });
       });
     }
-    const fr = zr(LW - 1.5, LW, lt, lt + .75), hr = zr(.19, 1.69, lt, lt + .75), lf = zr(0, LW, 0, lt);
-    g += box(0, P.bedLen, fr[0], fr[1], { fill: '#8A5A00', fo: .75, stroke: '#5A3A00', sw: 1 });
-    g += box(0, P.bedLen, hr[0], hr[1], { fill: '#8A5A00', fo: .75, stroke: '#5A3A00', sw: 1 });
+    const lf = zr(0, LW, 0, lt);
     g += box(0, P.bedLen, lf[0], Math.max(lf[1], lf[0] + .3), { fill: '#B07A2A', fo: .55 + .3 * bs.lift, stroke: '#5A3A00', sw: 1.2 });
     const fade = 1 - .75 * Math.sin(clamp((s - .2) / .6, 0, 1) * Math.PI), sb0 = deck + lt * Math.max(0, cs);
     g += box(0, P.bedLen, sb0, sb0 + P.mattress, { fill: COL.P, fo: .12 * fade, stroke: COL.P, sw: 1.4, rx: 3, so: fade });
@@ -300,7 +311,7 @@ function drawDriver(L, V) {
       g += T(X(P.bedLen / 2), Y(plat + P.mattress / 2 - 0.4), `Seat cushion, top at ${fmt(bt)} in (click to make up the bed)`, { size: 12.5, fill: COL.P, op: 1 - s / .3 });
       if (LW * bs.back > 9) g += T(X(P.bedLen / 2), Y(bt + LW * bs.back / 2), `Back cushion, upright, ${fmt(LW)} tall`, { size: 12.5, fill: COL.P, op: 1 - s / .3 });
     }
-    if (s > .85) g += T(X(P.bedLen / 2), Y(deck + P.mattress / 2 - 0.4), `Bed made up: ${fmt(P.bedD + LW)} wide, top at ${fmt(deck + P.mattress)} in, leaf on 3 legs`, { size: 12.5, fill: COL.P, op: (s - .85) / .15 });
+    if (s > .85) g += T(X(P.bedLen / 2), Y(deck + P.mattress / 2 - 0.4), `Bed made up: ${fmt(P.bedD + LW)} wide, top at ${fmt(deck + P.mattress)} in, leaf on 4 legs`, { size: 12.5, fill: COL.P, op: (s - .85) / .15 });
     else if (s >= .3) g += T(X(P.bedLen / 2), Y(bt + 6), 'leaf flips over (the seat cushion comes off)', { size: 11, fill: '#5A3A00', op: Math.min(1, (s - .3) * 4) * (s > .75 ? (.85 - s) * 10 : 1) });
     o.push(MV('bed', g, HITR(Math.min(X(0), X(P.bedLen)), Y(bt + LW), S * P.bedLen, S * (bt + LW))));
   }
@@ -339,15 +350,23 @@ function drawDriver(L, V) {
     }
     o.push(MV(dc.id, g, HITR(Math.min(X(L.c0 + 0.125), X(L.c1 - 0.125)), Y(dc.z1), S * wC, S * (dc.z1 - dc.z0))));
   });
-  // benches and table
-  [[L.bA, L.bA[0], L.bA[0] + 2.9], [L.bB, L.bB[1] - 2.9, L.bB[1]]].forEach(b => {
-    o.push(box(b[0][0], b[0][1], 0, P.seatH, { fill: COL.K, fo: .12, stroke: COL.K, sw: 1.4, rx: 3 }));
-    o.push(box(b[1], b[2], P.seatH, P.backH, { fill: COL.K, fo: .12, stroke: COL.K, sw: 1.4, rx: 3 }));
-    o.push(T(X((b[0][0] + b[0][1]) / 2), Y(2.5), 'Bench', { size: 12.5, fill: COL.K }));
-  });
-  if (L.tableLen > 0) {
-    o.push(box(L.tbl[0], L.tbl[1], P.tableH - 1, P.tableH, { fill: COL.G, fo: .35, stroke: COL.G, sw: 1.4 }));
-    o.push(T(X((L.tbl[0] + L.tbl[1]) / 2), Y(P.tableH - 3.7), `Table, ${fmt(P.tableH)} in high`, { size: 12.5, fill: COL.G }));
+  // benches and table. The dinette makes up into a bed: the table lowers, the backrest cushions come off and lie on it, so the three sections are level
+  {
+    const s = V.dinette || 0, ds = dinState(s), pt = P.pillowT, tt = P.tableH + (L.tableLow - P.tableH) * ds.tbl, bh = P.seatH + (P.backH - P.seatH) * ds.back;
+    let g = '';
+    [[L.bA, L.bA[0], L.bA[0] + pt], [L.bB, L.bB[1] - pt, L.bB[1]]].forEach(b => {
+      g += box(b[0][0], b[0][1], 0, P.seatH, { fill: COL.K, fo: .12, stroke: COL.K, sw: 1.4, rx: 3 });
+      if (ds.back > .02) g += box(b[1], b[2], P.seatH, bh, { fill: COL.K, fo: .12, stroke: COL.K, sw: 1.4, rx: 3 });
+      g += T(X((b[0][0] + b[0][1]) / 2), Y(2.5), 'Bench', { size: 12.5, fill: COL.K });
+    });
+    if (L.tableLen > 0) {
+      g += box(L.tbl[0], L.tbl[1], tt - 1, tt, { fill: COL.G, fo: .35, stroke: COL.G, sw: 1.4 });
+      if (ds.pil > .02) g += box(L.tbl[0], L.tbl[1], tt, tt + pt, { fill: COL.K, fo: .28 * ds.pil, stroke: COL.K, sw: 1.8, rx: 2, so: ds.pil });
+      g += T(X((L.tbl[0] + L.tbl[1]) / 2), Y(tt - 3.7), `Table, ${fmt(tt)} in high`, { size: 12.5, fill: COL.G });
+      if (s < .1) g += T(X((L.tbl[0] + L.tbl[1]) / 2), Y(tt - 8), 'click: dinette to bed', { size: 10, fill: COL.G, op: 1 - s * 10 });
+    }
+    if (ds.pil > .5) g += T(X((L.bA[0] + L.bB[1]) / 2), Y(P.seatH + 7), `Dinette bed: ${fmt(L.bB[1] - L.bA[0])} x ${fmt(Math.min(P.benchD, P.tableD))} in, top at ${fmt(P.seatH)} in`, { size: 12.5, fill: COL.K, op: (ds.pil - .5) * 2 });
+    o.push(MV('dinette', g, HITR(Math.min(X(L.bA[0]), X(L.bB[1])), Y(P.backH), S * (L.bB[1] - L.bA[0]), S * P.backH)));
   }
   // wall cabinet doors: flip up (hinged on the top edge), shown from the front so the door gets shorter as it swings up
   L.doors.forEach(d => {
@@ -483,9 +502,9 @@ function drawPass(L, V) {
   [25.5, 19.5].forEach(zb => { o.push(Ln(X(pt0), Y(zb), X(pt1), Y(zb), { stroke: COL.G, sw: 3.5, cap: 'round' })); o.push(`<circle cx="${f1(X(pt0))}" cy="${f1(Y(zb))}" r="3" fill="#444441"/><circle cx="${f1(X(pt1))}" cy="${f1(Y(zb))}" r="3" fill="#444441"/>`); });
   o.push(T(X((pt0 + pt1) / 2), Y(22.2), '2 towel bars, 11 in', { size: 9.5, fill: COL.G }));
   // hot water tank and sink plumbing
-  o.push(box(sinkS + 6.25, sinkS + 19.25, 0, P.hotH, { fill: '#C0392B', fo: .18, stroke: '#C0392B', sw: 1.5, rx: 3, dash: '5 3' }));
-  o.push(T(X(sinkS + 12.75), Y(10), 'Hot water tank', { size: 12, fill: '#C0392B' }));
-  o.push(T(X(sinkS + 12.75), Y(10) + 14, `13 x 12.5, ${fmt(P.hotH)} tall`, { size: 10.5, fill: '#C0392B' }));
+  o.push(box(L.hotX[0], L.hotX[1], 0, P.hotH, { fill: '#C0392B', fo: .18, stroke: '#C0392B', sw: 1.5, rx: 3, dash: '5 3' }));
+  o.push(T(X((L.hotX[0] + L.hotX[1]) / 2), Y(P.hotH * .6), 'Hot water tank', { size: 12, fill: '#C0392B' }));
+  o.push(T(X((L.hotX[0] + L.hotX[1]) / 2), Y(P.hotH * .6) + 14, `${fmt(P.hotW)} x ${fmt(P.hotD)}, ${fmt(P.hotH)} tall`, { size: 10.5, fill: '#C0392B' }));
   o.push(Ln(X(sinkS + 8), Y(0), X(sinkS + 8), Y(ch - 7), { stroke: COL.BL, sw: 3, dash: '2 2' }));
   o.push(T(X(sinkS + 10), Y(ch - 4), `sink plumbing, ${fmt(sinkE - sinkS - 8)} in from the cab-side edge`, { size: 9.5, fill: COL.BL }));
   // foot ledge on the cabinet end: hinged on its bottom edge, folds up into a recess in the end panel
@@ -534,6 +553,58 @@ function drawPass(L, V) {
   o.push(T(X(P.cab - 8), Y(13), `Entry, ${fmt(L.entry)} in clear`, { size: 11, fill: COL.G }));
   o.push(elevTail(E, L, 'inches from where you start measuring at the back'));
   return { w: E.W, h: E.H, body: o.join('') };
+}
+
+/* ================= the bed seen from the end: the leaf flipping over, the legs folding down out of their slots ================= */
+function drawBedEnd(L, V) {
+  const P = L.P, s = V.bed || 0, bs = bedState(s), S = 10, X0 = 80, zMax = 44, FL = 60 + S * zMax, LW = P.bedBack, lt = .75, deck = P.platform - lt, bt = P.platform + P.mattress;
+  const yMax = Math.max(P.bedD + LW, 46) + 6, xx = y => X0 + S * y, yy = z => FL - S * z;
+  const bx = (y0, y1, z0, z1, o) => R(xx(y0), yy(z1), S * (y1 - y0), S * (z1 - z0), o);
+  const o = [];
+  o.push(T(X0, 22, 'The bed seen from the rear doors, cut across the couch: wall on the left, aisle on the right.', { anchor: 'start', size: 14, fill: '#5F5E5A', halo: false }));
+  o.push(T(X0, 40, 'Click the couch to make up the bed. The leaf flips out on the hinge at the front of the deck; the legs lie in slots in it.', { anchor: 'start', size: 12, fill: '#5F5E5A', halo: false }));
+  for (let y = 0; y <= yMax; y += 10) { o.push(Ln(xx(y), yy(zMax), xx(y), FL, { stroke: '#3F3E3A', so: .35, sw: .9, dash: '3 3' })); o.push(T(xx(y), FL + 18, y + '→', { size: 11, fill: '#185FA5', w: 700, halo: false })); }
+  for (let z = 0; z <= zMax; z += 10) { o.push(Ln(xx(0), yy(z), xx(yMax), yy(z), { stroke: '#3F3E3A', so: .35, sw: .9, dash: '3 3' })); o.push(T(xx(0) - 6, yy(z) + 4, z + '↑', { anchor: 'end', size: 11, fill: '#8A4B0F', w: 700, halo: false })); }
+  o.push(T(xx(yMax / 2), FL + 38, 'inches out from the wall', { size: 12, fill: '#5F5E5A', halo: false }));
+  o.push(Ln(xx(0), yy(0), xx(yMax), yy(0), { stroke: '#5F5E5A', sw: 2 }));
+  o.push(Ln(xx(0), yy(zMax), xx(0), yy(0), { stroke: '#2C2C2A', sw: 3 }));
+  // wheel well, battery, and the shower pan's front edge (all are at other places along the wall; dashed)
+  o.push(bx(0, 6.25, 0, 7.5, { fill: '#E24B4A', fo: .2, stroke: '#A32D2D', sw: 1.4, dash: '5 3' }));
+  o.push(T(xx(3.1), yy(3), 'well', { size: 10, fill: '#791F1F', halo: false }));
+  o.push(bx(6.25, 16.25, 0, 9.5, { fill: '#F2B84B', fo: .35, stroke: '#8A5A00', sw: 1.4, dash: '5 3' }));
+  o.push(T(xx(11.25), yy(4.5), 'battery', { size: 10, fill: '#5A3A00', halo: false }));
+  const pe = P.vanW - P.panD;
+  if (pe < yMax) { o.push(bx(pe, Math.min(yMax, P.vanW), 0, 3, { fill: '#185FA5', fo: .15, stroke: '#185FA5', sw: 1.2, dash: '4 3' })); o.push(T(xx(pe + 1), yy(1.2), 'shower pan, down', { anchor: 'start', size: 9.5, fill: '#185FA5', halo: false })); }
+  // the base: a front rail under the deck edge and the deck itself (the ends and the wall ledger are behind the cut)
+  o.push(bx(0, P.bedD, deck - lt, deck, { fill: COL.G, fo: .3, stroke: COL.G, sw: 1.2 }));
+  o.push(bx(P.bedD - .75, P.bedD, deck - lt - 1.5, deck - lt, { fill: COL.G, fo: .3, stroke: COL.G, sw: 1 }));
+  o.push(T(xx(P.bedD + 1.2), yy(deck - lt - .6), 'base front rail holds up the deck front', { anchor: 'start', size: 10, fill: COL.G, halo: false, op: bs.th < .2 ? 1 : 0 }));
+  // the leaf: hinged on the top faces at the deck front edge (y = bedD, z = deck); th: 0 folded back on the deck, pi flipped out level
+  const th = bs.th, hy = P.bedD, d = [-Math.cos(th), Math.sin(th)], n = [Math.sin(th), Math.cos(th)];
+  const pt = (r, t) => [xx(hy + r * d[0] + t * n[0]), yy(deck + r * d[1] + t * n[1])];
+  const leaf = [pt(0, 0), pt(LW, 0), pt(LW, lt), pt(0, lt)];
+  o.push(Poly(leaf, { fill: '#B07A2A', fo: .75, stroke: '#5A3A00', sw: 1.2 }));
+  // the leg slot is shown as the leg: lying in the leaf (dark line) or swung down
+  const tp = lt / 2, LG = deck - tp - .25, rp = LW - P.legIn, psi = bs.legs * Math.PI / 2;
+  const p0 = pt(rp, tp);
+  if (bs.legs < .01) { const p1 = pt(rp - LG, tp); o.push(Ln(p0[0], p0[1], p1[0], p1[1], { stroke: '#2C2C2A', sw: 3.75, cap: 'round' })); }
+  else { const tipY = hy + rp - LG * Math.cos(psi), tipZ = deck - tp - LG * Math.sin(psi); o.push(Ln(p0[0], p0[1], xx(tipY), yy(tipZ), { stroke: COL.G, sw: 3.75, cap: 'round' })); if (bs.legs > .9) { o.push(bx(tipY - .7, tipY + .7, 0, .25, { fill: COL.G })); o.push(T(xx(tipY - 1.4), yy(5.5), `legs land ${fmt(hy + rp)} in out`, { anchor: 'end', size: 10, fill: COL.G, halo: false, op: (bs.legs - .9) * 10 })); } }
+  const hp = pt(0, 0); o.push(`<circle cx="${f1(hp[0])}" cy="${f1(hp[1])}" r="3.6" fill="#2C2C2A"/>`);
+  o.push(T(xx(P.bedD + 1.5), yy(deck + 3.2), 'hinge on the top faces', { anchor: 'start', size: 10, fill: '#5A3A00', halo: false, op: bs.th < .2 ? 1 : 0 }));
+  // cushions: the seat cushion rides on the folded leaf by day (top at plat + mattress) and sits on the deck at night; the back cushion stands, then lies on the leaf
+  const sb0 = deck + lt * Math.max(0, Math.cos(th)), fade = 1 - .75 * Math.sin(clamp((s - .2) / .6, 0, 1) * Math.PI);
+  o.push(bx(0, P.bedD, sb0, sb0 + P.mattress, { fill: COL.P, fo: .12 * fade, stroke: COL.P, sw: 1.4, rx: 3, so: fade }));
+  if (bs.back > .02) o.push(bx(0, P.mattress, bt, bt + LW * bs.back, { fill: COL.P, fo: .1, stroke: COL.P, sw: 1.4, rx: 3 }));
+  if (bs.flat > .02) {
+    o.push(bx(0, P.bedD, deck, deck + P.mattress, { fill: COL.P, fo: .2 * bs.flat, stroke: COL.P, sw: 2, rx: 3, so: bs.flat }));
+    o.push(bx(P.bedD, P.bedD + LW, deck, deck + P.mattress, { fill: COL.P, fo: .2 * bs.flat, stroke: COL.P, sw: 2, rx: 3, so: bs.flat }));
+    o.push(T(xx(P.bedD / 2), yy(deck + P.mattress / 2) + 4, 'seat cushion', { size: 11, fill: COL.P, op: bs.flat }));
+    o.push(T(xx(P.bedD + LW / 2), yy(deck + P.mattress / 2) + 4, 'back cushion, lying', { size: 11, fill: COL.P, op: bs.flat }));
+    o.push(Ln(xx(0), yy(deck + P.mattress + 4), xx(P.bedD + LW), yy(deck + P.mattress + 4), { stroke: '#A32D2D', sw: 1.6, mk: true, so: bs.flat }));
+    o.push(T(xx((P.bedD + LW) / 2), yy(deck + P.mattress + 4) - 6, `bed ${fmt(P.bedD)} + ${fmt(LW)} = ${fmt(P.bedD + LW)} wide, top at ${fmt(deck + P.mattress)}`, { size: 11.5, fill: '#A32D2D', w: 500, op: bs.flat }));
+  } else if (bs.th < .05) o.push(T(xx(P.bedD / 2), yy(sb0 + P.mattress / 2) + 4, `seat cushion, top at ${fmt(bt)}`, { size: 11, fill: COL.P }));
+  o.push(MV('bed', '', HITR(xx(0), yy(bt + LW), S * (P.bedD + LW), S * (bt + LW))));
+  return { w: xx(yMax) + 60, h: FL + 70, body: o.join('') };
 }
 /* ================= walkway model: what sticks out into the aisle right now ================= */
 // D = things on the driver side (depth from the driver wall), Q = things on the passenger side (depth from the passenger wall)
@@ -619,7 +690,7 @@ function drawPlan(L, V) {
   {
     const bs = bedState(sb);
     let g = R(xx(0), yy(P.bedD), S * P.bedLen, S * P.bedBack * bs.ext, { fill: COL.P, fo: .14, stroke: COL.P, sw: 1.6 });
-    if (bs.legs > .02) [1, P.bedLen / 2 - .625, P.bedLen - 2.25].forEach(lx => { g += R(xx(lx), yy(P.bedD + P.bedBack - 1.5), S * 1.25, S * 1.25, { fill: '#B07A2A', fo: .9 * bs.legs, stroke: '#5A3A00', sw: 1 }); });
+    if (bs.legs > .02) legXs(P).forEach(lx => { g += R(xx(lx), yy(P.bedD + P.bedBack - P.legIn - .6), S * 1.25, S * 1.25, { fill: '#B07A2A', fo: .9 * bs.legs, stroke: '#5A3A00', sw: 1 }); });
     g += R(xx(0), yy(P.bedD), S * P.bedLen, S * P.bedBack, { fill: COL.P, fo: .05, stroke: COL.P, sw: 1.6, dash: '6 4' });
     g += it(0, P.bedLen, 0, P.bedD, COL.P, 'Bed / couch', `${fmt(P.bedLen)} x ${fmt(P.bedD)}, platform ${fmt(P.platform)}, mattress top ${fmt(P.platform + P.mattress)}`, { fo: .12 });
     g += T(xx(P.bedLen * .7), yy(P.bedD + P.bedBack * .67), `bed made up with the leaf: ${fmt(P.bedLen)} x ${fmt(P.bedD + P.bedBack)}`, { size: 10.5, fill: COL.P, w: 500 });
@@ -627,9 +698,21 @@ function drawPlan(L, V) {
   }
   o.push(Ln(xx(L.c0 + 2), yy(P.closetD / 2), xx(L.c1 - 2), yy(P.closetD / 2), { stroke: COL.G, sw: 3.5, cap: 'round' }));
   o.push(it(L.c0, L.c1, 0, P.closetD, COL.G, 'Closet', `${fmt(P.closetW)} x ${fmt(P.closetD)}, 2 rods`, { fo: .14 }));
-  o.push(it(L.bA[0], L.bA[1], 0, P.benchD, COL.K, 'Bench', `${fmt(P.benchLen)} x ${fmt(P.benchD)}, seat ${fmt(P.seatH)} up`));
-  if (L.tableLen > 0) o.push(it(L.tbl[0], L.tbl[1], 0, P.tableD, COL.G, 'Table', `${fmt(L.tableLen)} x ${fmt(P.tableD)}, ${fmt(P.tableH)} up`));
-  o.push(it(L.bB[0], L.bB[1], 0, P.benchD, COL.K, 'Bench', `${fmt(P.benchLen)} x ${fmt(P.benchD)}, seat ${fmt(P.seatH)} up`));
+  {
+    const ds = dinState(V.dinette || 0), tt = P.tableH + (L.tableLow - P.tableH) * ds.tbl, bw = Math.min(P.benchD, P.tableD);
+    let g = it(L.bA[0], L.bA[1], 0, P.benchD, COL.K, 'Bench', `${fmt(P.benchLen)} x ${fmt(P.benchD)}, seat ${fmt(P.seatH)} up`);
+    if (L.tableLen > 0) g += it(L.tbl[0], L.tbl[1], 0, P.tableD, COL.G, 'Table', `${fmt(L.tableLen)} x ${fmt(P.tableD)}, ${fmt(tt)} up`);
+    g += it(L.bB[0], L.bB[1], 0, P.benchD, COL.K, 'Bench', `${fmt(P.benchLen)} x ${fmt(P.benchD)}, seat ${fmt(P.seatH)} up`);
+    if (ds.pil > .02 && L.tableLen > 0) {
+      g += R(xx(L.tbl[0]), yy(0), S * L.tableLen, S * P.tableD, { fill: COL.K, fo: .3 * ds.pil, stroke: COL.K, sw: 1.4, rx: 2, so: ds.pil });
+      g += T(xx((L.tbl[0] + L.tbl[1]) / 2), yy(P.tableD) - 5, 'backrest cushions laid flat', { size: 9, fill: COL.K, op: ds.pil });
+    }
+    if (ds.pil > .3) {
+      g += R(xx(L.bA[0]), yy(0), S * (L.bB[1] - L.bA[0]), S * bw, { stroke: COL.K, sw: 2.2, dash: '7 4', so: ds.pil });
+      g += T(xx((L.bA[0] + L.bB[1]) / 2), yy(bw) + 14, `dinette bed ${fmt(L.bB[1] - L.bA[0])} x ${fmt(bw)}`, { size: 11, fill: COL.K, w: 500, op: ds.pil });
+    }
+    o.push(MV('dinette', g, ''));
+  }
   o.push(it(42, 76, 0, 7, COL.W2, 'Wheel well', '34 x 7, 7.5 tall', { fo: .5, fs: 10 }));
   o.push(it(L.batt[0], L.batt[1], 7, 17, COL.B, 'Battery', '21 x 10 x 9.5', { fo: .5, fs: 10 }));
   o.push(Ln(xx(50), yy(0), xx(50), yy(17), { stroke: '#A32D2D', sw: 1.5, mk: 1 }) + T(xx(48.6), yy(10), '17', { anchor: 'end', size: 10, fill: '#A32D2D', w: 700, halo: false }));
@@ -696,8 +779,9 @@ function drawPlan(L, V) {
     if (s > .3) g += T(xx(x0 + 6.5), yp(P.cabD + out / 2) + 4, 'drawer out', { size: 9, fill: COL.B });
     o.push(MV(ids.join(','), g, ''));
   });
-  o.push(ip(L.sinkS + 6.25, L.sinkS + 19.25, 1.75, 14.25, '#C0392B', '', null, { fo: .2, dash: '4 3' }));
-  o.push(T(xx(L.sinkS + 12.75), yp(2.8), 'hot water tank', { size: 8.5, fill: '#C0392B' }));
+  o.push(ip(L.hotX[0], L.hotX[1], L.hotY[0], L.hotY[1], '#C0392B', '', null, { fo: .2, dash: '4 3' }));
+  if (L.hotY[1] > P.sinkD - .75 + .01) o.push(ip(L.hotX[0], L.hotX[1], P.sinkD - .75, L.hotY[1], '#C0392B', '', null, { fo: .55, dash: '' }));
+  o.push(T(xx((L.hotX[0] + L.hotX[1]) / 2), yp(L.hotY[0] + 2.8), `hot water tank ${fmt(P.hotW)} x ${fmt(P.hotD)}`, { size: 8.5, fill: '#C0392B' }));
   o.push(`<circle cx="${f1(xx(L.sinkS + 8))}" cy="${f1(yp(.9))}" r="3.5" fill="#185FA5"/>`);
   o.push(ip(58, 93.25, 0, 4.5, '#7A4A1E', '', null, { fo: .3, dash: '3 2' }));
   o.push(T(xx(66), yp(1.3), 'nook 4.5 deep', { size: 8.5, fill: '#5A3510' }));
@@ -761,7 +845,15 @@ function computeChecks(L, V) {
     if (a1.v < 1e8) push(a1.v < 0 ? 'bad' : lvA(a1.v), a1.v < 0 ? `Right now ${a1.dn} and ${a1.qn} overlap by ${fmt(-a1.v)} in at ${fmt(a1.x)} in from the back.` : `Narrowest walkway right now: ${fmt(a1.v)} in at ${fmt(a1.x)} in from the back (${a1.dn} against ${a1.qn}).`);
   }
   // bed leaf
-  push('ok', `Bed: a ${fmt(P.bedBack)} x ${fmt(P.bedLen)} in leaf on a hinge along the front edge, flipped out level with the deck (${fmt(P.platform - .75)} in) on 3 legs ${fmt(P.platform - 1.75)} in long, with the back cushion on it (${fmt(P.bedD)} + ${fmt(P.bedBack)} = ${fmt(P.bedD + P.bedBack)} in wide). The seat is ${fmt(P.platform + P.mattress)} in by day and the bed ${fmt(P.platform - .75 + P.mattress)} in at night. The seat cushion comes off to flip it. Put the legs down before anyone sits on the free edge: with the legs up it levers on the hinge screws.`);
+  const LEG = P.platform - .75 - .375 - .25, slotEnd = P.legIn + LEG + .25;
+  push('ok', `Bed: a ${fmt(P.bedBack)} x ${fmt(P.bedLen)} in leaf of 3/4 in plywood on a hinge along the front edge of the deck, flipped out level with the deck (${fmt(P.platform - .75)} in) on 4 legs ${fmt(LEG)} in long, about ${fmt((P.bedLen - 3.25) / 3)} in apart, that lie in slots in the leaf (no rails) and land ${fmt(P.bedD + P.bedBack - P.legIn)} in out from the wall (${fmt(P.legIn)} in in from its free edge), with the back cushion on it (${fmt(P.bedD)} + ${fmt(P.bedBack)} = ${fmt(P.bedD + P.bedBack)} in wide). The seat is ${fmt(P.platform + P.mattress)} in by day and ${fmt(P.bedD - P.mattress)} in deep, and the bed ${fmt(P.platform - .75 + P.mattress)} in at night. The seat cushion comes off to flip it. Put the legs down before anyone sits on the free edge: with the legs up it levers on the hinge screws.`);
+  if (slotEnd > P.bedBack - 1.5) push('warn', `The leg slots (${fmt(slotEnd)} in from the free edge) reach to within ${fmt(Math.max(0, P.bedBack - slotEnd))} in of the hinge; the leaf needs to be at least ${fmt(slotEnd + 1.5)} in wide, or the legs set in less.`);
+  // dinette bed
+  const dbw = Math.min(P.benchD, P.tableD), dbl = L.bB[1] - L.bA[0], cover = Math.min(100, 2 * P.benchLen * (P.backH - P.seatH) / Math.max(1, L.tableLen * P.tableD) * 100);
+  push(dbl < 72 ? 'warn' : 'ok', `Dinette bed: ${fmt(dbl)} x ${fmt(dbw)} in with its top at ${fmt(P.seatH)} in: the table lowers to ${fmt(L.tableLow)} in and the two backrest cushions (${fmt(P.pillowT)} thick) lie on it so all three sections are level.${dbl < 72 ? ` It is ${fmt(72 - dbl)} in short of a 72 in adult bed, so it suits a child or a guest who curls up.` : ''}`);
+  if (L.tableLen > 0) push(cover < 98 ? 'warn' : 'ok', `The two backrest cushions (${fmt(P.benchLen)} x ${fmt(P.backH - P.seatH)} in each) cover ${Math.round(cover)}% of the lowered table (${fmt(L.tableLen)} x ${fmt(P.tableD)} in)${cover < 98 ? '; add a filler cushion or a thicker table pad' : ''}.`);
+  if (P.tableD < P.benchD - .01) push('warn', `The table (${fmt(P.tableD)} deep) is shallower than the benches (${fmt(P.benchD)}), so the dinette bed has a ${fmt(P.benchD - P.tableD)} in notch along its edge.`);
+  push(P.cabBot - P.seatH < 24 ? 'warn' : 'ok', `${fmt(P.cabBot - P.seatH)} in between the dinette bed and the wall cabinets.`);
   // closet doors fully open
   const hx = P.hinge === 'rear' ? L.c0 + 0.125 : L.c1 - 0.125, wC = P.closetW - 0.25;
   const O1 = obstacles(L, { clo_lo: 1, clo_hi: 1 }), hits = doorHits(L, O1), r1 = aisleAt(L, O1, hx);
@@ -773,6 +865,8 @@ function computeChecks(L, V) {
   const xs = Math.min(14, P.panW - 2), rb = aisleAt(L, Ob, xs), rbp = aisleAt(L, Obp, xs);
   if (rb.v < 0) push('warn', `With the bed made up (${fmt(P.bedD + P.bedBack)} in) the shower pan has to be tipped up: down it overlaps by ${fmt(-rb.v)} in; tipped up it leaves ${fmt(rbp.v)} in.`);
   else push('ok', `Bed made up (${fmt(P.bedD + P.bedBack)} in) leaves ${fmt(rb.v)} in in front of the shower pan.`);
+  { const legY = P.bedD + P.bedBack - P.legIn, panEdge = P.vanW - P.panD, legX = 1; // the end leg at 1 in from the rear is across from the pan (the pan is panW long)
+    push(panEdge - legY >= 0 ? 'ok' : 'warn', panEdge - legY >= 0 ? `The leg at the rear end of the leaf lands ${fmt(legY)} in out from the wall, ${fmt(panEdge - legY)} in short of the shower pan's front edge (${fmt(panEdge)} in) when the pan is down; the leaf edge hangs ${fmt(Math.max(0, P.bedD + P.bedBack - panEdge))} in over the pan.` : `The leg at the rear end of the leaf lands ${fmt(legY)} in out from the wall, ${fmt(-(panEdge - legY))} in over the shower pan (its front edge is at ${fmt(panEdge)} in), so with the pan down the leg stands on it; tip the pan up first.`); }
   // fold-out table
   const reach = L.sinkE + L.flapLen, left = P.cab - reach;
   if (left < -0.01) push('bad', `The fold-out table (${fmt(L.flapLen)} long) runs ${fmt(-left)} in past the cab wall.`);
@@ -792,6 +886,16 @@ function computeChecks(L, V) {
   else push('ok', `Under-counter drawers fit: they top out at ${fmt(dtop)} in, ${fmt(P.counterH - dtop)} in under the counter.`);
   if (L.tankX[1] > L.sinkS - .5 || L.tankLen < 1) push('bad', `The fresh water tank ends at ${fmt(L.tankX[1])} in, too close to the sink cabinet (${fmt(L.sinkS)}).`);
   else push('ok', `Fresh water tank: ${fmt(L.tankLen)} x 10 x ${fmt(P.tankH)} in, about ${(L.tankLen * 10 * P.tankH / 231).toFixed(1)} gal.`);
+  {
+    const inner = P.sinkD - .75, wi = P.sinkW - 1.5, behind = inner - P.hotD, side = wi - P.hotW, plx = L.sinkS + 8;
+    const dims = `${fmt(P.hotW)} along the wall x ${fmt(P.hotD)} deep x ${fmt(P.hotH)} tall`;
+    if (P.hotH > P.counterH - 2) push('bad', `The hot water tank (${fmt(P.hotH)} tall) is taller than the sink cabinet (${fmt(P.counterH)}).`);
+    else if (behind < -.01 || side < -.01) {
+      const swap = P.hotW <= inner + .01 && P.hotD <= wi + .01;
+      push('bad', `The hot water tank (${dims}) does not fit the sink cabinet, which is ${fmt(wi)} along the wall and ${fmt(inner)} deep inside (behind a 3/4 in door).${behind < -.01 ? ` It is ${fmt(-behind)} in too deep, so the door will not close.` : ''}${side < -.01 ? ` It is ${fmt(-side)} in too long.` : ''}${swap ? ` Turned the other way (${fmt(P.hotD)} along the wall, ${fmt(P.hotW)} deep) it fits with ${fmt(inner - P.hotW)} in to spare behind it; or make the cabinet ${fmt(Math.max(0, -behind))} in deeper (the aisle gets that much narrower).` : ''}`);
+    } else push('ok', `Hot water tank: ${dims}, on the floor at the cab-side end of the sink cabinet (${fmt(L.hotX[0])} to ${fmt(L.hotX[1])} in), with ${fmt(side)} in spare along the wall, ${behind < .01 ? 'no room' : fmt(behind) + ' in'} behind it and ${fmt(P.counterH - P.hotH)} in under the countertop for the sink bowl and lines.`);
+    if (plx > L.hotX[0] - .01 && plx < L.hotX[1] + .01 && behind < 1.5) push(side >= 1.5 ? 'warn' : 'bad', `The sink pipes (${fmt(plx)} in from the back) come down inside the tank's span (${fmt(L.hotX[0])} to ${fmt(L.hotX[1])}) and there is only ${fmt(Math.max(0, behind))} in behind the tank, so ${side >= 1.5 ? `they have to jog sideways into the ${fmt(side)} in strip beside it (${fmt(L.sinkS + .75)} to ${fmt(L.hotX[0])}).` : 'there is no room for them.'}`);
+  }
   const ov = Math.min(L.sinkE, P.doorX + 51) - Math.max(L.sinkS, P.doorX);
   if (ov > .5) push('warn', `The sink cabinet (${fmt(L.sinkS)} to ${fmt(L.sinkE)}) sits ${fmt(ov)} in inside the sliding door opening (${fmt(P.doorX)} to ${fmt(P.doorX + 51)}); the door height and width are not measured yet.`);
   // headroom, battery, doors
@@ -810,9 +914,10 @@ const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
 /* ================= views, movers, drawing loop ================= */
 const ALLDR = ['sd0', 'sd1', 'sd2', 'uL0', 'uL1', 'uR0', 'uR1'], ALLDC = ['dc0', 'dc1', 'dc2', 'dc3', 'dc4', 'dc5'];
 const VIEWS = [
-  { id: 'driver', label: 'Driver side', draw: drawDriver, movers: [['Couch to bed', ['bed']], ['Wall cabinet doors, bed side', ['dc0', 'dc1', 'dc2']], ['Wall cabinet doors, dinette side', ['dc3', 'dc4', 'dc5']], ['Closet doors', ['clo_hi', 'clo_lo']]] },
+  { id: 'driver', label: 'Driver side', draw: drawDriver, movers: [['Couch to bed', ['bed']], ['Dinette to bed', ['dinette']], ['Wall cabinet doors, bed side', ['dc0', 'dc1', 'dc2']], ['Wall cabinet doors, dinette side', ['dc3', 'dc4', 'dc5']], ['Closet doors', ['clo_hi', 'clo_lo']]] },
   { id: 'pass', label: 'Passenger side', draw: drawPass, movers: [['Shower pan', ['pan']], ['Fridge door', ['fridge']], ['Fold-out table with the foot ledge', ['flap', 'ledge']], ['Foot ledge only', ['ledge']], ['Short drawers (3)', ['sd0', 'sd1', 'sd2']], ['Drawers under the counter (4)', ['uL0', 'uL1', 'uR0', 'uR1']]] },
-  { id: 'plan', label: 'From above', draw: drawPlan, movers: [['Couch to bed', ['bed']], ['Shower pan', ['pan']], ['Closet doors', ['clo_hi', 'clo_lo']], ['Fridge door', ['fridge']], ['Fold-out table with the foot ledge', ['flap', 'ledge']], ['Foot ledge only', ['ledge']], ['Drawers', ALLDR], ['Wall cabinet doors', ALLDC]] }
+  { id: 'end', label: 'Bed, from the end', draw: drawBedEnd, movers: [['Couch to bed', ['bed']]] },
+  { id: 'plan', label: 'From above', draw: drawPlan, movers: [['Couch to bed', ['bed']], ['Dinette to bed', ['dinette']], ['Shower pan', ['pan']], ['Closet doors', ['clo_hi', 'clo_lo']], ['Fridge door', ['fridge']], ['Fold-out table with the foot ledge', ['flap', 'ledge']], ['Foot ledge only', ['ledge']], ['Drawers', ALLDR], ['Wall cabinet doors', ALLDC]] }
 ];
 let view = 'driver', L = layout(P), lastSig = '';
 const DEFS = '<defs><marker id="arq" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker><pattern id="hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="6" stroke="#888780" stroke-width="1"/></pattern><pattern id="hq" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="6" stroke="#888780" stroke-width="1"/></pattern></defs>';
@@ -843,8 +948,8 @@ function buildMovers() {
   m.innerHTML = '<span class="lab">Open or close:</span>' + vw.movers.map(x => `<button type="button" class="chip" data-ids="${x[1].join(',')}" aria-pressed="false">${x[0]}</button>`).join('') + '<button type="button" class="chip all" id="openall">Open everything</button><button type="button" class="chip all" id="closeall">Close everything</button>';
   m.querySelectorAll('.chip[data-ids]').forEach(b => b.onclick = () => toggleIds(b.dataset.ids.split(',')));
   const all = [].concat(...vw.movers.map(x => x[1]));
-  $('#openall').onclick = () => { all.forEach((id, i) => setTarget(id, 1, i * 60)); kick(); };
-  $('#closeall').onclick = () => { all.forEach((id, i) => setTarget(id, 0, i * 40)); kick(); };
+  $('#openall').onclick = () => { all.forEach((id, i) => setTarget(id, 1, i * 240)); kick(); };
+  $('#closeall').onclick = () => { all.forEach((id, i) => setTarget(id, 0, i * 160)); kick(); };
   render();
 }
 // click anything marked data-act in the drawing (looked up by position, so it still works while the drawing is redrawing)
