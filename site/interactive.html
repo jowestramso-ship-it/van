@@ -59,7 +59,7 @@
 <body>
 <div class="wrap">
   <h1>Ford Transit van: interactive plan</h1>
-  <p class="lead">Click a door, drawer, table, the bed, the shower pan or the fridge to open or close it. Change any size on the right and everything redraws, including the walkway checks. Sizes are in inches, measured from the same zero as the static diagrams (6 in in from the rear edge). <a href="./">Static diagrams, photos and the full measurement tables</a></p>
+  <p class="lead">Click a door, table, the bed, the shower pan or the fridge to open or close it. Change any size on the right and everything redraws, including the walkway checks. Sizes are in inches, measured from the same zero as the static diagrams (6 in in from the rear edge). <a href="./">Static diagrams, photos and the full measurement tables</a></p>
   <noscript>This page needs JavaScript. The static diagrams are on the other page.</noscript>
   <div class="tabs" role="tablist" id="tabs"></div>
   <div class="movers" id="movers"></div>
@@ -126,13 +126,17 @@ const PD = [
   { k: 'flapH', g: 'Fold-out table and foot ledge', l: 'Height', d: 29, s: .5, a: 20, b: 40 },
   { k: 'ledgeLen', g: 'Fold-out table and foot ledge', l: 'Foot ledge length', d: 10, s: .5, a: 4, b: 20 },
   { k: 'ledgeH', g: 'Fold-out table and foot ledge', l: 'Foot ledge top, up from floor', d: 8, s: .5, a: 3, b: 20 },
-  { k: 'tankAuto', g: 'Tank and drawers', l: 'Fresh water tank fills its shelf', d: true, t: 'c', f: 'tankLen' },
-  { k: 'tankLen', g: 'Tank and drawers', l: 'Fresh water tank length', d: 41, s: .5, a: 10, b: 70 },
-  { k: 'tankH', g: 'Tank and drawers', l: 'Fresh water tank height', d: 15.5, s: .5, a: 6, b: 24 },
-  { k: 'drawerD', g: 'Tank and drawers', l: 'Drawer box depth', d: 20, s: .5, a: 8, b: 26 },
-  { k: 'hotW', g: 'Tank and drawers', l: 'Hot water tank length along the wall', d: 14, s: .5, a: 6, b: 18 },
-  { k: 'hotD', g: 'Tank and drawers', l: 'Hot water tank depth (out from the wall)', d: 15, s: .5, a: 6, b: 20 },
-  { k: 'hotH', g: 'Tank and drawers', l: 'Hot water tank height', d: 15, s: .5, a: 8, b: 34 }
+  { k: 'tankAuto', g: 'Water tanks', l: 'Fresh water tank fills the floor space to the sink end', d: false, t: 'c', f: 'tankLen' },
+  { k: 'tankLen', g: 'Water tanks', l: 'Fresh water tank length', d: 25, s: .5, a: 10, b: 70 },
+  { k: 'tankD', g: 'Water tanks', l: 'Fresh water tank depth (out from the wall)', d: 9, s: .5, a: 4, b: 20 },
+  { k: 'tankH', g: 'Water tanks', l: 'Fresh water tank height', d: 15, s: .5, a: 6, b: 24 },
+  { k: 'hotGap', g: 'Water tanks', l: 'Clear space each side of the hot water tank', d: 6, s: .5, a: 0, b: 20 },
+  { k: 'hotShelf', g: 'Water tanks', l: 'Hot water tank height off the floor (0 = on the floor)', d: 0, s: .5, a: 0, b: 30 },
+  { k: 'hotW', g: 'Water tanks', l: 'Hot water tank length along the wall', d: 14, s: .5, a: 6, b: 18 },
+  { k: 'hotD', g: 'Water tanks', l: 'Hot water tank depth (out from the wall)', d: 15, s: .5, a: 6, b: 20 },
+  { k: 'hotH', g: 'Water tanks', l: 'Hot water tank height', d: 15, s: .5, a: 8, b: 34 },
+  { k: 'battAh', g: 'Power', l: 'Battery capacity (Ah at 12 V)', d: 280, s: 10, a: 50, b: 800 },
+  { k: 'heaterW', g: 'Power', l: 'Hot water heater power (W, 120 V)', d: 1440, s: 40, a: 200, b: 3000 }
 ];
 const DEF = {}; PD.forEach(p => DEF[p.k] = p.d);
 let P = Object.assign({}, DEF);
@@ -199,11 +203,13 @@ function layout(P) {
   L.sinkS = L.angS + L.angLen; L.sinkE = L.sinkS + P.sinkW;
   L.entry = P.cab - L.sinkE;
   L.flapLen = P.flapAuto ? Math.max(1, L.entry - P.flapGap) : P.flapLen;
-  L.tankX = [L.cabS + 2, P.tankAuto ? L.sinkS - 2 : L.cabS + 2 + P.tankLen];
+  // the sink cabinet is open to the area beside it, so the fresh water tank sits on the floor at the sink end (against the cab-side end panel);
+  // the hot water tank is on the floor next to the wheel well (which ends at 76 in), between the well and the fresh tank, with up to hotGap in clear each side
+  const endX = L.sinkE - .75, wellEnd = 76;
+  if (P.tankAuto) { L.hotX = [wellEnd + P.hotGap, wellEnd + P.hotGap + P.hotW]; L.tankX = [L.hotX[1] + P.hotGap, endX]; }
+  else { L.tankX = [endX - P.tankLen, endX]; const gap = Math.max(0, Math.min(P.hotGap, (L.tankX[0] - wellEnd - P.hotW) / 2)); L.hotX = [wellEnd + gap, wellEnd + gap + P.hotW]; }
   L.tankLen = L.tankX[1] - L.tankX[0];
-  // hot water tank: on the floor of the sink cabinet, against the cab-side end panel and as far forward as the door allows
-  L.hotX = [L.sinkE - .75 - P.hotW, L.sinkE - .75];
-  L.hotY = [Math.max(0, P.sinkD - .75 - P.hotD), Math.max(0, P.sinkD - .75 - P.hotD) + P.hotD];
+  L.hotY = [0, P.hotD];
   return L;
 }
 
@@ -236,7 +242,7 @@ function bedState(s) {
 }
 // the dinette makes up into a bed: the table lowers, the backrest cushions come off and lie on it
 function dinState(s) { return { tbl: ease(clamp(s / .5, 0, 1)), back: 1 - ease(clamp((s - .15) / .4, 0, 1)), pil: clamp((s - .55) / .45, 0, 1) }; }
-const MOVER_IDS = ['dc0', 'dc1', 'dc2', 'dc3', 'dc4', 'dc5', 'clo_lo', 'clo_hi', 'bed', 'dinette', 'pan', 'flap', 'ledge', 'fridge', 'sd0', 'sd1', 'sd2', 'uL0', 'uL1', 'uR0', 'uR1'];
+const MOVER_IDS = ['dc0', 'dc1', 'dc2', 'dc3', 'dc4', 'dc5', 'clo_lo', 'clo_hi', 'bed', 'dinette', 'pan', 'flap', 'ledge', 'fridge'];
 MOVER_IDS.forEach(ensure);
 /* ================= elevation views (driver side and passenger side) ================= */
 function mkElev(flip, L) {
@@ -389,7 +395,7 @@ function drawPass(L, V) {
   const P = L.P, E = mkElev(true, L), { S, FL, xx, yy, box } = E, o = [];
   const X = x => xx(x), Y = z => yy(z);
   const ch = P.counterH, cabS = L.cabS, angS = L.angS, sinkS = L.sinkS, sinkE = L.sinkE;
-  o.push(elevFrame(E, L, 'Passenger side wall seen from inside the van: cab on the left, rear on the right. Click a drawer, the fold-out table, the fridge or the shower pan.'));
+  o.push(elevFrame(E, L, 'Passenger side wall seen from inside the van: cab on the left, rear on the right. Click the fold-out table, the fridge or the shower pan.'));
   // wheel well (same as the driver side)
   const WW = [[42, 0], [76, 0], [76, 2], [66.75, 7.5], [51.25, 7.5], [42, 2]];
   o.push(Poly(WW.map(p => [X(p[0]), Y(p[1])]), { fill: '#D8B79A', fo: .8, stroke: '#8A6B4D', sw: 1.2 }));
@@ -460,40 +466,12 @@ function drawPass(L, V) {
   o.push(box(76.5, 103.5, ch + 16, ch + 31.4, { fill: COL.G, fo: .25, stroke: COL.G, sw: 1.5, rx: 3 }));
   o.push(T(X(90), Y(ch + 25), 'TV 30 in', { size: 12, fill: COL.G }));
   o.push(T(X(90), Y(ch + 25) + 14, '27 x 15.4, over the cabinet', { size: 10.5, fill: COL.G }));
-  // fresh water tank on its shelf
-  o.push(box(L.tankX[0], L.tankX[1], 7.5, 7.5 + P.tankH, { fill: COL.BL, fo: .14, stroke: COL.BL, sw: 1.5, rx: 3, dash: '5 3' }));
-  o.push(T(X((L.tankX[0] + L.tankX[1]) / 2), Y(15), 'Fresh water tank', { size: 12, fill: COL.BL }));
-  o.push(T(X((L.tankX[0] + L.tankX[1]) / 2), Y(15) + 14, `${fmt(L.tankLen)} x 10 x ${fmt(P.tankH)}, on a shelf at 7.5`, { size: 10.5, fill: COL.BL }));
-  // trash can under the start of the angle
-  o.push(box(angS - 11, angS + 2.5, 0, 19.5, { fill: COL.G, fo: .3, stroke: COL.G, sw: 1.5, rx: 3 }));
-  o.push(T(X(angS - 4.25), Y(6.4), 'Trash can', { size: 12, fill: COL.G }));
-  o.push(T(X(angS - 4.25), Y(6.4) + 14, '8 gal, 13 1/2 x 9 x 19 1/2', { size: 10.5, fill: COL.G }));
-  // drawers (slide out toward you)
-  const dr = (id, x0, x1, z0, z1, lab, sub, fo) => {
-    const s = V[id] || 0, e = s * .5;
-    let g = '';
-    if (s > .02) g += box(x0, x1, z0, z1, { fill: '#2C2C2A', fo: .45 * Math.min(1, s * 1.5) });
-    g += R(Math.min(X(x0), X(x1)) + 3 * s, Y(z1) + 4 * s, Math.abs(X(x1) - X(x0)), S * (z1 - z0), { fill: '#000', fo: .22 * s, rx: 3 });
-    g += box(x0 - e, x1 + e, z0 - e, z1 + e, { fill: COL.B, fo: fo + .22 * s, stroke: COL.B, sw: 1.5, rx: 3 });
-    if (lab) g += T(X((x0 + x1) / 2), Y((z0 + z1) / 2) + 4, lab, { size: 12, fill: COL.B });
-    if (sub) g += T(X((x0 + x1) / 2), Y((z0 + z1) / 2) + 17, sub, { size: 10.5, fill: COL.B });
-    return MV(id, g, HITR(Math.min(X(x0), X(x1)), Y(z1), S * Math.abs(x1 - x0), S * (z1 - z0)));
-  };
-  const sx0 = cabS + 1.25, sx1 = cabS + 17.75;
-  o.push(dr('sd2', sx0, sx1, .75, 7.75, '', '', .2));
-  o.push(dr('sd1', sx0, sx1, 8.25, 15.25, '', '', .2));
-  o.push(dr('sd0', sx0, sx1, 15.75, 22.75, 'Drawers (3)', '16 1/2 x 10 x 7', .2));
-  const ub = 7.5 + P.tankH + .5;
-  o.push(box(cabS + 14.75, cabS + 15.25, ub - .3, ub + 12, { fill: '#8A6B4D', stroke: '#3E230B', sw: .8 }));
-  o.push(dr('uL1', cabS + 1.25, cabS + 14.25, ub, ub + 7, 'Drawer', `13 x ${fmt(P.drawerD)} x 7`, .2));
-  o.push(dr('uR1', cabS + 15.75, cabS + 28.75, ub, ub + 7, 'Drawer', `13 x ${fmt(P.drawerD)} x 7`, .2));
-  o.push(dr('uL0', cabS + 1.25, cabS + 14.25, ub + 7.75, ub + 11.75, 'Drawer', `13 x ${fmt(P.drawerD)} x 4`, .2));
-  o.push(dr('uR0', cabS + 15.75, cabS + 28.75, ub + 7.75, ub + 11.75, 'Drawer', `13 x ${fmt(P.drawerD)} x 4`, .2));
-  if ((V.uL0 || 0) < .15) { o.push(box(cabS + 1.75, cabS + 13.75, ub + 8.25, ub + 11.25, { fill: COL.T, fo: .35, stroke: COL.T, sw: 1, rx: 2 })); o.push(T(X(cabS + 7.75), Y(ub + 9.75) - 2, 'Silverware', { size: 10, fill: COL.T })); }
+  // fresh water tank on the floor at the sink end (runs out of the open sink cabinet)
+  o.push(box(L.tankX[0], L.tankX[1], 0, P.tankH, { fill: COL.BL, fo: .14, stroke: COL.BL, sw: 1.5, rx: 3, dash: '5 3' }));
+  o.push(T(X((L.tankX[0] + L.tankX[1]) / 2), Y(P.tankH * .62), 'Fresh water tank', { size: 12, fill: COL.BL }));
+  o.push(T(X((L.tankX[0] + L.tankX[1]) / 2), Y(P.tankH * .62) + 14, `${fmt(L.tankLen)} x ${fmt(P.tankD)} x ${fmt(P.tankH)}, on the floor`, { size: 10.5, fill: COL.BL }));
   // angle marker
   o.push(Ln(X(angS), Y(23), X(angS), Y(ch), { stroke: '#A32D2D', sw: 2, dash: '5 3' }));
-  o.push(T(X(angS + 7.5), Y(9.6), 'counter angles in from ' + fmt(angS) + ':', { size: 9.5, fill: '#A32D2D' }));
-  o.push(T(X(angS + 7.5), Y(9.6) + 11, 'no drawers past here', { size: 9.5, fill: '#A32D2D' }));
   // paper towels and towel bars in the angled front
   const pt0 = sinkS - 11.5, pt1 = sinkS - .5;
   o.push(box(pt0, pt1, 29.75, 35.25, { fill: '#B07A2A', fo: .35, stroke: '#B07A2A', sw: 1.5, rx: 3 }));
@@ -501,10 +479,11 @@ function drawPass(L, V) {
   o.push(T(X((pt0 + pt1) / 2), Y(32.5) + 14, '11 in roll, recessed', { size: 10.5, fill: '#B07A2A' }));
   [25.5, 19.5].forEach(zb => { o.push(Ln(X(pt0), Y(zb), X(pt1), Y(zb), { stroke: COL.G, sw: 3.5, cap: 'round' })); o.push(`<circle cx="${f1(X(pt0))}" cy="${f1(Y(zb))}" r="3" fill="#444441"/><circle cx="${f1(X(pt1))}" cy="${f1(Y(zb))}" r="3" fill="#444441"/>`); });
   o.push(T(X((pt0 + pt1) / 2), Y(22.2), '2 towel bars, 11 in', { size: 9.5, fill: COL.G }));
-  // hot water tank and sink plumbing
-  o.push(box(L.hotX[0], L.hotX[1], 0, P.hotH, { fill: '#C0392B', fo: .18, stroke: '#C0392B', sw: 1.5, rx: 3, dash: '5 3' }));
-  o.push(T(X((L.hotX[0] + L.hotX[1]) / 2), Y(P.hotH * .6), 'Hot water tank', { size: 12, fill: '#C0392B' }));
-  o.push(T(X((L.hotX[0] + L.hotX[1]) / 2), Y(P.hotH * .6) + 14, `${fmt(P.hotW)} x ${fmt(P.hotD)}, ${fmt(P.hotH)} tall`, { size: 10.5, fill: '#C0392B' }));
+  // hot water tank on the floor next to the wheel well (or on a shelf if raised), and sink plumbing
+  if (P.hotShelf > .5) o.push(box(L.hotX[0] - 1, L.hotX[1] + 1, P.hotShelf - .75, P.hotShelf, { fill: '#8A6B4D', fo: .6, stroke: '#3E230B', sw: 1 }));
+  o.push(box(L.hotX[0], L.hotX[1], P.hotShelf, P.hotShelf + P.hotH, { fill: '#C0392B', fo: .18, stroke: '#C0392B', sw: 1.5, rx: 3, dash: '5 3' }));
+  o.push(T(X((L.hotX[0] + L.hotX[1]) / 2), Y(P.hotShelf + P.hotH * .6), 'Hot water tank', { size: 12, fill: '#C0392B' }));
+  o.push(T(X((L.hotX[0] + L.hotX[1]) / 2), Y(P.hotShelf + P.hotH * .6) + 14, `${fmt(P.hotW)} x ${fmt(P.hotD)}, ${fmt(P.hotH)} tall`, { size: 10.5, fill: '#C0392B' }));
   o.push(Ln(X(sinkS + 8), Y(0), X(sinkS + 8), Y(ch - 7), { stroke: COL.BL, sw: 3, dash: '2 2' }));
   o.push(T(X(sinkS + 10), Y(ch - 4), `sink plumbing, ${fmt(sinkE - sinkS - 8)} in from the cab-side edge`, { size: 9.5, fill: COL.BL }));
   // foot ledge on the cabinet end: hinged on its bottom edge, folds up into a recess in the end panel
@@ -636,12 +615,6 @@ function obstacles(L, V) {
   const fo = V.flap || 0;
   if (fo > .02) Q.push({ x0: L.sinkE, x1: L.sinkE + .75 + (L.flapLen - .75) * Math.sin(fo * Math.PI / 2), d: P.flapD, n: 'the fold-out table' });
   if ((V.ledge || 0) > .02) Q.push({ x0: L.sinkE, x1: L.sinkE + P.ledgeLen * Math.sin((V.ledge || 0) * Math.PI / 2), d: P.sinkD, n: 'the foot ledge' });
-  const mx = (a, b) => Math.max(V[a] || 0, V[b] || 0);
-  const dOut = .9 * P.drawerD;
-  const uL = mx('uL0', 'uL1'), uR = mx('uR0', 'uR1'), sd = Math.max(V.sd0 || 0, V.sd1 || 0, V.sd2 || 0);
-  if (uL > .02) Q.push({ x0: L.cabS + 1.25, x1: L.cabS + 14.25, d: P.cabD + dOut * uL, n: 'the open drawers' });
-  if (uR > .02) Q.push({ x0: L.cabS + 15.75, x1: L.cabS + 28.75, d: P.cabD + dOut * uR, n: 'the open drawers' });
-  if (sd > .02) Q.push({ x0: L.cabS + .75, x1: L.cabS + 18.25, d: P.cabD - .75 + 9.5 * sd, n: 'the open short drawers' });
   return { D, Q };
 }
 function depthAt(list, x) { let m = 0, n = ''; for (const o of list) if (x >= o.x0 && x <= o.x1 && o.d > m) { m = o.d; n = o.n; } return { m, n }; }
@@ -763,30 +736,14 @@ function drawPlan(L, V) {
   o.push(ip(L.fr[0] + 1.75, L.fr[1] - 1.75, 0, 12, COL.G, '', null, { fo: .2, dash: '4 3' }));
   o.push(T(xx((L.fr[0] + L.fr[1]) / 2), yp(5.5), 'Microwave 18.5 x 12', { size: 9, fill: COL.G, w: 500 }));
   o.push(ip(42, 76, 0, 7, COL.W2, '', null, { fo: .3 }));
-  o.push(ip(L.tankX[0], L.tankX[1], 0, 10, COL.BL, '', null, { fo: .1, dash: '5 3' }));
-  o.push(ip(L.angS - 11, L.angS + 2.5, 10, 19, COL.G, '', null, { fo: .2, dash: '4 3' }));
-  o.push(T(xx(L.angS - 4.25), yp(15.6), 'trash can', { size: 9, fill: COL.G, w: 500 }) + T(xx(L.angS - 4.25), yp(15.6) + 11, '13 1/2 x 9', { size: 8.5, fill: COL.G }));
-  {
-    const s = Math.max(V.sd0 || 0, V.sd1 || 0, V.sd2 || 0), out = 9.5 * s, d0 = 10, d1 = P.cabD - .75;
-    let g = ip(L.cabS + .75, L.cabS + 18.25, d0, d1 + out, '#8A5A00', '', null, { fo: .1 + .2 * s, dash: s > .02 ? '' : '3 3' });
-    g += T(xx(L.cabS + 9.25), yp((d0 + d1 + out) / 2) + 3, s > .5 ? 'short drawers out' : 'drawers 17 1/2 x 10', { size: 8.5, fill: '#8A5A00' });
-    o.push(MV('sd0,sd1,sd2', g, ''));
-  }
-  ['L', 'R'].forEach(c => {
-    const ids = [`u${c}0`, `u${c}1`], s = Math.max(V[ids[0]] || 0, V[ids[1]] || 0), x0 = c === 'L' ? L.cabS + 1.25 : L.cabS + 15.75, out = .9 * P.drawerD * s;
-    let g = ip(x0, x0 + 13, P.cabD, P.cabD + Math.max(out, 0.001), COL.B, '', null, { fo: .3, dash: '' });
-    if (s < .02) g = ip(x0, x0 + 13, P.cabD - 2.2, P.cabD, COL.B, '', null, { fo: .05, dash: '2 3' });
-    if (s > .3) g += T(xx(x0 + 6.5), yp(P.cabD + out / 2) + 4, 'drawer out', { size: 9, fill: COL.B });
-    o.push(MV(ids.join(','), g, ''));
-  });
-  o.push(ip(L.hotX[0], L.hotX[1], L.hotY[0], L.hotY[1], '#C0392B', '', null, { fo: .2, dash: '4 3' }));
-  if (L.hotY[1] > P.sinkD - .75 + .01) o.push(ip(L.hotX[0], L.hotX[1], P.sinkD - .75, L.hotY[1], '#C0392B', '', null, { fo: .55, dash: '' }));
-  o.push(T(xx((L.hotX[0] + L.hotX[1]) / 2), yp(L.hotY[0] + 2.8), `hot water tank ${fmt(P.hotW)} x ${fmt(P.hotD)}`, { size: 8.5, fill: '#C0392B' }));
+  o.push(ip(L.tankX[0], L.tankX[1], 0, P.tankD, COL.BL, '', null, { fo: .1, dash: '5 3' }));
+  o.push(ip(L.hotX[0], L.hotX[1], 0, P.hotD, '#C0392B', '', null, { fo: .2, dash: '4 3' }));
+  o.push(T(xx((L.hotX[0] + L.hotX[1]) / 2), yp(P.hotD / 2) + 3, `hot water tank ${fmt(P.hotW)} x ${fmt(P.hotD)}`, { size: 8.5, fill: '#C0392B' }));
   o.push(`<circle cx="${f1(xx(L.sinkS + 8))}" cy="${f1(yp(.9))}" r="3.5" fill="#185FA5"/>`);
   o.push(ip(58, 93.25, 0, 4.5, '#7A4A1E', '', null, { fo: .3, dash: '3 2' }));
   o.push(T(xx(66), yp(1.3), 'nook 4.5 deep', { size: 8.5, fill: '#5A3510' }));
-  o.push(T(xx((L.tankX[0] + L.tankX[1]) / 2 + 12), yp(6.5), `Fresh water tank ${fmt(L.tankLen)} x 10`, { size: 9.5, fill: COL.BL, w: 500 }));
-  o.push(T(xx((L.tankX[0] + L.tankX[1]) / 2 + 12), yp(3.5), 'on a shelf at 7.5 over the well', { size: 9, fill: COL.BL }));
+  o.push(T(xx((L.tankX[0] + L.tankX[1]) / 2), yp(6.5), `Fresh water tank ${fmt(L.tankLen)} x ${fmt(P.tankD)}`, { size: 9.5, fill: COL.BL, w: 500 }));
+  o.push(T(xx((L.tankX[0] + L.tankX[1]) / 2), yp(3.5), 'on the floor, out of the open sink cabinet', { size: 9, fill: COL.BL }));
   o.push(T(xx(53), yp(1.8), 'wheel well 7 out', { size: 9, fill: '#3E230B' }));
   // paper towel roll on the angled front
   const nrm = [L.slope, -1], nl = Math.hypot(nrm[0], nrm[1]), nu = [nrm[0] / nl, nrm[1] / nl];
@@ -880,21 +837,19 @@ function computeChecks(L, V) {
   if (P.ledgeLen > L.flapLen + .01) push('warn', `The foot ledge (${fmt(P.ledgeLen)} long) is longer than the fold-out table (${fmt(L.flapLen)}).`);
   else if (P.ledgeH - .75 + P.ledgeLen > P.counterH - 1) push('warn', `Folded up, the foot ledge (${fmt(P.ledgeH - .75 + P.ledgeLen)} in up) is taller than the cabinet end (${fmt(P.counterH)}).`);
   else push(lclr < 16 ? 'warn' : 'ok', `Foot ledge: ${fmt(P.ledgeLen)} x ${fmt(P.sinkD)} in, top at ${fmt(P.ledgeH)} in, ${fmt(lclr)} in under the table${lclr < 16 ? ' (tight for knees)' : ''}. It suits a seat cushion at about ${fmt(P.ledgeH + 18)} in. The cabinet base is full, so it folds up into the end panel.`);
-  // drawers, tank, hot water
-  const ub = 7.5 + P.tankH + .5, dtop = ub + 11.75;
-  if (P.counterH - 2.75 < dtop) push('bad', `The under-counter drawers top out at ${fmt(dtop)} in; they need a counter at ${fmt(dtop + 2.75)} or higher (it is ${fmt(P.counterH)}).`);
-  else push('ok', `Under-counter drawers fit: they top out at ${fmt(dtop)} in, ${fmt(P.counterH - dtop)} in under the counter.`);
-  if (L.tankX[1] > L.sinkS - .5 || L.tankLen < 1) push('bad', `The fresh water tank ends at ${fmt(L.tankX[1])} in, too close to the sink cabinet (${fmt(L.sinkS)}).`);
-  else push('ok', `Fresh water tank: ${fmt(L.tankLen)} x 10 x ${fmt(P.tankH)} in, about ${(L.tankLen * 10 * P.tankH / 231).toFixed(1)} gal.`);
+  // tanks: the sink cabinet is open to the area beside it, so the fresh tank runs out of it; the hot tank is on a shelf over the wheel well with clear space each side
   {
-    const inner = P.sinkD - .75, wi = P.sinkW - 1.5, behind = inner - P.hotD, side = wi - P.hotW, plx = L.sinkS + 8;
-    const dims = `${fmt(P.hotW)} along the wall x ${fmt(P.hotD)} deep x ${fmt(P.hotH)} tall`;
-    if (P.hotH > P.counterH - 2) push('bad', `The hot water tank (${fmt(P.hotH)} tall) is taller than the sink cabinet (${fmt(P.counterH)}).`);
-    else if (behind < -.01 || side < -.01) {
-      const swap = P.hotW <= inner + .01 && P.hotD <= wi + .01;
-      push('bad', `The hot water tank (${dims}) does not fit the sink cabinet, which is ${fmt(wi)} along the wall and ${fmt(inner)} deep inside (behind a 3/4 in door).${behind < -.01 ? ` It is ${fmt(-behind)} in too deep, so the door will not close.` : ''}${side < -.01 ? ` It is ${fmt(-side)} in too long.` : ''}${swap ? ` Turned the other way (${fmt(P.hotD)} along the wall, ${fmt(P.hotW)} deep) it fits with ${fmt(inner - P.hotW)} in to spare behind it; or make the cabinet ${fmt(Math.max(0, -behind))} in deeper (the aisle gets that much narrower).` : ''}`);
-    } else push('ok', `Hot water tank: ${dims}, on the floor at the cab-side end of the sink cabinet (${fmt(L.hotX[0])} to ${fmt(L.hotX[1])} in), with ${fmt(side)} in spare along the wall, ${behind < .01 ? 'no room' : fmt(behind) + ' in'} behind it and ${fmt(P.counterH - P.hotH)} in under the countertop for the sink bowl and lines.`);
-    if (plx > L.hotX[0] - .01 && plx < L.hotX[1] + .01 && behind < 1.5) push(side >= 1.5 ? 'warn' : 'bad', `The sink pipes (${fmt(plx)} in from the back) come down inside the tank's span (${fmt(L.hotX[0])} to ${fmt(L.hotX[1])}) and there is only ${fmt(Math.max(0, behind))} in behind the tank, so ${side >= 1.5 ? `they have to jog sideways into the ${fmt(side)} in strip beside it (${fmt(L.sinkS + .75)} to ${fmt(L.hotX[0])}).` : 'there is no room for them.'}`);
+    const wellEnd = 76, gapL = L.hotX[0] - wellEnd, gapR = L.tankX[0] - L.hotX[1], hotTop = P.hotShelf + P.hotH, gal = (L.tankLen * P.tankD * P.tankH / 231).toFixed(1);
+    const dAt = x => x <= L.angS ? P.cabD : Math.max(P.sinkD, P.cabD - L.slope * (x - L.angS)), room = Math.min(dAt(L.hotX[0]), dAt(L.hotX[1])) - .75 - P.hotD;
+    if (L.tankX[0] < 76.5) push('bad', `The fresh water tank starts at ${fmt(L.tankX[0])} in, over the wheel well (it runs to 76 in at the wall).`);
+    else push('ok', `Fresh water tank: ${fmt(L.tankLen)} x ${fmt(P.tankD)} x ${fmt(P.tankH)} in on the floor (${fmt(L.tankX[0])} to ${fmt(L.tankX[1])} in), about ${gal} gal; it sits at the sink end against the cab-side end panel (partly in the open area beside the sink cabinet), and ${fmt(P.sinkD - .75 - P.tankD)} in of cabinet depth is left in front of it for the sink pipes (111 in from the back) and for reaching it.`);
+    if (hotTop > P.counterH - 2) push('bad', `The hot water tank top (${fmt(hotTop)} in) is up against the counter (${fmt(P.counterH)} in).`);
+    else if (P.hotShelf < 7.5 && gapL < -.01) push('bad', `The hot water tank starts at ${fmt(L.hotX[0])} in, over the wheel well (7 1/2 in tall, to 76 in at the wall); raise it onto a shelf or move it toward the sink.`);
+    else if (gapR < -.01) push('bad', `The hot water tank (${fmt(L.hotX[0])} to ${fmt(L.hotX[1])} in) runs into the fresh water tank (from ${fmt(L.tankX[0])} in).`);
+    else if (room < 0) push('bad', `The hot water tank (${fmt(P.hotD)} deep) sticks out of the cabinet by ${fmt(-room)} in at its sink end (the angled front makes the cabinet shallower there).`);
+    else push(gapL < P.hotGap - .01 || gapR < P.hotGap - .01 ? 'warn' : 'ok', `Hot water tank: ${fmt(P.hotW)} x ${fmt(P.hotD)} x ${fmt(P.hotH)} tall ${P.hotShelf > .5 ? `on a shelf at ${fmt(P.hotShelf)} in` : 'on the floor'} next to the wheel well (${fmt(L.hotX[0])} to ${fmt(L.hotX[1])} in from the back), top at ${fmt(hotTop)} in, ${fmt(P.counterH - hotTop)} in under the counter, ${fmt(gapL)} in from the wheel well end and ${fmt(gapR)} in from the fresh tank${gapL < P.hotGap - .01 || gapR < P.hotGap - .01 ? ` (you wanted ${fmt(P.hotGap)} in each side; the ${fmt(L.tankX[0] - wellEnd)} in between the well and the fresh tank holds the tank plus ${fmt(L.tankX[0] - wellEnd - P.hotW)} in of space)` : ''}; ${fmt(room)} in of cabinet depth is left in front of it at its tightest end.`);
+    const ac = P.heaterW / 120, dc = P.heaterW / (12 * .9), kwhGal = 8.34 * 80 / 3412, ahGal = kwhGal / .9 * 1000 / 12;
+    push('warn', `Hot water power: ${fmt(P.heaterW)} W at 120 V is ${ac.toFixed(0)} A AC, about ${Math.round(dc)} A from a 12 V battery through an inverter (use an inverter of ${Math.ceil(P.heaterW * 1.25 / 500) * 500} W or more, and check that the battery and its wiring can carry ${Math.round(dc)} A). Heating a gallon by 80 F takes about ${kwhGal.toFixed(2)} kWh, ${Math.round(ahGal)} Ah of the ${fmt(P.battAh)} Ah battery, so a full battery is about ${Math.round(P.battAh / ahGal)} gal of hot water from cold if nothing else runs; each gallon takes about ${Math.round(kwhGal / (P.heaterW / 1000) * 60)} min to heat.`);
   }
   const ov = Math.min(L.sinkE, P.doorX + 51) - Math.max(L.sinkS, P.doorX);
   if (ov > .5) push('warn', `The sink cabinet (${fmt(L.sinkS)} to ${fmt(L.sinkE)}) sits ${fmt(ov)} in inside the sliding door opening (${fmt(P.doorX)} to ${fmt(P.doorX + 51)}); the door height and width are not measured yet.`);
@@ -912,12 +867,12 @@ function computeChecks(L, V) {
 const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
 
 /* ================= views, movers, drawing loop ================= */
-const ALLDR = ['sd0', 'sd1', 'sd2', 'uL0', 'uL1', 'uR0', 'uR1'], ALLDC = ['dc0', 'dc1', 'dc2', 'dc3', 'dc4', 'dc5'];
+const ALLDC = ['dc0', 'dc1', 'dc2', 'dc3', 'dc4', 'dc5'];
 const VIEWS = [
   { id: 'driver', label: 'Driver side', draw: drawDriver, movers: [['Couch to bed', ['bed']], ['Dinette to bed', ['dinette']], ['Wall cabinet doors, bed side', ['dc0', 'dc1', 'dc2']], ['Wall cabinet doors, dinette side', ['dc3', 'dc4', 'dc5']], ['Closet doors', ['clo_hi', 'clo_lo']]] },
-  { id: 'pass', label: 'Passenger side', draw: drawPass, movers: [['Shower pan', ['pan']], ['Fridge door', ['fridge']], ['Fold-out table with the foot ledge', ['flap', 'ledge']], ['Foot ledge only', ['ledge']], ['Short drawers (3)', ['sd0', 'sd1', 'sd2']], ['Drawers under the counter (4)', ['uL0', 'uL1', 'uR0', 'uR1']]] },
+  { id: 'pass', label: 'Passenger side', draw: drawPass, movers: [['Shower pan', ['pan']], ['Fridge door', ['fridge']], ['Fold-out table with the foot ledge', ['flap', 'ledge']], ['Foot ledge only', ['ledge']]] },
   { id: 'end', label: 'Bed, from the end', draw: drawBedEnd, movers: [['Couch to bed', ['bed']]] },
-  { id: 'plan', label: 'From above', draw: drawPlan, movers: [['Couch to bed', ['bed']], ['Dinette to bed', ['dinette']], ['Shower pan', ['pan']], ['Closet doors', ['clo_hi', 'clo_lo']], ['Fridge door', ['fridge']], ['Fold-out table with the foot ledge', ['flap', 'ledge']], ['Foot ledge only', ['ledge']], ['Drawers', ALLDR], ['Wall cabinet doors', ALLDC]] }
+  { id: 'plan', label: 'From above', draw: drawPlan, movers: [['Couch to bed', ['bed']], ['Dinette to bed', ['dinette']], ['Shower pan', ['pan']], ['Closet doors', ['clo_hi', 'clo_lo']], ['Fridge door', ['fridge']], ['Fold-out table with the foot ledge', ['flap', 'ledge']], ['Foot ledge only', ['ledge']], ['Wall cabinet doors', ALLDC]] }
 ];
 let view = 'driver', L = layout(P), lastSig = '';
 const DEFS = '<defs><marker id="arq" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker><pattern id="hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="6" stroke="#888780" stroke-width="1"/></pattern><pattern id="hq" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="6" stroke="#888780" stroke-width="1"/></pattern></defs>';
