@@ -258,7 +258,7 @@ function drawPass(L, V) {
     // lower drawers under the pair: a 3/4 in shelf half an inch over the top of the hot water tank (or the wheel well, 7.5), 20 deep so they reach the wall over both
     const shelfZ = Math.max(P.hotShelf + P.hotH, 7.5) + .5, tl = z0 - .25, bs = shelfZ + 1, tot = tl - bs;
     if (tot >= 3) {
-      const rows = tot >= 10 ? 2 : 1, rh = rows === 2 ? (tot - .75) / 2 : tot;
+      const rows = tot >= 10 ? 2 : 1, rh = rows === 2 ? (tot - 1) / 2 : tot;
       o.push(box(L.cabS, L.angS - .75, shelfZ, shelfZ + .75, { fill: '#8A6B4D', fo: 1, stroke: '#3E230B', sw: .8 }));
       o.push(box(dm - .25, dm + .25, shelfZ + .75, z0 - .5, { fill: '#8A6B4D', fo: 1, stroke: '#3E230B', sw: .8 }));
       const drw = (c0, c1, b0, b1) => {
@@ -266,10 +266,10 @@ function drawPass(L, V) {
         o.push(T(X((c0 + c1) / 2), Y((b0 + b1) / 2) - 3, 'Drawer', { size: 11, fill: '#8A5A00' }));
         o.push(T(X((c0 + c1) / 2), Y((b0 + b1) / 2) + 10, (b1 - b0 > 10 ? `${fmt(b1 - b0)} tall` : `13 x 20 x ${fmt(b1 - b0)}`), { size: 9, fill: '#8A5A00' }));
       };
-      // two stacked on the cab side, one tall drawer to the right of them (toward the back); one row of two if there is too little height
-      if (rows === 2) {
-        o.push(box(dm - .25, L.angS - .75, bs + rh, bs + rh + .75, { fill: '#8A6B4D', fo: 1, stroke: '#3E230B', sw: .8 }));
-        drw(dm + .5, dm + 13.5, bs, bs + rh); drw(dm + .5, dm + 13.5, bs + rh + .75, tl); drw(d0, dm - .5, bs, tl);
+      // one 10 in drawer on the cab side (under the top pair, with the strip below it open), two stacked to the right of it (toward the back); one row of two if there is too little height
+      if (tot >= 10) {
+        o.push(box(L.cabS, dm - .25, bs + rh, bs + rh + .75, { fill: '#8A6B4D', fo: 1, stroke: '#3E230B', sw: .8 }));
+        drw(dm + .5, dm + 13.5, tl - 10, tl); drw(d0, dm - .5, bs, bs + rh); drw(d0, dm - .5, bs + rh + 1, tl);
       } else { drw(d0, dm - .5, bs, tl); drw(dm + .5, dm + 13.5, bs, tl); }
     }
   }
