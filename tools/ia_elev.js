@@ -251,10 +251,24 @@ function drawPass(L, V) {
     o.push(box(dm - .25, dm + .25, z0 - .5, z1 + .25, { fill: '#8A6B4D', fo: 1, stroke: '#3E230B', sw: .8 }));
     o.push(box(d0, dm - .5, z0, z1, { fill: '#8A5A00', fo: .2, stroke: '#8A5A00', sw: 1.5, rx: 3 }));
     o.push(box(dm + .5, dm + 13.5, z0, z1, { fill: '#8A5A00', fo: .2, stroke: '#8A5A00', sw: 1.5, rx: 3 }));
-    o.push(T(X(d0 + 6.5), Y((z0 + z1) / 2) - 3, 'Drawer + tray', { size: 11, fill: '#8A5A00' }));
-    o.push(T(X(d0 + 6.5), Y((z0 + z1) / 2) + 10, '13 x 20 x 4', { size: 9, fill: '#8A5A00' }));
-    o.push(T(X(dm + 7), Y((z0 + z1) / 2) - 3, 'Drawer', { size: 11, fill: '#8A5A00' }));
-    o.push(T(X(dm + 7), Y((z0 + z1) / 2) + 10, '13 x 20 x 4', { size: 9, fill: '#8A5A00' }));
+    o.push(T(X(d0 + 6.5), Y((z0 + z1) / 2) - 5, 'Drawer + tray', { size: 11, fill: '#8A5A00' }));
+    o.push(T(X(d0 + 6.5), Y((z0 + z1) / 2) + 7, '13 x 20 x 4', { size: 9, fill: '#8A5A00' }));
+    o.push(T(X(dm + 7), Y((z0 + z1) / 2) - 5, 'Drawer', { size: 11, fill: '#8A5A00' }));
+    o.push(T(X(dm + 7), Y((z0 + z1) / 2) + 7, '13 x 20 x 4', { size: 9, fill: '#8A5A00' }));
+    // lower drawers under the pair: a 3/4 in shelf half an inch over the top of the hot water tank (or the wheel well, 7.5), 20 deep so they reach the wall over both
+    const shelfZ = Math.max(P.hotShelf + P.hotH, 7.5) + .5, tl = z0 - .25, bs = shelfZ + 1, tot = tl - bs;
+    if (tot >= 3) {
+      const rows = tot >= 10 ? 2 : 1, rh = rows === 2 ? (tot - .75) / 2 : tot;
+      o.push(box(L.cabS, L.angS - .75, shelfZ, shelfZ + .75, { fill: '#8A6B4D', fo: 1, stroke: '#3E230B', sw: .8 }));
+      o.push(box(dm - .25, dm + .25, shelfZ + .75, z0 - .5, { fill: '#8A6B4D', fo: 1, stroke: '#3E230B', sw: .8 }));
+      for (let r = 0; r < rows; r++) {
+        const b0 = bs + r * (rh + .75), b1 = b0 + rh;
+        if (r > 0) o.push(box(L.cabS, L.angS - .75, b0 - .75, b0, { fill: '#8A6B4D', fo: 1, stroke: '#3E230B', sw: .8 }));
+        o.push(box(d0, dm - .5, b0, b1, { fill: '#8A5A00', fo: .2, stroke: '#8A5A00', sw: 1.5, rx: 3 }));
+        o.push(box(dm + .5, dm + 13.5, b0, b1, { fill: '#8A5A00', fo: .2, stroke: '#8A5A00', sw: 1.5, rx: 3 }));
+        [d0 + 6.5, dm + 7].forEach(cx => { o.push(T(X(cx), Y((b0 + b1) / 2) - 3, 'Drawer', { size: 11, fill: '#8A5A00' })); o.push(T(X(cx), Y((b0 + b1) / 2) + 10, `13 x 20 x ${fmt(rh)}`, { size: 9, fill: '#8A5A00' })); });
+      }
+    }
   }
   o.push(Ln(X(sinkS + 8), Y(0), X(sinkS + 8), Y(ch - 7), { stroke: COL.BL, sw: 3, dash: '2 2' }));
   o.push(T(X(sinkS + 10), Y(ch - 4), `sink plumbing, ${fmt(sinkE - sinkS - 8)} in from the cab-side edge`, { size: 9.5, fill: COL.BL }));

@@ -154,7 +154,7 @@ function drawPlan(L, V) {
   o.push(T(xx((L.hotX[0] + L.hotX[1]) / 2), yp(P.hotD / 2) + 3, `hot water tank ${fmt(P.hotW)} x ${fmt(P.hotD)}`, { size: 8.5, fill: '#C0392B' }));
   o.push(ip(L.cabS + 1.25, L.cabS + 14.25, 0, 20, '#8A5A00', '', null, { fo: .15, dash: '3 2' }));
   o.push(ip(L.cabS + 15.75, L.cabS + 28.75, 0, 20, '#8A5A00', '', null, { fo: .15, dash: '3 2' }));
-  o.push(T(xx(L.cabS + 14.75), yp(10), '2 drawers 13 x 20 x 4', { size: 8.5, fill: '#8A5A00' }));
+  o.push(T(xx(L.cabS + 14.75), yp(10), '2 + 4 drawers 13 x 20 deep', { size: 8.5, fill: '#8A5A00' }));
   o.push(`<circle cx="${f1(xx(L.sinkS + 8))}" cy="${f1(yp(.9))}" r="3.5" fill="#185FA5"/>`);
   o.push(ip(58, 93.25, 0, 4.5, '#7A4A1E', '', null, { fo: .3, dash: '3 2' }));
   o.push(T(xx(66), yp(1.3), 'nook 4.5 deep', { size: 8.5, fill: '#5A3510' }));

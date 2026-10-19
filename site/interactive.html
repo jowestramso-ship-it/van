@@ -535,10 +535,24 @@ function drawPass(L, V) {
     o.push(box(dm - .25, dm + .25, z0 - .5, z1 + .25, { fill: '#8A6B4D', fo: 1, stroke: '#3E230B', sw: .8 }));
     o.push(box(d0, dm - .5, z0, z1, { fill: '#8A5A00', fo: .2, stroke: '#8A5A00', sw: 1.5, rx: 3 }));
     o.push(box(dm + .5, dm + 13.5, z0, z1, { fill: '#8A5A00', fo: .2, stroke: '#8A5A00', sw: 1.5, rx: 3 }));
-    o.push(T(X(d0 + 6.5), Y((z0 + z1) / 2) - 3, 'Drawer + tray', { size: 11, fill: '#8A5A00' }));
-    o.push(T(X(d0 + 6.5), Y((z0 + z1) / 2) + 10, '13 x 20 x 4', { size: 9, fill: '#8A5A00' }));
-    o.push(T(X(dm + 7), Y((z0 + z1) / 2) - 3, 'Drawer', { size: 11, fill: '#8A5A00' }));
-    o.push(T(X(dm + 7), Y((z0 + z1) / 2) + 10, '13 x 20 x 4', { size: 9, fill: '#8A5A00' }));
+    o.push(T(X(d0 + 6.5), Y((z0 + z1) / 2) - 5, 'Drawer + tray', { size: 11, fill: '#8A5A00' }));
+    o.push(T(X(d0 + 6.5), Y((z0 + z1) / 2) + 7, '13 x 20 x 4', { size: 9, fill: '#8A5A00' }));
+    o.push(T(X(dm + 7), Y((z0 + z1) / 2) - 5, 'Drawer', { size: 11, fill: '#8A5A00' }));
+    o.push(T(X(dm + 7), Y((z0 + z1) / 2) + 7, '13 x 20 x 4', { size: 9, fill: '#8A5A00' }));
+    // lower drawers under the pair: a 3/4 in shelf half an inch over the top of the hot water tank (or the wheel well, 7.5), 20 deep so they reach the wall over both
+    const shelfZ = Math.max(P.hotShelf + P.hotH, 7.5) + .5, tl = z0 - .25, bs = shelfZ + 1, tot = tl - bs;
+    if (tot >= 3) {
+      const rows = tot >= 10 ? 2 : 1, rh = rows === 2 ? (tot - .75) / 2 : tot;
+      o.push(box(L.cabS, L.angS - .75, shelfZ, shelfZ + .75, { fill: '#8A6B4D', fo: 1, stroke: '#3E230B', sw: .8 }));
+      o.push(box(dm - .25, dm + .25, shelfZ + .75, z0 - .5, { fill: '#8A6B4D', fo: 1, stroke: '#3E230B', sw: .8 }));
+      for (let r = 0; r < rows; r++) {
+        const b0 = bs + r * (rh + .75), b1 = b0 + rh;
+        if (r > 0) o.push(box(L.cabS, L.angS - .75, b0 - .75, b0, { fill: '#8A6B4D', fo: 1, stroke: '#3E230B', sw: .8 }));
+        o.push(box(d0, dm - .5, b0, b1, { fill: '#8A5A00', fo: .2, stroke: '#8A5A00', sw: 1.5, rx: 3 }));
+        o.push(box(dm + .5, dm + 13.5, b0, b1, { fill: '#8A5A00', fo: .2, stroke: '#8A5A00', sw: 1.5, rx: 3 }));
+        [d0 + 6.5, dm + 7].forEach(cx => { o.push(T(X(cx), Y((b0 + b1) / 2) - 3, 'Drawer', { size: 11, fill: '#8A5A00' })); o.push(T(X(cx), Y((b0 + b1) / 2) + 10, `13 x 20 x ${fmt(rh)}`, { size: 9, fill: '#8A5A00' })); });
+      }
+    }
   }
   o.push(Ln(X(sinkS + 8), Y(0), X(sinkS + 8), Y(ch - 7), { stroke: COL.BL, sw: 3, dash: '2 2' }));
   o.push(T(X(sinkS + 10), Y(ch - 4), `sink plumbing, ${fmt(sinkE - sinkS - 8)} in from the cab-side edge`, { size: 9.5, fill: COL.BL }));
@@ -797,7 +811,7 @@ function drawPlan(L, V) {
   o.push(T(xx((L.hotX[0] + L.hotX[1]) / 2), yp(P.hotD / 2) + 3, `hot water tank ${fmt(P.hotW)} x ${fmt(P.hotD)}`, { size: 8.5, fill: '#C0392B' }));
   o.push(ip(L.cabS + 1.25, L.cabS + 14.25, 0, 20, '#8A5A00', '', null, { fo: .15, dash: '3 2' }));
   o.push(ip(L.cabS + 15.75, L.cabS + 28.75, 0, 20, '#8A5A00', '', null, { fo: .15, dash: '3 2' }));
-  o.push(T(xx(L.cabS + 14.75), yp(10), '2 drawers 13 x 20 x 4', { size: 8.5, fill: '#8A5A00' }));
+  o.push(T(xx(L.cabS + 14.75), yp(10), '2 + 4 drawers 13 x 20 deep', { size: 8.5, fill: '#8A5A00' }));
   o.push(`<circle cx="${f1(xx(L.sinkS + 8))}" cy="${f1(yp(.9))}" r="3.5" fill="#185FA5"/>`);
   o.push(ip(58, 93.25, 0, 4.5, '#7A4A1E', '', null, { fo: .3, dash: '3 2' }));
   o.push(T(xx(66), yp(1.3), 'nook 4.5 deep', { size: 8.5, fill: '#5A3510' }));
@@ -965,6 +979,11 @@ function computeChecks(L, V) {
     else if (gapR < -.01) push('bad', `The hot water tank (${fmt(L.hotX[0])} to ${fmt(L.hotX[1])} in) runs into the fresh water tank (from ${fmt(L.tankX[0])} in).`);
     else if (room < 0) push('bad', `The hot water tank (${fmt(P.hotD)} deep) sticks out of the cabinet by ${fmt(-room)} in at its sink end (the angled front makes the cabinet shallower there).`);
     else push(gapL < P.hotGap - .01 || gapR < P.hotGap - .01 ? 'warn' : 'ok', `Hot water tank: ${fmt(P.hotW)} x ${fmt(P.hotD)} x ${fmt(P.hotH)} tall ${P.hotShelf > .5 ? `on a shelf at ${fmt(P.hotShelf)} in` : 'on the floor'} next to the wheel well (${fmt(L.hotX[0])} to ${fmt(L.hotX[1])} in from the back), top at ${fmt(hotTop)} in, ${fmt(P.counterH - hotTop)} in under the counter, ${fmt(gapL)} in from the wheel well end and ${fmt(gapR)} in from the fresh tank${gapL < P.hotGap - .01 || gapR < P.hotGap - .01 ? ` (you wanted ${fmt(P.hotGap)} in each side; the ${fmt(L.tankX[0] - wellEnd)} in between the well and the fresh tank holds the tank plus ${fmt(L.tankX[0] - wellEnd - P.hotW)} in of space)` : ''}; ${fmt(room)} in of cabinet depth is left in front of it at its tightest end.`);
+    {
+      const shelfZ = Math.max(hotTop, 7.5) + .5, tot = P.counterH - 6.75 - .25 - (shelfZ + 1);
+      if (tot < 3) push('bad', `The four lower drawers under the top pair do not fit: only ${fmt(Math.max(0, tot))} in is left between the shelf over the hot water tank (${fmt(shelfZ)} in up) and the top drawers.`);
+      else push(tot < 10 ? 'warn' : 'ok', `Lower drawers: ${tot >= 10 ? `two rows of two, 13 x 20 x ${fmt((tot - .75) / 2)} in` : `one row of two, 13 x 20 x ${fmt(tot)} in`} on a shelf at ${fmt(shelfZ)} in up (1/2 in over the hot water tank top), 20 deep so they reach the wall over the tank and the wheel well. Nothing may come out of the top of the hot water tank (fittings, relief valve).`);
+    }
     const ac = P.heaterW / 120, dc = P.heaterW / (12 * .9), kwhGal = 8.34 * 80 / 3412, ahGal = kwhGal / .9 * 1000 / 12;
     push('ok', `Hot water power: ${fmt(P.heaterW)} W at 120 V is ${ac.toFixed(0)} A AC, about ${Math.round(dc)} A from a 12 V battery through an inverter. The ${fmt(P.battAh)} Ah battery is said to handle it; what is left to size for about ${Math.round(dc)} A is an inverter of ${Math.ceil(P.heaterW * 1.25 / 500) * 500} W or more, the battery cable and its fuse. Heating a gallon by 80 F takes about ${kwhGal.toFixed(2)} kWh, ${Math.round(ahGal)} Ah of the ${fmt(P.battAh)} Ah battery, so a full battery is about ${Math.round(P.battAh / ahGal)} gal of hot water from cold if nothing else runs; each gallon takes about ${Math.round(kwhGal / (P.heaterW / 1000) * 60)} min to heat.`);
   }
