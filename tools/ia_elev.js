@@ -270,10 +270,11 @@ function drawPass(L, V) {
         o.push(T(X((c0 + c1) / 2), Y((b0 + b1) / 2) - 3, 'Drawer', { size: 11, fill: '#8A5A00' }));
         o.push(T(X((c0 + c1) / 2), Y((b0 + b1) / 2) + 10, (b1 - b0 > 10 ? `${fmt(b1 - b0)} tall` : `13 x 20 x ${fmt(b1 - b0)}`), { size: 9, fill: '#8A5A00' }));
       };
-      // one 10 in drawer on the cab side (under the top pair, with the strip below it open), a second 10 in one to the right of it (toward the back) with whatever is left under it, on its own shelf 1/2 in over the wheel well; one row of two if there is too little height
+      // two 5 in drawers on the cab side (under the top pair, with the strip below them open), a second 10 in one to the right of it (toward the back) with whatever is left under it, on its own shelf 1/2 in over the wheel well; one row of two if there is too little height
       if (tot >= 10) {
         o.push(box(L.cabS, dm - .25, tl - 10.75, tl - 10, { fill: '#8A6B4D', fo: 1, stroke: '#3E230B', sw: .8 }));
-        drw(dm + .5, dm + 13.5, tl - 10, tl); drw(d0, dm - .5, tl - 10, tl); if (tl - 11 - (wellShelf + 1) > 1) drw(d0, dm - .5, wellShelf + 1, tl - 11);
+        o.push(box(dm - .25, L.angS - .75, tl - 6, tl - 5.25, { fill: '#8A6B4D', fo: 1, stroke: '#3E230B', sw: .8 }));
+        drw(dm + .5, dm + 13.5, tl - 5, tl); drw(dm + .5, dm + 13.5, tl - 11, tl - 6); drw(d0, dm - .5, tl - 10, tl); if (tl - 11 - (wellShelf + 1) > 1) drw(d0, dm - .5, wellShelf + 1, tl - 11);
       } else { drw(d0, dm - .5, bs, tl); drw(dm + .5, dm + 13.5, bs, tl); }
     }
   }
