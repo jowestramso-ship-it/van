@@ -628,7 +628,7 @@ function drawPass(L, V) {
         o.push(box(c0, c1, b0, b1, { fill: '#8A5A00', fo: .2, stroke: '#8A5A00', sw: 1.5, rx: 3 }));
         if (b1 - b0 < 5) { o.push(T(X((c0 + c1) / 2), Y((b0 + b1) / 2) + 3, `13 x 20 x ${fmt(b1 - b0)}`, { size: 9, fill: '#8A5A00' })); return; }
         o.push(T(X((c0 + c1) / 2), Y((b0 + b1) / 2) - 3, 'Drawer', { size: 11, fill: '#8A5A00' }));
-        o.push(T(X((c0 + c1) / 2), Y((b0 + b1) / 2) + 10, (b1 - b0 > 10 ? `${fmt(b1 - b0)} tall` : `13 x 20 x ${fmt(b1 - b0)}`), { size: 9, fill: '#8A5A00' }));
+        o.push(T(X((c0 + c1) / 2), Y((b0 + b1) / 2) + 10, `13 x 20 x ${fmt(b1 - b0)}`, { size: 9, fill: '#8A5A00' }));
       };
       // two 5 in drawers on the cab side (under the top pair, with the strip below them open), a second 10 in one to the right of it (toward the back) with whatever is left under it, on its own shelf 1/2 in over the wheel well; one row of two if there is too little height
       if (tot >= 10) {
