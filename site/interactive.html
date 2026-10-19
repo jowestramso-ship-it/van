@@ -619,18 +619,21 @@ function drawPass(L, V) {
     const shelfZ = Math.max(P.hotShelf + P.hotH, 7.5) + .5, tl = z0 - .25, bs = shelfZ + 1, tot = tl - bs;
     if (tot >= 3) {
       const rows = tot >= 10 ? 2 : 1, rh = rows === 2 ? (tot - 1) / 2 : tot;
-      o.push(box(L.cabS, L.angS - .75, shelfZ, shelfZ + .75, { fill: '#8A6B4D', fo: 1, stroke: '#3E230B', sw: .8 }));
-      o.push(box(dm - .25, dm + .25, shelfZ + .75, z0 - .5, { fill: '#8A6B4D', fo: 1, stroke: '#3E230B', sw: .8 }));
+      o.push(box(dm - .25, L.angS - .75, shelfZ, shelfZ + .75, { fill: '#8A6B4D', fo: 1, stroke: '#3E230B', sw: .8 }));
+      // the back-side column is over the wheel well only (7.5 tall, to 76 in), so its shelf sits 1/2 in over the well
+      const wellShelf = tot >= 10 ? 8 : shelfZ;
+      o.push(box(L.cabS, dm - .25, wellShelf, wellShelf + .75, { fill: '#8A6B4D', fo: 1, stroke: '#3E230B', sw: .8 }));
+      o.push(box(dm - .25, dm + .25, wellShelf + .75, z0 - .5, { fill: '#8A6B4D', fo: 1, stroke: '#3E230B', sw: .8 }));
       const drw = (c0, c1, b0, b1) => {
         o.push(box(c0, c1, b0, b1, { fill: '#8A5A00', fo: .2, stroke: '#8A5A00', sw: 1.5, rx: 3 }));
         if (b1 - b0 < 5) { o.push(T(X((c0 + c1) / 2), Y((b0 + b1) / 2) + 3, `13 x 20 x ${fmt(b1 - b0)}`, { size: 9, fill: '#8A5A00' })); return; }
         o.push(T(X((c0 + c1) / 2), Y((b0 + b1) / 2) - 3, 'Drawer', { size: 11, fill: '#8A5A00' }));
         o.push(T(X((c0 + c1) / 2), Y((b0 + b1) / 2) + 10, (b1 - b0 > 10 ? `${fmt(b1 - b0)} tall` : `13 x 20 x ${fmt(b1 - b0)}`), { size: 9, fill: '#8A5A00' }));
       };
-      // one 10 in drawer on the cab side (under the top pair, with the strip below it open), a second 10 in one to the right of it (toward the back) with whatever is left under it (3 1/2 in); one row of two if there is too little height
+      // one 10 in drawer on the cab side (under the top pair, with the strip below it open), a second 10 in one to the right of it (toward the back) with whatever is left under it, on its own shelf 1/2 in over the wheel well; one row of two if there is too little height
       if (tot >= 10) {
         o.push(box(L.cabS, dm - .25, tl - 10.75, tl - 10, { fill: '#8A6B4D', fo: 1, stroke: '#3E230B', sw: .8 }));
-        drw(dm + .5, dm + 13.5, tl - 10, tl); drw(d0, dm - .5, tl - 10, tl); if (tl - 11 - bs > 1) drw(d0, dm - .5, bs, tl - 11);
+        drw(dm + .5, dm + 13.5, tl - 10, tl); drw(d0, dm - .5, tl - 10, tl); if (tl - 11 - (wellShelf + 1) > 1) drw(d0, dm - .5, wellShelf + 1, tl - 11);
       } else { drw(d0, dm - .5, bs, tl); drw(dm + .5, dm + 13.5, bs, tl); }
     }
   }
@@ -1062,7 +1065,7 @@ function computeChecks(L, V) {
     {
       const shelfZ = Math.max(hotTop, 7.5) + .5, tot = P.counterH - 6.75 - .25 - (shelfZ + 1);
       if (tot < 3) push('bad', `The three lower drawers under the top pair do not fit: only ${fmt(Math.max(0, tot))} in is left between the shelf over the hot water tank (${fmt(shelfZ)} in up) and the top drawers.`);
-      else push(tot < 10 ? 'warn' : 'ok', `Lower drawers: ${tot >= 10 ? `two 13 x 20 x 10 in drawers side by side under the top pair (cab side, and toward the back), with a ${fmt(Math.max(0, tot - 11))} in tall drawer under the back one and ${fmt(tot - 10)} in open under the cab side one` : `one row of two, 13 x 20 x ${fmt(tot)} in`} on a shelf at ${fmt(shelfZ)} in up (1/2 in over the hot water tank top), 20 deep so they reach the wall over the tank and the wheel well. Nothing may come out of the top of the hot water tank (fittings, relief valve).`);
+      else push(tot < 10 ? 'warn' : 'ok', `Lower drawers: ${tot >= 10 ? `two 13 x 20 x 10 in drawers side by side under the top pair (cab side, and toward the back), with a ${fmt(Math.max(0, P.counterH - 27))} in tall drawer under the back one (on its own shelf at 8 in, 1/2 in over the wheel well, because that column is over the well, not the tank) and ${fmt(tot - 10)} in open under the cab side one` : `one row of two, 13 x 20 x ${fmt(tot)} in`} on a shelf at ${fmt(shelfZ)} in up (1/2 in over the hot water tank top), 20 deep so they reach the wall over the tank and the wheel well. Nothing may come out of the top of the hot water tank (fittings, relief valve).`);
     }
     const ac = P.heaterW / 120, dc = P.heaterW / (12 * .9), kwhGal = 8.34 * 80 / 3412, ahGal = kwhGal / .9 * 1000 / 12;
     push('ok', `Hot water power: ${fmt(P.heaterW)} W at 120 V is ${ac.toFixed(0)} A AC, about ${Math.round(dc)} A from a 12 V battery through an inverter. The ${fmt(P.battAh)} Ah battery is said to handle it; what is left to size for about ${Math.round(dc)} A is an inverter of ${Math.ceil(P.heaterW * 1.25 / 500) * 500} W or more, the battery cable and its fuse. Heating a gallon by 80 F takes about ${kwhGal.toFixed(2)} kWh, ${Math.round(ahGal)} Ah of the ${fmt(P.battAh)} Ah battery, so a full battery is about ${Math.round(P.battAh / ahGal)} gal of hot water from cold if nothing else runs; each gallon takes about ${Math.round(kwhGal / (P.heaterW / 1000) * 60)} min to heat.`);
