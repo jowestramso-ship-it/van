@@ -24,8 +24,8 @@
   .chip:hover { border-color: #2C2C2A; }
   .chip[aria-pressed="true"] { background: #EEEDFE; border-color: #534AB7; color: #3C3489; }
   .chip.all { background: #2C2C2A; border-color: #2C2C2A; color: #fff; }
-  .layout { display: grid; grid-template-columns: minmax(0, 1fr) 350px; gap: 16px; align-items: start; }
-  @media (max-width: 1000px) { .layout { grid-template-columns: minmax(0, 1fr); } }
+  .layout { display: block; }
+  .layout aside { max-width: 760px; margin-top: 16px; }
   .stage { border: 1px solid var(--line); border-radius: 10px; background: #fff; padding: 4px; }
   svg#svg { width: 100%; height: auto; display: block; touch-action: manipulation; }
   svg text { font-family: -apple-system, "Segoe UI", sans-serif; }
@@ -59,7 +59,7 @@
 <body>
 <div class="wrap">
   <h1>Ford Transit van: interactive plan</h1>
-  <p class="lead">Click a door, table, the bed, the shower pan or the fridge to open or close it. Change any size on the right and everything redraws, including the walkway checks. Zoom the drawing with the + and − buttons in its corner, Ctrl (Cmd on a Mac) and scroll, or pinch; drag it to move when zoomed. Sizes are in inches, measured from the same zero as the static diagrams (6 in in from the rear edge). <a href="./">Static diagrams, photos and the full measurement tables</a></p>
+  <p class="lead">Click a door, table, the bed, the shower pan or the fridge to open or close it. Change any size below the drawing and everything redraws, including the walkway checks. Zoom the drawing with the + and − buttons in its corner, Ctrl (Cmd on a Mac) and scroll, or pinch; drag it to move when zoomed. Sizes are in inches, measured from the same zero as the static diagrams (6 in in from the rear edge). <a href="./">Static diagrams, photos and the full measurement tables</a></p>
   <noscript>This page needs JavaScript. The static diagrams are on the other page.</noscript>
   <div class="tabs" role="tablist" id="tabs"></div>
   <div class="movers" id="movers"></div>

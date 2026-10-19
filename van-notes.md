@@ -16,6 +16,9 @@ User: 'add the storage under the countertop', drawers, 'the same top drawers'. R
 ## Zoomable diagrams (latest)
 User: 'Make the diagrams zoomable'. Every diagram in sides.html and the drawing in interactive.html now has + / minus / Reset buttons in its top right corner, Ctrl (Cmd on a Mac) + scroll, and pinch on a touch screen; once zoomed, drag to move (a drag does not count as a click, so it does not hide or open parts). Plain scrolling still scrolls the page. Up to 8x. The interactive page resets the zoom when you change views. Source: tools/zoom.js (shared; joined into interactive.html by build.sh and injected into sides.html by tools/zoom.py).
 
+## Interactive page layout (latest)
+User: 'Put the does it fit portion and everything under it, under the diagram'. On interactive.html the 'Does it fit?' list and the Sizes panel (with the reset and copy link buttons) are now below the drawing in one column (up to 760 px wide) instead of in a column on the right, so the drawing uses the full page width. The intro text says 'below the drawing' instead of 'on the right'.
+
 ## Review fixes (latest)
 An independent review of the drawer work (three lenses, two skeptics per finding) found, and I fixed: the interactive elevation drew the cab side drawer column, divider and rails 1/2 in off diagram E (the divider is now 72.75 to 73.25, the boxes 59.25 to 72.25 and 73.75 to 86.75, as in E and the plan); the top rail was drawn inside the countertop; the back-side rail was 1/4 in high; the 'From above' label said 2 + 4 drawers (now 6 drawers); a new check warns when the flat part (needs 29 1/4 in between end panels) or the cabinet depth (needs 20 3/4 in) is too small for the drawers; notes and comments corrected (the 20 in boxes plus a 3/4 in front leave 1/4 in of the 21 in cabinet, not 1 in; the notes header pointed at a file that does not exist). Earlier findings about 6 7/8 in drawers and the 2 x 2 layout were about versions that are gone.
 
