@@ -260,13 +260,16 @@ function drawPass(L, V) {
     if (tot >= 3) {
       const rows = tot >= 10 ? 2 : 1, rh = rows === 2 ? (tot - .75) / 2 : tot;
       o.push(box(L.cabS, L.angS - .75, shelfZ, shelfZ + .75, { fill: '#8A6B4D', fo: 1, stroke: '#3E230B', sw: .8 }));
-      o.push(box(dm - .25, dm + .25, shelfZ + .75, z0 - .5, { fill: '#8A6B4D', fo: 1, stroke: '#3E230B', sw: .8 }));
+      o.push(box(dm - .25, dm + .25, rows === 2 ? bs + rh + .75 : shelfZ + .75, z0 - .5, { fill: '#8A6B4D', fo: 1, stroke: '#3E230B', sw: .8 }));
       for (let r = 0; r < rows; r++) {
         const b0 = bs + r * (rh + .75), b1 = b0 + rh;
         if (r > 0) o.push(box(L.cabS, L.angS - .75, b0 - .75, b0, { fill: '#8A6B4D', fo: 1, stroke: '#3E230B', sw: .8 }));
-        o.push(box(d0, dm - .5, b0, b1, { fill: '#8A5A00', fo: .2, stroke: '#8A5A00', sw: 1.5, rx: 3 }));
-        o.push(box(dm + .5, dm + 13.5, b0, b1, { fill: '#8A5A00', fo: .2, stroke: '#8A5A00', sw: 1.5, rx: 3 }));
-        [d0 + 6.5, dm + 7].forEach(cx => { o.push(T(X(cx), Y((b0 + b1) / 2) - 3, 'Drawer', { size: 11, fill: '#8A5A00' })); o.push(T(X(cx), Y((b0 + b1) / 2) + 10, `13 x 20 x ${fmt(rh)}`, { size: 9, fill: '#8A5A00' })); });
+        const full = rows === 2 && r === 0, cols = full ? [[d0, dm + 13.5, 27.5]] : [[d0, dm - .5, 13], [dm + .5, dm + 13.5, 13]];
+        cols.forEach(([c0, c1, w]) => {
+          o.push(box(c0, c1, b0, b1, { fill: '#8A5A00', fo: .2, stroke: '#8A5A00', sw: 1.5, rx: 3 }));
+          o.push(T(X((c0 + c1) / 2), Y((b0 + b1) / 2) - 3, 'Drawer', { size: 11, fill: '#8A5A00' }));
+          o.push(T(X((c0 + c1) / 2), Y((b0 + b1) / 2) + 10, `${w === 27.5 ? '27 1/2' : w} x 20 x ${fmt(rh)}`, { size: 9, fill: '#8A5A00' }));
+        });
       }
     }
   }
