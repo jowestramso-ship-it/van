@@ -10,6 +10,9 @@ Interior: 160 in long, 68 in wide, 76 in tall. Open `van-layout.html` for the th
 - No bulkhead: the cab end stays open (no partition, so no cab seat gap measurement needed).
 - Still open: roof width (assumed 68 in), fan and A/C models, electrical details; to be discussed later.
 
+## Under-counter drawers (latest)
+User: 'add the storage under the countertop', drawers, 'the same top drawers'. Read as: the earlier side-by-side pair is back unchanged. Two 4 in tall drawers in the flat part of the counter (58 to 88), under the 36.5 in counter underside: boxes 13 wide x 20 deep, left 59.25 to 72.25 (holds the 12 x 14 x 3 silverware tray), right 73.75 to 86.75, 1/2 in divider at 72.75 to 73.25, 31.25 to 35.25 up, 3/4 in rail above. They sit above the wheel well and the hot water tank (79 5/8 to 93 5/8, 15 tall), clear of both. None at the angle (88 on). The lower area (7.5 to 15 up over the well and under the drawers) stays open. Drawn in E, the plan (F) with a table row, and the interactive page (passenger side and from above). The interpretation of 'the same' is unconfirmed.
+
 ## Measuring datum
 Confirmed by the user: everything, including the layout items, is measured from the same zero, 6 in in from the back (the rear lip is not counted), and the cab wall is at 154 in on that scale. So the earlier layout numbers that ran to 160 were wrong; the dinette is now 86.5 to 154 and the closet is 76 to 86.5 (10.5 wide, bar about 78 to 86). The passenger entry is 123 to 154 (31 in clear). Overhead cabinet over the dinette is 86.5 to 154.
 

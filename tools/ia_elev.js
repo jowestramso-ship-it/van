@@ -244,6 +244,18 @@ function drawPass(L, V) {
   o.push(box(L.hotX[0], L.hotX[1], P.hotShelf, P.hotShelf + P.hotH, { fill: '#C0392B', fo: .18, stroke: '#C0392B', sw: 1.5, rx: 3, dash: '5 3' }));
   o.push(T(X((L.hotX[0] + L.hotX[1]) / 2), Y(P.hotShelf + P.hotH * .6), 'Hot water tank', { size: 12, fill: '#C0392B' }));
   o.push(T(X((L.hotX[0] + L.hotX[1]) / 2), Y(P.hotShelf + P.hotH * .6) + 14, `${fmt(P.hotW)} x ${fmt(P.hotD)}, ${fmt(P.hotH)} tall`, { size: 10.5, fill: '#C0392B' }));
+  // two 4 in drawers side by side under the counter in the flat part, 1/2 in divider between
+  {
+    const d0 = L.cabS + 1.25, dm = L.cabS + 14.75, z0 = ch - 6.75, z1 = ch - 2.75;
+    o.push(box(L.cabS, L.angS - .75, ch - 1.5, ch - .75, { fill: '#8A6B4D', fo: 1, stroke: '#3E230B', sw: .8 }));
+    o.push(box(dm - .25, dm + .25, z0 - .5, z1 + .25, { fill: '#8A6B4D', fo: 1, stroke: '#3E230B', sw: .8 }));
+    o.push(box(d0, dm - .5, z0, z1, { fill: '#8A5A00', fo: .2, stroke: '#8A5A00', sw: 1.5, rx: 3 }));
+    o.push(box(dm + .5, dm + 13.5, z0, z1, { fill: '#8A5A00', fo: .2, stroke: '#8A5A00', sw: 1.5, rx: 3 }));
+    o.push(T(X(d0 + 6.5), Y((z0 + z1) / 2) - 3, 'Drawer + tray', { size: 11, fill: '#8A5A00' }));
+    o.push(T(X(d0 + 6.5), Y((z0 + z1) / 2) + 10, '13 x 20 x 4', { size: 9, fill: '#8A5A00' }));
+    o.push(T(X(dm + 7), Y((z0 + z1) / 2) - 3, 'Drawer', { size: 11, fill: '#8A5A00' }));
+    o.push(T(X(dm + 7), Y((z0 + z1) / 2) + 10, '13 x 20 x 4', { size: 9, fill: '#8A5A00' }));
+  }
   o.push(Ln(X(sinkS + 8), Y(0), X(sinkS + 8), Y(ch - 7), { stroke: COL.BL, sw: 3, dash: '2 2' }));
   o.push(T(X(sinkS + 10), Y(ch - 4), `sink plumbing, ${fmt(sinkE - sinkS - 8)} in from the cab-side edge`, { size: 9.5, fill: COL.BL }));
   // foot ledge on the cabinet end: hinged on its bottom edge, folds up into a recess in the end panel
