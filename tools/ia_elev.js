@@ -247,23 +247,23 @@ function drawPass(L, V) {
   // two 4 in drawers side by side under the counter in the flat part, 1/2 in divider between
   {
     const d0 = L.cabS + 1.25, dm = L.cabS + 14.75, z0 = ch - 6.75, z1 = ch - 2.75;
-    o.push(box(L.cabS, L.angS - .75, ch - 1.5, ch - .75, { fill: '#8A6B4D', fo: 1, stroke: '#3E230B', sw: .8 }));
-    o.push(box(dm - .25, dm + .25, z0 - .5, z1 + .25, { fill: '#8A6B4D', fo: 1, stroke: '#3E230B', sw: .8 }));
+    o.push(box(L.cabS, L.angS - .75, ch - 2.25, ch - 1.5, { fill: '#8A6B4D', fo: 1, stroke: '#3E230B', sw: .8 }));
+    o.push(box(dm, dm + .5, z0 - .5, z1 + .25, { fill: '#8A6B4D', fo: 1, stroke: '#3E230B', sw: .8 }));
     o.push(box(d0, dm - .5, z0, z1, { fill: '#8A5A00', fo: .2, stroke: '#8A5A00', sw: 1.5, rx: 3 }));
-    o.push(box(dm + .5, dm + 13.5, z0, z1, { fill: '#8A5A00', fo: .2, stroke: '#8A5A00', sw: 1.5, rx: 3 }));
+    o.push(box(dm + 1, dm + 14, z0, z1, { fill: '#8A5A00', fo: .2, stroke: '#8A5A00', sw: 1.5, rx: 3 }));
     o.push(T(X(d0 + 6.5), Y((z0 + z1) / 2) - 5, 'Drawer + tray', { size: 11, fill: '#8A5A00' }));
     o.push(T(X(d0 + 6.5), Y((z0 + z1) / 2) + 7, '13 x 20 x 4', { size: 9, fill: '#8A5A00' }));
-    o.push(T(X(dm + 7), Y((z0 + z1) / 2) - 5, 'Drawer', { size: 11, fill: '#8A5A00' }));
-    o.push(T(X(dm + 7), Y((z0 + z1) / 2) + 7, '13 x 20 x 4', { size: 9, fill: '#8A5A00' }));
+    o.push(T(X(dm + 7.5), Y((z0 + z1) / 2) - 5, 'Drawer', { size: 11, fill: '#8A5A00' }));
+    o.push(T(X(dm + 7.5), Y((z0 + z1) / 2) + 7, '13 x 20 x 4', { size: 9, fill: '#8A5A00' }));
     // lower drawers under the pair: a 3/4 in shelf half an inch over the top of the hot water tank (or the wheel well, 7.5), 20 deep so they reach the wall over both
     const shelfZ = Math.max(P.hotShelf + P.hotH, 7.5) + .5, tl = z0 - .25, bs = shelfZ + 1, tot = tl - bs;
     if (tot >= 3) {
       const rows = tot >= 10 ? 2 : 1, rh = rows === 2 ? (tot - 1) / 2 : tot;
-      o.push(box(dm - .25, L.angS - .75, shelfZ, shelfZ + .75, { fill: '#8A6B4D', fo: 1, stroke: '#3E230B', sw: .8 }));
+      o.push(box(dm, L.angS - .75, shelfZ, shelfZ + .75, { fill: '#8A6B4D', fo: 1, stroke: '#3E230B', sw: .8 }));
       // the back-side column is over the wheel well only (7.5 tall, to 76 in), so its shelf sits 1/2 in over the well
       const wellShelf = tot >= 10 ? 8 : shelfZ;
-      o.push(box(L.cabS, dm - .25, wellShelf, wellShelf + .75, { fill: '#8A6B4D', fo: 1, stroke: '#3E230B', sw: .8 }));
-      o.push(box(dm - .25, dm + .25, wellShelf + .75, z0 - .5, { fill: '#8A6B4D', fo: 1, stroke: '#3E230B', sw: .8 }));
+      o.push(box(L.cabS, dm, wellShelf, wellShelf + .75, { fill: '#8A6B4D', fo: 1, stroke: '#3E230B', sw: .8 }));
+      o.push(box(dm, dm + .5, wellShelf + .75, z0 - .5, { fill: '#8A6B4D', fo: 1, stroke: '#3E230B', sw: .8 }));
       const drw = (c0, c1, b0, b1) => {
         o.push(box(c0, c1, b0, b1, { fill: '#8A5A00', fo: .2, stroke: '#8A5A00', sw: 1.5, rx: 3 }));
         if (b1 - b0 < 5) { o.push(T(X((c0 + c1) / 2), Y((b0 + b1) / 2) + 3, `13 x 20 x ${fmt(b1 - b0)}`, { size: 9, fill: '#8A5A00' })); return; }
@@ -272,10 +272,10 @@ function drawPass(L, V) {
       };
       // two 5 in drawers on the cab side (under the top pair, with the strip below them open), a second 10 in one to the right of it (toward the back) with whatever is left under it, on its own shelf 1/2 in over the wheel well; one row of two if there is too little height
       if (tot >= 10) {
-        o.push(box(L.cabS, dm - .25, tl - 10.75, tl - 10, { fill: '#8A6B4D', fo: 1, stroke: '#3E230B', sw: .8 }));
-        o.push(box(dm - .25, L.angS - .75, tl - 6, tl - 5.25, { fill: '#8A6B4D', fo: 1, stroke: '#3E230B', sw: .8 }));
-        drw(dm + .5, dm + 13.5, tl - 5, tl); drw(dm + .5, dm + 13.5, tl - 11, tl - 6); drw(d0, dm - .5, tl - 10, tl); if (tl - 11 - (wellShelf + 1) > 1) drw(d0, dm - .5, wellShelf + 1, tl - 11);
-      } else { drw(d0, dm - .5, bs, tl); drw(dm + .5, dm + 13.5, bs, tl); }
+        o.push(box(L.cabS, dm, tl - 11, tl - 10.25, { fill: '#8A6B4D', fo: 1, stroke: '#3E230B', sw: .8 }));
+        o.push(box(dm, L.angS - .75, tl - 6, tl - 5.25, { fill: '#8A6B4D', fo: 1, stroke: '#3E230B', sw: .8 }));
+        drw(dm + 1, dm + 14, tl - 5, tl); drw(dm + 1, dm + 14, tl - 11, tl - 6); drw(d0, dm - .5, tl - 10, tl); if (tl - 11 - (wellShelf + 1) > 1) drw(d0, dm - .5, wellShelf + 1, tl - 11);
+      } else { drw(d0, dm - .5, bs, tl); drw(dm + 1, dm + 14, bs, tl); }
     }
   }
   o.push(Ln(X(sinkS + 8), Y(0), X(sinkS + 8), Y(ch - 7), { stroke: COL.BL, sw: 3, dash: '2 2' }));

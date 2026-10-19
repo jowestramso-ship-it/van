@@ -76,7 +76,7 @@ a(f'<text class="ts" x="{xx(106)}" y="{yy(47.2)}" text-anchor="middle" style="fo
 item(79.625,93.625,53,68,'#C0392B','',None,0.2,'stroke-dasharray="4 3"')
 item(59.25,72.25,48,68,'#8A5A00','',None,0.15,'stroke-dasharray="3 2"')
 item(73.75,86.75,48,68,'#8A5A00','',None,0.15,'stroke-dasharray="3 2"')
-a(f'<text class="ts" x="{xx(73)}" y="{yy(58)}" text-anchor="middle" style="font-size:8.5px;fill:#8A5A00;paint-order:stroke;stroke:#fff;stroke-width:2.5px">2 + 3 drawers, 20 deep</text>')
+a(f'<text class="ts" x="{xx(73)}" y="{yy(58)}" text-anchor="middle" style="font-size:8.5px;fill:#8A5A00;paint-order:stroke;stroke:#fff;stroke-width:2.5px">6 drawers, 20 deep</text>')
 a(f'<text class="ts" x="{xx(86.625)}" y="{yy(65.2)}" text-anchor="middle" style="font-size:8.5px;fill:#C0392B;paint-order:stroke;stroke:#fff;stroke-width:2.5px">hot water tank</text>')
 a(f'<circle cx="{xx(111):.1f}" cy="{yy(67.1):.1f}" r="3.5" fill="#185FA5"/>')
 item(58,93.25,63.5,68,'#7A4A1E','',None,0.3,'stroke-dasharray="3 2"')
