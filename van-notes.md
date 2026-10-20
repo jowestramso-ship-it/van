@@ -16,6 +16,9 @@ User: 'add the storage under the countertop', drawers, 'the same top drawers'. R
 ## Zoomable diagrams (latest)
 User: 'Make the diagrams zoomable'. Every diagram in sides.html and the drawing in interactive.html now has + / minus / Reset buttons in its top right corner, Ctrl (Cmd on a Mac) + scroll, and pinch on a touch screen; once zoomed, drag to move (a drag does not count as a click, so it does not hide or open parts). Plain scrolling still scrolls the page. Up to 8x. The interactive page resets the zoom when you change views. Source: tools/zoom.js (shared; joined into interactive.html by build.sh and injected into sides.html by tools/zoom.py).
 
+## No ribs behind 21 3/4 (latest)
+User: 'no ribs behind 21.75'. Confirmed: the five ribs (21 3/4, 37 7/8, 58 3/8, 97 3/8, 126 3/8) are all of them, so the fan at 13 1/4 (opening 6 1/4 to 20 1/4) sits in the 21 3/4 in clear space behind the first rib with no rib under its opening (1 1/2 in clear of the rib, 6 1/4 in from the back edge). Nothing changes in the drawings or checks.
+
 ## Fan moved along to 13 1/4 (latest)
 User: 'yes move the fan'. The shower fan cutout is now centered 13 1/4 in from the rear doors (was 14), 46 across: opening 6 1/4 to 20 1/4 from the rear doors (datum of the other diagrams: 1/4 to 14 1/4, center 7 1/4), 1 1/2 in clear of the rib that starts at 21 3/4 (was 3/4 in); the 17 3/4 in fan unit spans 4 3/8 to 22 1/8, over that rib, normal for its base. Updated in the interactive page, diagram G, the fan marks in the elevations (B, C, E) and the plan F (which also still had the fan at 49 to 63 across, from the 56 across position; now 39 to 53 across to match 46), and the plan table. Still open: whether a rib exists behind 21 3/4 (if one is at about 5 3/4 the fan would sit on it).
 
