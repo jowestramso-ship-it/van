@@ -99,6 +99,9 @@ const PD = [
   { k: 'acUnit', g: 'Ceiling', l: 'Air conditioner unit on the roof: square footprint (OutEquip 12 V cooling-only: 28.3 x 28.3 x 6.3 tall, 45 lb on the listing)', d: 28.25, s: .25, a: 10, b: 50 },
   { k: 'acW', g: 'Ceiling', l: 'Air conditioning cutout: square size', d: 14.25, s: .25, a: 4, b: 30 },
   { k: 'battAh', g: 'Power', l: 'Battery capacity (Ah at 12 V)', d: 280, s: 10, a: 50, b: 800 },
+  { k: 'fanLowW', g: 'Power', l: 'Shower fan power on low (W, 12 V DC)', d: 3, s: 1, a: 0, b: 100 },
+  { k: 'fanHighW', g: 'Power', l: 'Shower fan power on high (W, 12 V DC)', d: 32, s: 1, a: 0, b: 200 },
+  { k: 'fanHighH', g: 'Power', l: 'Hours a day the fan runs on high (the rest of the day is low)', d: 1, s: .5, a: 0, b: 24 },
   { k: 'heaterW', g: 'Power', l: 'Hot water heater power (W, 120 V)', d: 1440, s: 40, a: 200, b: 3000 }
 ];
 const DEF = {}; PD.forEach(p => DEF[p.k] = p.d);

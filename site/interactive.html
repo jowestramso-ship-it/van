@@ -252,6 +252,9 @@ const PD = [
   { k: 'acUnit', g: 'Ceiling', l: 'Air conditioner unit on the roof: square footprint (OutEquip 12 V cooling-only: 28.3 x 28.3 x 6.3 tall, 45 lb on the listing)', d: 28.25, s: .25, a: 10, b: 50 },
   { k: 'acW', g: 'Ceiling', l: 'Air conditioning cutout: square size', d: 14.25, s: .25, a: 4, b: 30 },
   { k: 'battAh', g: 'Power', l: 'Battery capacity (Ah at 12 V)', d: 280, s: 10, a: 50, b: 800 },
+  { k: 'fanLowW', g: 'Power', l: 'Shower fan power on low (W, 12 V DC)', d: 3, s: 1, a: 0, b: 100 },
+  { k: 'fanHighW', g: 'Power', l: 'Shower fan power on high (W, 12 V DC)', d: 32, s: 1, a: 0, b: 200 },
+  { k: 'fanHighH', g: 'Power', l: 'Hours a day the fan runs on high (the rest of the day is low)', d: 1, s: .5, a: 0, b: 24 },
   { k: 'heaterW', g: 'Power', l: 'Hot water heater power (W, 120 V)', d: 1440, s: 40, a: 200, b: 3000 }
 ];
 const DEF = {}; PD.forEach(p => DEF[p.k] = p.d);
@@ -1246,6 +1249,10 @@ function computeChecks(L, V) {
       else push(tot < 10 ? 'warn' : 'ok', `Lower drawers: ${tot >= 10 ? `two 13 x 20 x 5 in drawers one above the other on the cab side and a 13 x 20 x 10 in one toward the back, under the top pair, with a ${fmt(Math.max(0, P.counterH - 27))} in tall drawer under the back one (on its own shelf at 8 in, 1/2 in over the wheel well, because that column is over the well, not the tank) and ${fmt(P.counterH - 18 - (shelfZ + .75))} in open under the cab side ones, down to their shelf` : `one row of two, 13 x 20 x ${fmt(tot)} in`} on a shelf at ${fmt(shelfZ)} in up (1/2 in over the hot water tank top), 20 deep so they reach the wall over the tank and the wheel well. Nothing may come out of the top of the hot water tank (fittings, relief valve).`);
     }
     const ac = P.heaterW / 120, dc = P.heaterW / (12 * .9), kwhGal = 8.34 * 80 / 3412, ahGal = kwhGal / .9 * 1000 / 12;
+    {
+      const aLo = P.fanLowW / 12, aHi = P.fanHighW / 12, ah = aLo * (24 - P.fanHighH) + aHi * P.fanHighH, pct = ah / P.battAh * 100;
+      push('ok', `Shower fan power (12 V DC, no inverter): ${fmt(P.fanLowW)} W on low is ${aLo.toFixed(2)} A and ${fmt(P.fanHighW)} W on high is ${aHi.toFixed(1)} A. Run ${fmt(P.fanHighH)} hour${P.fanHighH === 1 ? '' : 's'} on high and the rest of the day on low it uses about ${ah.toFixed(1)} Ah a day, ${pct.toFixed(1)} percent of the ${fmt(P.battAh)} Ah battery. Small next to the water heater; wire and fuse it for ${aHi.toFixed(1)} A.`);
+    }
     push('ok', `Hot water power: ${fmt(P.heaterW)} W at 120 V is ${ac.toFixed(0)} A AC, about ${Math.round(dc)} A from a 12 V battery through an inverter. The ${fmt(P.battAh)} Ah battery is said to handle it; what is left to size for about ${Math.round(dc)} A is an inverter of ${Math.ceil(P.heaterW * 1.25 / 500) * 500} W or more, the battery cable and its fuse. Heating a gallon by 80 F takes about ${kwhGal.toFixed(2)} kWh, ${Math.round(ahGal)} Ah of the ${fmt(P.battAh)} Ah battery, so a full battery is about ${Math.round(P.battAh / ahGal)} gal of hot water from cold if nothing else runs; each gallon takes about ${Math.round(kwhGal / (P.heaterW / 1000) * 60)} min to heat.`);
   }
   const ov = Math.min(L.sinkE, P.doorX + P.slideW) - Math.max(L.sinkS, P.doorX);

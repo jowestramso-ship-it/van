@@ -16,6 +16,9 @@ User: 'add the storage under the countertop', drawers, 'the same top drawers'. R
 ## Zoomable diagrams (latest)
 User: 'Make the diagrams zoomable'. Every diagram in sides.html and the drawing in interactive.html now has + / minus / Reset buttons in its top right corner, Ctrl (Cmd on a Mac) + scroll, and pinch on a touch screen; once zoomed, drag to move (a drag does not count as a click, so it does not hide or open parts). Plain scrolling still scrolls the page. Up to 8x. The interactive page resets the zoom when you change views. Source: tools/zoom.js (shared; joined into interactive.html by build.sh and injected into sides.html by tools/zoom.py).
 
+## Fan power on the page (latest)
+User: 'add the fan power to the page'. New sizes in the Power group (shower fan power on low 3 W, on high 32 W, hours a day on high 1) and a line in 'Does it fit?': 0.25 A on low, 2.7 A on high at 12 V DC; 1 hour on high and 23 on low is about 8.4 Ah a day, 3 percent of the 280 Ah battery; wire and fuse for 2.7 A. (My earlier note said about 6 Ah a day for low only: 0.25 A x 24 h.) The A/C draw is still not on the page (not found).
+
 ## Fan power confirmed (latest)
 User: '3 to 32 W'. The F36AR fan draws 3 W on low to 32 W on high, DC 12 V: about 0.25 A to 2.7 A (at 12 V; 3 W / 12 V = 0.25 A, 32 W / 12 V = 2.67 A). Running it on low all night costs about 6 Ah a day (0.25 A x 24 h), 2 percent of the 280 Ah battery. Not on the page (no fan power size; electrics deferred).
 
