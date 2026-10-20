@@ -88,7 +88,7 @@ const PD = [
   { k: 'lightRows', g: 'Ceiling', l: 'Rows of lights along the ceiling', d: 2, s: 1, a: 1, b: 4 },
   { k: 'lightD', g: 'Ceiling', l: 'Light diameter (mounted on a slat)', d: 2, s: .25, a: 1, b: 8 },
   { k: 'fanX', g: 'Ceiling', l: 'Shower fan cutout: along the van (from the back)', d: 14, s: .5, a: 0, b: 220 },
-  { k: 'fanY', g: 'Ceiling', l: 'Shower fan cutout: across (from the driver wall)', d: 54, s: .5, a: 0, b: 90 },
+  { k: 'fanY', g: 'Ceiling', l: 'Shower fan cutout: across (from the driver wall)', d: 46, s: .5, a: 0, b: 90 },
   { k: 'fanUnit', g: 'Ceiling', l: 'Shower fan unit on the roof: square footprint (2012 F36AR exhaust fan: 17.7 x 17.7 x 6.4 tall)', d: 17.75, s: .25, a: 6, b: 40 },
   { k: 'fanW', g: 'Ceiling', l: 'Shower fan cutout: square size', d: 14, s: .25, a: 4, b: 30 },
   { k: 'acX', g: 'Ceiling', l: 'Air conditioning cutout: along the van (from the back)', d: 58, s: .5, a: 0, b: 220 },

@@ -16,7 +16,7 @@ def _g():
         for j in range(2):
             a(f'<rect x="{xx(cx[i]):.1f}" y="{yy(cy[j]):.1f}" width="{SC*(cx[i+1]-cx[i]):.1f}" height="{SC*(cy[j+1]-cy[j]):.1f}" fill="#D9C7A5" fill-opacity="0.8" stroke="#8A6B4D" stroke-width="1.2"/>')
     # slats: 17 rows of 3 in with 1 in gaps (1/2 in left each side), cut where the openings cross them
-    fan=(14,54,14); ac=(58,34,14.25)
+    fan=(14,46,14); ac=(58,34,14.25)
     cut=[(c[0]-c[2]/2,c[0]+c[2]/2,c[1]-c[2]/2,c[1]+c[2]/2) for c in (fan,ac)]
     ys=[0.5+4*k for k in range(17)]
     cutn=[0,0]
@@ -58,7 +58,7 @@ _svg,_cutn=_g()
 _rows=[('Plywood','1/4 in','3 sheets of 4 x 8 ft at least (76 sq ft of ceiling), cut into pieces 96 x 48, 64 x 48, 96 x 20 and 64 x 20','against the roof bows; about 54 lb'),
  ('Slats','3 wide x 1 thick x 160 long','17, with 1 in gaps (1/2 in left at each side); each one is cut where the fan or the A/C opening crosses it: the fan cuts %d, the A/C cuts %d'%(_cutn[0],_cutn[1]),'14 ft stock (8 in waste each); about 132 lb in pine; a board sold as 1 x 3 is only 3/4 x 2 1/2, so this is milled or 5/4 stock'),
  ('Round lights','2 in across, 6','two rows of three, at 26 2/3, 80 and 133 1/3 in from the rear doors, on the slats nearest 22 and 46 in across from the driver wall','centered on a 3 in slat (1/2 in of wood each side); a small hole through the plywood behind each for the wire'),
- ('Shower fan cutout','14 x 14','centered 14 in from the rear doors and 54 in across from the driver wall (over the wet bath)','a typical roof vent opening; model not chosen; framed between the roof bows'),
+ ('Shower fan cutout','14 x 14','centered 14 in from the rear doors and 46 in across from the driver wall (its center is over the wet bath; the opening runs 39 to 53 across, 5 in of it past the pan front edge at 44)','a typical roof vent opening; model not chosen; framed between the roof bows'),
  ('Air conditioning cutout','14 1/4 x 14 1/4','centered 58 in from the rear doors (52 on the datum of the other diagrams: it spans 50 7/8 to 65 1/8 from the rear doors, inside the 40 to 70 asked for) and 34 in across','the usual air conditioner opening; model not chosen; framed between the roof bows; its weight is not modeled')]
 _tbl='<table><tr><th>Part</th><th>Size</th><th>How many and where</th><th>Notes</th></tr>'+''.join('<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>'%r for r in _rows)+'</table>'
 _h=open((ROOT+'/sides.html')).read()
