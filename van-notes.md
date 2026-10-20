@@ -16,6 +16,9 @@ User: 'add the storage under the countertop', drawers, 'the same top drawers'. R
 ## Zoomable diagrams (latest)
 User: 'Make the diagrams zoomable'. Every diagram in sides.html and the drawing in interactive.html now has + / minus / Reset buttons in its top right corner, Ctrl (Cmd on a Mac) + scroll, and pinch on a touch screen; once zoomed, drag to move (a drag does not count as a click, so it does not hide or open parts). Plain scrolling still scrolls the page. Up to 8x. The interactive page resets the zoom when you change views. Source: tools/zoom.js (shared; joined into interactive.html by build.sh and injected into sides.html by tools/zoom.py).
 
+## Fan power confirmed (latest)
+User: '3 to 32 W'. The F36AR fan draws 3 W on low to 32 W on high, DC 12 V: about 0.25 A to 2.7 A (at 12 V; 3 W / 12 V = 0.25 A, 32 W / 12 V = 2.67 A). Running it on low all night costs about 6 Ah a day (0.25 A x 24 h), 2 percent of the 280 Ah battery. Not on the page (no fan power size; electrics deferred).
+
 ## Fan power (latest)
 User: 'Power 3  32W' (for the 12 V DC fan, F36AR). Read as 3 to 32 W (low to high speed), which at 12 V is about 0.25 A to 2.7 A; if it means a single rating of 32 W it is about 2.7 A. Not confirmed which. Small next to the A/C and the 133 A water heater (the electrics are still deferred by the user); not added to the page, which has no fan power size.
 
