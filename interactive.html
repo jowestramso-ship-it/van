@@ -228,6 +228,7 @@ const PD = [
   { k: 'sheetH', g: 'Walls', l: 'Sheet height', d: 96, s: 1, a: 24, b: 120 },
   { k: 'wallSpan', g: 'Walls', l: 'Most the covering may span between furring strips', d: 16, s: 1, a: 6, b: 32 },
   { k: 'ribList', g: 'Roof ribs', l: 'Rib positions along the roof: inches from the back edge (rear doors), separated by commas', d: '21.75, 37.875, 58.375, 97.375, 126.375', t: 'x' },
+  { k: 'ribDepth', g: 'Roof ribs', l: 'Rib depth (how far the ribs hang below the steel roof)', d: 2, s: .25, a: .5, b: 6 },
   { k: 'ribW', g: 'Roof ribs', l: 'Rib width (the flange along the van)', d: 2.75, s: .125, a: .5, b: 8 },
   { k: 'ribRef', g: 'Roof ribs', l: 'The positions above are', d: 'back', t: 's', o: [['back', 'the edge of each rib nearest the back'], ['center', 'the middle of each rib'], ['front', 'the edge of each rib nearest the cab']] },
   { k: 'liningOn', g: 'Ceiling', l: 'Cover the ceiling (plywood, then slats)', d: true, t: 'c' },
@@ -742,7 +743,7 @@ function drawPass(L, V) {
 
 /* ================= cross-section from the rear doors: both walls leaning in toward the flat roof ================= */
 function drawCross(L, V) {
-  const P = L.P, S = 7, X0 = 260, zMax = Math.max(P.roofMidH + 6, 86), FL = 60 + S * zMax, W = P.vanW, o = [];
+  const P = L.P, S = 7, X0 = 260, zMax = Math.max(P.roofMidH + P.ribDepth + 6, 88), FL = 60 + S * zMax, W = P.vanW, o = [];
   const xx = y => X0 + S * y, yy = z => FL - S * z, bx = (y0, y1, z0, z1, q) => R(xx(y0), yy(z1), S * (y1 - y0), S * (z1 - z0), q);
   const lean = z => L.leanAt(z), s0 = Math.min(Math.max(L.leanStart, 0), P.ceil), lc = lean(P.ceil);
   o.push(T(20, 22, 'Cross-section seen from the rear doors: driver side wall on the left, passenger side on the right.', { anchor: 'start', size: 14, fill: '#5F5E5A', halo: false }));
@@ -754,6 +755,9 @@ function drawCross(L, V) {
   const zw = P.roofWallH, lw = lean(zw), arc = []; for (let i = 0; i <= 40; i++) { const y = lw + (W - 2 * lw) * i / 40; arc.push([xx(y), yy(L.roofZ(y))]); }
   o.push(Poly([[xx(0), yy(0)], [xx(0), yy(Math.min(s0, zw))], [xx(lw), yy(zw)], ...arc, [xx(W - lw), yy(zw)], [xx(W), yy(Math.min(s0, zw))], [xx(W), yy(0)]], { fill: '#F1EFE8', fo: .7, stroke: '#2C2C2A', sw: 2.4 }));
   if (lw > 0) { o.push(Poly([[xx(0), yy(s0)], [xx(0), yy(zw)], [xx(lw), yy(zw)]], { fill: 'url(#hatch)', fo: .5, stroke: '#A32D2D', sw: 1, dash: '4 3' })); o.push(Poly([[xx(W), yy(s0)], [xx(W), yy(zw)], [xx(W - lw), yy(zw)]], { fill: 'url(#hatch)', fo: .5, stroke: '#A32D2D', sw: 1, dash: '4 3' })); }
+  // outside of the steel roof: the ribs hang ribDepth below it, so it is that much above the rib height
+  o.push(`<polyline points="${arc.map(p => f1(p[0]) + ',' + f1(p[1] - S * P.ribDepth)).join(' ')}" fill="none" stroke="#5F5E5A" stroke-width="1.4" stroke-dasharray="2 3"/>`);
+  o.push(T(xx(W / 2), yy(L.roofZ(W / 2) + P.ribDepth) - 6, `outside of the steel roof ${fmt(L.roofZ(W / 2) + P.ribDepth)} in up in the middle (ribs ${fmt(P.ribDepth)} deep)`, { size: 10.5, fill: '#5F5E5A', halo: false }));
   // finished ceiling
   if (L.lining > 0) o.push(`<polyline points="${arc.map(p => f1(p[0]) + ',' + f1(p[1] + S * L.lining)).join(' ')}" fill="none" stroke="#8A6B4D" stroke-width="1.6" stroke-dasharray="6 3"/>`);
   o.push(T(xx(W / 2), yy(L.roofZ(W / 2) - L.lining) + 24, `roof ribs ${fmt(zw)} at the wall, ${fmt(L.roofZ(W / 2))} in the middle`, { size: 11, fill: '#5A3A00' })); if (L.lining > 0) o.push(T(xx(W / 2), yy(L.roofZ(W / 2) - L.lining) + 38, `finished ceiling ${fmt(zw - L.lining)} at the wall, ${fmt(L.roofZ(W / 2) - L.lining)} in the middle`, { size: 11, fill: '#5A3A00' }));
@@ -767,7 +771,7 @@ function drawCross(L, V) {
   o.push(bx(W - P.cabD, W, 0, P.counterH, { fill: COL.C, fo: .12, stroke: COL.C, sw: 1.5, rx: 3 })); o.push(T(xx(W - P.cabD / 2), yy(P.counterH / 2), 'counter and cabinet', { size: 11, fill: COL.C }));
   o.push(bx(W - 2 - 19, W - 2, 8.25, 56.25, { fill: '#0A6A8A', fo: .14, stroke: '#0A6A8A', sw: 1.4, dash: '5 3' })); o.push(T(xx(W - 11.5), yy(40), 'fridge', { size: 11, fill: '#0A6A8A' }));
   o.push(bx(W - 12, W, 59, 69, { fill: COL.G, fo: .2, stroke: COL.G, sw: 1.4, rx: 2 })); o.push(T(xx(W - 6), yy(64.5), 'micro', { size: 10, fill: COL.G }));
-  o.push(T(xx(0) + 6, yy(P.roofMidH + 4), 'driver side wall', { anchor: 'start', size: 11, fill: '#5F5E5A', halo: false })); o.push(T(xx(W) - 6, yy(P.roofMidH + 4), 'passenger side wall', { anchor: 'end', size: 11, fill: '#5F5E5A', halo: false }));
+  o.push(T(xx(0) + 6, yy(P.roofMidH + P.ribDepth + 5), 'driver side wall', { anchor: 'start', size: 11, fill: '#5F5E5A', halo: false })); o.push(T(xx(W) - 6, yy(P.roofMidH + P.ribDepth + 5), 'passenger side wall', { anchor: 'end', size: 11, fill: '#5F5E5A', halo: false }));
   o.push(Ln(xx(0), yy(0), xx(W), yy(0), { stroke: '#5F5E5A', sw: 2 }));
   o.push(T(20, FL + 58, 'Things at different places along the van are drawn together (the fridge and the counter are side by side along the wall, not on top of each other).', { anchor: 'start', size: 10.5, fill: '#5F5E5A', halo: false }));
   return { w: xx(W) + 260, h: FL + 72, body: o.join('') };
@@ -1153,6 +1157,7 @@ function computeChecks(L, V) {
   {
     const fW = P.roofWallH - L.lining, fM = L.roofZ(P.vanW / 2) - L.lining, sag = L.roofSag;
     push(L.ceilF > fW + .01 ? 'warn' : 'ok', `Roof: the ribs are ${fmt(P.roofWallH)} in up at the wall and ${fmt(P.roofMidH)} in in the middle, so the roof rises ${fmt(sag)} in across ${fmt(L.roofW)} in (an arc of about ${L.roofR > 1e8 ? 'infinite' : fmt(L.roofR)} in radius). ${L.lining > 0 ? `With the ${fmt(L.lining)} in covering the finished ceiling is ${fmt(fW)} in at the wall and ${fmt(fM)} in in the middle. ` : ''}${L.ceilF > fW + .01 ? `The wall cabinets and the closet are cut for a flat ${fmt(L.ceilF)} in ceiling, ${fmt(L.ceilF - fW)} in above the finished ceiling at the wall, so they are too tall by that much there (or the covering is thinner at the wall). ` : ''}The ceiling is drawn flat at ${fmt(P.ceil)} in in the side views; the cross-section shows the arc. 1/4 in plywood bends across this arc easily (the slats run along the van, so each one stays at one height).`);
+    push('ok', `Roof stack at the openings: the ribs hang ${fmt(P.ribDepth)} in below the steel, so the outside of the roof is ${fmt(P.roofWallH + P.ribDepth)} in up at the wall and ${fmt(P.roofMidH + P.ribDepth)} in in the middle; from the outside of the steel to the finished ceiling is the ${fmt(P.ribDepth)} in rib depth${L.lining > 0 ? ` plus the ${fmt(L.lining)} in covering` : ''} = ${fmt(P.ribDepth + L.lining)} in, plus the steel skin itself (a few hundredths of an inch). That is the thickness the fan and the air conditioner mounting kits clamp across and have to be framed for; compare it with each manual's range (not found yet).`);
     const under = (c, nm) => { const h = c.u / 2, dz = Math.abs(L.roofZ(c.y + h) - L.roofZ(c.y - h)); return `${nm} (${fmt(c.y)} across): the roof tilts about ${L.roofTilt(c.y).toFixed(1)} degrees there and drops ${fmt(dz)} in across its ${fmt(c.u)} in base`; };
     const worst = Math.max(Math.abs(L.roofZ(L.fan.y + L.fan.u / 2) - L.roofZ(L.fan.y - L.fan.u / 2)), Math.abs(L.roofZ(L.ac.y + L.ac.u / 2) - L.roofZ(L.ac.y - L.ac.u / 2)));
     push(worst > 2 ? 'warn' : 'ok', `Units on the curved roof: ${under(L.ac, 'air conditioner')}; ${under(L.fan, 'fan')}. A flat base on a tilted roof needs a curb or a shaped gasket to sit level and seal; check the manuals for the most curve each allows.`);

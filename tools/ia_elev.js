@@ -345,7 +345,7 @@ function drawPass(L, V) {
 
 /* ================= cross-section from the rear doors: both walls leaning in toward the flat roof ================= */
 function drawCross(L, V) {
-  const P = L.P, S = 7, X0 = 260, zMax = Math.max(P.roofMidH + 6, 86), FL = 60 + S * zMax, W = P.vanW, o = [];
+  const P = L.P, S = 7, X0 = 260, zMax = Math.max(P.roofMidH + P.ribDepth + 6, 88), FL = 60 + S * zMax, W = P.vanW, o = [];
   const xx = y => X0 + S * y, yy = z => FL - S * z, bx = (y0, y1, z0, z1, q) => R(xx(y0), yy(z1), S * (y1 - y0), S * (z1 - z0), q);
   const lean = z => L.leanAt(z), s0 = Math.min(Math.max(L.leanStart, 0), P.ceil), lc = lean(P.ceil);
   o.push(T(20, 22, 'Cross-section seen from the rear doors: driver side wall on the left, passenger side on the right.', { anchor: 'start', size: 14, fill: '#5F5E5A', halo: false }));
@@ -357,6 +357,9 @@ function drawCross(L, V) {
   const zw = P.roofWallH, lw = lean(zw), arc = []; for (let i = 0; i <= 40; i++) { const y = lw + (W - 2 * lw) * i / 40; arc.push([xx(y), yy(L.roofZ(y))]); }
   o.push(Poly([[xx(0), yy(0)], [xx(0), yy(Math.min(s0, zw))], [xx(lw), yy(zw)], ...arc, [xx(W - lw), yy(zw)], [xx(W), yy(Math.min(s0, zw))], [xx(W), yy(0)]], { fill: '#F1EFE8', fo: .7, stroke: '#2C2C2A', sw: 2.4 }));
   if (lw > 0) { o.push(Poly([[xx(0), yy(s0)], [xx(0), yy(zw)], [xx(lw), yy(zw)]], { fill: 'url(#hatch)', fo: .5, stroke: '#A32D2D', sw: 1, dash: '4 3' })); o.push(Poly([[xx(W), yy(s0)], [xx(W), yy(zw)], [xx(W - lw), yy(zw)]], { fill: 'url(#hatch)', fo: .5, stroke: '#A32D2D', sw: 1, dash: '4 3' })); }
+  // outside of the steel roof: the ribs hang ribDepth below it, so it is that much above the rib height
+  o.push(`<polyline points="${arc.map(p => f1(p[0]) + ',' + f1(p[1] - S * P.ribDepth)).join(' ')}" fill="none" stroke="#5F5E5A" stroke-width="1.4" stroke-dasharray="2 3"/>`);
+  o.push(T(xx(W / 2), yy(L.roofZ(W / 2) + P.ribDepth) - 6, `outside of the steel roof ${fmt(L.roofZ(W / 2) + P.ribDepth)} in up in the middle (ribs ${fmt(P.ribDepth)} deep)`, { size: 10.5, fill: '#5F5E5A', halo: false }));
   // finished ceiling
   if (L.lining > 0) o.push(`<polyline points="${arc.map(p => f1(p[0]) + ',' + f1(p[1] + S * L.lining)).join(' ')}" fill="none" stroke="#8A6B4D" stroke-width="1.6" stroke-dasharray="6 3"/>`);
   o.push(T(xx(W / 2), yy(L.roofZ(W / 2) - L.lining) + 24, `roof ribs ${fmt(zw)} at the wall, ${fmt(L.roofZ(W / 2))} in the middle`, { size: 11, fill: '#5A3A00' })); if (L.lining > 0) o.push(T(xx(W / 2), yy(L.roofZ(W / 2) - L.lining) + 38, `finished ceiling ${fmt(zw - L.lining)} at the wall, ${fmt(L.roofZ(W / 2) - L.lining)} in the middle`, { size: 11, fill: '#5A3A00' }));
@@ -370,7 +373,7 @@ function drawCross(L, V) {
   o.push(bx(W - P.cabD, W, 0, P.counterH, { fill: COL.C, fo: .12, stroke: COL.C, sw: 1.5, rx: 3 })); o.push(T(xx(W - P.cabD / 2), yy(P.counterH / 2), 'counter and cabinet', { size: 11, fill: COL.C }));
   o.push(bx(W - 2 - 19, W - 2, 8.25, 56.25, { fill: '#0A6A8A', fo: .14, stroke: '#0A6A8A', sw: 1.4, dash: '5 3' })); o.push(T(xx(W - 11.5), yy(40), 'fridge', { size: 11, fill: '#0A6A8A' }));
   o.push(bx(W - 12, W, 59, 69, { fill: COL.G, fo: .2, stroke: COL.G, sw: 1.4, rx: 2 })); o.push(T(xx(W - 6), yy(64.5), 'micro', { size: 10, fill: COL.G }));
-  o.push(T(xx(0) + 6, yy(P.roofMidH + 4), 'driver side wall', { anchor: 'start', size: 11, fill: '#5F5E5A', halo: false })); o.push(T(xx(W) - 6, yy(P.roofMidH + 4), 'passenger side wall', { anchor: 'end', size: 11, fill: '#5F5E5A', halo: false }));
+  o.push(T(xx(0) + 6, yy(P.roofMidH + P.ribDepth + 5), 'driver side wall', { anchor: 'start', size: 11, fill: '#5F5E5A', halo: false })); o.push(T(xx(W) - 6, yy(P.roofMidH + P.ribDepth + 5), 'passenger side wall', { anchor: 'end', size: 11, fill: '#5F5E5A', halo: false }));
   o.push(Ln(xx(0), yy(0), xx(W), yy(0), { stroke: '#5F5E5A', sw: 2 }));
   o.push(T(20, FL + 58, 'Things at different places along the van are drawn together (the fridge and the counter are side by side along the wall, not on top of each other).', { anchor: 'start', size: 10.5, fill: '#5F5E5A', halo: false }));
   return { w: xx(W) + 260, h: FL + 72, body: o.join('') };
