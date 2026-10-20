@@ -339,6 +339,9 @@ function drawPass(L, V) {
   o.push(R(Math.min(X(P.doorX), X(dx1)), Y(P.slideH), S * (dx1 - P.doorX), S * P.slideH, { stroke: '#BA7517', sw: 2, dash: '8 4' }));
   o.push(T(X((P.doorX + dx1) / 2), Y(52), `Sliding door opening (${fmt(P.doorX)} to ${fmt(dx1 + 0)})`, { size: 12, fill: '#854F0B' }));
   o.push(T(X(P.cab - 8), Y(13), `Entry, ${fmt(L.entry)} in clear`, { size: 11, fill: COL.G }));
+  // the cab passenger seat cushion level, in the strip past the cab wall
+  o.push(Ln(X(P.cab), Y(P.cabSeatH), X(P.cab + 7), Y(P.cabSeatH), { stroke: '#534AB7', sw: 3 }));
+  o.push(T(X(P.cab + 3.5), Y(P.cabSeatH) - 5, `cab seat ${fmt(P.cabSeatH)} up`, { size: 9, fill: '#534AB7' }));
   o.push(elevTail(E, L, 'inches from where you start measuring at the back'));
   return { w: E.W, h: E.H, body: o.join('') };
 }

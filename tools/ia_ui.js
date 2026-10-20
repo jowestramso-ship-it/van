@@ -110,7 +110,11 @@ function computeChecks(L, V) {
   const lclr = P.flapH - .75 - P.ledgeH;
   if (P.ledgeLen > L.flapLen + .01) push('warn', `The foot ledge (${fmt(P.ledgeLen)} long) is longer than the fold-out table (${fmt(L.flapLen)}).`);
   else if (P.ledgeH - .75 + P.ledgeLen > P.counterH - 1) push('warn', `Folded up, the foot ledge (${fmt(P.ledgeH - .75 + P.ledgeLen)} in up) is taller than the cabinet end (${fmt(P.counterH)}).`);
-  else push(lclr < 16 ? 'warn' : 'ok', `Foot ledge: ${fmt(P.ledgeLen)} x ${fmt(P.sinkD)} in, top at ${fmt(P.ledgeH)} in, ${fmt(lclr)} in under the table${lclr < 16 ? ' (tight for knees)' : ''}. It suits a seat cushion at about ${fmt(P.ledgeH + 18)} in. The cabinet base is full, so it folds up into the end panel.`);
+  else push(lclr < 16 ? 'warn' : 'ok', `Foot ledge: ${fmt(P.ledgeLen)} x ${fmt(P.sinkD)} in, top at ${fmt(P.ledgeH)} in, ${fmt(lclr)} in under the table${lclr < 16 ? ' (tight for knees)' : ''}. The cab passenger seat is ${fmt(P.cabSeatH)} in up (see the next line). The cabinet base is full, so it folds up into the end panel.`);
+  {
+    const gap = P.flapH - P.cabSeatH, below = P.cabSeatH - P.ledgeH;
+    push(gap < 9 ? 'warn' : gap > 13 ? 'warn' : 'ok', `Cab passenger seat: ${fmt(P.cabSeatH)} in up, so the fold-out table is ${fmt(gap)} in above the seat cushion (a dining table is usually about 11 to 12 in above its seat) and the foot ledge (${fmt(P.ledgeH)} in up) is ${fmt(below)} in below the seat. The seat has to swivel to face the table: check the swivel clearance against the cab wall at ${fmt(P.cab)} in and the table end (${fmt(L.flapLen)} in long, to ${fmt(L.sinkE + L.flapLen)} in).`);
+  }
   // tanks: the sink cabinet is open to the area beside it, so the fresh tank runs out of it; the hot tank is on a shelf over the wheel well with clear space each side
   {
     const wellEnd = 76, gapL = L.hotX[0] - wellEnd, gapR = L.tankX[0] - L.hotX[1], hotTop = P.hotShelf + P.hotH, gal = (L.tankLen * P.tankD * P.tankH / 231).toFixed(1);
