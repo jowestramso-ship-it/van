@@ -27,7 +27,7 @@ function obstacles(L, V) {
   Q.push({ x0: L.sinkS, x1: L.sinkE, d: P.sinkD, n: 'the sink counter' });
   const fo = V.flap || 0;
   if (fo > .02) Q.push({ x0: L.sinkE, x1: L.sinkE + .75 + (L.flapLen - .75) * Math.sin(fo * Math.PI / 2), d: P.flapD, n: 'the fold-out table' });
-  if ((V.ledge || 0) > .02) Q.push({ x0: L.sinkE, x1: L.sinkE + P.ledgeLen * Math.sin((V.ledge || 0) * Math.PI / 2), d: P.sinkD, n: 'the foot ledge' });
+  if ((V.ledge || 0) > .02) Q.push({ x0: L.sinkE, x1: L.sinkE + L.ledgeTot * Math.sin((V.ledge || 0) * Math.PI / 2), d: P.sinkD, n: 'the foot ledge' });
   return { D, Q };
 }
 function depthAt(list, x) { let m = 0, n = ''; for (const o of list) if (x >= o.x0 && x <= o.x1 && o.d > m) { m = o.d; n = o.n; } return { m, n }; }
@@ -139,10 +139,10 @@ function drawPlan(L, V) {
     o.push(MV('flap,ledge', g, HITR(xx(L.sinkE), yp(P.flapD), S * Math.max(w, 6), S * P.flapD)));
   }
   {
-    const sl = V.ledge || 0, lw = P.ledgeLen * Math.sin(sl * Math.PI / 2);
+    const sl = V.ledge || 0, lw = L.ledgeTot * Math.sin(sl * Math.PI / 2);
     if (sl > .02) {
       o.push(ip(L.sinkE, L.sinkE + lw, 0, P.sinkD, '#5A3A00', '', null, { fo: .14, dash: '2 2' }));
-      if (sl > .8) o.push(T(xx(L.sinkE + P.ledgeLen / 2), yp(1.3), `foot ledge ${fmt(P.ledgeLen)} x ${fmt(P.sinkD)}`, { size: 8, fill: '#5A3A00' }));
+      if (sl > .8) o.push(T(xx(L.sinkE + P.ledgeOff + P.ledgeLen / 2), yp(1.3), `foot platform ${fmt(P.ledgeLen)} (starts ${fmt(P.ledgeOff)} from the end)`, { size: 8, fill: '#5A3A00' }));
     }
   }
   o.push(ip(L.fr[0], L.fr[1], 0, P.cabD, '#8A6B4D', '', null, { fo: .08, dash: '6 3' }));

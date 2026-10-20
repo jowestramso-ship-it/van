@@ -217,8 +217,9 @@ const PD = [
   { k: 'cabSeatW', g: 'Fold-out table and foot ledge', l: 'Cab passenger seat cushion: width', d: 20, s: .5, a: 10, b: 30 },
   { k: 'cabSeatD', g: 'Fold-out table and foot ledge', l: 'Cab passenger seat cushion: depth (front to back)', d: 19, s: .5, a: 10, b: 30 },
   { k: 'flapH', g: 'Fold-out table and foot ledge', l: 'Height', d: 29, s: .5, a: 20, b: 40 },
-  { k: 'ledgeLen', g: 'Fold-out table and foot ledge', l: 'Foot ledge length', d: 10, s: .5, a: 4, b: 20 },
-  { k: 'ledgeH', g: 'Fold-out table and foot ledge', l: 'Foot ledge top, up from floor', d: 8, s: .5, a: 3, b: 20 },
+  { k: 'ledgeOff', g: 'Fold-out table and foot ledge', l: 'Foot ledge: distance from the cabinet end to where the foot platform starts (the plate is hinged on the end)', d: 13, s: .5, a: 0, b: 25 },
+  { k: 'ledgeLen', g: 'Fold-out table and foot ledge', l: 'Foot ledge: length of the foot platform', d: 10, s: .5, a: 4, b: 20 },
+  { k: 'ledgeH', g: 'Fold-out table and foot ledge', l: 'Foot ledge top, up from floor', d: 8.5, s: .5, a: 3, b: 20 },
   { k: 'tankAuto', g: 'Water tanks', l: 'Fresh water tank fills the floor space to the sink end', d: false, t: 'c', f: 'tankLen' },
   { k: 'tankLen', g: 'Water tanks', l: 'Fresh water tank length', d: 25, s: .5, a: 10, b: 70 },
   { k: 'tankD', g: 'Water tanks', l: 'Fresh water tank depth (out from the wall)', d: 9, s: .5, a: 4, b: 20 },
@@ -363,6 +364,7 @@ function layout(P0) {
   }
   L.ribs = String(P.ribList || '').split(/[\s,;]+/).map(parseFloat).filter(v => isFinite(v) && v >= 0 && v <= P.ceilLen + 20).sort((a, b) => a - b);
   L.ribBands = L.ribs.map(r => P.ribRef === 'center' ? [r - P.ribW / 2, r + P.ribW / 2] : P.ribRef === 'front' ? [r - P.ribW, r] : [r, r + P.ribW]);
+  L.ledgeTot = P.ledgeOff + P.ledgeLen;
   L.lining = P.liningOn ? P.plyT + P.slatT : 0;
   L.ceilF = P.ceil - L.lining;
   L.slatLen = P.slatAuto ? P.ceilLen : P.slatLen;
@@ -716,7 +718,7 @@ function drawPass(L, V) {
   o.push(T(X(sinkS + 10), Y(ch - 4), `sink plumbing, ${fmt(sinkE - sinkS - 8)} in from the cab-side edge`, { size: 9.5, fill: COL.BL }));
   // foot ledge on the cabinet end: hinged on its bottom edge, folds up into a recess in the end panel
   {
-    const s = V.ledge || 0, phi = Math.PI / 2 * (1 - s), th = .75, Lg = P.ledgeLen, lz = P.ledgeH;
+    const s = V.ledge || 0, phi = Math.PI / 2 * (1 - s), th = .75, Lg = L.ledgeTot, lz = P.ledgeH;
     const d = [Math.cos(phi), Math.sin(phi)], n = [-Math.sin(phi), Math.cos(phi)];
     const p0 = [sinkE, lz - th], p1 = [p0[0] + Lg * d[0], p0[1] + Lg * d[1]];
     const q0 = [p0[0] + th * n[0], p0[1] + th * n[1]], q1 = [p1[0] + th * n[0], p1[1] + th * n[1]];
@@ -881,7 +883,7 @@ function obstacles(L, V) {
   Q.push({ x0: L.sinkS, x1: L.sinkE, d: P.sinkD, n: 'the sink counter' });
   const fo = V.flap || 0;
   if (fo > .02) Q.push({ x0: L.sinkE, x1: L.sinkE + .75 + (L.flapLen - .75) * Math.sin(fo * Math.PI / 2), d: P.flapD, n: 'the fold-out table' });
-  if ((V.ledge || 0) > .02) Q.push({ x0: L.sinkE, x1: L.sinkE + P.ledgeLen * Math.sin((V.ledge || 0) * Math.PI / 2), d: P.sinkD, n: 'the foot ledge' });
+  if ((V.ledge || 0) > .02) Q.push({ x0: L.sinkE, x1: L.sinkE + L.ledgeTot * Math.sin((V.ledge || 0) * Math.PI / 2), d: P.sinkD, n: 'the foot ledge' });
   return { D, Q };
 }
 function depthAt(list, x) { let m = 0, n = ''; for (const o of list) if (x >= o.x0 && x <= o.x1 && o.d > m) { m = o.d; n = o.n; } return { m, n }; }
@@ -993,10 +995,10 @@ function drawPlan(L, V) {
     o.push(MV('flap,ledge', g, HITR(xx(L.sinkE), yp(P.flapD), S * Math.max(w, 6), S * P.flapD)));
   }
   {
-    const sl = V.ledge || 0, lw = P.ledgeLen * Math.sin(sl * Math.PI / 2);
+    const sl = V.ledge || 0, lw = L.ledgeTot * Math.sin(sl * Math.PI / 2);
     if (sl > .02) {
       o.push(ip(L.sinkE, L.sinkE + lw, 0, P.sinkD, '#5A3A00', '', null, { fo: .14, dash: '2 2' }));
-      if (sl > .8) o.push(T(xx(L.sinkE + P.ledgeLen / 2), yp(1.3), `foot ledge ${fmt(P.ledgeLen)} x ${fmt(P.sinkD)}`, { size: 8, fill: '#5A3A00' }));
+      if (sl > .8) o.push(T(xx(L.sinkE + P.ledgeOff + P.ledgeLen / 2), yp(1.3), `foot platform ${fmt(P.ledgeLen)} (starts ${fmt(P.ledgeOff)} from the end)`, { size: 8, fill: '#5A3A00' }));
     }
   }
   o.push(ip(L.fr[0], L.fr[1], 0, P.cabD, '#8A6B4D', '', null, { fo: .08, dash: '6 3' }));
@@ -1248,9 +1250,10 @@ function computeChecks(L, V) {
   if (rF.dm > 0 && rF.qm > 0 && rF.v < 14) push(rF.v < 8 ? 'bad' : 'warn', `With the fold-out table open only ${fmt(rF.v)} in is left between it and the ${rF.dn}.`);
   // foot ledge
   const lclr = P.flapH - .75 - P.ledgeH;
-  if (P.ledgeLen > L.flapLen + .01) push('warn', `The foot ledge (${fmt(P.ledgeLen)} long) is longer than the fold-out table (${fmt(L.flapLen)}).`);
-  else if (P.ledgeH - .75 + P.ledgeLen > P.counterH - 1) push('warn', `Folded up, the foot ledge (${fmt(P.ledgeH - .75 + P.ledgeLen)} in up) is taller than the cabinet end (${fmt(P.counterH)}).`);
-  else push(lclr < 16 ? 'warn' : 'ok', `Foot ledge: ${fmt(P.ledgeLen)} x ${fmt(P.sinkD)} in, top at ${fmt(P.ledgeH)} in, ${fmt(lclr)} in under the table${lclr < 16 ? ' (tight for knees)' : ''}. The cab passenger seat is ${fmt(P.cabSeatH)} in up (see the next line). The cabinet base is full, so it folds up into the end panel.`);
+  if (P.ledgeH - .75 + L.ledgeTot > P.flapH + .01 && P.ledgeH - .75 + L.ledgeTot <= P.counterH - 1) push('warn', `Folded up, the ${fmt(L.ledgeTot)} in foot ledge reaches ${fmt(P.ledgeH - .75 + L.ledgeTot)} in up, ${fmt(P.ledgeH - .75 + L.ledgeTot - P.flapH)} in above the fold-out table's hinge (${fmt(P.flapH)} in), so that much of it shows above the folded-down table; shorten the ledge, set the foot platform nearer, or lower the ledge.`);
+  if (L.ledgeTot > L.flapLen + .01) push('warn', `The foot ledge (${fmt(L.ledgeTot)} long) is longer than the fold-out table (${fmt(L.flapLen)}).`);
+  else if (P.ledgeH - .75 + L.ledgeTot > P.counterH - 1) push('warn', `Folded up, the foot ledge (${fmt(P.ledgeH - .75 + L.ledgeTot)} in up) is taller than the cabinet end (${fmt(P.counterH)}).`);
+  else push(lclr < 16 ? 'warn' : 'ok', `Foot ledge: a ${fmt(L.ledgeTot)} x ${fmt(P.sinkD)} in plate hinged on the cabinet end, with the ${fmt(P.ledgeLen)} in foot platform starting ${fmt(P.ledgeOff)} in from the end (${fmt(L.sinkE + P.ledgeOff)} to ${fmt(L.sinkE + L.ledgeTot)} in from the back). Its top is ${fmt(P.ledgeH)} in up (${fmt(P.ledgeH + 1)} in at the 1 in lip on the outer edge) and ${fmt(lclr)} in under the table${lclr < 16 ? ' (tight for knees)' : ''}; folded up it stands ${fmt(L.ledgeTot)} in tall in the end panel recess. The cab passenger seat is ${fmt(P.cabSeatH)} in up (see the next line). The cabinet base is full, so it folds up into the end panel.`);
   {
     const gap = P.flapH - P.cabSeatH, below = P.cabSeatH - P.ledgeH, swR = Math.hypot(P.cabSeatW / 2, P.cabSeatD / 2), swIn = swR - (P.cabSeatD / 2 - P.cabSeatOut), swFwd = swR - (P.cabSeatD / 2 + P.cabSeatFwd);
     push(gap < 9 || gap > 13 || P.cab - P.cabSeatOut - L.sinkE - L.flapLen < .5 ? 'warn' : 'ok', `Cab passenger seat: ${fmt(P.cabSeatH)} in up, so the fold-out table is ${fmt(gap)} in above the seat cushion (a dining table is usually about 11 to 12 in above its seat) and the foot ledge (${fmt(P.ledgeH)} in up) is ${fmt(below)} in below the seat. The seat sticks out ${fmt(P.cabSeatOut)} in past the cab wall, so at seat height the living area ends at ${fmt(P.cab - P.cabSeatOut)} in: the open table (to ${fmt(L.sinkE + L.flapLen)} in) leaves ${fmt(P.cab - P.cabSeatOut - L.sinkE - L.flapLen)} in to the seat and the entry is ${fmt(P.cab - P.cabSeatOut - L.sinkE)} in clear there. The seat back does not stick out; the seat is on a swivel. Swivel: the ${fmt(P.cabSeatW)} x ${fmt(P.cabSeatD)} in cushion turns about its pivot (at the middle of the cushion), so its corners sweep a circle ${fmt(swR)} in in radius; in the rearmost position they reach ${fmt(Math.max(0, swIn))} in past the cab wall into the living area (to ${fmt(P.cab - Math.max(0, swIn))} in) as it turns. At 17 in up the cushion passes under the table (${fmt(P.flapH - .75)} in up underneath) and over the foot ledge (${fmt(P.ledgeH + 1)} in up with its lip), so the turn is clear of both. Turned in its rearmost position the corners reach into the entry, leaving ${fmt(P.cab - Math.max(0, swIn) - L.sinkE)} in to the sink cabinet end. Pulled all the way forward (the cushion rear edge ${fmt(P.cabSeatFwd)} in in front of the cab wall) the corners reach ${fmt(Math.abs(swFwd))} in ${swFwd > 0 ? 'past the cab wall into the living area' : 'short of the cab wall, so the turn does not enter the living area at all'}: slide the seat forward before turning it.`);

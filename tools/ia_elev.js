@@ -297,7 +297,7 @@ function drawPass(L, V) {
   o.push(T(X(sinkS + 10), Y(ch - 4), `sink plumbing, ${fmt(sinkE - sinkS - 8)} in from the cab-side edge`, { size: 9.5, fill: COL.BL }));
   // foot ledge on the cabinet end: hinged on its bottom edge, folds up into a recess in the end panel
   {
-    const s = V.ledge || 0, phi = Math.PI / 2 * (1 - s), th = .75, Lg = P.ledgeLen, lz = P.ledgeH;
+    const s = V.ledge || 0, phi = Math.PI / 2 * (1 - s), th = .75, Lg = L.ledgeTot, lz = P.ledgeH;
     const d = [Math.cos(phi), Math.sin(phi)], n = [-Math.sin(phi), Math.cos(phi)];
     const p0 = [sinkE, lz - th], p1 = [p0[0] + Lg * d[0], p0[1] + Lg * d[1]];
     const q0 = [p0[0] + th * n[0], p0[1] + th * n[1]], q1 = [p1[0] + th * n[0], p1[1] + th * n[1]];

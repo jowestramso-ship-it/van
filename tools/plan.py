@@ -58,7 +58,7 @@ a(f'<text class="th" x="{xx(47)}" y="{yy(50.5)}" text-anchor="middle" style="fon
 item(103,123,52.25,68,C,'Sink','20 x 15 3/4 counter',0.12,'',10)
 item(123,152,53,68,'#8A5A00','Fold-out table','29 x 15, 29 up (open)',0.2,'stroke-dasharray="5 3"',10)
 item(123,133,52.25,68,'#5A3A00','',None,0.12,'stroke-dasharray="2 2"')
-a(f'<text class="ts" x="{xx(128)}" y="{yy(66.7)}" text-anchor="middle" style="font-size:8px;fill:#5A3A00;paint-order:stroke;stroke:#fff;stroke-width:2.5px">foot ledge 10 x 15</text>')
+a(f'<text class="ts" x="{xx(128)}" y="{yy(66.7)}" text-anchor="middle" style="font-size:8px;fill:#5A3A00;paint-order:stroke;stroke:#fff;stroke-width:2.5px">foot ledge 23 x 15</text>')
 item(36,58,47,68,'#8A6B4D','',None,0.08,'stroke-dasharray="6 3"')
 item(37.75,56.25,56,68,G,'',None,0.2,'stroke-dasharray="4 3"')
 a(f'<text class="th" x="{xx(47)}" y="{yy(62.5)}" text-anchor="middle" style="font-size:9px;fill:{G};paint-order:stroke;stroke:#fff;stroke-width:3px">Microwave 18.5 x 12</text>')
@@ -143,7 +143,7 @@ rows=[('Driver','Bed / couch','0 to 74','74 x 26 (couch), 74 x 46 opened','deck 
 ('Passenger','Wheel well','42 to 76','34 x 7','7.5 tall','same as the driver side (flat top 15.5 long)'),
 ('Passenger','Sliding door','104 to 155','51 opening, 59 panel','up to 58','only the rear edge is measured'),
 ('Passenger','Fold-out table','123 to 152','29 long x 15 deep (3/4 thick)','29 up (hinged on the sink cabinet end, folds down against it)','reaches the passenger seat when it is turned to face the back; carried by a folding brace (a diagonal arm hinged on the cabinet end, 13 in below the board, locking 15 3/4 in out), not a floor leg, because the knees and shins of the rotated seat are at the free end; closes off the entry while open; length may need to be shorter, it should stop in front of the belly'),
-('Passenger','Foot ledge','123 to 133','10 long x 15 3/4 wide (3/4 thick, 1 in lip)','top at 8 up (about the seat cushion height minus 18)','hinged on the cabinet end under the table, folds up into a 3/4 in recess in the end panel behind the folded table; small folding brace; the base of the sink cabinet is full (fresh water tank), so it cannot slide out of the base'),
+('Passenger','Foot ledge','123 to 146 (the foot platform is 136 to 146)','23 long x 15 3/4 wide (3/4 thick, 1 in lip); the foot platform is the outer 10 in, starting 13 in from the cabinet end','top at 8 1/2 up (9 1/2 at the lip), 8 1/2 in below the 17 in cab seat cushion','hinged on the cabinet end under the table, folds up into a 3/4 in recess in the end panel behind the folded table; small folding brace; the base of the sink cabinet is full (fresh water tank), so it cannot slide out of the base'),
 ('Passenger','Entry','123 to 154','31 clear (about 30 with the table folded down)','','behind the passenger seat; closed off while the table is open'),
 ('Under the van','Grey water tank','not set','30 x 17 x 8 space (was 24 x 17 x 8)','','shower and sink (grey water only); both drains run down through the floor; no off-the-shelf tank found that fits; size to be chosen; toilet waste (black water) is not covered'),
 ('Aisles','Bed to counter','','21 across (couch, 26 deep), 22 with the bed opened to 46 in','',''),

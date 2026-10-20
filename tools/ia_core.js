@@ -54,8 +54,9 @@ const PD = [
   { k: 'cabSeatW', g: 'Fold-out table and foot ledge', l: 'Cab passenger seat cushion: width', d: 20, s: .5, a: 10, b: 30 },
   { k: 'cabSeatD', g: 'Fold-out table and foot ledge', l: 'Cab passenger seat cushion: depth (front to back)', d: 19, s: .5, a: 10, b: 30 },
   { k: 'flapH', g: 'Fold-out table and foot ledge', l: 'Height', d: 29, s: .5, a: 20, b: 40 },
-  { k: 'ledgeLen', g: 'Fold-out table and foot ledge', l: 'Foot ledge length', d: 10, s: .5, a: 4, b: 20 },
-  { k: 'ledgeH', g: 'Fold-out table and foot ledge', l: 'Foot ledge top, up from floor', d: 8, s: .5, a: 3, b: 20 },
+  { k: 'ledgeOff', g: 'Fold-out table and foot ledge', l: 'Foot ledge: distance from the cabinet end to where the foot platform starts (the plate is hinged on the end)', d: 13, s: .5, a: 0, b: 25 },
+  { k: 'ledgeLen', g: 'Fold-out table and foot ledge', l: 'Foot ledge: length of the foot platform', d: 10, s: .5, a: 4, b: 20 },
+  { k: 'ledgeH', g: 'Fold-out table and foot ledge', l: 'Foot ledge top, up from floor', d: 8.5, s: .5, a: 3, b: 20 },
   { k: 'tankAuto', g: 'Water tanks', l: 'Fresh water tank fills the floor space to the sink end', d: false, t: 'c', f: 'tankLen' },
   { k: 'tankLen', g: 'Water tanks', l: 'Fresh water tank length', d: 25, s: .5, a: 10, b: 70 },
   { k: 'tankD', g: 'Water tanks', l: 'Fresh water tank depth (out from the wall)', d: 9, s: .5, a: 4, b: 20 },
@@ -200,6 +201,7 @@ function layout(P0) {
   }
   L.ribs = String(P.ribList || '').split(/[\s,;]+/).map(parseFloat).filter(v => isFinite(v) && v >= 0 && v <= P.ceilLen + 20).sort((a, b) => a - b);
   L.ribBands = L.ribs.map(r => P.ribRef === 'center' ? [r - P.ribW / 2, r + P.ribW / 2] : P.ribRef === 'front' ? [r - P.ribW, r] : [r, r + P.ribW]);
+  L.ledgeTot = P.ledgeOff + P.ledgeLen;
   L.lining = P.liningOn ? P.plyT + P.slatT : 0;
   L.ceilF = P.ceil - L.lining;
   L.slatLen = P.slatAuto ? P.ceilLen : P.slatLen;
