@@ -211,6 +211,12 @@ const PD = [
   { k: 'hotW', g: 'Water tanks', l: 'Hot water tank length along the wall', d: 14, s: .5, a: 6, b: 18 },
   { k: 'hotD', g: 'Water tanks', l: 'Hot water tank depth (out from the wall)', d: 15, s: .5, a: 6, b: 20 },
   { k: 'hotH', g: 'Water tanks', l: 'Hot water tank height', d: 15, s: .5, a: 8, b: 34 },
+  { k: 'wallOn', g: 'Walls', l: 'Cover the walls (birch plywood on the furring)', d: true, t: 'c' },
+  { k: 'wallT', g: 'Walls', l: 'Covering thickness', d: .125, s: .125, a: .125, b: .75 },
+  { k: 'wallDens', g: 'Walls', l: 'Wood density (lb per cu ft; birch about 41, cedar about 23)', d: 41, s: 1, a: 15, b: 60 },
+  { k: 'sheetW', g: 'Walls', l: 'Sheet width (runs floor to ceiling)', d: 48, s: 1, a: 12, b: 60 },
+  { k: 'sheetH', g: 'Walls', l: 'Sheet height', d: 96, s: 1, a: 24, b: 120 },
+  { k: 'wallSpan', g: 'Walls', l: 'Most the covering may span between furring strips', d: 16, s: 1, a: 6, b: 32 },
   { k: 'liningOn', g: 'Ceiling', l: 'Cover the ceiling (plywood, then slats)', d: true, t: 'c' },
   { k: 'ceilLen', g: 'Ceiling', l: 'Ceiling length being covered (rear doors to cab wall)', d: 160, s: 1, a: 40, b: 220 },
   { k: 'ceilW', g: 'Ceiling', l: 'Ceiling width being covered (measure the flat part; the roof curves in)', d: 68, s: 1, a: 20, b: 90 },
@@ -385,6 +391,19 @@ function elevFrame(E, L, title) {
   }
   return o.join('');
 }
+// wall covering: the sheet joints (sheets run floor to ceiling from the rear edge, 6 in behind the 0 mark), left out where the sliding door opening is
+const FURR = [3, 12, 21.5, 30.25, 43.5, 57.25, 66, 76.75];
+function wallSeams(E, L, pass) {
+  const P = L.P, { xx, yy } = E, o = [];
+  if (!P.wallOn) return '';
+  let first = true;
+  for (let x = -6 + P.sheetW; x < P.cab; x += P.sheetW) {
+    const inDoor = pass && x > P.doorX && x < P.doorX + 51, z0 = inDoor ? 58 : 0;
+    o.push(Ln(xx(x), yy(z0), xx(x), yy(L.ceilF), { stroke: '#8A6B4D', so: .7, sw: 1, dash: '2 3' }));
+    if (first) { o.push(T(xx(x) + (E.flip ? -3 : 3), yy(L.ceilF) + 11, 'sheet joint', { anchor: E.flip ? 'end' : 'start', size: 8, fill: '#8A6B4D', halo: false })); first = false; }
+  }
+  return o.join('');
+}
 function elevTail(E, L, xlabel) {
   const P = L.P, { S, FL, xs, xx, yy, box } = E, o = [];
   o.push(box(P.cab, P.cab + 4, 0, P.ceil, { fill: 'url(#hatch)', fo: .4 }));
@@ -404,6 +423,7 @@ function drawDriver(L, V) {
   const P = L.P, E = mkElev(false, L), { S, FL, xx, yy, box } = E, o = [];
   const X = x => xx(x), Y = z => yy(z);
   o.push(elevFrame(E, L, 'Driver side wall seen from the aisle: rear on the left, cab on the right. Click a door to open it.'));
+  o.push(wallSeams(E, L, false));
   // wheel well
   const WW = [[42, 0], [76, 0], [76, 2], [66.75, 7.5], [51.25, 7.5], [42, 2]];
   o.push(Poly(WW.map(p => [X(p[0]), Y(p[1])]), { fill: '#E24B4A', fo: .35, stroke: '#A32D2D', sw: 1.6, dash: '5 3', join: 'round' }));
@@ -516,6 +536,7 @@ function drawPass(L, V) {
   const X = x => xx(x), Y = z => yy(z);
   const ch = P.counterH, cabS = L.cabS, angS = L.angS, sinkS = L.sinkS, sinkE = L.sinkE;
   o.push(elevFrame(E, L, 'Passenger side wall seen from inside the van: cab on the left, rear on the right. Click the fold-out table, the fridge or the shower pan.'));
+  o.push(wallSeams(E, L, true));
   // wheel well (same as the driver side)
   const WW = [[42, 0], [76, 0], [76, 2], [66.75, 7.5], [51.25, 7.5], [42, 2]];
   o.push(Poly(WW.map(p => [X(p[0]), Y(p[1])]), { fill: '#D8B79A', fo: .8, stroke: '#8A6B4D', sw: 1.2 }));
@@ -997,6 +1018,14 @@ function computeChecks(L, V) {
   const LEG = P.platform - .75 - .375 - .25, slotEnd = P.legIn + LEG + .25;
   push('ok', `Bed: a ${fmt(P.bedBack)} x ${fmt(P.bedLen)} in leaf of 3/4 in plywood on a hinge along the front edge of the deck, flipped out level with the deck (${fmt(P.platform - .75)} in) on 4 legs ${fmt(LEG)} in long, about ${fmt((P.bedLen - 3.25) / 3)} in apart, that lie in slots in the leaf (no rails) and land ${fmt(P.bedD + P.bedBack - P.legIn)} in out from the wall (${fmt(P.legIn)} in in from its free edge), with the back cushion on it (${fmt(P.bedD)} + ${fmt(P.bedBack)} = ${fmt(P.bedD + P.bedBack)} in wide). The seat is ${fmt(P.platform + P.mattress)} in by day and ${fmt(P.bedD - P.mattress)} in deep, and the bed ${fmt(P.platform - .75 + P.mattress)} in at night. The seat cushion comes off to flip it. Put the legs down before anyone sits on the free edge: with the legs up it levers on the hinge screws.`);
   if (slotEnd > P.bedBack - 1.5) push('warn', `The leg slots (${fmt(slotEnd)} in from the free edge) reach to within ${fmt(Math.max(0, P.bedBack - slotEnd))} in of the hinge; the leaf needs to be at least ${fmt(slotEnd + 1.5)} in wide, or the legs set in less.`);
+  // wall covering: plywood sheets standing floor to ceiling on the furring strips, both side walls
+  if (P.wallOn) {
+    const len = P.cab + 6, h = L.ceilF, door = P.doorX + 51 > len ? 0 : 51 * 58, area = (2 * len * h - door) / 144, wt = area * P.wallT / 12 * P.wallDens;
+    const tall = P.sheetH >= h, sheetsD = Math.ceil(len / P.sheetW), sheetsP = Math.ceil((P.doorX + 6) / P.sheetW), sheets = sheetsD + sheetsP;
+    const gaps = FURR.slice(1).map((z, i) => z - FURR[i]), maxGap = Math.max(...gaps);
+    push(tall ? 'ok' : 'warn', `Wall covering: ${fmt(P.wallT)} in plywood on both side walls (${area.toFixed(0)} sq ft after the sliding door opening) takes about ${sheets} sheets of ${fmt(P.sheetW)} x ${fmt(P.sheetH)} in standing floor to ceiling (${sheetsD} on the driver side, ${sheetsP} on the passenger side; the pieces over the door and past it come out of the offcuts)${tall ? '' : `; the sheets are shorter than the ${fmt(h)} in wall, so there would be a horizontal joint`}. It weighs about ${Math.round(wt)} lb (more with adhesive and screws).`);
+    push(maxGap <= P.wallSpan ? 'ok' : 'warn', `The furring strips are at most ${fmt(maxGap)} in apart (3, 12, 21 1/2, 30 1/4, 43 1/2, 57 1/4, 66, 76 3/4 in up), ${maxGap <= P.wallSpan ? 'within' : 'more than'} the ${fmt(P.wallSpan)} in the covering may span. Glue to every strip and put a screw with a finish washer (so the head does not pull through) about every 8 in along the strips, near the edges first; leave 1/16 in between sheets. The widths in this plan are not reduced for the covering (${fmt(P.wallT)} in on each side).`);
+  }
   // ceiling covering
   if (P.liningOn) {
     const area = P.ceilLen * P.ceilW, n = L.nSlats, out = L.slatOut.size, nEff = n - out, used = n * P.slatW + Math.max(0, n - 1) * P.slatGap, margin = (P.ceilW - used) / 2;

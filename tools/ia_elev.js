@@ -25,6 +25,19 @@ function elevFrame(E, L, title) {
   }
   return o.join('');
 }
+// wall covering: the sheet joints (sheets run floor to ceiling from the rear edge, 6 in behind the 0 mark), left out where the sliding door opening is
+const FURR = [3, 12, 21.5, 30.25, 43.5, 57.25, 66, 76.75];
+function wallSeams(E, L, pass) {
+  const P = L.P, { xx, yy } = E, o = [];
+  if (!P.wallOn) return '';
+  let first = true;
+  for (let x = -6 + P.sheetW; x < P.cab; x += P.sheetW) {
+    const inDoor = pass && x > P.doorX && x < P.doorX + 51, z0 = inDoor ? 58 : 0;
+    o.push(Ln(xx(x), yy(z0), xx(x), yy(L.ceilF), { stroke: '#8A6B4D', so: .7, sw: 1, dash: '2 3' }));
+    if (first) { o.push(T(xx(x) + (E.flip ? -3 : 3), yy(L.ceilF) + 11, 'sheet joint', { anchor: E.flip ? 'end' : 'start', size: 8, fill: '#8A6B4D', halo: false })); first = false; }
+  }
+  return o.join('');
+}
 function elevTail(E, L, xlabel) {
   const P = L.P, { S, FL, xs, xx, yy, box } = E, o = [];
   o.push(box(P.cab, P.cab + 4, 0, P.ceil, { fill: 'url(#hatch)', fo: .4 }));
@@ -44,6 +57,7 @@ function drawDriver(L, V) {
   const P = L.P, E = mkElev(false, L), { S, FL, xx, yy, box } = E, o = [];
   const X = x => xx(x), Y = z => yy(z);
   o.push(elevFrame(E, L, 'Driver side wall seen from the aisle: rear on the left, cab on the right. Click a door to open it.'));
+  o.push(wallSeams(E, L, false));
   // wheel well
   const WW = [[42, 0], [76, 0], [76, 2], [66.75, 7.5], [51.25, 7.5], [42, 2]];
   o.push(Poly(WW.map(p => [X(p[0]), Y(p[1])]), { fill: '#E24B4A', fo: .35, stroke: '#A32D2D', sw: 1.6, dash: '5 3', join: 'round' }));
@@ -156,6 +170,7 @@ function drawPass(L, V) {
   const X = x => xx(x), Y = z => yy(z);
   const ch = P.counterH, cabS = L.cabS, angS = L.angS, sinkS = L.sinkS, sinkE = L.sinkE;
   o.push(elevFrame(E, L, 'Passenger side wall seen from inside the van: cab on the left, rear on the right. Click the fold-out table, the fridge or the shower pan.'));
+  o.push(wallSeams(E, L, true));
   // wheel well (same as the driver side)
   const WW = [[42, 0], [76, 0], [76, 2], [66.75, 7.5], [51.25, 7.5], [42, 2]];
   o.push(Poly(WW.map(p => [X(p[0]), Y(p[1])]), { fill: '#D8B79A', fo: .8, stroke: '#8A6B4D', sw: 1.2 }));
