@@ -16,6 +16,9 @@ User: 'add the storage under the countertop', drawers, 'the same top drawers'. R
 ## Zoomable diagrams (latest)
 User: 'Make the diagrams zoomable'. Every diagram in sides.html and the drawing in interactive.html now has + / minus / Reset buttons in its top right corner, Ctrl (Cmd on a Mac) + scroll, and pinch on a touch screen; once zoomed, drag to move (a drag does not count as a click, so it does not hide or open parts). Plain scrolling still scrolls the page. Up to 8x. The interactive page resets the zoom when you change views. Source: tools/zoom.js (shared; joined into interactive.html by build.sh and injected into sides.html by tools/zoom.py).
 
+## Rib positions are the back edges (latest)
+User: 'Yes, the ribs are the back edge'. Confirmed: each typed position (21 3/4, 37 7/8, 58 3/8, 97 3/8, 126 3/8) is the edge of the rib nearest the back, so the ribs occupy 21 3/4 to 24 1/2, 37 7/8 to 40 5/8, 58 3/8 to 61 1/8, 97 3/8 to 100 1/8 and 126 3/8 to 129 1/8 (2 3/4 wide). This is the page default ('The positions above are: the edge of each rib nearest the back'), so nothing changes: the A/C opening (42 3/8 to 56 5/8) is 1 3/4 in clear of both ribs and the fan opening (6 1/4 to 20 1/4) is 1 1/2 in clear of the first.
+
 ## No ribs behind 21 3/4 (latest)
 User: 'no ribs behind 21.75'. Confirmed: the five ribs (21 3/4, 37 7/8, 58 3/8, 97 3/8, 126 3/8) are all of them, so the fan at 13 1/4 (opening 6 1/4 to 20 1/4) sits in the 21 3/4 in clear space behind the first rib with no rib under its opening (1 1/2 in clear of the rib, 6 1/4 in from the back edge). Nothing changes in the drawings or checks.
 
