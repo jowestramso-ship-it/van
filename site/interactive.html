@@ -706,11 +706,15 @@ function drawPass(L, V) {
         o.push(T(X((c0 + c1) / 2), Y((b0 + b1) / 2) - 3, 'Drawer', { size: 11, fill: '#8A5A00' }));
         o.push(T(X((c0 + c1) / 2), Y((b0 + b1) / 2) + 10, `13 x 20 x ${fmt(b1 - b0)}`, { size: 9, fill: '#8A5A00' }));
       };
-      // two 5 in drawers on the cab side (under the top pair, with the strip below them open), a second 10 in one to the right of it (toward the back) with whatever is left under it, on its own shelf 1/2 in over the wheel well; one row of two if there is too little height
+      // two 5 in drawers on the cab side (under the top pair, with the strip below them open), a 5 in one to the right of it (toward the back) with two equal drawers under it, on their own shelf 1/2 in over the wheel well; one row of two if there is too little height
       if (tot >= 10) {
-        o.push(box(L.cabS, dm, tl - 11, tl - 10.25, { fill: '#8A6B4D', fo: 1, stroke: '#3E230B', sw: .8 }));
+        // back side: a 5 in drawer at the top, and two equal drawers under it down to the shelf over the wheel well
+        const bt = tl - 6, bb = wellShelf + 1, rh2 = (bt - bb - 1) / 2;
         o.push(box(dm, L.angS - .75, tl - 6, tl - 5.25, { fill: '#8A6B4D', fo: 1, stroke: '#3E230B', sw: .8 }));
-        drw(dm + 1, dm + 14, tl - 5, tl); drw(dm + 1, dm + 14, tl - 11, tl - 6); drw(d0, dm - .5, tl - 10, tl); if (tl - 11 - (wellShelf + 1) > 1) drw(d0, dm - .5, wellShelf + 1, tl - 11);
+        o.push(box(L.cabS, dm, bt, bt + .75, { fill: '#8A6B4D', fo: 1, stroke: '#3E230B', sw: .8 }));
+        o.push(box(L.cabS, dm, bb + rh2, bb + rh2 + .75, { fill: '#8A6B4D', fo: 1, stroke: '#3E230B', sw: .8 }));
+        drw(dm + 1, dm + 14, tl - 5, tl); drw(dm + 1, dm + 14, tl - 11, tl - 6); drw(d0, dm - .5, tl - 5, tl);
+        if (rh2 > 1) { drw(d0, dm - .5, bb + rh2 + 1, bt); drw(d0, dm - .5, bb, bb + rh2); }
       } else { drw(d0, dm - .5, bs, tl); drw(dm + 1, dm + 14, bs, tl); }
     }
   }
@@ -1272,7 +1276,7 @@ function computeChecks(L, V) {
       const fitL = L.angS - .75 - L.cabS, fitD = P.cabD - .75;
       if (fitL < 29.2 || fitD < 19.95) push('bad', `The drawers under the counter need a flat part 29 1/4 in long between end panels (58 to 87 1/4 in) and a cabinet 20 3/4 in deep (20 in boxes plus a 3/4 in front); here the flat part is ${fmt(fitL)} in and the cabinet is ${fmt(P.cabD)} in deep.`);
       else if (tot < 3) push('bad', `The lower drawers under the top pair do not fit: only ${fmt(Math.max(0, tot))} in is left between the shelf over the hot water tank (${fmt(shelfZ)} in up) and the top drawers.`);
-      else push(tot < 10 ? 'warn' : 'ok', `Lower drawers: ${tot >= 10 ? `two 13 x 20 x 5 in drawers one above the other on the cab side and a 13 x 20 x 10 in one toward the back, under the top pair, with a ${fmt(Math.max(0, P.counterH - 27))} in tall drawer under the back one (on its own shelf at 8 in, 1/2 in over the wheel well, because that column is over the well, not the tank) and ${fmt(P.counterH - 18 - (shelfZ + .75))} in open under the cab side ones, down to their shelf` : `one row of two, 13 x 20 x ${fmt(tot)} in`} on a shelf at ${fmt(shelfZ)} in up (1/2 in over the hot water tank top), 20 deep so they reach the wall over the tank and the wheel well. Nothing may come out of the top of the hot water tank (fittings, relief valve).`);
+      else push(tot < 10 ? 'warn' : 'ok', `Lower drawers: ${tot >= 10 ? `two 13 x 20 x 5 in drawers one above the other on the cab side and, toward the back, a 13 x 20 x 5 in drawer over two 13 x 20 x ${fmt((P.counterH - 13 - 9 - 1) / 2)} in ones (on their own shelf at 8 in, 1/2 in over the wheel well, because that column is over the well, not the tank), all under the top pair, with ${fmt(P.counterH - 18 - (shelfZ + .75))} in open under the cab side ones, down to their shelf` : `one row of two, 13 x 20 x ${fmt(tot)} in`}. The cab side shelf is at ${fmt(shelfZ)} in up (1/2 in over the hot water tank top). All are 20 deep so they reach the wall over the tank and the wheel well. Nothing may come out of the top of the hot water tank (fittings, relief valve).`);
     }
     const ac = P.heaterW / 120, dc = P.heaterW / (12 * .9), kwhGal = 8.34 * 80 / 3412, ahGal = kwhGal / .9 * 1000 / 12;
     {

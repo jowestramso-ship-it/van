@@ -285,11 +285,15 @@ function drawPass(L, V) {
         o.push(T(X((c0 + c1) / 2), Y((b0 + b1) / 2) - 3, 'Drawer', { size: 11, fill: '#8A5A00' }));
         o.push(T(X((c0 + c1) / 2), Y((b0 + b1) / 2) + 10, `13 x 20 x ${fmt(b1 - b0)}`, { size: 9, fill: '#8A5A00' }));
       };
-      // two 5 in drawers on the cab side (under the top pair, with the strip below them open), a second 10 in one to the right of it (toward the back) with whatever is left under it, on its own shelf 1/2 in over the wheel well; one row of two if there is too little height
+      // two 5 in drawers on the cab side (under the top pair, with the strip below them open), a 5 in one to the right of it (toward the back) with two equal drawers under it, on their own shelf 1/2 in over the wheel well; one row of two if there is too little height
       if (tot >= 10) {
-        o.push(box(L.cabS, dm, tl - 11, tl - 10.25, { fill: '#8A6B4D', fo: 1, stroke: '#3E230B', sw: .8 }));
+        // back side: a 5 in drawer at the top, and two equal drawers under it down to the shelf over the wheel well
+        const bt = tl - 6, bb = wellShelf + 1, rh2 = (bt - bb - 1) / 2;
         o.push(box(dm, L.angS - .75, tl - 6, tl - 5.25, { fill: '#8A6B4D', fo: 1, stroke: '#3E230B', sw: .8 }));
-        drw(dm + 1, dm + 14, tl - 5, tl); drw(dm + 1, dm + 14, tl - 11, tl - 6); drw(d0, dm - .5, tl - 10, tl); if (tl - 11 - (wellShelf + 1) > 1) drw(d0, dm - .5, wellShelf + 1, tl - 11);
+        o.push(box(L.cabS, dm, bt, bt + .75, { fill: '#8A6B4D', fo: 1, stroke: '#3E230B', sw: .8 }));
+        o.push(box(L.cabS, dm, bb + rh2, bb + rh2 + .75, { fill: '#8A6B4D', fo: 1, stroke: '#3E230B', sw: .8 }));
+        drw(dm + 1, dm + 14, tl - 5, tl); drw(dm + 1, dm + 14, tl - 11, tl - 6); drw(d0, dm - .5, tl - 5, tl);
+        if (rh2 > 1) { drw(d0, dm - .5, bb + rh2 + 1, bt); drw(d0, dm - .5, bb, bb + rh2); }
       } else { drw(d0, dm - .5, bs, tl); drw(dm + 1, dm + 14, bs, tl); }
     }
   }
