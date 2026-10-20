@@ -182,7 +182,7 @@ item(74,89,0,74.75,G,'Closet','15 in',Y(47))
 BG('ceil','Ceiling covering')
 BA(box(0,154,75.75,76,'fill="#D9C7A5" stroke="#8A6B4D" stroke-width="0.8"'))
 BA(box(0,154,74.75,75.75,'fill="#9A6B3A" fill-opacity="0.85" stroke="#5A3A00" stroke-width="0.8"'))
-for _x0,_x1,_nm in ((1,15,'shower fan'),(44.875,59.125,'A/C')):
+for _x0,_x1,_nm in ((1,15,'shower fan'),(36.375,50.625,'A/C')):
     BA(box(_x0,_x1,74.75,76,'fill="#2C2C2A" fill-opacity="0.85"'))
     BA(f'<text class="ts" x="{X((_x0+_x1)/2)}" y="{Y(77.4)}" text-anchor="middle" style="font-size:10px;fill:#2C2C2A;paint-order:stroke;stroke:#fff;stroke-width:3px">{_nm}</text>')
 for _lx in (20.67,74,127.33): BA(f'<circle cx="{X(_lx)}" cy="{Y(74.4)}" r="3" fill="#FFD84A" stroke="#B8860B" stroke-width="0.8"/>')
@@ -957,7 +957,7 @@ def passenger_items(tank=False):
     grp('ceil','Ceiling covering')
     a(f'<rect x="{xx(0):.1f}" y="{yy(76):.1f}" width="{S*154:.1f}" height="{S*0.25:.1f}" fill="#D9C7A5" stroke="#8A6B4D" stroke-width="0.8"/>')
     a(f'<rect x="{xx(0):.1f}" y="{yy(75.75):.1f}" width="{S*154:.1f}" height="{S*1:.1f}" fill="#9A6B3A" fill-opacity="0.85" stroke="#5A3A00" stroke-width="0.8"/>')
-    for _x0,_x1,_nm in ((1,15,'shower fan'),(44.875,59.125,'A/C')):
+    for _x0,_x1,_nm in ((1,15,'shower fan'),(36.375,50.625,'A/C')):
         a(f'<rect x="{xx(_x0):.1f}" y="{yy(76):.1f}" width="{S*(_x1-_x0):.1f}" height="{S*1.25:.1f}" fill="#2C2C2A" fill-opacity="0.85"/>')
         a(f'<text class="ts" x="{xx((_x0+_x1)/2):.1f}" y="{yy(77.4):.1f}" text-anchor="middle" style="font-size:10px;fill:#2C2C2A;paint-order:stroke;stroke:#fff;stroke-width:3px">{_nm}</text>')
     for _lx in (20.67,74,127.33): a(f'<circle cx="{xx(_lx):.1f}" cy="{yy(74.4):.1f}" r="3" fill="#FFD84A" stroke="#B8860B" stroke-width="0.8"/>')
