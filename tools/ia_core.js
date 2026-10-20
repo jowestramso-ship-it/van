@@ -3,7 +3,7 @@
 // k = key, g = group, l = label, d = default, s = step, a/b = min/max, t = type (n number, c checkbox, s select)
 const PD = [
   { k: 'cab', g: 'Van', l: 'Cab wall, from the back', d: 154, s: .5, a: 100, b: 200 },
-  { k: 'vanW', g: 'Van', l: 'Inside width', d: 68, s: .5, a: 50, b: 90 },
+  { k: 'vanW', g: 'Van', l: 'Inside width (bare; the wall covering is taken off it)', d: 68, s: .5, a: 50, b: 90 },
   { k: 'ceil', g: 'Van', l: 'Ceiling height (bare)', d: 76, s: .5, a: 60, b: 90 },
   { k: 'bedLen', g: 'Bed / couch', l: 'Length', d: 74, s: .5, a: 40, b: 120 },
   { k: 'bedD', g: 'Bed / couch', l: 'Depth, closed (the couch on its base)', d: 26, s: .5, a: 15, b: 40 },
@@ -126,7 +126,9 @@ function MV(ids, inner, hit) {
 const HITR = (x, y, w, h) => `<rect x="${f1(x)}" y="${f1(y)}" width="${f1(Math.max(0, w))}" height="${f1(Math.max(0, h))}" fill="#000" fill-opacity="0"/>`;
 
 /* ================= layout (everything derived from the sizes) ================= */
-function layout(P) {
+function layout(P0) {
+  // the wall covering takes its thickness off each side of the inside width
+  const P = Object.assign({}, P0, { vanW: P0.vanW - (P0.wallOn ? 2 * P0.wallT : 0) });
   const L = { P };
   L.c0 = P.bedLen; L.c1 = P.bedLen + P.closetW;
   L.bA = [L.c1, L.c1 + P.benchLen]; L.bB = [P.cab - P.benchLen, P.cab];
