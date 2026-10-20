@@ -16,6 +16,9 @@ User: 'add the storage under the countertop', drawers, 'the same top drawers'. R
 ## Zoomable diagrams (latest)
 User: 'Make the diagrams zoomable'. Every diagram in sides.html and the drawing in interactive.html now has + / minus / Reset buttons in its top right corner, Ctrl (Cmd on a Mac) + scroll, and pinch on a touch screen; once zoomed, drag to move (a drag does not count as a click, so it does not hide or open parts). Plain scrolling still scrolls the page. Up to 8x. The interactive page resets the zoom when you change views. Source: tools/zoom.js (shared; joined into interactive.html by build.sh and injected into sides.html by tools/zoom.py).
 
+## Shower fan: F36AR (latest)
+User: 'the fan is F36AR'. Two web searches found nothing for that model number (only unrelated PC fans and 14 x 14 RV roof vents), so the fan cutout stays at 14 x 14 at 14 in from the back and 56 across, as a placeholder. Needed: brand or product link, the roof cutout size, how far it sticks up above the roof and hangs below, the roof thickness range, the 12 V draw, and whether it has a rain cover or a lid that opens (a lid opening over the wet bath).
+
 ## Air conditioner: 12 V, 10,000 BTU confirmed (latest)
 User: '12V-10,000BTU'. So the A/C is the Outequip 12 V, 10,000 BTU, cooling only, white, top mounted, non-ducted unit; the sizes already on the interactive page are the ones for this class (28.3 x 28.3 x 6.3 in on the roof, 45 lb on the listing, 14 1/4 in cutout over the 14.1 x 13.7 in minimum), so no change to the drawings. Still unconfirmed: the amp draw (reviews say about 20 A in eco mode, peak not found), the exact footprint (28.3 x 28.3 on the listing, 26.2 x 28.4 on the maker's sheet), and the roof thickness range.
 
