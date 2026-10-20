@@ -170,10 +170,10 @@ function drawPlan(L, V) {
   o.push(Ln(xx(b0[0]), yy(b0[1]), xx(b1[0]), yy(b1[1]), { stroke: COL.G, sw: 2.5, dash: '2 2' }));
   o.push(T(xx(L.sinkS + 3), yy(Wd - P.cabD) - 1, 'paper towels (recessed, high)', { size: 8.5, fill: '#8A5A00' }) + T(xx(L.sinkS + 3), yy(Wd - P.cabD) + 9, 'towel bars stick out 2 1/2 in', { size: 8.5, fill: COL.G }));
   // sliding door opening in the passenger wall
-  const dxe = Math.min(P.doorX + 51, P.cab);
+  const dxe = Math.min(P.doorX + P.slideW, P.cab);
   o.push(Ln(xx(P.doorX), yy(Wd), xx(dxe), yy(Wd), { stroke: '#BA7517', sw: 5, dash: '10 5' }));
   o.push(T(xx((P.doorX + dxe) / 2 + 8), yp(18.5), 'Sliding door opening', { size: 11, fill: '#854F0B', w: 500 }));
-  o.push(T(xx((P.doorX + dxe) / 2 + 8), yp(21.5), `51 wide, ${fmt(P.doorX)} to ${fmt(P.doorX + 51)}`, { size: 10, fill: '#854F0B' }));
+  o.push(T(xx((P.doorX + dxe) / 2 + 8), yp(21.5), `${fmt(P.slideW)} wide, ${fmt(P.doorX)} to ${fmt(P.doorX + P.slideW)}`, { size: 10, fill: '#854F0B' }));
   o.push(T(xx((P.doorX + dxe) / 2 + 8), yp(24.5), `entry ${fmt(L.entry)} clear` + ((V.flap || 0) > .5 ? ' (blocked by the table)' : ''), { size: 10, fill: COL.G }));
   // overhead cabinets (outline on top so the doors above them can be clicked); their doors flip up and stick out over the aisle
   L.cabs.forEach((c, ci) => {

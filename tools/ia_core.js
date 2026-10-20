@@ -41,6 +41,8 @@ const PD = [
   { k: 'sinkD', g: 'Passenger side', l: 'Depth at the sink end (includes the 3/4 in door)', d: 15.75, s: .5, a: 10, b: 24 },
   { k: 'angLen', g: 'Passenger side', l: 'Length of the angled part of the counter front', d: 15, s: .5, a: 3, b: 40 },
   { k: 'sinkW', g: 'Passenger side', l: 'Sink cabinet width', d: 20, s: .5, a: 12, b: 40 },
+  { k: 'slideW', g: 'Passenger side', l: 'Sliding door opening width', d: 51, s: .5, a: 30, b: 70 },
+  { k: 'slideH', g: 'Passenger side', l: 'Sliding door opening height', d: 67, s: .5, a: 40, b: 76 },
   { k: 'doorX', g: 'Passenger side', l: 'Sliding door starts at', d: 104, s: .5, a: 80, b: 150 },
   { k: 'flapAuto', g: 'Fold-out table and foot ledge', l: 'Length fits the entry', d: true, t: 'c', f: 'flapLen' },
   { k: 'flapGap', g: 'Fold-out table and foot ledge', l: 'Gap left to the cab wall', d: 2, s: .5, a: 0, b: 10 },

@@ -22,7 +22,7 @@ function computeChecks(L, V) {
   if (slotEnd > P.bedBack - 1.5) push('warn', `The leg slots (${fmt(slotEnd)} in from the free edge) reach to within ${fmt(Math.max(0, P.bedBack - slotEnd))} in of the hinge; the leaf needs to be at least ${fmt(slotEnd + 1.5)} in wide, or the legs set in less.`);
   // wall covering: plywood sheets standing floor to ceiling on the furring strips, both side walls
   if (P.wallOn) {
-    const P0sub = P.wallSub, len = P.cab + 6, h = L.ceilF, door = P.doorX + 51 > len ? 0 : 51 * 58, area = (2 * len * h - door) / 144, wt = area * P.wallT / 12 * P.wallDens;
+    const P0sub = P.wallSub, len = P.cab + 6, h = L.ceilF, door = P.doorX + P.slideW > len ? 0 : P.slideW * P.slideH, area = (2 * len * h - door) / 144, wt = area * P.wallT / 12 * P.wallDens;
     const tall = P.sheetH >= h, sheetsD = Math.ceil(len / P.sheetW), sheetsP = Math.ceil((P.doorX + 6) / P.sheetW), sheets = sheetsD + sheetsP;
     const gaps = FURR.slice(1).map((z, i) => z - FURR[i]), maxGap = Math.max(...gaps);
     push(tall ? 'ok' : 'warn', `Wall covering: ${fmt(P.wallT)} in plywood on both side walls (${area.toFixed(0)} sq ft after the sliding door opening) takes about ${sheets} sheets of ${fmt(P.sheetW)} x ${fmt(P.sheetH)} in standing floor to ceiling (${sheetsD} on the driver side, ${sheetsP} on the passenger side; the pieces over the door and past it come out of the offcuts)${tall ? '' : `; the sheets are shorter than the ${fmt(h)} in wall, so there would be a horizontal joint`}. It weighs about ${Math.round(wt)} lb (more with adhesive and screws).`);
@@ -106,8 +106,8 @@ function computeChecks(L, V) {
     const ac = P.heaterW / 120, dc = P.heaterW / (12 * .9), kwhGal = 8.34 * 80 / 3412, ahGal = kwhGal / .9 * 1000 / 12;
     push('ok', `Hot water power: ${fmt(P.heaterW)} W at 120 V is ${ac.toFixed(0)} A AC, about ${Math.round(dc)} A from a 12 V battery through an inverter. The ${fmt(P.battAh)} Ah battery is said to handle it; what is left to size for about ${Math.round(dc)} A is an inverter of ${Math.ceil(P.heaterW * 1.25 / 500) * 500} W or more, the battery cable and its fuse. Heating a gallon by 80 F takes about ${kwhGal.toFixed(2)} kWh, ${Math.round(ahGal)} Ah of the ${fmt(P.battAh)} Ah battery, so a full battery is about ${Math.round(P.battAh / ahGal)} gal of hot water from cold if nothing else runs; each gallon takes about ${Math.round(kwhGal / (P.heaterW / 1000) * 60)} min to heat.`);
   }
-  const ov = Math.min(L.sinkE, P.doorX + 51) - Math.max(L.sinkS, P.doorX);
-  if (ov > .5) push('warn', `The sink cabinet (${fmt(L.sinkS)} to ${fmt(L.sinkE)}) sits ${fmt(ov)} in inside the sliding door opening (${fmt(P.doorX)} to ${fmt(P.doorX + 51)}); the door height and width are not measured yet.`);
+  const ov = Math.min(L.sinkE, P.doorX + P.slideW) - Math.max(L.sinkS, P.doorX);
+  if (ov > .5) push('warn', `The sink cabinet (${fmt(L.sinkS)} to ${fmt(L.sinkE)}) sits ${fmt(ov)} in inside the sliding door opening (${fmt(P.doorX)} to ${fmt(P.doorX + P.slideW)} in, ${fmt(P.slideH)} tall); you said that overlap is intended.`);
   // headroom, battery, doors
   const head = Math.max(P.platform + P.mattress, P.seatH) + 37, hg = P.cabBot - head;
   push(hg < 1 ? 'bad' : hg < 3 ? 'warn' : 'ok', `Seated headroom under the wall cabinets: ${fmt(hg)} in for a 6 ft person (head at ${fmt(head)} up).`);

@@ -771,7 +771,7 @@ def passenger(svgtxt):
     t=t.replace('Driver side wall. Inside every hole you see the body. The steel around it is colored by how far it is from the body.','Passenger side, seen from inside the van: cab on the left, rear on the right.')
     PS=6.0; PX0=50; PFL=540
     px=lambda i:PX0+PS*i; py=lambda h:PFL-PS*h
-    door=(f'<rect x="{px(104):.1f}" y="{py(58):.1f}" width="{PS*51:.1f}" height="{PS*58:.1f}" fill="#fff" fill-opacity="1" stroke="#BA7517" stroke-width="2" stroke-dasharray="8 4"/>'
+    door=(f'<rect x="{px(104):.1f}" y="{py(67):.1f}" width="{PS*51:.1f}" height="{PS*67:.1f}" fill="#fff" fill-opacity="1" stroke="#BA7517" stroke-width="2" stroke-dasharray="8 4"/>'
           f'<text class="th" x="{px(129.5):.1f}" y="{py(30):.1f}" text-anchor="middle" style="font-size:14px;fill:#854F0B">Sliding door opening</text>'
           f'<text class="ts" x="{px(129.5):.1f}" y="{py(30)+17:.1f}" text-anchor="middle" style="font-size:12px">51 in wide, 104 to 155 in</text>'
           f'<text class="ts" x="{px(129.5):.1f}" y="{py(30)+33:.1f}" text-anchor="middle" style="font-size:11px">(rear edge 104 in, measured); empty behind it</text>')
@@ -877,8 +877,8 @@ def furring_pass_group():
     yy=lambda h:FL-S*h
     o=[]; a=o.append
     strips=[('S1',3),('S2',12),('S3',21.4),('S4',30.25),('S5',43.5),('S6',57.25),('S7',66),('S8',76.75)]
-    SEG={'S1':[(0,42),(76,104)],'S2':[(0,104)],'S3':[(0,104)],'S4':[(0,104)],'S5':[(0,4.5),(31.25,56.5),(94.75,104)],'S6':[(0,104)],'S7':[(0,154)],'S8':[(0,154)]}
-    PAP={'S1':[6,17.75,31.25,82.94,98.9],'S2':[15,30.75,40,54,62,72,80,96,104],'S3':[22,34,46,58,70,78,99],'S4':[10,17.75,31.25,44.5,58.6,71.31,82.94,98.9],'S5':[2,32,44.5,98.9],'S6':[10,17.75,31.25,44.5,58.6,71.31,82.94,98.9],'S7':AP['S7'],'S8':AP['S8']}
+    SEG={'S1':[(0,42),(76,104)],'S2':[(0,104)],'S3':[(0,104)],'S4':[(0,104)],'S5':[(0,4.5),(31.25,56.5),(94.75,104)],'S6':[(0,104)],'S7':[(0,104)],'S8':[(0,154)]}
+    PAP={'S1':[6,17.75,31.25,82.94,98.9],'S2':[15,30.75,40,54,62,72,80,96,104],'S3':[22,34,46,58,70,78,99],'S4':[10,17.75,31.25,44.5,58.6,71.31,82.94,98.9],'S5':[2,32,44.5,98.9],'S6':[10,17.75,31.25,44.5,58.6,71.31,82.94,98.9],'S7':[x for x in AP['S7'] if x<=104],'S8':AP['S8']}
     for n,h in strips:
         for x0,x1 in SEG[n]:
             fill='#7A4A1E' if n in ('S1','S2','S3') else ('url(#spcP)' if n in ('S4','S5','S6') else '#D9A05B')
@@ -909,7 +909,7 @@ html=html.replace(pass2,_pass2f,1)
 _h3='<h3>Passenger side wall: depth color map (same as the driver side, adjustments to come)</h3>\n'
 assert _h3 in html
 html=html.replace(_h3,_h3+'<p><label><input type="checkbox" id="furrboxP" checked onchange="document.getElementById(\'furrP\').style.display=this.checked?\'\':\'none\'"> Show the furring strips (S1 to S8) and the nook frames (V1 to V4)</label></p>\n',1)
-_rows=[('S1 to S4, S6','stop at the door opening (104 in)','There is no wall behind the sliding door, so these strips end at 104 in and the dots past 104 are dropped. S7 and S8 carry on above the door. The door height (58 in) is an estimate, so if the door is lower than 56 1/2 in, S6 can run on past 104.'),
+_rows=[('S1 to S4, S6, S7','stop at the door opening (104 in)','There is no wall behind the sliding door (51 wide, 67 tall, measured), so these strips end at 104 in and the dots past 104 are dropped. S7 (65 1/4 to 66 3/4 in up) is inside the 67 in opening, so it stops too. Only S8 (76 in up) carries on above the door.'),
 ('S4','under the shower nook','Its top edge (31 in) is the bottom of the shower nook, so S4 is the nook floor frame. No change to the strip.'),
 ('S5','cut at both nooks','S5 (43 1/2 in up) crosses both nooks, so it is removed there. It now runs 0 to 4 1/2 in (a stub, one dot at 2 in, sitting straight on the 3 3/4 in steel, no spacer), 31 1/4 to 56 1/2 in (dots at 32 and 44 1/2), and 94 3/4 to 104 in (dot at 98.9, on the 3 3/4 in steel between P7 and P8, no spacer). The dots at 17.75 (shower nook) and 58.6, 71.31 and 82.94 (counter nook) are dropped.'),
 ('S6','top of both nooks','Its bottom edge (56 1/2 in) is the top of both nooks, so S6 is the top frame. No change to the strip.'),
@@ -1056,7 +1056,7 @@ def passenger_items(tank=False):
     a(f'<text class="ts" x="{xx(145.5):.1f}" y="{yy(22.5):.1f}" text-anchor="middle" style="font-size:10px;fill:#5A3A00;paint-order:stroke;stroke:#fff;stroke-width:3px">folding brace under the table</text>')
     # sliding door (copy) and conflicts
     grp('door','Sliding door opening')
-    a(f'<rect x="{xx(104):.1f}" y="{yy(58):.1f}" width="{S*51:.1f}" height="{S*58:.1f}" fill="none" stroke="#BA7517" stroke-width="2" stroke-dasharray="8 4"/>')
+    a(f'<rect x="{xx(104):.1f}" y="{yy(67):.1f}" width="{S*51:.1f}" height="{S*67:.1f}" fill="none" stroke="#BA7517" stroke-width="2" stroke-dasharray="8 4"/>')
     a(f'<text class="th" x="{xx(129.5):.1f}" y="{yy(52):.1f}" text-anchor="middle" style="font-size:12px;fill:#854F0B;paint-order:stroke;stroke:#fff;stroke-width:3px">Sliding door opening (104 to 155)</text>')
     a(f'<text class="th" x="{xx(146):.1f}" y="{yy(14):.1f}" text-anchor="middle" style="font-size:11px;fill:#444441;paint-order:stroke;stroke:#fff;stroke-width:3px">Entry, 31 in clear</text>')
     grp()

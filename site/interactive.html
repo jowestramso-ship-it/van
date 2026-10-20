@@ -194,6 +194,8 @@ const PD = [
   { k: 'sinkD', g: 'Passenger side', l: 'Depth at the sink end (includes the 3/4 in door)', d: 15.75, s: .5, a: 10, b: 24 },
   { k: 'angLen', g: 'Passenger side', l: 'Length of the angled part of the counter front', d: 15, s: .5, a: 3, b: 40 },
   { k: 'sinkW', g: 'Passenger side', l: 'Sink cabinet width', d: 20, s: .5, a: 12, b: 40 },
+  { k: 'slideW', g: 'Passenger side', l: 'Sliding door opening width', d: 51, s: .5, a: 30, b: 70 },
+  { k: 'slideH', g: 'Passenger side', l: 'Sliding door opening height', d: 67, s: .5, a: 40, b: 76 },
   { k: 'doorX', g: 'Passenger side', l: 'Sliding door starts at', d: 104, s: .5, a: 80, b: 150 },
   { k: 'flapAuto', g: 'Fold-out table and foot ledge', l: 'Length fits the entry', d: true, t: 'c', f: 'flapLen' },
   { k: 'flapGap', g: 'Fold-out table and foot ledge', l: 'Gap left to the cab wall', d: 2, s: .5, a: 0, b: 10 },
@@ -397,14 +399,14 @@ function elevFrame(E, L, title) {
   }
   return o.join('');
 }
-// wall covering: the sheet joints (sheets run floor to ceiling from the rear edge, 6 in behind the 0 mark), left out where the sliding door opening is
+// wall covering: the sheet joints (sheets run floor to ceiling from the rear edge, 6 in behind the 0 mark), left out below the top of the sliding door opening
 const FURR = [3, 12, 21.5, 30.25, 43.5, 57.25, 66, 76.75];
 function wallSeams(E, L, pass) {
   const P = L.P, { xx, yy } = E, o = [];
   if (!P.wallOn) return '';
   let first = true;
   for (let x = -6 + P.sheetW; x < P.cab; x += P.sheetW) {
-    const inDoor = pass && x > P.doorX && x < P.doorX + 51, z0 = inDoor ? 58 : 0;
+    const inDoor = pass && x > P.doorX && x < P.doorX + P.slideW, z0 = inDoor ? P.slideH : 0;
     o.push(Ln(xx(x), yy(z0), xx(x), yy(L.ceilF), { stroke: '#8A6B4D', so: .7, sw: 1, dash: '2 3' }));
     if (first) { o.push(T(xx(x) + (E.flip ? -3 : 3), yy(L.ceilF) + 11, 'sheet joint', { anchor: E.flip ? 'end' : 'start', size: 8, fill: '#8A6B4D', halo: false })); first = false; }
   }
@@ -707,8 +709,8 @@ function drawPass(L, V) {
     o.push(MV('flap,ledge', g, HITR(Math.min(X(sinkE), X(sinkE + L.flapLen)), Y(hz + 3), S * L.flapLen, S * 6) + HITR(Math.min(X(sinkE), X(sinkE + 3)), Y(hz + 2), S * 3, S * (hz + 2))));
   }
   // sliding door opening and the entry
-  const dx1 = Math.min(P.doorX + 51, P.cab + 1);
-  o.push(R(Math.min(X(P.doorX), X(dx1)), Y(58), S * (dx1 - P.doorX), S * 58, { stroke: '#BA7517', sw: 2, dash: '8 4' }));
+  const dx1 = Math.min(P.doorX + P.slideW, P.cab + 1);
+  o.push(R(Math.min(X(P.doorX), X(dx1)), Y(P.slideH), S * (dx1 - P.doorX), S * P.slideH, { stroke: '#BA7517', sw: 2, dash: '8 4' }));
   o.push(T(X((P.doorX + dx1) / 2), Y(52), `Sliding door opening (${fmt(P.doorX)} to ${fmt(dx1 + 0)})`, { size: 12, fill: '#854F0B' }));
   o.push(T(X(P.cab - 8), Y(13), `Entry, ${fmt(L.entry)} in clear`, { size: 11, fill: COL.G }));
   o.push(elevTail(E, L, 'inches from where you start measuring at the back'));
@@ -938,10 +940,10 @@ function drawPlan(L, V) {
   o.push(Ln(xx(b0[0]), yy(b0[1]), xx(b1[0]), yy(b1[1]), { stroke: COL.G, sw: 2.5, dash: '2 2' }));
   o.push(T(xx(L.sinkS + 3), yy(Wd - P.cabD) - 1, 'paper towels (recessed, high)', { size: 8.5, fill: '#8A5A00' }) + T(xx(L.sinkS + 3), yy(Wd - P.cabD) + 9, 'towel bars stick out 2 1/2 in', { size: 8.5, fill: COL.G }));
   // sliding door opening in the passenger wall
-  const dxe = Math.min(P.doorX + 51, P.cab);
+  const dxe = Math.min(P.doorX + P.slideW, P.cab);
   o.push(Ln(xx(P.doorX), yy(Wd), xx(dxe), yy(Wd), { stroke: '#BA7517', sw: 5, dash: '10 5' }));
   o.push(T(xx((P.doorX + dxe) / 2 + 8), yp(18.5), 'Sliding door opening', { size: 11, fill: '#854F0B', w: 500 }));
-  o.push(T(xx((P.doorX + dxe) / 2 + 8), yp(21.5), `51 wide, ${fmt(P.doorX)} to ${fmt(P.doorX + 51)}`, { size: 10, fill: '#854F0B' }));
+  o.push(T(xx((P.doorX + dxe) / 2 + 8), yp(21.5), `${fmt(P.slideW)} wide, ${fmt(P.doorX)} to ${fmt(P.doorX + P.slideW)}`, { size: 10, fill: '#854F0B' }));
   o.push(T(xx((P.doorX + dxe) / 2 + 8), yp(24.5), `entry ${fmt(L.entry)} clear` + ((V.flap || 0) > .5 ? ' (blocked by the table)' : ''), { size: 10, fill: COL.G }));
   // overhead cabinets (outline on top so the doors above them can be clicked); their doors flip up and stick out over the aisle
   L.cabs.forEach((c, ci) => {
@@ -1032,7 +1034,7 @@ function computeChecks(L, V) {
   if (slotEnd > P.bedBack - 1.5) push('warn', `The leg slots (${fmt(slotEnd)} in from the free edge) reach to within ${fmt(Math.max(0, P.bedBack - slotEnd))} in of the hinge; the leaf needs to be at least ${fmt(slotEnd + 1.5)} in wide, or the legs set in less.`);
   // wall covering: plywood sheets standing floor to ceiling on the furring strips, both side walls
   if (P.wallOn) {
-    const P0sub = P.wallSub, len = P.cab + 6, h = L.ceilF, door = P.doorX + 51 > len ? 0 : 51 * 58, area = (2 * len * h - door) / 144, wt = area * P.wallT / 12 * P.wallDens;
+    const P0sub = P.wallSub, len = P.cab + 6, h = L.ceilF, door = P.doorX + P.slideW > len ? 0 : P.slideW * P.slideH, area = (2 * len * h - door) / 144, wt = area * P.wallT / 12 * P.wallDens;
     const tall = P.sheetH >= h, sheetsD = Math.ceil(len / P.sheetW), sheetsP = Math.ceil((P.doorX + 6) / P.sheetW), sheets = sheetsD + sheetsP;
     const gaps = FURR.slice(1).map((z, i) => z - FURR[i]), maxGap = Math.max(...gaps);
     push(tall ? 'ok' : 'warn', `Wall covering: ${fmt(P.wallT)} in plywood on both side walls (${area.toFixed(0)} sq ft after the sliding door opening) takes about ${sheets} sheets of ${fmt(P.sheetW)} x ${fmt(P.sheetH)} in standing floor to ceiling (${sheetsD} on the driver side, ${sheetsP} on the passenger side; the pieces over the door and past it come out of the offcuts)${tall ? '' : `; the sheets are shorter than the ${fmt(h)} in wall, so there would be a horizontal joint`}. It weighs about ${Math.round(wt)} lb (more with adhesive and screws).`);
@@ -1116,8 +1118,8 @@ function computeChecks(L, V) {
     const ac = P.heaterW / 120, dc = P.heaterW / (12 * .9), kwhGal = 8.34 * 80 / 3412, ahGal = kwhGal / .9 * 1000 / 12;
     push('ok', `Hot water power: ${fmt(P.heaterW)} W at 120 V is ${ac.toFixed(0)} A AC, about ${Math.round(dc)} A from a 12 V battery through an inverter. The ${fmt(P.battAh)} Ah battery is said to handle it; what is left to size for about ${Math.round(dc)} A is an inverter of ${Math.ceil(P.heaterW * 1.25 / 500) * 500} W or more, the battery cable and its fuse. Heating a gallon by 80 F takes about ${kwhGal.toFixed(2)} kWh, ${Math.round(ahGal)} Ah of the ${fmt(P.battAh)} Ah battery, so a full battery is about ${Math.round(P.battAh / ahGal)} gal of hot water from cold if nothing else runs; each gallon takes about ${Math.round(kwhGal / (P.heaterW / 1000) * 60)} min to heat.`);
   }
-  const ov = Math.min(L.sinkE, P.doorX + 51) - Math.max(L.sinkS, P.doorX);
-  if (ov > .5) push('warn', `The sink cabinet (${fmt(L.sinkS)} to ${fmt(L.sinkE)}) sits ${fmt(ov)} in inside the sliding door opening (${fmt(P.doorX)} to ${fmt(P.doorX + 51)}); the door height and width are not measured yet.`);
+  const ov = Math.min(L.sinkE, P.doorX + P.slideW) - Math.max(L.sinkS, P.doorX);
+  if (ov > .5) push('warn', `The sink cabinet (${fmt(L.sinkS)} to ${fmt(L.sinkE)}) sits ${fmt(ov)} in inside the sliding door opening (${fmt(P.doorX)} to ${fmt(P.doorX + P.slideW)} in, ${fmt(P.slideH)} tall); you said that overlap is intended.`);
   // headroom, battery, doors
   const head = Math.max(P.platform + P.mattress, P.seatH) + 37, hg = P.cabBot - head;
   push(hg < 1 ? 'bad' : hg < 3 ? 'warn' : 'ok', `Seated headroom under the wall cabinets: ${fmt(hg)} in for a 6 ft person (head at ${fmt(head)} up).`);

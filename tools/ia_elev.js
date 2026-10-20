@@ -25,14 +25,14 @@ function elevFrame(E, L, title) {
   }
   return o.join('');
 }
-// wall covering: the sheet joints (sheets run floor to ceiling from the rear edge, 6 in behind the 0 mark), left out where the sliding door opening is
+// wall covering: the sheet joints (sheets run floor to ceiling from the rear edge, 6 in behind the 0 mark), left out below the top of the sliding door opening
 const FURR = [3, 12, 21.5, 30.25, 43.5, 57.25, 66, 76.75];
 function wallSeams(E, L, pass) {
   const P = L.P, { xx, yy } = E, o = [];
   if (!P.wallOn) return '';
   let first = true;
   for (let x = -6 + P.sheetW; x < P.cab; x += P.sheetW) {
-    const inDoor = pass && x > P.doorX && x < P.doorX + 51, z0 = inDoor ? 58 : 0;
+    const inDoor = pass && x > P.doorX && x < P.doorX + P.slideW, z0 = inDoor ? P.slideH : 0;
     o.push(Ln(xx(x), yy(z0), xx(x), yy(L.ceilF), { stroke: '#8A6B4D', so: .7, sw: 1, dash: '2 3' }));
     if (first) { o.push(T(xx(x) + (E.flip ? -3 : 3), yy(L.ceilF) + 11, 'sheet joint', { anchor: E.flip ? 'end' : 'start', size: 8, fill: '#8A6B4D', halo: false })); first = false; }
   }
@@ -335,8 +335,8 @@ function drawPass(L, V) {
     o.push(MV('flap,ledge', g, HITR(Math.min(X(sinkE), X(sinkE + L.flapLen)), Y(hz + 3), S * L.flapLen, S * 6) + HITR(Math.min(X(sinkE), X(sinkE + 3)), Y(hz + 2), S * 3, S * (hz + 2))));
   }
   // sliding door opening and the entry
-  const dx1 = Math.min(P.doorX + 51, P.cab + 1);
-  o.push(R(Math.min(X(P.doorX), X(dx1)), Y(58), S * (dx1 - P.doorX), S * 58, { stroke: '#BA7517', sw: 2, dash: '8 4' }));
+  const dx1 = Math.min(P.doorX + P.slideW, P.cab + 1);
+  o.push(R(Math.min(X(P.doorX), X(dx1)), Y(P.slideH), S * (dx1 - P.doorX), S * P.slideH, { stroke: '#BA7517', sw: 2, dash: '8 4' }));
   o.push(T(X((P.doorX + dx1) / 2), Y(52), `Sliding door opening (${fmt(P.doorX)} to ${fmt(dx1 + 0)})`, { size: 12, fill: '#854F0B' }));
   o.push(T(X(P.cab - 8), Y(13), `Entry, ${fmt(L.entry)} in clear`, { size: 11, fill: COL.G }));
   o.push(elevTail(E, L, 'inches from where you start measuring at the back'));
