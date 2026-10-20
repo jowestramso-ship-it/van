@@ -49,7 +49,7 @@ const PD = [
   { k: 'flapLen', g: 'Fold-out table and foot ledge', l: 'Length', d: 29, s: .5, a: 8, b: 60 },
   { k: 'flapD', g: 'Fold-out table and foot ledge', l: 'Depth', d: 15, s: .5, a: 8, b: 30 },
   { k: 'cabSeatH', g: 'Fold-out table and foot ledge', l: 'Cab passenger seat: top of the cushion, up from the floor', d: 17, s: .5, a: 10, b: 30 },
-  { k: 'cabSeatOut', g: 'Fold-out table and foot ledge', l: 'Cab passenger seat: how far it sticks out past the cab wall into the living area', d: 1, s: .5, a: 0, b: 10 },
+  { k: 'cabSeatOut', g: 'Fold-out table and foot ledge', l: 'Cab passenger seat: how far the cushion sticks out past the cab wall into the living area (the back does not)', d: 1, s: .5, a: 0, b: 10 },
   { k: 'flapH', g: 'Fold-out table and foot ledge', l: 'Height', d: 29, s: .5, a: 20, b: 40 },
   { k: 'ledgeLen', g: 'Fold-out table and foot ledge', l: 'Foot ledge length', d: 10, s: .5, a: 4, b: 20 },
   { k: 'ledgeH', g: 'Fold-out table and foot ledge', l: 'Foot ledge top, up from floor', d: 8, s: .5, a: 3, b: 20 },
