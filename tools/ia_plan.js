@@ -146,8 +146,8 @@ function drawPlan(L, V) {
     }
   }
   o.push(ip(L.fr[0], L.fr[1], 0, P.cabD, '#8A6B4D', '', null, { fo: .08, dash: '6 3' }));
-  o.push(ip(L.fr[0] + 1.75, L.fr[1] - 1.75, 0, 12, COL.G, '', null, { fo: .2, dash: '4 3' }));
-  o.push(T(xx((L.fr[0] + L.fr[1]) / 2), yp(5.5), 'Microwave 18.5 x 12', { size: 9, fill: COL.G, w: 500 }));
+  o.push(ip(L.fr[0] + 1.75, L.fr[1] - 1.75, P.microIn, P.microIn + 12, COL.G, '', null, { fo: .2, dash: '4 3' }));
+  o.push(T(xx((L.fr[0] + L.fr[1]) / 2), yp(5.5 + P.microIn), 'Microwave 18.5 x 12', { size: 9, fill: COL.G, w: 500 }));
   o.push(ip(42, 76, 0, 7, COL.W2, '', null, { fo: .3 }));
   o.push(ip(L.tankX[0], L.tankX[1], 0, P.tankD, COL.BL, '', null, { fo: .1, dash: '5 3' }));
   o.push(ip(L.hotX[0], L.hotX[1], 0, P.hotD, '#C0392B', '', null, { fo: .2, dash: '4 3' }));
@@ -178,9 +178,9 @@ function drawPlan(L, V) {
   // overhead cabinets (outline on top so the doors above them can be clicked); their doors flip up and stick out over the aisle
   L.cabs.forEach((c, ci) => {
     const ids = [0, 1, 2].map(i => 'dc' + (ci * 3 + i)).join(',');
-    let g = R(xx(c[0]), yy(0), S * (c[1] - c[0]), S * P.cabDepth, { rx: 2, stroke: COL.P, sw: 1.6, dash: '5 3' });
-    L.doors.slice(ci * 3, ci * 3 + 3).forEach(d => { const s = V[d.id] || 0; if (s > .01) g += R(xx(d.x0), yy(P.cabDepth), S * d.w, S * P.doorH * Math.sin(s * Math.PI / 2), { fill: COL.P, fo: .2, stroke: COL.P, sw: 1.2, dash: '3 2' }); });
-    g += T(xx((c[0] + c[1]) / 2), yy(P.cabDepth - 3.5), `overhead cabinet ${fmt(c[1] - c[0])} x ${fmt(P.cabDepth)} (bottom ${fmt(P.cabBot)} up)`, { size: 9, fill: COL.P, halo: false });
+    let g = R(xx(c[0]), yy(P.cabBackIn), S * (c[1] - c[0]), S * P.cabDepth, { rx: 2, stroke: COL.P, sw: 1.6, dash: '5 3' });
+    L.doors.slice(ci * 3, ci * 3 + 3).forEach(d => { const s = V[d.id] || 0; if (s > .01) g += R(xx(d.x0), yy(P.cabBackIn + P.cabDepth), S * d.w, S * P.doorH * Math.sin(s * Math.PI / 2), { fill: COL.P, fo: .2, stroke: COL.P, sw: 1.2, dash: '3 2' }); });
+    g += T(xx((c[0] + c[1]) / 2), yy(P.cabBackIn + P.cabDepth - 3.5), `overhead cabinet ${fmt(c[1] - c[0])} x ${fmt(P.cabDepth)} (bottom ${fmt(P.cabBot)} up)`, { size: 9, fill: COL.P, halo: false });
     o.push(MV(ids, g, ''));
   });
   // ---------- walkway dimensions, worked out from what is open right now ----------

@@ -191,6 +191,7 @@ const PD = [
   { k: 'tableD', g: 'Dinette', l: 'Table depth', d: 30, s: .5, a: 10, b: 45 },
   { k: 'tableH', g: 'Dinette', l: 'Table height', d: 29, s: .5, a: 20, b: 40 },
   { k: 'cabBot', g: 'Wall cabinets', l: 'Bottom, up from floor', d: 61, s: .5, a: 40, b: 80 },
+  { k: 'cabBackIn', g: 'Wall cabinets', l: 'Set the back of the cabinets in from the wall (the wall leans in, 2 7/8 in at the cabinet tops)', d: 3, s: .5, a: 0, b: 8 },
   { k: 'cabDepth', g: 'Wall cabinets', l: 'Depth', d: 14, s: .5, a: 6, b: 24 },
   { k: 'doorH', g: 'Wall cabinets', l: 'Door height (3 doors a side, widths follow the cabinet)', d: 12, s: .5, a: 6, b: 24 },
   { k: 'panW', g: 'Passenger side', l: 'Shower pan length', d: 36, s: .5, a: 20, b: 50 },
@@ -211,6 +212,7 @@ const PD = [
   { k: 'flapGap', g: 'Fold-out table and foot ledge', l: 'Gap left to the cab wall', d: 2, s: .5, a: 0, b: 10 },
   { k: 'flapLen', g: 'Fold-out table and foot ledge', l: 'Length', d: 29, s: .5, a: 8, b: 60 },
   { k: 'flapD', g: 'Fold-out table and foot ledge', l: 'Depth', d: 15, s: .5, a: 8, b: 30 },
+  { k: 'microIn', g: 'Fold-out table and foot ledge', l: 'Microwave: set its back in from the passenger wall (the wall leans in, about 2 1/2 in at its top)', d: 2.5, s: .5, a: 0, b: 8 },
   { k: 'cabSeatH', g: 'Fold-out table and foot ledge', l: 'Cab passenger seat: top of the cushion, up from the floor', d: 17, s: .5, a: 10, b: 30 },
   { k: 'cabSeatOut', g: 'Fold-out table and foot ledge', l: 'Cab passenger seat: how far the cushion sticks out past the cab wall into the living area (the back does not)', d: 1, s: .5, a: 0, b: 10 },
   { k: 'cabSeatFwd', g: 'Fold-out table and foot ledge', l: 'Cab passenger seat pulled all the way forward: the cushion rear edge is this far in front of the cab wall', d: 6, s: .5, a: 0, b: 20 },
@@ -794,11 +796,11 @@ function drawCross(L, V) {
   // driver side: couch and the wall cabinets; passenger side: counter, fridge, microwave shelf
   o.push(bx(0, P.bedD, 0, P.seatH, { fill: COL.P, fo: .18, stroke: COL.P, sw: 1.5, rx: 3 })); o.push(T(xx(P.bedD / 2), yy(P.seatH / 2), 'couch', { size: 11, fill: COL.P }));
   o.push(bx(0, 6, P.seatH, P.backH, { fill: COL.P, fo: .18, stroke: COL.P, sw: 1.5, rx: 3 }));
-  o.push(bx(0, P.cabDepth, P.cabBot, L.ceilF, { fill: '#534AB7', fo: .16, stroke: '#534AB7', sw: 1.6, dash: '5 3' }));
-  o.push(T(xx(P.cabDepth / 2), yy((P.cabBot + L.ceilF) / 2), 'wall cabinet', { size: 11, fill: '#3C3489' })); o.push(T(xx(P.cabDepth / 2), yy((P.cabBot + L.ceilF) / 2) + 13, `${fmt(P.cabDepth)} deep`, { size: 10, fill: '#3C3489' }));
+  o.push(bx(P.cabBackIn, P.cabBackIn + P.cabDepth, P.cabBot, L.ceilF, { fill: '#534AB7', fo: .16, stroke: '#534AB7', sw: 1.6, dash: '5 3' }));
+  o.push(T(xx(P.cabBackIn + P.cabDepth / 2), yy((P.cabBot + L.ceilF) / 2), 'wall cabinet', { size: 11, fill: '#3C3489' })); o.push(T(xx(P.cabBackIn + P.cabDepth / 2), yy((P.cabBot + L.ceilF) / 2) + 13, `${fmt(P.cabDepth)} deep`, { size: 10, fill: '#3C3489' }));
   o.push(bx(W - P.cabD, W, 0, P.counterH, { fill: COL.C, fo: .12, stroke: COL.C, sw: 1.5, rx: 3 })); o.push(T(xx(W - P.cabD / 2), yy(P.counterH / 2), 'counter and cabinet', { size: 11, fill: COL.C }));
   o.push(bx(W - 2 - 19, W - 2, 8.25, 56.25, { fill: '#0A6A8A', fo: .14, stroke: '#0A6A8A', sw: 1.4, dash: '5 3' })); o.push(T(xx(W - 11.5), yy(40), 'fridge', { size: 11, fill: '#0A6A8A' }));
-  o.push(bx(W - 12, W, 59, 69, { fill: COL.G, fo: .2, stroke: COL.G, sw: 1.4, rx: 2 })); o.push(T(xx(W - 6), yy(64.5), 'micro', { size: 10, fill: COL.G }));
+  o.push(bx(W - 12 - P.microIn, W - P.microIn, 59, 69, { fill: COL.G, fo: .2, stroke: COL.G, sw: 1.4, rx: 2 })); o.push(T(xx(W - 6 - P.microIn), yy(64.5), 'micro', { size: 10, fill: COL.G }));
   o.push(T(xx(0) + 6, yy(P.roofMidH + P.ribDepth + 5), 'driver side wall', { anchor: 'start', size: 11, fill: '#5F5E5A', halo: false })); o.push(T(xx(W) - 6, yy(P.roofMidH + P.ribDepth + 5), 'passenger side wall', { anchor: 'end', size: 11, fill: '#5F5E5A', halo: false }));
   o.push(Ln(xx(0), yy(0), xx(W), yy(0), { stroke: '#5F5E5A', sw: 2 }));
   o.push(T(20, FL + 58, 'Things at different places along the van are drawn together (the fridge and the counter are side by side along the wall, not on top of each other).', { anchor: 'start', size: 10.5, fill: '#5F5E5A', halo: false }));
@@ -1004,8 +1006,8 @@ function drawPlan(L, V) {
     }
   }
   o.push(ip(L.fr[0], L.fr[1], 0, P.cabD, '#8A6B4D', '', null, { fo: .08, dash: '6 3' }));
-  o.push(ip(L.fr[0] + 1.75, L.fr[1] - 1.75, 0, 12, COL.G, '', null, { fo: .2, dash: '4 3' }));
-  o.push(T(xx((L.fr[0] + L.fr[1]) / 2), yp(5.5), 'Microwave 18.5 x 12', { size: 9, fill: COL.G, w: 500 }));
+  o.push(ip(L.fr[0] + 1.75, L.fr[1] - 1.75, P.microIn, P.microIn + 12, COL.G, '', null, { fo: .2, dash: '4 3' }));
+  o.push(T(xx((L.fr[0] + L.fr[1]) / 2), yp(5.5 + P.microIn), 'Microwave 18.5 x 12', { size: 9, fill: COL.G, w: 500 }));
   o.push(ip(42, 76, 0, 7, COL.W2, '', null, { fo: .3 }));
   o.push(ip(L.tankX[0], L.tankX[1], 0, P.tankD, COL.BL, '', null, { fo: .1, dash: '5 3' }));
   o.push(ip(L.hotX[0], L.hotX[1], 0, P.hotD, '#C0392B', '', null, { fo: .2, dash: '4 3' }));
@@ -1036,9 +1038,9 @@ function drawPlan(L, V) {
   // overhead cabinets (outline on top so the doors above them can be clicked); their doors flip up and stick out over the aisle
   L.cabs.forEach((c, ci) => {
     const ids = [0, 1, 2].map(i => 'dc' + (ci * 3 + i)).join(',');
-    let g = R(xx(c[0]), yy(0), S * (c[1] - c[0]), S * P.cabDepth, { rx: 2, stroke: COL.P, sw: 1.6, dash: '5 3' });
-    L.doors.slice(ci * 3, ci * 3 + 3).forEach(d => { const s = V[d.id] || 0; if (s > .01) g += R(xx(d.x0), yy(P.cabDepth), S * d.w, S * P.doorH * Math.sin(s * Math.PI / 2), { fill: COL.P, fo: .2, stroke: COL.P, sw: 1.2, dash: '3 2' }); });
-    g += T(xx((c[0] + c[1]) / 2), yy(P.cabDepth - 3.5), `overhead cabinet ${fmt(c[1] - c[0])} x ${fmt(P.cabDepth)} (bottom ${fmt(P.cabBot)} up)`, { size: 9, fill: COL.P, halo: false });
+    let g = R(xx(c[0]), yy(P.cabBackIn), S * (c[1] - c[0]), S * P.cabDepth, { rx: 2, stroke: COL.P, sw: 1.6, dash: '5 3' });
+    L.doors.slice(ci * 3, ci * 3 + 3).forEach(d => { const s = V[d.id] || 0; if (s > .01) g += R(xx(d.x0), yy(P.cabBackIn + P.cabDepth), S * d.w, S * P.doorH * Math.sin(s * Math.PI / 2), { fill: COL.P, fo: .2, stroke: COL.P, sw: 1.2, dash: '3 2' }); });
+    g += T(xx((c[0] + c[1]) / 2), yy(P.cabBackIn + P.cabDepth - 3.5), `overhead cabinet ${fmt(c[1] - c[0])} x ${fmt(P.cabDepth)} (bottom ${fmt(P.cabBot)} up)`, { size: 9, fill: COL.P, halo: false });
     o.push(MV(ids, g, ''));
   });
   // ---------- walkway dimensions, worked out from what is open right now ----------
@@ -1168,7 +1170,9 @@ function computeChecks(L, V) {
   if (P.leanOn) {
     const z0 = P.cabBot, z1 = L.ceilF, l0 = L.leanAt(z0), l1 = L.leanAt(z1), wc = P.vanW - 2 * L.leanAt(P.ceil), d = Math.abs(wc - P.ceilW);
     push(L.leanK <= 0 ? 'warn' : 'ok', `Wall lean: from your two widths (${fmt(P.leanW1)} in at ${fmt(P.leanZ1)} up, ${fmt(P.leanW2)} in at ${fmt(P.leanZ2)} up) each wall is straight up to about ${fmt(L.leanStart)} in (${fmt(P.vanW)} wide), then leans in ${(L.leanK * 12).toFixed(2)} in per foot, ${(Math.atan(L.leanK) * 180 / Math.PI).toFixed(1)} degrees: ${fmt(L.leanAt(P.ceil))} in each side by the bare roof, so ${fmt(wc)} in wide at ${fmt(P.ceil)} up. ${d <= .75 ? `That matches the ${fmt(P.ceilW)} in flat roof.` : `The flat roof is set to ${fmt(P.ceilW)} in; the lean says ${fmt(wc)}.`}`);
-    push(l1 > .25 ? 'warn' : 'ok', `The driver side wall cabinets (${fmt(z0)} to ${fmt(z1)} in up) stand against a wall that leans in ${fmt(l0)} in at their bottom and ${fmt(l1)} in at their top. With vertical backs set flush at the bottom there is a gap up to ${fmt(l1 - l0)} in at the top; set flush at the top, the bottom stands ${fmt(l1 - l0)} in off the wall. Either scribe the cabinet backs to the lean (about ${(Math.atan(L.leanK) * 180 / Math.PI).toFixed(0)} degrees) or fill the wedge; the cabinet depth is measured from where the back sits. The same wedge is behind the wall covering and the vertical planks (furring strips S6 to S8 are inside it).`);
+    const bk = P.cabBackIn, mk = P.microIn, m0 = L.leanAt(59), m1 = L.leanAt(69);
+    push(bk < l1 - .01 ? 'bad' : 'ok', `The driver side wall cabinets (${fmt(z0)} to ${fmt(z1)} in up) stand against a wall that leans in ${fmt(l0)} in at their bottom and ${fmt(l1)} in at their top. Their backs are set in ${fmt(bk)} in from the wall, so the back is ${fmt(bk - l0)} in off the wall at the bottom and ${fmt(bk - l1)} in at the top${bk < l1 - .01 ? `: it would run into the wall by ${fmt(l1 - bk)} in, so set it in at least ${fmt(l1)} in` : ''}. The front is then ${fmt(bk + P.cabDepth)} in from the wall (the ${fmt(P.cabDepth)} in depth is measured from the back), so the aisle at cabinet height is ${fmt(bk)} in narrower than before. Set the back in more and the cabinet loses nothing but aisle width; set it in less and its top corner hits the wall.`);
+    push(mk < m1 - .01 ? 'bad' : 'ok', `The microwave (59 to 69 in up) is on a wall that leans in ${fmt(m0)} in at its bottom and ${fmt(m1)} in at its top; its back is set in ${fmt(mk)} in, so it is ${fmt(mk - m0)} in off the wall at the bottom and ${fmt(mk - m1)} in at the top${mk < m1 - .01 ? `: it would run into the wall by ${fmt(m1 - mk)} in` : ''}. The same wedge is behind the wall covering, the vertical planks and the closet (74 1/4 in tall, against the same leaning wall; the closet is not moved in yet).`);
   }
   // rib marks on the bare roof: each rib is a band ribW wide; an opening has to sit in the clear space between two bands
   if (L.ribs.length) {
