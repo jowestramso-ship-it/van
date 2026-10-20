@@ -301,12 +301,10 @@ function drawPass(L, V) {
     const d = [Math.cos(phi), Math.sin(phi)], n = [-Math.sin(phi), Math.cos(phi)];
     const p0 = [sinkE, lz - th], p1 = [p0[0] + Lg * d[0], p0[1] + Lg * d[1]];
     const q0 = [p0[0] + th * n[0], p0[1] + th * n[1]], q1 = [p1[0] + th * n[0], p1[1] + th * n[1]];
-    const lip = [[p1[0] - .75 * d[0] + th * n[0], p1[1] - .75 * d[1] + th * n[1]], q1, [q1[0] + n[0], q1[1] + n[1]], [p1[0] - .75 * d[0] + (th + 1) * n[0], p1[1] - .75 * d[1] + (th + 1) * n[1]]];
     const px = pt => [X(pt[0]), Y(pt[1])];
     let g = box(sinkE - th, sinkE, lz - th, lz - th + Lg, { stroke: '#5A3A00', sw: .8, dash: '2 2', so: .55 });
     if (s > .6) { const a1 = px([sinkE, lz - th - 6]), a2 = px([sinkE + Lg - 1.5, lz - th]); g += Ln(a1[0], a1[1], a2[0], a2[1], { stroke: '#5A3A00', sw: 2.2, so: clamp((s - .6) / .4, 0, 1) }); }
     g += Poly([px(p0), px(p1), px(q1), px(q0)], { fill: '#B07A2A', fo: .9, stroke: '#5A3A00', sw: 1.2 });
-    g += Poly(lip.map(px), { fill: '#B07A2A', fo: .9, stroke: '#5A3A00', sw: 1 });
     g += `<circle cx="${f1(px(p0)[0])}" cy="${f1(px(p0)[1])}" r="2.6" fill="#5A3A00"/>`;
     if (s > .5) g += T(X(sinkE + Lg / 2 + 3), Y(lz - 5), `Foot ledge, ${fmt(Lg)} x ${fmt(P.sinkD)}, top ${fmt(lz)} up`, { size: 10.5, fill: '#5A3A00', op: (s - .5) * 2 });
     o.push(MV('ledge', g, HITR(Math.min(X(sinkE), X(sinkE + Lg)), Y(lz + 3), S * Lg, S * 5) + HITR(Math.min(X(sinkE - 2), X(sinkE + .5)), Y(lz - th + Lg), S * 2.5, S * Lg)));
