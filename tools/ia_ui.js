@@ -26,6 +26,13 @@ function computeChecks(L, V) {
     push(L.leanK <= 0 ? 'warn' : 'ok', `Wall lean: from your two widths (${fmt(P.leanW1)} in at ${fmt(P.leanZ1)} up, ${fmt(P.leanW2)} in at ${fmt(P.leanZ2)} up) each wall is straight up to about ${fmt(L.leanStart)} in (${fmt(P.vanW)} wide), then leans in ${(L.leanK * 12).toFixed(2)} in per foot, ${(Math.atan(L.leanK) * 180 / Math.PI).toFixed(1)} degrees: ${fmt(L.leanAt(P.ceil))} in each side by the bare roof, so ${fmt(wc)} in wide at ${fmt(P.ceil)} up. ${d <= .75 ? `That matches the ${fmt(P.ceilW)} in flat roof.` : `The flat roof is set to ${fmt(P.ceilW)} in; the lean says ${fmt(wc)}.`}`);
     push(l1 > .25 ? 'warn' : 'ok', `The driver side wall cabinets (${fmt(z0)} to ${fmt(z1)} in up) stand against a wall that leans in ${fmt(l0)} in at their bottom and ${fmt(l1)} in at their top. With vertical backs set flush at the bottom there is a gap up to ${fmt(l1 - l0)} in at the top; set flush at the top, the bottom stands ${fmt(l1 - l0)} in off the wall. Either scribe the cabinet backs to the lean (about ${(Math.atan(L.leanK) * 180 / Math.PI).toFixed(0)} degrees) or fill the wedge; the cabinet depth is measured from where the back sits. The same wedge is behind the wall covering and the vertical planks (furring strips S6 to S8 are inside it).`);
   }
+  // rib marks on the bare roof: the openings and the units must sit between ribs
+  if (L.ribs.length) {
+    const gaps = L.ribs.slice(1).map((r, i) => r - L.ribs[i]), hit = (a, b) => L.ribs.filter(r => r > a && r < b);
+    const cuts = [[L.fan, 'fan'], [L.ac, 'air conditioner']].map(([c, nm]) => ({ nm, cut: hit(c.x - c.w / 2, c.x + c.w / 2), unit: hit(c.x - c.u / 2, c.x + c.u / 2) }));
+    const bad = cuts.filter(c => c.cut.length);
+    push(bad.length ? 'warn' : 'ok', `Roof ribs: ${L.ribs.length} marked (${L.ribs.map(fmt).join(', ')} in from the back${gaps.length ? `; gaps ${gaps.map(fmt).join(', ')}` : ''}). ${bad.length ? bad.map(c => `The ${c.nm} opening is crossed by the rib at ${c.cut.map(fmt).join(', ')} in: move it, or frame around the rib.`).join(' ') : 'No rib crosses the fan or air conditioner opening.'} ${cuts.filter(c => c.unit.length).map(c => `The ${c.nm} unit sits over ${c.unit.length} rib${c.unit.length > 1 ? 's' : ''} (${c.unit.map(fmt).join(', ')}), which is normal for the base.`).join(' ')}`);
+  }
   // roof arc (ribs 75 1/2 at the wall, 80 in the middle)
   {
     const fW = P.roofWallH - L.lining, fM = L.roofZ(P.vanW / 2) - L.lining, sag = L.roofSag;
@@ -142,6 +149,7 @@ const VIEWS = [
   { id: 'pass', label: 'Passenger side', draw: drawPass, movers: [['Shower pan', ['pan']], ['Fridge door', ['fridge']], ['Fold-out table with the foot ledge', ['flap', 'ledge']], ['Foot ledge only', ['ledge']]] },
   { id: 'end', label: 'Bed, from the end', draw: drawBedEnd, movers: [['Couch to bed', ['bed']]] },
   { id: 'cross', label: 'Cross-section', draw: drawCross, movers: [] },
+  { id: 'bare', label: 'Bare roof (mark the ribs)', draw: drawBare, movers: [] },
   { id: 'ceil', label: 'Ceiling', draw: drawCeiling, movers: [] },
   { id: 'plan', label: 'From above', draw: drawPlan, movers: [['Couch to bed', ['bed']], ['Dinette to bed', ['dinette']], ['Shower pan', ['pan']], ['Closet doors', ['clo_hi', 'clo_lo']], ['Fridge door', ['fridge']], ['Fold-out table with the foot ledge', ['flap', 'ledge']], ['Foot ledge only', ['ledge']], ['Wall cabinet doors', ALLDC]] }
 ];
@@ -191,12 +199,14 @@ function buildSizes() {
   const groups = []; PD.forEach(p => { if (!groups.includes(p.g)) groups.push(p.g); });
   $('#sizes').innerHTML = groups.map((g, gi) => `<details${gi < 2 ? ' open' : ''}><summary>${g}</summary>${PD.filter(p => p.g === g).map(p => {
     if (p.t === 'c') return `<label class="fld chk"><input type="checkbox" id="in_${p.k}"${P[p.k] ? ' checked' : ''}><span>${p.l}</span></label>`;
+    if (p.t === 'x') return `<label class="fld" style="grid-template-columns:1fr"><span>${p.l}</span><input type="text" id="in_${p.k}" value="${P[p.k]}" placeholder="for example 12, 26.5, 41" style="width:100%;padding:4px 6px;border:1px solid #B4B2A9;border-radius:6px;font:inherit"></label>`;
     if (p.t === 's') return `<label class="fld"><span>${p.l}</span><select id="in_${p.k}">${p.o.map(o => `<option value="${o[0]}"${P[p.k] === o[0] ? ' selected' : ''}>${o[1]}</option>`).join('')}</select></label>`;
     return `<label class="fld"><span>${p.l}</span><input type="number" id="in_${p.k}" value="${P[p.k]}" step="${p.s}" min="${p.a}" max="${p.b}" inputmode="decimal"></label>`;
   }).join('')}</details>`).join('');
   PD.forEach(p => {
     const el = $('#in_' + p.k);
     if (p.t === 'c') el.onchange = () => { P[p.k] = el.checked; syncAuto(); saveHash(); render(); };
+    else if (p.t === 'x') el.oninput = () => { P[p.k] = el.value; saveHash(); render(); };
     else if (p.t === 's') el.onchange = () => { P[p.k] = el.value; saveHash(); render(); };
     else {
       el.oninput = () => { const v = parseFloat(el.value); if (!isNaN(v)) { P[p.k] = clamp(v, p.a, p.b); saveHash(); render(); } };
@@ -228,6 +238,7 @@ function loadHash() {
     if (!q.has(p.k)) return;
     const raw = q.get(p.k);
     if (p.t === 'c') vals[p.k] = raw === '1';
+    else if (p.t === 'x') vals[p.k] = raw.slice(0, 400);
     else if (p.t === 's') { if (p.o.some(o => o[0] === raw)) vals[p.k] = raw; }
     else { const v = parseFloat(raw); if (!isNaN(v)) vals[p.k] = clamp(v, p.a, p.b); }
   });

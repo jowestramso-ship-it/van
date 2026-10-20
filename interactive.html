@@ -157,7 +157,7 @@
 const PD = [
   { k: 'cab', g: 'Van', l: 'Cab wall, from the back', d: 154, s: .5, a: 100, b: 200 },
   { k: 'vanW', g: 'Van', l: 'Inside width', d: 68, s: .5, a: 50, b: 90 },
-  { k: 'ceil', g: 'Van', l: 'Ceiling height (bare)', d: 76, s: .5, a: 60, b: 90 },
+  { k: 'ceil', g: 'Van', l: 'Ceiling height at the wall (bare, to the rib)', d: 75.5, s: .5, a: 60, b: 90 },
   { k: 'bedLen', g: 'Bed / couch', l: 'Length', d: 74, s: .5, a: 40, b: 120 },
   { k: 'bedD', g: 'Bed / couch', l: 'Depth, closed (the couch on its base)', d: 26, s: .5, a: 15, b: 40 },
   { k: 'bedBack', g: 'Bed / couch', l: 'Leaf width (flips out in front; = back cushion length)', d: 20, s: .5, a: 0, b: 40 },
@@ -227,6 +227,7 @@ const PD = [
   { k: 'sheetW', g: 'Walls', l: 'Sheet width (runs floor to ceiling)', d: 48, s: 1, a: 12, b: 60 },
   { k: 'sheetH', g: 'Walls', l: 'Sheet height', d: 96, s: 1, a: 24, b: 120 },
   { k: 'wallSpan', g: 'Walls', l: 'Most the covering may span between furring strips', d: 16, s: 1, a: 6, b: 32 },
+  { k: 'ribList', g: 'Roof ribs', l: 'Rib positions along the roof: inches from the back edge (rear doors), separated by commas', d: '', t: 'x' },
   { k: 'liningOn', g: 'Ceiling', l: 'Cover the ceiling (plywood, then slats)', d: true, t: 'c' },
   { k: 'ceilLen', g: 'Ceiling', l: 'Ceiling length being covered (rear doors to cab wall)', d: 160, s: 1, a: 40, b: 220 },
   { k: 'ceilW', g: 'Ceiling', l: 'Ceiling width being covered (the flat part, measured wall to wall; centered in the van)', d: 62, s: 1, a: 20, b: 90 },
@@ -336,6 +337,7 @@ function layout(P0) {
     L.roofZ = y => { const d = Math.min(Math.abs(y - P.vanW / 2), c / 2); return zw + (R > 1e8 ? 0 : Math.sqrt(R * R - d * d) - Math.sqrt(R * R - c * c / 4)); };
     L.roofTilt = y => R > 1e8 ? 0 : Math.atan(Math.min(Math.abs(y - P.vanW / 2), c / 2) / Math.sqrt(R * R - Math.pow(Math.min(Math.abs(y - P.vanW / 2), c / 2), 2))) * 180 / Math.PI;
   }
+  L.ribs = String(P.ribList || '').split(/[\s,;]+/).map(parseFloat).filter(v => isFinite(v) && v >= 0 && v <= P.ceilLen + 20).sort((a, b) => a - b);
   L.lining = P.liningOn ? P.plyT + P.slatT : 0;
   L.ceilF = P.ceil - L.lining;
   L.slatLen = P.slatAuto ? P.ceilLen : P.slatLen;
@@ -1061,6 +1063,47 @@ function drawCeiling(L, V) {
   o.push(T(xx(CL / 2), yy(0) - 6, 'driver side wall', { size: 11, fill: '#5F5E5A', halo: false })); o.push(T(xx(CL / 2), yy(VW) + 52, 'passenger side wall', { size: 11, fill: '#5F5E5A', halo: false }));
   return { w: xx(CL) + 130, h: yy(VW) + 70, body: o.join('') };
 }
+
+/* ================= the bare roof from above, before any covering, to mark where the ribs are ================= */
+function drawBare(L, V) {
+  const P = L.P, S = 5, X0 = 70, Y0 = 100, CL = P.ceilLen, W = P.vanW, o = [];
+  const xx = x => X0 + S * x, yy = y => Y0 + S * y;
+  o.push(T(20, 22, 'The bare roof seen from above, before any covering: rear doors on the left, cab wall on the right, driver side at the top.', { anchor: 'start', size: 14, fill: '#5F5E5A', halo: false }));
+  o.push(T(20, 40, 'Measure from the back edge (the rear doors). Type the rib positions in the Roof ribs box below the drawing, separated by commas.', { anchor: 'start', size: 12, fill: '#5F5E5A', halo: false }));
+  o.push(T(20, 56, `Heights from the floor: ${fmt(P.roofWallH)} in to the rib at the wall, ${fmt(P.roofMidH)} in to the rib in the middle (the roof arcs ${fmt(L.roofSag)} in across the ${fmt(L.roofW)} in between the wall tops).`, { anchor: 'start', size: 12, fill: '#5F5E5A', halo: false }));
+  o.push(R(xx(0), yy(0), S * CL, S * W, { fill: '#F1EFE8', fo: .8, stroke: '#2C2C2A', sw: 2 }));
+  // the flat/arched part between the wall tops, and the middle line
+  const e = (W - L.roofW) / 2;
+  o.push(R(xx(0), yy(e), S * CL, S * L.roofW, { stroke: '#8A6B4D', sw: 1, dash: '6 4' }));
+  o.push(Ln(xx(0), yy(W / 2), xx(CL), yy(W / 2), { stroke: '#8A6B4D', sw: 1, dash: '2 4' }));
+  o.push(T(xx(CL) + 8, yy(W / 2) + 4, `middle, ${fmt(P.roofMidH)} up`, { anchor: 'start', size: 10.5, fill: '#5A3A00', halo: false }));
+  o.push(T(xx(CL) + 8, yy(e) + 4, `wall top, ${fmt(P.roofWallH)} up`, { anchor: 'start', size: 10.5, fill: '#5A3A00', halo: false }));
+  o.push(T(xx(CL) + 8, yy(W - e) + 4, `wall top, ${fmt(P.roofWallH)} up`, { anchor: 'start', size: 10.5, fill: '#5A3A00', halo: false }));
+  // grid every 10 in and a ruler along the top and bottom edges (a tick every 5 in, a number every 10)
+  for (let x = 0; x <= CL; x += 10) o.push(Ln(xx(x), yy(0), xx(x), yy(W), { stroke: '#3F3E3A', so: .28, sw: .8, dash: '3 3' }));
+  for (let y = 0; y <= W; y += 10) o.push(Ln(xx(0), yy(y), xx(CL), yy(y), { stroke: '#3F3E3A', so: .28, sw: .8, dash: '3 3' }));
+  for (let x = 0; x <= CL; x += 5) {
+    const big = x % 10 === 0;
+    o.push(Ln(xx(x), yy(0), xx(x), yy(0) - (big ? 9 : 5), { stroke: '#185FA5', sw: 1 })); o.push(Ln(xx(x), yy(W), xx(x), yy(W) + (big ? 9 : 5), { stroke: '#185FA5', sw: 1 }));
+    if (big) { o.push(T(xx(x), yy(0) - 13, x + '', { size: 10.5, fill: '#185FA5', w: 700, halo: false })); o.push(T(xx(x), yy(W) + 22, x + '', { size: 10.5, fill: '#185FA5', w: 700, halo: false })); }
+  }
+  for (let y = 0; y <= W; y += 5) { const big = y % 10 === 0; o.push(Ln(xx(0), yy(y), xx(0) - (big ? 9 : 5), yy(y), { stroke: '#185FA5', sw: 1 })); if (big) o.push(T(xx(0) - 14, yy(y) + 4, y + '', { anchor: 'end', size: 10.5, fill: '#185FA5', w: 700, halo: false })); }
+  o.push(T(xx(CL / 2), yy(W) + 40, 'inches from the back edge (the rear doors)', { size: 12, fill: '#5F5E5A', halo: false }));
+  o.push(T(xx(0) - 50, yy(0) - 28, 'down the side: inches across from the driver wall', { anchor: 'start', size: 10.5, fill: '#5F5E5A', halo: false }));
+  // the cab wall
+  o.push(Ln(xx(CL), yy(0), xx(CL), yy(W), { stroke: '#2C2C2A', sw: 3 })); o.push(T(xx(CL) - 4, yy(0) - 30, 'cab wall', { anchor: 'end', size: 11, fill: '#5F5E5A', halo: false }));
+  // the roof openings (planned) and the units over them
+  [L.fan, L.ac].forEach(c => {
+    o.push(R(xx(c.x - c.u / 2), yy(c.y - c.u / 2), S * c.u, S * c.u, { stroke: '#444441', sw: 1.2, dash: '6 4' }));
+    o.push(R(xx(c.x - c.w / 2), yy(c.y - c.w / 2), S * c.w, S * c.w, { fill: '#2C2C2A', fo: .75, stroke: '#000', sw: 1.2 }));
+    o.push(T(xx(c.x), yy(c.y) + 4, c.nm === 'A/C' ? 'A/C' : 'fan', { size: 11, fill: '#fff', w: 600, halo: false }));
+    o.push(T(xx(c.x), yy(c.y - c.u / 2) - 4, `${c.nm === 'A/C' ? 'A/C' : 'fan'} unit ${fmt(c.u)} sq, opening ${fmt(c.w)} sq at ${fmt(c.x)} / ${fmt(c.y)}`, { size: 9.5, fill: '#444441' }));
+  });
+  // the ribs the user has marked: full width lines with their position
+  L.ribs.forEach((r, i) => { o.push(Ln(xx(r), yy(0), xx(r), yy(W), { stroke: '#A32D2D', sw: 2.4 })); o.push(T(xx(r), yy(W) - 6 - (i % 2) * 12, fmt(r), { size: 10.5, fill: '#A32D2D', w: 700 })); });
+  if (!L.ribs.length) o.push(T(xx(CL / 2), yy(W / 2) + 40, 'No ribs marked yet', { size: 13, fill: '#8A8A8A', halo: false }));
+  return { w: xx(CL) + 130, h: yy(W) + 70, body: o.join('') };
+}
 /* ================= checks ================= */
 function computeChecks(L, V) {
   const P = L.P, out = [], push = (lv, t) => out.push({ lv, t });
@@ -1088,6 +1131,13 @@ function computeChecks(L, V) {
     const z0 = P.cabBot, z1 = L.ceilF, l0 = L.leanAt(z0), l1 = L.leanAt(z1), wc = P.vanW - 2 * L.leanAt(P.ceil), d = Math.abs(wc - P.ceilW);
     push(L.leanK <= 0 ? 'warn' : 'ok', `Wall lean: from your two widths (${fmt(P.leanW1)} in at ${fmt(P.leanZ1)} up, ${fmt(P.leanW2)} in at ${fmt(P.leanZ2)} up) each wall is straight up to about ${fmt(L.leanStart)} in (${fmt(P.vanW)} wide), then leans in ${(L.leanK * 12).toFixed(2)} in per foot, ${(Math.atan(L.leanK) * 180 / Math.PI).toFixed(1)} degrees: ${fmt(L.leanAt(P.ceil))} in each side by the bare roof, so ${fmt(wc)} in wide at ${fmt(P.ceil)} up. ${d <= .75 ? `That matches the ${fmt(P.ceilW)} in flat roof.` : `The flat roof is set to ${fmt(P.ceilW)} in; the lean says ${fmt(wc)}.`}`);
     push(l1 > .25 ? 'warn' : 'ok', `The driver side wall cabinets (${fmt(z0)} to ${fmt(z1)} in up) stand against a wall that leans in ${fmt(l0)} in at their bottom and ${fmt(l1)} in at their top. With vertical backs set flush at the bottom there is a gap up to ${fmt(l1 - l0)} in at the top; set flush at the top, the bottom stands ${fmt(l1 - l0)} in off the wall. Either scribe the cabinet backs to the lean (about ${(Math.atan(L.leanK) * 180 / Math.PI).toFixed(0)} degrees) or fill the wedge; the cabinet depth is measured from where the back sits. The same wedge is behind the wall covering and the vertical planks (furring strips S6 to S8 are inside it).`);
+  }
+  // rib marks on the bare roof: the openings and the units must sit between ribs
+  if (L.ribs.length) {
+    const gaps = L.ribs.slice(1).map((r, i) => r - L.ribs[i]), hit = (a, b) => L.ribs.filter(r => r > a && r < b);
+    const cuts = [[L.fan, 'fan'], [L.ac, 'air conditioner']].map(([c, nm]) => ({ nm, cut: hit(c.x - c.w / 2, c.x + c.w / 2), unit: hit(c.x - c.u / 2, c.x + c.u / 2) }));
+    const bad = cuts.filter(c => c.cut.length);
+    push(bad.length ? 'warn' : 'ok', `Roof ribs: ${L.ribs.length} marked (${L.ribs.map(fmt).join(', ')} in from the back${gaps.length ? `; gaps ${gaps.map(fmt).join(', ')}` : ''}). ${bad.length ? bad.map(c => `The ${c.nm} opening is crossed by the rib at ${c.cut.map(fmt).join(', ')} in: move it, or frame around the rib.`).join(' ') : 'No rib crosses the fan or air conditioner opening.'} ${cuts.filter(c => c.unit.length).map(c => `The ${c.nm} unit sits over ${c.unit.length} rib${c.unit.length > 1 ? 's' : ''} (${c.unit.map(fmt).join(', ')}), which is normal for the base.`).join(' ')}`);
   }
   // roof arc (ribs 75 1/2 at the wall, 80 in the middle)
   {
@@ -1205,6 +1255,7 @@ const VIEWS = [
   { id: 'pass', label: 'Passenger side', draw: drawPass, movers: [['Shower pan', ['pan']], ['Fridge door', ['fridge']], ['Fold-out table with the foot ledge', ['flap', 'ledge']], ['Foot ledge only', ['ledge']]] },
   { id: 'end', label: 'Bed, from the end', draw: drawBedEnd, movers: [['Couch to bed', ['bed']]] },
   { id: 'cross', label: 'Cross-section', draw: drawCross, movers: [] },
+  { id: 'bare', label: 'Bare roof (mark the ribs)', draw: drawBare, movers: [] },
   { id: 'ceil', label: 'Ceiling', draw: drawCeiling, movers: [] },
   { id: 'plan', label: 'From above', draw: drawPlan, movers: [['Couch to bed', ['bed']], ['Dinette to bed', ['dinette']], ['Shower pan', ['pan']], ['Closet doors', ['clo_hi', 'clo_lo']], ['Fridge door', ['fridge']], ['Fold-out table with the foot ledge', ['flap', 'ledge']], ['Foot ledge only', ['ledge']], ['Wall cabinet doors', ALLDC]] }
 ];
@@ -1254,12 +1305,14 @@ function buildSizes() {
   const groups = []; PD.forEach(p => { if (!groups.includes(p.g)) groups.push(p.g); });
   $('#sizes').innerHTML = groups.map((g, gi) => `<details${gi < 2 ? ' open' : ''}><summary>${g}</summary>${PD.filter(p => p.g === g).map(p => {
     if (p.t === 'c') return `<label class="fld chk"><input type="checkbox" id="in_${p.k}"${P[p.k] ? ' checked' : ''}><span>${p.l}</span></label>`;
+    if (p.t === 'x') return `<label class="fld" style="grid-template-columns:1fr"><span>${p.l}</span><input type="text" id="in_${p.k}" value="${P[p.k]}" placeholder="for example 12, 26.5, 41" style="width:100%;padding:4px 6px;border:1px solid #B4B2A9;border-radius:6px;font:inherit"></label>`;
     if (p.t === 's') return `<label class="fld"><span>${p.l}</span><select id="in_${p.k}">${p.o.map(o => `<option value="${o[0]}"${P[p.k] === o[0] ? ' selected' : ''}>${o[1]}</option>`).join('')}</select></label>`;
     return `<label class="fld"><span>${p.l}</span><input type="number" id="in_${p.k}" value="${P[p.k]}" step="${p.s}" min="${p.a}" max="${p.b}" inputmode="decimal"></label>`;
   }).join('')}</details>`).join('');
   PD.forEach(p => {
     const el = $('#in_' + p.k);
     if (p.t === 'c') el.onchange = () => { P[p.k] = el.checked; syncAuto(); saveHash(); render(); };
+    else if (p.t === 'x') el.oninput = () => { P[p.k] = el.value; saveHash(); render(); };
     else if (p.t === 's') el.onchange = () => { P[p.k] = el.value; saveHash(); render(); };
     else {
       el.oninput = () => { const v = parseFloat(el.value); if (!isNaN(v)) { P[p.k] = clamp(v, p.a, p.b); saveHash(); render(); } };
@@ -1291,6 +1344,7 @@ function loadHash() {
     if (!q.has(p.k)) return;
     const raw = q.get(p.k);
     if (p.t === 'c') vals[p.k] = raw === '1';
+    else if (p.t === 'x') vals[p.k] = raw.slice(0, 400);
     else if (p.t === 's') { if (p.o.some(o => o[0] === raw)) vals[p.k] = raw; }
     else { const v = parseFloat(raw); if (!isNaN(v)) vals[p.k] = clamp(v, p.a, p.b); }
   });

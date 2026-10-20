@@ -240,3 +240,44 @@ function drawCeiling(L, V) {
   o.push(T(xx(CL / 2), yy(0) - 6, 'driver side wall', { size: 11, fill: '#5F5E5A', halo: false })); o.push(T(xx(CL / 2), yy(VW) + 52, 'passenger side wall', { size: 11, fill: '#5F5E5A', halo: false }));
   return { w: xx(CL) + 130, h: yy(VW) + 70, body: o.join('') };
 }
+
+/* ================= the bare roof from above, before any covering, to mark where the ribs are ================= */
+function drawBare(L, V) {
+  const P = L.P, S = 5, X0 = 70, Y0 = 100, CL = P.ceilLen, W = P.vanW, o = [];
+  const xx = x => X0 + S * x, yy = y => Y0 + S * y;
+  o.push(T(20, 22, 'The bare roof seen from above, before any covering: rear doors on the left, cab wall on the right, driver side at the top.', { anchor: 'start', size: 14, fill: '#5F5E5A', halo: false }));
+  o.push(T(20, 40, 'Measure from the back edge (the rear doors). Type the rib positions in the Roof ribs box below the drawing, separated by commas.', { anchor: 'start', size: 12, fill: '#5F5E5A', halo: false }));
+  o.push(T(20, 56, `Heights from the floor: ${fmt(P.roofWallH)} in to the rib at the wall, ${fmt(P.roofMidH)} in to the rib in the middle (the roof arcs ${fmt(L.roofSag)} in across the ${fmt(L.roofW)} in between the wall tops).`, { anchor: 'start', size: 12, fill: '#5F5E5A', halo: false }));
+  o.push(R(xx(0), yy(0), S * CL, S * W, { fill: '#F1EFE8', fo: .8, stroke: '#2C2C2A', sw: 2 }));
+  // the flat/arched part between the wall tops, and the middle line
+  const e = (W - L.roofW) / 2;
+  o.push(R(xx(0), yy(e), S * CL, S * L.roofW, { stroke: '#8A6B4D', sw: 1, dash: '6 4' }));
+  o.push(Ln(xx(0), yy(W / 2), xx(CL), yy(W / 2), { stroke: '#8A6B4D', sw: 1, dash: '2 4' }));
+  o.push(T(xx(CL) + 8, yy(W / 2) + 4, `middle, ${fmt(P.roofMidH)} up`, { anchor: 'start', size: 10.5, fill: '#5A3A00', halo: false }));
+  o.push(T(xx(CL) + 8, yy(e) + 4, `wall top, ${fmt(P.roofWallH)} up`, { anchor: 'start', size: 10.5, fill: '#5A3A00', halo: false }));
+  o.push(T(xx(CL) + 8, yy(W - e) + 4, `wall top, ${fmt(P.roofWallH)} up`, { anchor: 'start', size: 10.5, fill: '#5A3A00', halo: false }));
+  // grid every 10 in and a ruler along the top and bottom edges (a tick every 5 in, a number every 10)
+  for (let x = 0; x <= CL; x += 10) o.push(Ln(xx(x), yy(0), xx(x), yy(W), { stroke: '#3F3E3A', so: .28, sw: .8, dash: '3 3' }));
+  for (let y = 0; y <= W; y += 10) o.push(Ln(xx(0), yy(y), xx(CL), yy(y), { stroke: '#3F3E3A', so: .28, sw: .8, dash: '3 3' }));
+  for (let x = 0; x <= CL; x += 5) {
+    const big = x % 10 === 0;
+    o.push(Ln(xx(x), yy(0), xx(x), yy(0) - (big ? 9 : 5), { stroke: '#185FA5', sw: 1 })); o.push(Ln(xx(x), yy(W), xx(x), yy(W) + (big ? 9 : 5), { stroke: '#185FA5', sw: 1 }));
+    if (big) { o.push(T(xx(x), yy(0) - 13, x + '', { size: 10.5, fill: '#185FA5', w: 700, halo: false })); o.push(T(xx(x), yy(W) + 22, x + '', { size: 10.5, fill: '#185FA5', w: 700, halo: false })); }
+  }
+  for (let y = 0; y <= W; y += 5) { const big = y % 10 === 0; o.push(Ln(xx(0), yy(y), xx(0) - (big ? 9 : 5), yy(y), { stroke: '#185FA5', sw: 1 })); if (big) o.push(T(xx(0) - 14, yy(y) + 4, y + '', { anchor: 'end', size: 10.5, fill: '#185FA5', w: 700, halo: false })); }
+  o.push(T(xx(CL / 2), yy(W) + 40, 'inches from the back edge (the rear doors)', { size: 12, fill: '#5F5E5A', halo: false }));
+  o.push(T(xx(0) - 50, yy(0) - 28, 'down the side: inches across from the driver wall', { anchor: 'start', size: 10.5, fill: '#5F5E5A', halo: false }));
+  // the cab wall
+  o.push(Ln(xx(CL), yy(0), xx(CL), yy(W), { stroke: '#2C2C2A', sw: 3 })); o.push(T(xx(CL) - 4, yy(0) - 30, 'cab wall', { anchor: 'end', size: 11, fill: '#5F5E5A', halo: false }));
+  // the roof openings (planned) and the units over them
+  [L.fan, L.ac].forEach(c => {
+    o.push(R(xx(c.x - c.u / 2), yy(c.y - c.u / 2), S * c.u, S * c.u, { stroke: '#444441', sw: 1.2, dash: '6 4' }));
+    o.push(R(xx(c.x - c.w / 2), yy(c.y - c.w / 2), S * c.w, S * c.w, { fill: '#2C2C2A', fo: .75, stroke: '#000', sw: 1.2 }));
+    o.push(T(xx(c.x), yy(c.y) + 4, c.nm === 'A/C' ? 'A/C' : 'fan', { size: 11, fill: '#fff', w: 600, halo: false }));
+    o.push(T(xx(c.x), yy(c.y - c.u / 2) - 4, `${c.nm === 'A/C' ? 'A/C' : 'fan'} unit ${fmt(c.u)} sq, opening ${fmt(c.w)} sq at ${fmt(c.x)} / ${fmt(c.y)}`, { size: 9.5, fill: '#444441' }));
+  });
+  // the ribs the user has marked: full width lines with their position
+  L.ribs.forEach((r, i) => { o.push(Ln(xx(r), yy(0), xx(r), yy(W), { stroke: '#A32D2D', sw: 2.4 })); o.push(T(xx(r), yy(W) - 6 - (i % 2) * 12, fmt(r), { size: 10.5, fill: '#A32D2D', w: 700 })); });
+  if (!L.ribs.length) o.push(T(xx(CL / 2), yy(W / 2) + 40, 'No ribs marked yet', { size: 13, fill: '#8A8A8A', halo: false }));
+  return { w: xx(CL) + 130, h: yy(W) + 70, body: o.join('') };
+}
