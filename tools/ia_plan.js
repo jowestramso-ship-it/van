@@ -178,7 +178,7 @@ function drawPlan(L, V) {
   // overhead cabinets (outline on top so the doors above them can be clicked); their doors flip up and stick out over the aisle
   L.cabs.forEach((c, ci) => {
     const ids = [0, 1, 2].map(i => 'dc' + (ci * 3 + i)).join(',');
-    let g = R(xx(c[0]), yy(P.cabBackIn), S * (c[1] - c[0]), S * P.cabDepth, { rx: 2, stroke: COL.P, sw: 1.6, dash: '5 3' });
+    const cy0 = Math.max(P.cabBackIn, L.leanAt(L.ceilF)); let g = R(xx(c[0]), yy(cy0), S * (c[1] - c[0]), S * (P.cabBackIn + P.cabDepth - cy0), { rx: 2, stroke: COL.P, sw: 1.6, dash: '5 3' });
     L.doors.slice(ci * 3, ci * 3 + 3).forEach(d => { const s = V[d.id] || 0; if (s > .01) g += R(xx(d.x0), yy(P.cabBackIn + P.cabDepth), S * d.w, S * P.doorH * Math.sin(s * Math.PI / 2), { fill: COL.P, fo: .2, stroke: COL.P, sw: 1.2, dash: '3 2' }); });
     g += T(xx((c[0] + c[1]) / 2), yy(P.cabBackIn + P.cabDepth - 3.5), `overhead cabinet ${fmt(c[1] - c[0])} x ${fmt(P.cabDepth)} (bottom ${fmt(P.cabBot)} up)`, { size: 9, fill: COL.P, halo: false });
     o.push(MV(ids, g, ''));

@@ -28,7 +28,7 @@ const PD = [
   { k: 'tableD', g: 'Dinette', l: 'Table depth', d: 30, s: .5, a: 10, b: 45 },
   { k: 'tableH', g: 'Dinette', l: 'Table height', d: 29, s: .5, a: 20, b: 40 },
   { k: 'cabBot', g: 'Wall cabinets', l: 'Bottom, up from floor', d: 61, s: .5, a: 40, b: 80 },
-  { k: 'cabBackIn', g: 'Wall cabinets', l: 'Set the back of the cabinets in from the wall (the wall leans in, 2 7/8 in at the cabinet tops)', d: 3, s: .5, a: 0, b: 8 },
+  { k: 'cabBackIn', g: 'Wall cabinets', l: 'Set a solid back of the cabinets in from the wall (0 = open backs: the sides are cut to follow the leaning wall)', d: 0, s: .5, a: 0, b: 8 },
   { k: 'cabDepth', g: 'Wall cabinets', l: 'Depth', d: 14, s: .5, a: 6, b: 24 },
   { k: 'doorH', g: 'Wall cabinets', l: 'Door height (3 doors a side, widths follow the cabinet)', d: 12, s: .5, a: 6, b: 24 },
   { k: 'panW', g: 'Passenger side', l: 'Shower pan length', d: 36, s: .5, a: 20, b: 50 },

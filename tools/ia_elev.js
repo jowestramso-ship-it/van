@@ -373,8 +373,15 @@ function drawCross(L, V) {
   // driver side: couch and the wall cabinets; passenger side: counter, fridge, microwave shelf
   o.push(bx(0, P.bedD, 0, P.seatH, { fill: COL.P, fo: .18, stroke: COL.P, sw: 1.5, rx: 3 })); o.push(T(xx(P.bedD / 2), yy(P.seatH / 2), 'couch', { size: 11, fill: COL.P }));
   o.push(bx(0, 6, P.seatH, P.backH, { fill: COL.P, fo: .18, stroke: COL.P, sw: 1.5, rx: 3 }));
-  o.push(bx(P.cabBackIn, P.cabBackIn + P.cabDepth, P.cabBot, L.ceilF, { fill: '#534AB7', fo: .16, stroke: '#534AB7', sw: 1.6, dash: '5 3' }));
-  o.push(T(xx(P.cabBackIn + P.cabDepth / 2), yy((P.cabBot + L.ceilF) / 2), 'wall cabinet', { size: 11, fill: '#3C3489' })); o.push(T(xx(P.cabBackIn + P.cabDepth / 2), yy((P.cabBot + L.ceilF) / 2) + 13, `${fmt(P.cabDepth)} deep`, { size: 10, fill: '#3C3489' }));
+  // wall cabinets and the closet have open backs: the side panels run against the leaning wall, front edge vertical
+  {
+    const bk = P.cabBackIn, yf = bk + P.cabDepth, b0 = Math.max(bk, lean(P.cabBot)), b1 = Math.max(bk, lean(L.ceilF));
+    o.push(Poly([[xx(b0), yy(P.cabBot)], [xx(yf), yy(P.cabBot)], [xx(yf), yy(L.ceilF)], [xx(b1), yy(L.ceilF)]], { fill: '#534AB7', fo: .16, stroke: '#534AB7', sw: 1.6, dash: '5 3' }));
+    const cd = P.closetD, c1 = Math.max(0, lean(L.ceilF));
+    o.push(Poly([[xx(0), yy(0)], [xx(cd), yy(0)], [xx(cd), yy(L.ceilF)], [xx(c1), yy(L.ceilF)], [xx(lean(Math.max(L.leanStart, 0.0001)) ), yy(Math.min(L.leanStart, L.ceilF))]], { fill: 'none', stroke: '#444441', sw: 1.2, dash: '2 3' }));
+    o.push(T(xx(cd - 4), yy(L.ceilF - 26), `closet ${fmt(cd)} deep`, { size: 10, fill: '#444441' }));
+  }
+  o.push(T(xx(P.cabBackIn + P.cabDepth / 2 + 1.5), yy((P.cabBot + L.ceilF) / 2), 'wall cabinet', { size: 11, fill: '#3C3489' })); o.push(T(xx(P.cabBackIn + P.cabDepth / 2 + 1.5), yy((P.cabBot + L.ceilF) / 2) + 13, `${fmt(P.cabDepth)} deep`, { size: 10, fill: '#3C3489' }));
   o.push(bx(W - P.cabD, W, 0, P.counterH, { fill: COL.C, fo: .12, stroke: COL.C, sw: 1.5, rx: 3 })); o.push(T(xx(W - P.cabD / 2), yy(P.counterH / 2), 'counter and cabinet', { size: 11, fill: COL.C }));
   o.push(bx(W - 2 - 19, W - 2, 8.25, 56.25, { fill: '#0A6A8A', fo: .14, stroke: '#0A6A8A', sw: 1.4, dash: '5 3' })); o.push(T(xx(W - 11.5), yy(40), 'fridge', { size: 11, fill: '#0A6A8A' }));
   o.push(bx(W - 12 - P.microIn, W - P.microIn, 59, 69, { fill: COL.G, fo: .2, stroke: COL.G, sw: 1.4, rx: 2 })); o.push(T(xx(W - 6 - P.microIn), yy(64.5), 'micro', { size: 10, fill: COL.G }));
