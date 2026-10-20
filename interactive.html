@@ -220,7 +220,7 @@ const PD = [
   { k: 'wallSpan', g: 'Walls', l: 'Most the covering may span between furring strips', d: 16, s: 1, a: 6, b: 32 },
   { k: 'liningOn', g: 'Ceiling', l: 'Cover the ceiling (plywood, then slats)', d: true, t: 'c' },
   { k: 'ceilLen', g: 'Ceiling', l: 'Ceiling length being covered (rear doors to cab wall)', d: 160, s: 1, a: 40, b: 220 },
-  { k: 'ceilW', g: 'Ceiling', l: 'Ceiling width being covered (measure the flat part; the roof curves in)', d: 68, s: 1, a: 20, b: 90 },
+  { k: 'ceilW', g: 'Ceiling', l: 'Ceiling width being covered (the flat part, measured wall to wall; centered in the van)', d: 62, s: 1, a: 20, b: 90 },
   { k: 'plyT', g: 'Ceiling', l: 'Plywood thickness', d: .25, s: .125, a: .125, b: 1 },
   { k: 'slatW', g: 'Ceiling', l: 'Slat width', d: 3, s: .25, a: 1, b: 8 },
   { k: 'slatT', g: 'Ceiling', l: 'Slat thickness', d: 1, s: .125, a: .25, b: 3 },
@@ -321,12 +321,13 @@ function layout(P0) {
   // slat rows across the width (centered), the lights (each row of lights is mounted on the slat nearest its row, centered on it, so every slat still runs the whole length except where a cutout crosses it), and the cutouts
   {
     const n = L.nSlats, used = n * P.slatW + Math.max(0, n - 1) * P.slatGap, m = (P.ceilW - used) / 2;
-    L.slatY = []; for (let k = 0; k < n; k++) L.slatY.push(m + k * (P.slatW + P.slatGap));
+    L.ceilOff = (P.vanW - P.ceilW) / 2; // the flat part is centered in the van; every ceiling y below is across from the driver wall
+    L.slatY = []; for (let k = 0; k < n; k++) L.slatY.push(L.ceilOff + m + k * (P.slatW + P.slatGap));
     L.slatOut = new Set(); L.lights = []; L.chanY = [];
     const rows = Math.max(1, Math.round(P.lightRows)), N = Math.max(0, Math.round(P.lightN));
     for (let r = 0; r < rows; r++) {
       const cnt = Math.floor(N / rows) + (r < N % rows ? 1 : 0); if (cnt < 1) continue;
-      const target = P.ceilW * (r + 1) / (rows + 1); let y = target;
+      const target = L.ceilOff + P.ceilW * (r + 1) / (rows + 1); let y = target;
       if (P.liningOn && n > 0) { let best = 0, bd = 1e9; L.slatY.forEach((sy, k) => { const d = Math.abs(sy + P.slatW / 2 - target); if (d < bd) { bd = d; best = k; } }); y = L.slatY[best] + P.slatW / 2; L.chanY.push(y); }
       for (let c = 0; c < cnt; c++) L.lights.push({ x: P.ceilLen * (c + .5) / cnt, y });
     }
@@ -975,8 +976,8 @@ function drawCeiling(L, V) {
   const cx = [0], cy = [0]; for (let x = 96; x < CL; x += 96) cx.push(x); cx.push(CL); for (let y = 48; y < CW; y += 48) cy.push(y); cy.push(CW);
   if (P.liningOn) {
     for (let i = 0; i < cx.length - 1; i++) for (let j = 0; j < cy.length - 1; j++) {
-      o.push(R(xx(cx[i]), yy(cy[j]), S * (cx[i + 1] - cx[i]), S * (cy[j + 1] - cy[j]), { fill: '#D9C7A5', fo: .7, stroke: '#8A6B4D', sw: 1.2 }));
-      o.push(T(xx((cx[i] + cx[i + 1]) / 2), yy(cy[j]) + 12, `plywood ${fmt(cx[i + 1] - cx[i])} x ${fmt(cy[j + 1] - cy[j])}`, { size: 10, fill: '#5A3A00', w: 600 }));
+      o.push(R(xx(cx[i]), yy(L.ceilOff + cy[j]), S * (cx[i + 1] - cx[i]), S * (cy[j + 1] - cy[j]), { fill: '#D9C7A5', fo: .7, stroke: '#8A6B4D', sw: 1.2 }));
+      o.push(T(xx((cx[i] + cx[i + 1]) / 2), yy(L.ceilOff + cy[j]) + 12, `plywood ${fmt(cx[i + 1] - cx[i])} x ${fmt(cy[j + 1] - cy[j])}`, { size: 10, fill: '#5A3A00', w: 600 }));
     }
     // slats: one row each, as long as the ceiling, cut where the fan and A/C openings cross them; a row is left out where each row of lights goes
     const seg = (x0, x1, ex) => { let parts = [[x0, x1]]; ex.forEach(([e0, e1]) => { const nx = []; parts.forEach(([p0, p1]) => { if (e1 <= p0 || e0 >= p1) nx.push([p0, p1]); else { if (e0 > p0) nx.push([p0, e0]); if (e1 < p1) nx.push([e1, p1]); } }); parts = nx; }); return parts; };
@@ -988,16 +989,18 @@ function drawCeiling(L, V) {
     o.push(T(xx(CL * .62), yy(L.slatY[Math.min(L.slatY.length - 1, 6)] || 4) + 9, `slats ${fmt(P.slatW)} x ${fmt(P.slatT)} x ${fmt(L.slatLen)}`, { size: 11, fill: '#fff', w: 600, halo: false }));
     L.lights.forEach(l => { o.push(`<circle cx="${f1(xx(l.x))}" cy="${f1(yy(l.y))}" r="${f1(S * P.lightD / 2)}" fill="#FFE9A0" stroke="#B8860B" stroke-width="1.4"/>`); });
     [L.fan, L.ac].forEach(c => { o.push(R(xx(c.x - c.w / 2), yy(c.y - c.w / 2), S * c.w, S * c.w, { fill: '#2C2C2A', fo: .88, stroke: '#000', sw: 1.4 })); o.push(T(xx(c.x), yy(c.y) - 2, c.nm, { size: 11, fill: '#fff', w: 600, halo: false })); o.push(T(xx(c.x), yy(c.y) + 11, `${fmt(c.w)} x ${fmt(c.w)} cutout`, { size: 9.5, fill: '#fff', halo: false })); });
-  } else o.push(R(xx(0), yy(0), S * CL, S * CW, { fill: '#F1EFE8', fo: .7, stroke: '#5F5E5A', sw: 1.2 }));
-  // outline and dimensions
-  o.push(R(xx(0), yy(0), S * CL, S * CW, { stroke: '#2C2C2A', sw: 1.8 }));
-  o.push(Ln(xx(0), yy(CW) + 18, xx(CL), yy(CW) + 18, { stroke: '#A32D2D', sw: 1.4, mk: true }));
-  o.push(T(xx(CL / 2), yy(CW) + 34, `${fmt(CL)} in long (rear doors to cab wall)`, { size: 12, fill: '#A32D2D', w: 500, halo: false }));
-  o.push(Ln(xx(CL) + 18, yy(0), xx(CL) + 18, yy(CW), { stroke: '#A32D2D', sw: 1.4, mk: true }));
-  o.push(T(xx(CL) + 28, yy(CW / 2), `${fmt(CW)}`, { size: 12, fill: '#A32D2D', w: 500, halo: false, anchor: 'start' }));
-  o.push(T(xx(0) - 6, yy(CW / 2), 'rear', { size: 11, fill: '#5F5E5A', halo: false, anchor: 'end' })); o.push(T(xx(CL) - 4, yy(0) - 6, 'cab wall', { size: 11, fill: '#5F5E5A', halo: false, anchor: 'end' }));
-  o.push(T(xx(CL / 2), yy(0) - 6, 'driver side wall', { size: 11, fill: '#5F5E5A', halo: false })); o.push(T(xx(CL / 2), yy(CW) + 52, 'passenger side wall', { size: 11, fill: '#5F5E5A', halo: false }));
-  return { w: xx(CL) + 90, h: yy(CW) + 70, body: o.join('') };
+  } else o.push(R(xx(0), yy(L.ceilOff), S * CL, S * CW, { fill: '#F1EFE8', fo: .7, stroke: '#5F5E5A', sw: 1.2 }));
+  // outline (the inside of the van) and dimensions; the flat part being covered is centered in it
+  const VW = P.vanW;
+  o.push(R(xx(0), yy(0), S * CL, S * VW, { stroke: '#2C2C2A', sw: 1.8 }));
+  o.push(Ln(xx(0), yy(VW) + 18, xx(CL), yy(VW) + 18, { stroke: '#A32D2D', sw: 1.4, mk: true }));
+  o.push(T(xx(CL / 2), yy(VW) + 34, `${fmt(CL)} in long (rear doors to cab wall)`, { size: 12, fill: '#A32D2D', w: 500, halo: false }));
+  o.push(Ln(xx(CL) + 18, yy(L.ceilOff), xx(CL) + 18, yy(L.ceilOff + CW), { stroke: '#A32D2D', sw: 1.4, mk: true }));
+  o.push(T(xx(CL) + 28, yy(L.ceilOff + CW / 2) - 6, `${fmt(CW)} flat part`, { size: 12, fill: '#A32D2D', w: 500, halo: false, anchor: 'start' }));
+  o.push(T(xx(CL) + 28, yy(L.ceilOff + CW / 2) + 10, `${fmt(L.ceilOff)} each side`, { size: 11, fill: '#A32D2D', halo: false, anchor: 'start' }));
+  o.push(T(xx(0) - 6, yy(VW / 2), 'rear', { size: 11, fill: '#5F5E5A', halo: false, anchor: 'end' })); o.push(T(xx(CL) - 4, yy(0) - 6, 'cab wall', { size: 11, fill: '#5F5E5A', halo: false, anchor: 'end' }));
+  o.push(T(xx(CL / 2), yy(0) - 6, 'driver side wall', { size: 11, fill: '#5F5E5A', halo: false })); o.push(T(xx(CL / 2), yy(VW) + 52, 'passenger side wall', { size: 11, fill: '#5F5E5A', halo: false }));
+  return { w: xx(CL) + 130, h: yy(VW) + 70, body: o.join('') };
 }
 /* ================= checks ================= */
 function computeChecks(L, V) {
@@ -1041,7 +1044,7 @@ function computeChecks(L, V) {
   {
     const fit = P.lightD <= P.slatW + .01 || !P.liningOn;
     if (P.lightN > 0) push(fit ? 'ok' : 'warn', `Ceiling lights: ${L.lights.length} round lights ${fmt(P.lightD)} in across in ${Math.max(1, Math.round(P.lightRows))} row${P.lightRows > 1 ? 's' : ''} (${L.lights.map(l => fmt(l.x)).filter((v, i, a) => a.indexOf(v) === i).join(', ')} in from the back; rows ${L.chanY.length ? L.chanY.map(fmt).join(' and ') : '--'} in from the driver wall), each mounted on a slat${P.liningOn ? `, centered on a ${fmt(P.slatW)} in slat (${fmt((P.slatW - P.lightD) / 2)} in of wood left each side), so every slat stays whole${fit ? '' : `; the lights are wider than the slat (${fmt(P.slatW)} in): use a smaller light or wider slats`}` : ''}. A small hole through the ${fmt(P.plyT)} in plywood behind each one takes the wire to a switch; surface mounted they hang about 1/2 in below the slat faces, or recessed into the 1 in slat they add nothing.`);
-    const outside = c => c.x - c.w / 2 < 0 || c.x + c.w / 2 > P.ceilLen || c.y - c.w / 2 < 0 || c.y + c.w / 2 > P.ceilW;
+    const outside = c => c.x - c.w / 2 < 0 || c.x + c.w / 2 > P.ceilLen || c.y - c.w / 2 < L.ceilOff || c.y + c.w / 2 > L.ceilOff + P.ceilW;
     const over = (a, b) => Math.abs(a.x - b.x) < (a.w + b.w) / 2 && Math.abs(a.y - b.y) < (a.w + b.w) / 2;
     const near = c => L.lights.filter(l => { const dx = Math.max(Math.abs(l.x - c.x) - c.w / 2, 0), dy = Math.max(Math.abs(l.y - c.y) - c.w / 2, 0); return Math.hypot(dx, dy) < P.lightD / 2 + 2; }).length;
     const panY = P.vanW - P.panD, onBath = L.fan.x - L.fan.w / 2 >= 0 && L.fan.x + L.fan.w / 2 <= P.panW && L.fan.y - L.fan.w / 2 >= panY - .01;

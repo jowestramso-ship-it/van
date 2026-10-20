@@ -67,7 +67,7 @@ const PD = [
   { k: 'wallSpan', g: 'Walls', l: 'Most the covering may span between furring strips', d: 16, s: 1, a: 6, b: 32 },
   { k: 'liningOn', g: 'Ceiling', l: 'Cover the ceiling (plywood, then slats)', d: true, t: 'c' },
   { k: 'ceilLen', g: 'Ceiling', l: 'Ceiling length being covered (rear doors to cab wall)', d: 160, s: 1, a: 40, b: 220 },
-  { k: 'ceilW', g: 'Ceiling', l: 'Ceiling width being covered (measure the flat part; the roof curves in)', d: 68, s: 1, a: 20, b: 90 },
+  { k: 'ceilW', g: 'Ceiling', l: 'Ceiling width being covered (the flat part, measured wall to wall; centered in the van)', d: 62, s: 1, a: 20, b: 90 },
   { k: 'plyT', g: 'Ceiling', l: 'Plywood thickness', d: .25, s: .125, a: .125, b: 1 },
   { k: 'slatW', g: 'Ceiling', l: 'Slat width', d: 3, s: .25, a: 1, b: 8 },
   { k: 'slatT', g: 'Ceiling', l: 'Slat thickness', d: 1, s: .125, a: .25, b: 3 },
@@ -168,12 +168,13 @@ function layout(P0) {
   // slat rows across the width (centered), the lights (each row of lights is mounted on the slat nearest its row, centered on it, so every slat still runs the whole length except where a cutout crosses it), and the cutouts
   {
     const n = L.nSlats, used = n * P.slatW + Math.max(0, n - 1) * P.slatGap, m = (P.ceilW - used) / 2;
-    L.slatY = []; for (let k = 0; k < n; k++) L.slatY.push(m + k * (P.slatW + P.slatGap));
+    L.ceilOff = (P.vanW - P.ceilW) / 2; // the flat part is centered in the van; every ceiling y below is across from the driver wall
+    L.slatY = []; for (let k = 0; k < n; k++) L.slatY.push(L.ceilOff + m + k * (P.slatW + P.slatGap));
     L.slatOut = new Set(); L.lights = []; L.chanY = [];
     const rows = Math.max(1, Math.round(P.lightRows)), N = Math.max(0, Math.round(P.lightN));
     for (let r = 0; r < rows; r++) {
       const cnt = Math.floor(N / rows) + (r < N % rows ? 1 : 0); if (cnt < 1) continue;
-      const target = P.ceilW * (r + 1) / (rows + 1); let y = target;
+      const target = L.ceilOff + P.ceilW * (r + 1) / (rows + 1); let y = target;
       if (P.liningOn && n > 0) { let best = 0, bd = 1e9; L.slatY.forEach((sy, k) => { const d = Math.abs(sy + P.slatW / 2 - target); if (d < bd) { bd = d; best = k; } }); y = L.slatY[best] + P.slatW / 2; L.chanY.push(y); }
       for (let c = 0; c < cnt; c++) L.lights.push({ x: P.ceilLen * (c + .5) / cnt, y });
     }

@@ -210,8 +210,8 @@ function drawCeiling(L, V) {
   const cx = [0], cy = [0]; for (let x = 96; x < CL; x += 96) cx.push(x); cx.push(CL); for (let y = 48; y < CW; y += 48) cy.push(y); cy.push(CW);
   if (P.liningOn) {
     for (let i = 0; i < cx.length - 1; i++) for (let j = 0; j < cy.length - 1; j++) {
-      o.push(R(xx(cx[i]), yy(cy[j]), S * (cx[i + 1] - cx[i]), S * (cy[j + 1] - cy[j]), { fill: '#D9C7A5', fo: .7, stroke: '#8A6B4D', sw: 1.2 }));
-      o.push(T(xx((cx[i] + cx[i + 1]) / 2), yy(cy[j]) + 12, `plywood ${fmt(cx[i + 1] - cx[i])} x ${fmt(cy[j + 1] - cy[j])}`, { size: 10, fill: '#5A3A00', w: 600 }));
+      o.push(R(xx(cx[i]), yy(L.ceilOff + cy[j]), S * (cx[i + 1] - cx[i]), S * (cy[j + 1] - cy[j]), { fill: '#D9C7A5', fo: .7, stroke: '#8A6B4D', sw: 1.2 }));
+      o.push(T(xx((cx[i] + cx[i + 1]) / 2), yy(L.ceilOff + cy[j]) + 12, `plywood ${fmt(cx[i + 1] - cx[i])} x ${fmt(cy[j + 1] - cy[j])}`, { size: 10, fill: '#5A3A00', w: 600 }));
     }
     // slats: one row each, as long as the ceiling, cut where the fan and A/C openings cross them; a row is left out where each row of lights goes
     const seg = (x0, x1, ex) => { let parts = [[x0, x1]]; ex.forEach(([e0, e1]) => { const nx = []; parts.forEach(([p0, p1]) => { if (e1 <= p0 || e0 >= p1) nx.push([p0, p1]); else { if (e0 > p0) nx.push([p0, e0]); if (e1 < p1) nx.push([e1, p1]); } }); parts = nx; }); return parts; };
@@ -223,14 +223,16 @@ function drawCeiling(L, V) {
     o.push(T(xx(CL * .62), yy(L.slatY[Math.min(L.slatY.length - 1, 6)] || 4) + 9, `slats ${fmt(P.slatW)} x ${fmt(P.slatT)} x ${fmt(L.slatLen)}`, { size: 11, fill: '#fff', w: 600, halo: false }));
     L.lights.forEach(l => { o.push(`<circle cx="${f1(xx(l.x))}" cy="${f1(yy(l.y))}" r="${f1(S * P.lightD / 2)}" fill="#FFE9A0" stroke="#B8860B" stroke-width="1.4"/>`); });
     [L.fan, L.ac].forEach(c => { o.push(R(xx(c.x - c.w / 2), yy(c.y - c.w / 2), S * c.w, S * c.w, { fill: '#2C2C2A', fo: .88, stroke: '#000', sw: 1.4 })); o.push(T(xx(c.x), yy(c.y) - 2, c.nm, { size: 11, fill: '#fff', w: 600, halo: false })); o.push(T(xx(c.x), yy(c.y) + 11, `${fmt(c.w)} x ${fmt(c.w)} cutout`, { size: 9.5, fill: '#fff', halo: false })); });
-  } else o.push(R(xx(0), yy(0), S * CL, S * CW, { fill: '#F1EFE8', fo: .7, stroke: '#5F5E5A', sw: 1.2 }));
-  // outline and dimensions
-  o.push(R(xx(0), yy(0), S * CL, S * CW, { stroke: '#2C2C2A', sw: 1.8 }));
-  o.push(Ln(xx(0), yy(CW) + 18, xx(CL), yy(CW) + 18, { stroke: '#A32D2D', sw: 1.4, mk: true }));
-  o.push(T(xx(CL / 2), yy(CW) + 34, `${fmt(CL)} in long (rear doors to cab wall)`, { size: 12, fill: '#A32D2D', w: 500, halo: false }));
-  o.push(Ln(xx(CL) + 18, yy(0), xx(CL) + 18, yy(CW), { stroke: '#A32D2D', sw: 1.4, mk: true }));
-  o.push(T(xx(CL) + 28, yy(CW / 2), `${fmt(CW)}`, { size: 12, fill: '#A32D2D', w: 500, halo: false, anchor: 'start' }));
-  o.push(T(xx(0) - 6, yy(CW / 2), 'rear', { size: 11, fill: '#5F5E5A', halo: false, anchor: 'end' })); o.push(T(xx(CL) - 4, yy(0) - 6, 'cab wall', { size: 11, fill: '#5F5E5A', halo: false, anchor: 'end' }));
-  o.push(T(xx(CL / 2), yy(0) - 6, 'driver side wall', { size: 11, fill: '#5F5E5A', halo: false })); o.push(T(xx(CL / 2), yy(CW) + 52, 'passenger side wall', { size: 11, fill: '#5F5E5A', halo: false }));
-  return { w: xx(CL) + 90, h: yy(CW) + 70, body: o.join('') };
+  } else o.push(R(xx(0), yy(L.ceilOff), S * CL, S * CW, { fill: '#F1EFE8', fo: .7, stroke: '#5F5E5A', sw: 1.2 }));
+  // outline (the inside of the van) and dimensions; the flat part being covered is centered in it
+  const VW = P.vanW;
+  o.push(R(xx(0), yy(0), S * CL, S * VW, { stroke: '#2C2C2A', sw: 1.8 }));
+  o.push(Ln(xx(0), yy(VW) + 18, xx(CL), yy(VW) + 18, { stroke: '#A32D2D', sw: 1.4, mk: true }));
+  o.push(T(xx(CL / 2), yy(VW) + 34, `${fmt(CL)} in long (rear doors to cab wall)`, { size: 12, fill: '#A32D2D', w: 500, halo: false }));
+  o.push(Ln(xx(CL) + 18, yy(L.ceilOff), xx(CL) + 18, yy(L.ceilOff + CW), { stroke: '#A32D2D', sw: 1.4, mk: true }));
+  o.push(T(xx(CL) + 28, yy(L.ceilOff + CW / 2) - 6, `${fmt(CW)} flat part`, { size: 12, fill: '#A32D2D', w: 500, halo: false, anchor: 'start' }));
+  o.push(T(xx(CL) + 28, yy(L.ceilOff + CW / 2) + 10, `${fmt(L.ceilOff)} each side`, { size: 11, fill: '#A32D2D', halo: false, anchor: 'start' }));
+  o.push(T(xx(0) - 6, yy(VW / 2), 'rear', { size: 11, fill: '#5F5E5A', halo: false, anchor: 'end' })); o.push(T(xx(CL) - 4, yy(0) - 6, 'cab wall', { size: 11, fill: '#5F5E5A', halo: false, anchor: 'end' }));
+  o.push(T(xx(CL / 2), yy(0) - 6, 'driver side wall', { size: 11, fill: '#5F5E5A', halo: false })); o.push(T(xx(CL / 2), yy(VW) + 52, 'passenger side wall', { size: 11, fill: '#5F5E5A', halo: false }));
+  return { w: xx(CL) + 130, h: yy(VW) + 70, body: o.join('') };
 }
