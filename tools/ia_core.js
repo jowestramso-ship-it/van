@@ -74,7 +74,7 @@ const PD = [
   { k: 'sheetW', g: 'Walls', l: 'Sheet width (runs floor to ceiling)', d: 48, s: 1, a: 12, b: 60 },
   { k: 'sheetH', g: 'Walls', l: 'Sheet height', d: 96, s: 1, a: 24, b: 120 },
   { k: 'wallSpan', g: 'Walls', l: 'Most the covering may span between furring strips', d: 16, s: 1, a: 6, b: 32 },
-  { k: 'ribList', g: 'Roof ribs', l: 'Rib positions along the roof: inches from the back edge (rear doors), separated by commas', d: '21.75, 37.875, 58.375', t: 'x' },
+  { k: 'ribList', g: 'Roof ribs', l: 'Rib positions along the roof: inches from the back edge (rear doors), separated by commas', d: '21.75, 37.875, 58.375, 97.375', t: 'x' },
   { k: 'liningOn', g: 'Ceiling', l: 'Cover the ceiling (plywood, then slats)', d: true, t: 'c' },
   { k: 'ceilLen', g: 'Ceiling', l: 'Ceiling length being covered (rear doors to cab wall)', d: 160, s: 1, a: 40, b: 220 },
   { k: 'ceilW', g: 'Ceiling', l: 'Ceiling width being covered (the flat part, measured wall to wall; centered in the van)', d: 62, s: 1, a: 20, b: 90 },
