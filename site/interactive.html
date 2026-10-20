@@ -228,6 +228,8 @@ const PD = [
   { k: 'sheetH', g: 'Walls', l: 'Sheet height', d: 96, s: 1, a: 24, b: 120 },
   { k: 'wallSpan', g: 'Walls', l: 'Most the covering may span between furring strips', d: 16, s: 1, a: 6, b: 32 },
   { k: 'ribList', g: 'Roof ribs', l: 'Rib positions along the roof: inches from the back edge (rear doors), separated by commas', d: '21.75, 37.875, 58.375, 97.375', t: 'x' },
+  { k: 'ribW', g: 'Roof ribs', l: 'Rib width (the flange along the van)', d: 2.75, s: .125, a: .5, b: 8 },
+  { k: 'ribRef', g: 'Roof ribs', l: 'The positions above are', d: 'back', t: 's', o: [['back', 'the edge of each rib nearest the back'], ['center', 'the middle of each rib'], ['front', 'the edge of each rib nearest the cab']] },
   { k: 'liningOn', g: 'Ceiling', l: 'Cover the ceiling (plywood, then slats)', d: true, t: 'c' },
   { k: 'ceilLen', g: 'Ceiling', l: 'Ceiling length being covered (rear doors to cab wall)', d: 160, s: 1, a: 40, b: 220 },
   { k: 'ceilW', g: 'Ceiling', l: 'Ceiling width being covered (the flat part, measured wall to wall; centered in the van)', d: 62, s: 1, a: 20, b: 90 },
@@ -338,6 +340,7 @@ function layout(P0) {
     L.roofTilt = y => R > 1e8 ? 0 : Math.atan(Math.min(Math.abs(y - P.vanW / 2), c / 2) / Math.sqrt(R * R - Math.pow(Math.min(Math.abs(y - P.vanW / 2), c / 2), 2))) * 180 / Math.PI;
   }
   L.ribs = String(P.ribList || '').split(/[\s,;]+/).map(parseFloat).filter(v => isFinite(v) && v >= 0 && v <= P.ceilLen + 20).sort((a, b) => a - b);
+  L.ribBands = L.ribs.map(r => P.ribRef === 'center' ? [r - P.ribW / 2, r + P.ribW / 2] : P.ribRef === 'front' ? [r - P.ribW, r] : [r, r + P.ribW]);
   L.lining = P.liningOn ? P.plyT + P.slatT : 0;
   L.ceilF = P.ceil - L.lining;
   L.slatLen = P.slatAuto ? P.ceilLen : P.slatLen;
@@ -1052,7 +1055,7 @@ function drawCeiling(L, V) {
     [L.fan, L.ac].forEach(c => { o.push(R(xx(c.x - c.w / 2), yy(c.y - c.w / 2), S * c.w, S * c.w, { fill: '#2C2C2A', fo: .88, stroke: '#000', sw: 1.4 })); o.push(T(xx(c.x), yy(c.y) - 2, c.nm, { size: 11, fill: '#fff', w: 600, halo: false })); o.push(T(xx(c.x), yy(c.y) + 11, `${fmt(c.w)} x ${fmt(c.w)} cutout`, { size: 9.5, fill: '#fff', halo: false })); });
   } else o.push(R(xx(0), yy(L.ceilOff), S * CL, S * CW, { fill: '#F1EFE8', fo: .7, stroke: '#5F5E5A', sw: 1.2 }));
   // the roof ribs marked on the Bare roof tab (from the back edge): dashed red lines across the roof
-  L.ribs.forEach((r, i) => { o.push(Ln(xx(r), yy(0), xx(r), yy(P.vanW), { stroke: '#A32D2D', sw: 1.8, dash: '9 4' })); o.push(T(xx(r), yy(0) - 6 - (i % 2) * 12, `rib ${fmt(r)}`, { size: 10.5, fill: '#A32D2D', w: 700 })); });
+  L.ribBands.forEach((b, i) => { o.push(R(xx(b[0]), yy(0), S * (b[1] - b[0]), S * P.vanW, { fill: '#A32D2D', fo: .16, stroke: '#A32D2D', sw: 1.4, dash: '9 4' })); o.push(T(xx((b[0] + b[1]) / 2), yy(0) - 6 - (i % 2) * 12, `rib ${fmt(L.ribs[i])}`, { size: 10.5, fill: '#A32D2D', w: 700 })); });
   if (!L.ribs.length) o.push(T(xx(CL / 2), yy(0) - 22, 'No roof ribs marked yet: type them in the Roof ribs box (Sizes) and they show here', { size: 11, fill: '#8A8A8A', halo: false }));
   // outline (the inside of the van) and dimensions; the flat part being covered is centered in it
   const VW = P.vanW;
@@ -1103,7 +1106,7 @@ function drawBare(L, V) {
     o.push(T(xx(c.x), yy(c.y - c.u / 2) - 4, `${c.nm === 'A/C' ? 'A/C' : 'fan'} unit ${fmt(c.u)} sq, opening ${fmt(c.w)} sq at ${fmt(c.x)} / ${fmt(c.y)}`, { size: 9.5, fill: '#444441' }));
   });
   // the ribs the user has marked: full width lines with their position
-  L.ribs.forEach((r, i) => { o.push(Ln(xx(r), yy(0), xx(r), yy(W), { stroke: '#A32D2D', sw: 2.4 })); o.push(T(xx(r), yy(W) - 6 - (i % 2) * 12, fmt(r), { size: 10.5, fill: '#A32D2D', w: 700 })); });
+  L.ribBands.forEach((b, i) => { o.push(R(xx(b[0]), yy(0), S * (b[1] - b[0]), S * W, { fill: '#A32D2D', fo: .3, stroke: '#A32D2D', sw: 1.6 })); o.push(T(xx((b[0] + b[1]) / 2), yy(W) - 6 - (i % 2) * 12, `${fmt(L.ribs[i])}${P.ribRef === 'center' ? '' : P.ribRef === 'front' ? ' (front edge)' : ' (back edge)'}`, { size: 10.5, fill: '#A32D2D', w: 700 })); });
   if (!L.ribs.length) o.push(T(xx(CL / 2), yy(W / 2) + 40, 'No ribs marked yet', { size: 13, fill: '#8A8A8A', halo: false }));
   return { w: xx(CL) + 130, h: yy(W) + 70, body: o.join('') };
 }
@@ -1135,12 +1138,16 @@ function computeChecks(L, V) {
     push(L.leanK <= 0 ? 'warn' : 'ok', `Wall lean: from your two widths (${fmt(P.leanW1)} in at ${fmt(P.leanZ1)} up, ${fmt(P.leanW2)} in at ${fmt(P.leanZ2)} up) each wall is straight up to about ${fmt(L.leanStart)} in (${fmt(P.vanW)} wide), then leans in ${(L.leanK * 12).toFixed(2)} in per foot, ${(Math.atan(L.leanK) * 180 / Math.PI).toFixed(1)} degrees: ${fmt(L.leanAt(P.ceil))} in each side by the bare roof, so ${fmt(wc)} in wide at ${fmt(P.ceil)} up. ${d <= .75 ? `That matches the ${fmt(P.ceilW)} in flat roof.` : `The flat roof is set to ${fmt(P.ceilW)} in; the lean says ${fmt(wc)}.`}`);
     push(l1 > .25 ? 'warn' : 'ok', `The driver side wall cabinets (${fmt(z0)} to ${fmt(z1)} in up) stand against a wall that leans in ${fmt(l0)} in at their bottom and ${fmt(l1)} in at their top. With vertical backs set flush at the bottom there is a gap up to ${fmt(l1 - l0)} in at the top; set flush at the top, the bottom stands ${fmt(l1 - l0)} in off the wall. Either scribe the cabinet backs to the lean (about ${(Math.atan(L.leanK) * 180 / Math.PI).toFixed(0)} degrees) or fill the wedge; the cabinet depth is measured from where the back sits. The same wedge is behind the wall covering and the vertical planks (furring strips S6 to S8 are inside it).`);
   }
-  // rib marks on the bare roof: the openings and the units must sit between ribs
+  // rib marks on the bare roof: each rib is a band ribW wide; an opening has to sit in the clear space between two bands
   if (L.ribs.length) {
-    const gaps = L.ribs.slice(1).map((r, i) => r - L.ribs[i]), hit = (a, b) => L.ribs.filter(r => r > a && r < b);
-    const cuts = [[L.fan, 'fan'], [L.ac, 'air conditioner']].map(([c, nm]) => ({ nm, cut: hit(c.x - c.w / 2, c.x + c.w / 2), unit: hit(c.x - c.u / 2, c.x + c.u / 2) }));
-    const bad = cuts.filter(c => c.cut.length);
-    push(bad.length ? 'warn' : 'ok', `Roof ribs: ${L.ribs.length} marked (${L.ribs.map(fmt).join(', ')} in from the back${gaps.length ? `; gaps ${gaps.map(fmt).join(', ')}` : ''}). ${bad.length ? bad.map(c => `The ${c.nm} opening is crossed by the rib at ${c.cut.map(fmt).join(', ')} in: move it, or frame around the rib.`).join(' ') : 'No rib crosses the fan or air conditioner opening.'} ${cuts.filter(c => c.unit.length).map(c => `The ${c.nm} unit sits over ${c.unit.length} rib${c.unit.length > 1 ? 's' : ''} (${c.unit.map(fmt).join(', ')}), which is normal for the base.`).join(' ')}`);
+    const bands = L.ribBands, over = (a0, a1) => bands.map((b, i) => [b, i]).filter(([b]) => a0 < b[1] && a1 > b[0]).map(([b, i]) => L.ribs[i]);
+    const gaps = []; let prev = 0; bands.forEach((b, i) => { gaps.push([prev, b[0], i === 0 ? 'behind the first rib' : `between ribs ${fmt(L.ribs[i - 1])} and ${fmt(L.ribs[i])}`]); prev = b[1]; }); gaps.push([prev, P.ceilLen, 'in front of the last rib']);
+    const gdesc = gaps.map(g => `${fmt(g[1] - g[0])} ${g[2]}`).join('; ');
+    const fits = (w, from, to) => gaps.filter(g => g[1] - g[0] >= w - .01 && (g[0] + g[1]) / 2 >= from && (g[0] + g[1]) / 2 <= to).map(g => `${fmt((g[0] + g[1]) / 2)} (${g[2]}, ${fmt(g[1] - g[0] - w)} to spare)`);
+    const units = [[L.fan, 'fan', 0, P.panW], [L.ac, 'air conditioner', 40 - 6 + 0, 70 - 6]];
+    const bad = units.filter(([c]) => over(c.x - c.w / 2, c.x + c.w / 2).length);
+    const msgs = units.map(([c, nm, f0, f1]) => { const o = over(c.x - c.w / 2, c.x + c.w / 2); const ok = fits(c.w, f0, f1); return o.length ? `The ${nm} opening (${fmt(c.w)} wide at ${fmt(c.x)}, ${fmt(c.x - c.w / 2)} to ${fmt(c.x + c.w / 2)}) overlaps the rib at ${o.map(fmt).join(', ')}; a ${fmt(c.w)} in opening fits the clear space centered at ${ok.length ? ok.join(' or ') : 'nowhere in the places you want it (use a smaller opening, or frame the rib out)'}.` : `The ${nm} opening clears the ribs.`; });
+    push(bad.length ? 'warn' : 'ok', `Roof ribs: ${L.ribs.length} marked, each ${fmt(P.ribW)} wide (${P.ribRef === 'center' ? 'positions are the middles' : P.ribRef === 'front' ? 'positions are the edge nearest the cab' : 'positions are the edge nearest the back'}); clear space: ${gdesc}. ${msgs.join(' ')}`);
   }
   // roof arc (ribs 75 1/2 at the wall, 80 in the middle)
   {

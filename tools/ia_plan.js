@@ -229,7 +229,7 @@ function drawCeiling(L, V) {
     [L.fan, L.ac].forEach(c => { o.push(R(xx(c.x - c.w / 2), yy(c.y - c.w / 2), S * c.w, S * c.w, { fill: '#2C2C2A', fo: .88, stroke: '#000', sw: 1.4 })); o.push(T(xx(c.x), yy(c.y) - 2, c.nm, { size: 11, fill: '#fff', w: 600, halo: false })); o.push(T(xx(c.x), yy(c.y) + 11, `${fmt(c.w)} x ${fmt(c.w)} cutout`, { size: 9.5, fill: '#fff', halo: false })); });
   } else o.push(R(xx(0), yy(L.ceilOff), S * CL, S * CW, { fill: '#F1EFE8', fo: .7, stroke: '#5F5E5A', sw: 1.2 }));
   // the roof ribs marked on the Bare roof tab (from the back edge): dashed red lines across the roof
-  L.ribs.forEach((r, i) => { o.push(Ln(xx(r), yy(0), xx(r), yy(P.vanW), { stroke: '#A32D2D', sw: 1.8, dash: '9 4' })); o.push(T(xx(r), yy(0) - 6 - (i % 2) * 12, `rib ${fmt(r)}`, { size: 10.5, fill: '#A32D2D', w: 700 })); });
+  L.ribBands.forEach((b, i) => { o.push(R(xx(b[0]), yy(0), S * (b[1] - b[0]), S * P.vanW, { fill: '#A32D2D', fo: .16, stroke: '#A32D2D', sw: 1.4, dash: '9 4' })); o.push(T(xx((b[0] + b[1]) / 2), yy(0) - 6 - (i % 2) * 12, `rib ${fmt(L.ribs[i])}`, { size: 10.5, fill: '#A32D2D', w: 700 })); });
   if (!L.ribs.length) o.push(T(xx(CL / 2), yy(0) - 22, 'No roof ribs marked yet: type them in the Roof ribs box (Sizes) and they show here', { size: 11, fill: '#8A8A8A', halo: false }));
   // outline (the inside of the van) and dimensions; the flat part being covered is centered in it
   const VW = P.vanW;
@@ -280,7 +280,7 @@ function drawBare(L, V) {
     o.push(T(xx(c.x), yy(c.y - c.u / 2) - 4, `${c.nm === 'A/C' ? 'A/C' : 'fan'} unit ${fmt(c.u)} sq, opening ${fmt(c.w)} sq at ${fmt(c.x)} / ${fmt(c.y)}`, { size: 9.5, fill: '#444441' }));
   });
   // the ribs the user has marked: full width lines with their position
-  L.ribs.forEach((r, i) => { o.push(Ln(xx(r), yy(0), xx(r), yy(W), { stroke: '#A32D2D', sw: 2.4 })); o.push(T(xx(r), yy(W) - 6 - (i % 2) * 12, fmt(r), { size: 10.5, fill: '#A32D2D', w: 700 })); });
+  L.ribBands.forEach((b, i) => { o.push(R(xx(b[0]), yy(0), S * (b[1] - b[0]), S * W, { fill: '#A32D2D', fo: .3, stroke: '#A32D2D', sw: 1.6 })); o.push(T(xx((b[0] + b[1]) / 2), yy(W) - 6 - (i % 2) * 12, `${fmt(L.ribs[i])}${P.ribRef === 'center' ? '' : P.ribRef === 'front' ? ' (front edge)' : ' (back edge)'}`, { size: 10.5, fill: '#A32D2D', w: 700 })); });
   if (!L.ribs.length) o.push(T(xx(CL / 2), yy(W / 2) + 40, 'No ribs marked yet', { size: 13, fill: '#8A8A8A', halo: false }));
   return { w: xx(CL) + 130, h: yy(W) + 70, body: o.join('') };
 }

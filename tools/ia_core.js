@@ -75,6 +75,8 @@ const PD = [
   { k: 'sheetH', g: 'Walls', l: 'Sheet height', d: 96, s: 1, a: 24, b: 120 },
   { k: 'wallSpan', g: 'Walls', l: 'Most the covering may span between furring strips', d: 16, s: 1, a: 6, b: 32 },
   { k: 'ribList', g: 'Roof ribs', l: 'Rib positions along the roof: inches from the back edge (rear doors), separated by commas', d: '21.75, 37.875, 58.375, 97.375', t: 'x' },
+  { k: 'ribW', g: 'Roof ribs', l: 'Rib width (the flange along the van)', d: 2.75, s: .125, a: .5, b: 8 },
+  { k: 'ribRef', g: 'Roof ribs', l: 'The positions above are', d: 'back', t: 's', o: [['back', 'the edge of each rib nearest the back'], ['center', 'the middle of each rib'], ['front', 'the edge of each rib nearest the cab']] },
   { k: 'liningOn', g: 'Ceiling', l: 'Cover the ceiling (plywood, then slats)', d: true, t: 'c' },
   { k: 'ceilLen', g: 'Ceiling', l: 'Ceiling length being covered (rear doors to cab wall)', d: 160, s: 1, a: 40, b: 220 },
   { k: 'ceilW', g: 'Ceiling', l: 'Ceiling width being covered (the flat part, measured wall to wall; centered in the van)', d: 62, s: 1, a: 20, b: 90 },
@@ -185,6 +187,7 @@ function layout(P0) {
     L.roofTilt = y => R > 1e8 ? 0 : Math.atan(Math.min(Math.abs(y - P.vanW / 2), c / 2) / Math.sqrt(R * R - Math.pow(Math.min(Math.abs(y - P.vanW / 2), c / 2), 2))) * 180 / Math.PI;
   }
   L.ribs = String(P.ribList || '').split(/[\s,;]+/).map(parseFloat).filter(v => isFinite(v) && v >= 0 && v <= P.ceilLen + 20).sort((a, b) => a - b);
+  L.ribBands = L.ribs.map(r => P.ribRef === 'center' ? [r - P.ribW / 2, r + P.ribW / 2] : P.ribRef === 'front' ? [r - P.ribW, r] : [r, r + P.ribW]);
   L.lining = P.liningOn ? P.plyT + P.slatT : 0;
   L.ceilF = P.ceil - L.lining;
   L.slatLen = P.slatAuto ? P.ceilLen : P.slatLen;
