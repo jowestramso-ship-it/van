@@ -345,20 +345,21 @@ function drawPass(L, V) {
 
 /* ================= cross-section from the rear doors: both walls leaning in toward the flat roof ================= */
 function drawCross(L, V) {
-  const P = L.P, S = 7, X0 = 260, zMax = Math.max(P.ceil + 6, 82), FL = 60 + S * zMax, W = P.vanW, o = [];
+  const P = L.P, S = 7, X0 = 260, zMax = Math.max(P.roofMidH + 6, 86), FL = 60 + S * zMax, W = P.vanW, o = [];
   const xx = y => X0 + S * y, yy = z => FL - S * z, bx = (y0, y1, z0, z1, q) => R(xx(y0), yy(z1), S * (y1 - y0), S * (z1 - z0), q);
   const lean = z => L.leanAt(z), s0 = Math.min(Math.max(L.leanStart, 0), P.ceil), lc = lean(P.ceil);
   o.push(T(20, 22, 'Cross-section seen from the rear doors: driver side wall on the left, passenger side on the right.', { anchor: 'start', size: 14, fill: '#5F5E5A', halo: false }));
-  o.push(T(20, 40, P.leanOn && L.leanK > 0 ? `The walls are straight up to about ${fmt(L.leanStart)} in, then lean in ${(L.leanK * 12).toFixed(2)} in per foot (${(Math.atan(L.leanK) * 180 / Math.PI).toFixed(1)} degrees), ${fmt(lc)} in each by the bare roof (${fmt(P.ceil)} in): ${fmt(W - 2 * lc)} in wide there.` : 'The walls are drawn straight up (lean switched off).', { anchor: 'start', size: 12, fill: '#5F5E5A', halo: false }));
+  o.push(T(20, 40, P.leanOn && L.leanK > 0 ? `Walls straight up to ${fmt(L.leanStart)} in, then leaning in ${(L.leanK * 12).toFixed(2)} in per foot (${(Math.atan(L.leanK) * 180 / Math.PI).toFixed(1)} degrees), ${fmt(lean(P.roofWallH))} in each at ${fmt(P.roofWallH)} up (${fmt(W - 2 * lean(P.roofWallH))} wide); roof arcs to ${fmt(P.roofMidH)} in the middle.` : 'The walls are drawn straight up (lean switched off).', { anchor: 'start', size: 12, fill: '#5F5E5A', halo: false }));
   for (let y = 0; y <= W; y += 10) { o.push(Ln(xx(y), yy(zMax), xx(y), FL, { stroke: '#3F3E3A', so: .3, sw: .9, dash: '3 3' })); o.push(T(xx(y), FL + 18, y + '', { size: 11, fill: '#185FA5', w: 700, halo: false })); }
   for (let z = 0; z <= zMax; z += 10) { o.push(Ln(xx(0), yy(z), xx(W), yy(z), { stroke: '#3F3E3A', so: .3, sw: .9, dash: '3 3' })); o.push(T(xx(0) - 6, yy(z) + 4, z + '↑', { anchor: 'end', size: 11, fill: '#8A4B0F', w: 700, halo: false })); }
   o.push(T(xx(W / 2), FL + 38, 'inches across from the driver side wall', { size: 12, fill: '#5F5E5A', halo: false }));
   // the inside of the van, and the space lost to the lean (hatched) outside the straight walls
-  o.push(Poly([[xx(0), yy(0)], [xx(0), yy(s0)], [xx(lc), yy(P.ceil)], [xx(W - lc), yy(P.ceil)], [xx(W), yy(s0)], [xx(W), yy(0)]], { fill: '#F1EFE8', fo: .7, stroke: '#2C2C2A', sw: 2.4 }));
-  if (lc > 0) { o.push(Poly([[xx(0), yy(s0)], [xx(0), yy(P.ceil)], [xx(lc), yy(P.ceil)]], { fill: 'url(#hatch)', fo: .5, stroke: '#A32D2D', sw: 1, dash: '4 3' })); o.push(Poly([[xx(W), yy(s0)], [xx(W), yy(P.ceil)], [xx(W - lc), yy(P.ceil)]], { fill: 'url(#hatch)', fo: .5, stroke: '#A32D2D', sw: 1, dash: '4 3' })); }
+  const zw = P.roofWallH, lw = lean(zw), arc = []; for (let i = 0; i <= 40; i++) { const y = lw + (W - 2 * lw) * i / 40; arc.push([xx(y), yy(L.roofZ(y))]); }
+  o.push(Poly([[xx(0), yy(0)], [xx(0), yy(Math.min(s0, zw))], [xx(lw), yy(zw)], ...arc, [xx(W - lw), yy(zw)], [xx(W), yy(Math.min(s0, zw))], [xx(W), yy(0)]], { fill: '#F1EFE8', fo: .7, stroke: '#2C2C2A', sw: 2.4 }));
+  if (lw > 0) { o.push(Poly([[xx(0), yy(s0)], [xx(0), yy(zw)], [xx(lw), yy(zw)]], { fill: 'url(#hatch)', fo: .5, stroke: '#A32D2D', sw: 1, dash: '4 3' })); o.push(Poly([[xx(W), yy(s0)], [xx(W), yy(zw)], [xx(W - lw), yy(zw)]], { fill: 'url(#hatch)', fo: .5, stroke: '#A32D2D', sw: 1, dash: '4 3' })); }
   // finished ceiling
-  if (L.lining > 0) o.push(Ln(xx(lean(L.ceilF)), yy(L.ceilF), xx(W - lean(L.ceilF)), yy(L.ceilF), { stroke: '#8A6B4D', sw: 1.6, dash: '6 3' }));
-  o.push(T(xx(W / 2), yy(L.ceilF) + 14, L.lining > 0 ? `finished ceiling ${fmt(L.ceilF)} in, ${fmt(W - 2 * lean(L.ceilF))} wide` : `roof ${fmt(W - 2 * lc)} wide`, { size: 11, fill: '#5A3A00' }));
+  if (L.lining > 0) o.push(`<polyline points="${arc.map(p => f1(p[0]) + ',' + f1(p[1] + S * L.lining)).join(' ')}" fill="none" stroke="#8A6B4D" stroke-width="1.6" stroke-dasharray="6 3"/>`);
+  o.push(T(xx(W / 2), yy(L.roofZ(W / 2) - L.lining) + 24, `roof ribs ${fmt(zw)} at the wall, ${fmt(L.roofZ(W / 2))} in the middle`, { size: 11, fill: '#5A3A00' })); if (L.lining > 0) o.push(T(xx(W / 2), yy(L.roofZ(W / 2) - L.lining) + 38, `finished ceiling ${fmt(zw - L.lining)} at the wall, ${fmt(L.roofZ(W / 2) - L.lining)} in the middle`, { size: 11, fill: '#5A3A00' }));
   // width at the two measured heights, at the cabinet bottom and at the finished ceiling
   [[P.leanZ1, 'measured'], [P.leanZ2, 'measured'], [P.cabBot, 'cabinet bottom']].forEach(([z, nm], i) => { const l = lean(z), x0 = xx(l), x1 = xx(W - l); o.push(Ln(x0, yy(z), x1, yy(z), { stroke: '#A32D2D', sw: 1.2, mk: true })); o.push(T(xx(W / 2) + (i === 2 ? 0 : 0), yy(z) - 4, `${fmt(W - 2 * l)} wide at ${fmt(z)} up (${nm})`, { size: 10.5, fill: '#A32D2D' })); });
   // driver side: couch and the wall cabinets; passenger side: counter, fridge, microwave shelf
@@ -369,10 +370,10 @@ function drawCross(L, V) {
   o.push(bx(W - P.cabD, W, 0, P.counterH, { fill: COL.C, fo: .12, stroke: COL.C, sw: 1.5, rx: 3 })); o.push(T(xx(W - P.cabD / 2), yy(P.counterH / 2), 'counter and cabinet', { size: 11, fill: COL.C }));
   o.push(bx(W - 2 - 19, W - 2, 8.25, 56.25, { fill: '#0A6A8A', fo: .14, stroke: '#0A6A8A', sw: 1.4, dash: '5 3' })); o.push(T(xx(W - 11.5), yy(40), 'fridge', { size: 11, fill: '#0A6A8A' }));
   o.push(bx(W - 12, W, 59, 69, { fill: COL.G, fo: .2, stroke: COL.G, sw: 1.4, rx: 2 })); o.push(T(xx(W - 6), yy(64.5), 'micro', { size: 10, fill: COL.G }));
-  o.push(T(xx(0) + 6, yy(P.ceil + 3.2), 'driver side wall', { anchor: 'start', size: 11, fill: '#5F5E5A', halo: false })); o.push(T(xx(W) - 6, yy(P.ceil + 3.2), 'passenger side wall', { anchor: 'end', size: 11, fill: '#5F5E5A', halo: false }));
+  o.push(T(xx(0) + 6, yy(P.roofMidH + 4), 'driver side wall', { anchor: 'start', size: 11, fill: '#5F5E5A', halo: false })); o.push(T(xx(W) - 6, yy(P.roofMidH + 4), 'passenger side wall', { anchor: 'end', size: 11, fill: '#5F5E5A', halo: false }));
   o.push(Ln(xx(0), yy(0), xx(W), yy(0), { stroke: '#5F5E5A', sw: 2 }));
-  o.push(T(20, FL + 38, 'Things at different places along the van are drawn together (the fridge and the counter are side by side along the wall, not on top of each other).', { anchor: 'start', size: 10.5, fill: '#5F5E5A', halo: false }));
-  return { w: xx(W) + 260, h: FL + 60, body: o.join('') };
+  o.push(T(20, FL + 58, 'Things at different places along the van are drawn together (the fridge and the counter are side by side along the wall, not on top of each other).', { anchor: 'start', size: 10.5, fill: '#5F5E5A', halo: false }));
+  return { w: xx(W) + 260, h: FL + 72, body: o.join('') };
 }
 
 /* ================= the bed seen from the end: the leaf flipping over, the legs folding down out of their slots ================= */

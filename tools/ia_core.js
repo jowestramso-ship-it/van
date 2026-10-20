@@ -65,6 +65,8 @@ const PD = [
   { k: 'leanW1', g: 'Walls', l: 'Lean: inside width at that height', d: 67, s: .25, a: 50, b: 80 },
   { k: 'leanZ2', g: 'Walls', l: 'Lean: upper measurement, height up from the floor', d: 64, s: .5, a: 30, b: 80 },
   { k: 'leanW2', g: 'Walls', l: 'Lean: inside width at that height', d: 64, s: .25, a: 40, b: 80 },
+  { k: 'roofWallH', g: 'Walls', l: 'Roof: height from the floor to the rib along the wall', d: 75.5, s: .25, a: 60, b: 90 },
+  { k: 'roofMidH', g: 'Walls', l: 'Roof: height from the floor to the rib in the middle', d: 80, s: .25, a: 60, b: 95 },
   { k: 'wallOn', g: 'Walls', l: 'Cover the walls (birch plywood on the furring)', d: true, t: 'c' },
   { k: 'wallSub', g: 'Walls', l: 'Take the covering thickness off the inside width (leave off if the width was measured to the covered wall)', d: false, t: 'c' },
   { k: 'wallT', g: 'Walls', l: 'Covering thickness', d: .125, s: .125, a: .125, b: .75 },
@@ -174,6 +176,13 @@ function layout(P0) {
   L.leanK = Math.max(0, (P.leanW1 - P.leanW2) / 2 / Math.max(.1, P.leanZ2 - P.leanZ1));
   L.leanStart = L.leanK > 0 ? P.leanZ1 - Math.max(0, P.vanW - P.leanW1) / 2 / L.leanK : 1e9;
   L.leanAt = z => P.leanOn && z > L.leanStart ? L.leanK * (z - L.leanStart) : 0;
+  // the roof is an arc from the wall tops (rib height at the wall) up to the middle rib; roofZ(y) is its height y in from the driver wall
+  {
+    const zw = P.roofWallH, c = P.vanW - 2 * L.leanAt(zw), sg = P.roofMidH - zw, R = sg > .01 ? (c * c / 4 + sg * sg) / (2 * sg) : 1e9;
+    L.roofW = c; L.roofR = R; L.roofSag = Math.max(0, sg);
+    L.roofZ = y => { const d = Math.min(Math.abs(y - P.vanW / 2), c / 2); return zw + (R > 1e8 ? 0 : Math.sqrt(R * R - d * d) - Math.sqrt(R * R - c * c / 4)); };
+    L.roofTilt = y => R > 1e8 ? 0 : Math.atan(Math.min(Math.abs(y - P.vanW / 2), c / 2) / Math.sqrt(R * R - Math.pow(Math.min(Math.abs(y - P.vanW / 2), c / 2), 2))) * 180 / Math.PI;
+  }
   L.lining = P.liningOn ? P.plyT + P.slatT : 0;
   L.ceilF = P.ceil - L.lining;
   L.slatLen = P.slatAuto ? P.ceilLen : P.slatLen;
