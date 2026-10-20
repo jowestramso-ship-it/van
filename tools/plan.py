@@ -94,7 +94,7 @@ a(f'<text class="ts" x="{xx(138)}" y="{yy(43.5)}" text-anchor="middle" style="fo
 for _lx,_ly in ((20.67,22),(74,22),(127.33,22),(20.67,46),(74,46),(127.33,46)):
     a(f'<circle cx="{xx(_lx):.1f}" cy="{yy(_ly):.1f}" r="{S*1:.1f}" fill="#FFE9A0" fill-opacity="0.9" stroke="#B8860B" stroke-width="1"/>')
 item(0.25,14.25,39,53,'#2C2C2A','',None,0.12,'stroke-dasharray="4 3"')
-a(f'<text class="ts" x="{xx(7.25):.1f}" y="{yy(39)+10:.1f}" text-anchor="middle" style="font-size:8.5px;fill:#2C2C2A;paint-order:stroke;stroke:#fff;stroke-width:2.5px">shower fan</text><text class="ts" x="{xx(7.25):.1f}" y="{yy(63)-4:.1f}" text-anchor="middle" style="font-size:8px;fill:#2C2C2A;paint-order:stroke;stroke:#fff;stroke-width:2.5px">14 x 14</text>')
+a(f'<text class="ts" x="{xx(7.25):.1f}" y="{yy(39)+10:.1f}" text-anchor="middle" style="font-size:8.5px;fill:#2C2C2A;paint-order:stroke;stroke:#fff;stroke-width:2.5px">shower fan</text><text class="ts" x="{xx(7.25):.1f}" y="{yy(53)-4:.1f}" text-anchor="middle" style="font-size:8px;fill:#2C2C2A;paint-order:stroke;stroke:#fff;stroke-width:2.5px">14 x 14</text>')
 item(36.375,50.625,26.875,41.125,'#2C2C2A','',None,0.12,'stroke-dasharray="4 3"')
 a(f'<text class="ts" x="{xx(43.5):.1f}" y="{yy(34)-2:.1f}" text-anchor="middle" style="font-size:8.5px;fill:#2C2C2A;paint-order:stroke;stroke:#fff;stroke-width:2.5px">A/C cutout</text><text class="ts" x="{xx(43.5):.1f}" y="{yy(34)+9:.1f}" text-anchor="middle" style="font-size:8px;fill:#2C2C2A;paint-order:stroke;stroke:#fff;stroke-width:2.5px">14 1/4 x 14 1/4</text>')
 # aisle dimensions
