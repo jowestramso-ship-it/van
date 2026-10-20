@@ -60,6 +60,11 @@ const PD = [
   { k: 'hotW', g: 'Water tanks', l: 'Hot water tank length along the wall', d: 14, s: .5, a: 6, b: 18 },
   { k: 'hotD', g: 'Water tanks', l: 'Hot water tank depth (out from the wall)', d: 15, s: .5, a: 6, b: 20 },
   { k: 'hotH', g: 'Water tanks', l: 'Hot water tank height', d: 15, s: .5, a: 8, b: 34 },
+  { k: 'leanOn', g: 'Walls', l: 'The walls lean in toward the roof (checks use the measurements below)', d: true, t: 'c' },
+  { k: 'leanZ1', g: 'Walls', l: 'Lean: lower measurement, height up from the floor', d: 47, s: .5, a: 20, b: 76 },
+  { k: 'leanW1', g: 'Walls', l: 'Lean: inside width at that height', d: 67, s: .25, a: 50, b: 80 },
+  { k: 'leanZ2', g: 'Walls', l: 'Lean: upper measurement, height up from the floor', d: 64, s: .5, a: 30, b: 80 },
+  { k: 'leanW2', g: 'Walls', l: 'Lean: inside width at that height', d: 64, s: .25, a: 40, b: 80 },
   { k: 'wallOn', g: 'Walls', l: 'Cover the walls (birch plywood on the furring)', d: true, t: 'c' },
   { k: 'wallSub', g: 'Walls', l: 'Take the covering thickness off the inside width (leave off if the width was measured to the covered wall)', d: false, t: 'c' },
   { k: 'wallT', g: 'Walls', l: 'Covering thickness', d: .125, s: .125, a: .125, b: .75 },
@@ -165,6 +170,10 @@ function layout(P0) {
   L.tankLen = L.tankX[1] - L.tankX[0];
   L.hotY = [0, P.hotD];
   // ceiling covering: plywood against the roof, slats on it; everything that reaches the ceiling stops at the finished ceiling
+  // wall lean from two width measurements: each wall comes in k per inch of height above where it stops being vertical (found from the full width)
+  L.leanK = Math.max(0, (P.leanW1 - P.leanW2) / 2 / Math.max(.1, P.leanZ2 - P.leanZ1));
+  L.leanStart = L.leanK > 0 ? P.leanZ1 - Math.max(0, P.vanW - P.leanW1) / 2 / L.leanK : 1e9;
+  L.leanAt = z => P.leanOn && z > L.leanStart ? L.leanK * (z - L.leanStart) : 0;
   L.lining = P.liningOn ? P.plyT + P.slatT : 0;
   L.ceilF = P.ceil - L.lining;
   L.slatLen = P.slatAuto ? P.ceilLen : P.slatLen;
