@@ -167,6 +167,34 @@ const DEFS = '<defs><marker id="arq" viewBox="0 0 10 10" refX="8" refY="5" marke
 let raf = 0;
 function kick() { if (!raf) raf = requestAnimationFrame(frame); }
 function frame() { raf = 0; render(); if (animating(performance.now())) kick(); }
+// the build order: what to do first, with the numbers from the current sizes; ticks are kept in this browser
+let buildSig = '', buildDone = {};
+try { buildDone = JSON.parse(localStorage.getItem('van-build-done') || '{}') || {}; } catch (e) { buildDone = {}; }
+function buildSteps(L) {
+  const P = L.P, rib = L.ribs.map(fmt).join(', '), strips = FURR.map(fmt).join(', ');
+  return [
+    ['manuals', 'Get the two manuals before you cut anything', `The fan (2012 F36AR, 356 mm opening) and the OutEquip air conditioner: the exact roof opening and how thick a roof each kit clamps across. Your stack from the outside of the steel to the finished ceiling is ${fmt(P.ribDepth + L.lining)} in (${fmt(P.ribDepth)} in of rib plus ${fmt(L.lining)} in of covering) plus the steel skin.`],
+    ['roof', 'Cut and frame the roof openings', `Air conditioner ${fmt(L.ac.w)} in square at ${fmt(L.ac.x)} in from the rear doors and ${fmt(L.ac.y)} across; fan ${fmt(L.fan.w)} in square at ${fmt(L.fan.x)} and ${fmt(L.fan.y)} across. Ribs start at ${rib} in (${fmt(P.ribW)} wide), so the openings sit between them: frame each opening, then seal, rust-proof the cut edges and fit the units.`],
+    ['wiring', 'Rough in the wiring before anything is covered', `12 V DC runs for the fan (up to ${(P.fanHighW / 12).toFixed(1)} A), the air conditioner, the ${L.lights.length} ceiling lights and the battery cable; the hot water heater needs about ${Math.round(P.heaterW / (12 * .9))} A through the inverter. Decide the battery (${fmt(P.battAh)} Ah), inverter and fuses first, since the electrics are still undecided.`],
+    ['insulate', 'Insulate between the ribs and in the walls', `The ribs hang ${fmt(P.ribDepth)} in, so the insulation fits between them without going past the ceiling plane. Keep it clear of the openings' frames and the wiring.`],
+    ['floor', 'Lay the subfloor', 'Everything else stands on it: the bed and couch base, the counter, the tanks and the battery.'],
+    ['furring', 'Fit the furring strips and the blocking', `The eight horizontal strips on each wall (at ${strips} in up, at most 13 3/4 in apart; S7 stops at the sliding door opening and only S8 carries over it), then the blocking for the ceiling slats. Do the ceiling blocking before the walls.`],
+    ['cover', 'Cover the ceiling, then the walls', `Ceiling: ${P.ceilLen > 0 ? Math.ceil(P.ceilLen * P.ceilW / 4608) : 0} sheets of ${fmt(P.plyT)} in plywood and ${L.nSlats - L.slatOut.size} slats ${fmt(P.slatW)} x ${fmt(P.slatT)} in, the lights on the slats. Walls: ${fmt(P.wallT)} in birch plywood standing floor to ceiling, joints at 42, 90 and 138 in. Seal both faces and finish before hanging (clear water-based finish or hardwax oil), glue to every strip, a screw with a finish washer about every 8 in, 1/16 in between sheets.`],
+    ['heavy', 'Build the heavy low things first', `The battery (${fmt(P.battW || 21)} x ${fmt(P.battD || 10)} in, 52 to 73 in from the back), the hot water tank (${fmt(L.hotX[0])} to ${fmt(L.hotX[1])} in) and the fresh water tank (${fmt(L.tankX[0])} to ${fmt(L.tankX[1])} in), then the couch base, the counter and the drawers under it.`],
+    ['cabinets', 'Last: wall cabinets, closet and the fold-out table', `The walls lean in about ${(Math.atan(L.leanK) * 180 / Math.PI).toFixed(0)} degrees above ${fmt(L.leanStart)} in, so the wall cabinets (${fmt(P.cabBot)} to ${fmt(L.ceilF)} in up) stand ${fmt(L.leanAt(P.cabBot))} in off the wall at the bottom and ${fmt(L.leanAt(L.ceilF))} in at the top: scribe the backs or fill the wedge, and cut their tops to the finished ceiling at the wall (${fmt(P.roofWallH - L.lining)} in, because the roof arcs up toward the middle). These are the pieces most likely to need small adjustments, so fit them last.`]
+  ];
+}
+function renderBuild(L) {
+  const steps = buildSteps(L), sig = JSON.stringify(steps) + JSON.stringify(buildDone);
+  if (sig === buildSig) return; buildSig = sig;
+  $('#build').innerHTML = steps.map(s => `<li class="${buildDone[s[0]] ? 'done' : ''}"><label><input type="checkbox" data-s="${s[0]}"${buildDone[s[0]] ? ' checked' : ''}><span><span class="bt">${s[1]}</span><span class="bb">${s[2]}</span></span></label></li>`).join('');
+}
+document.addEventListener('change', e => {
+  const t = e.target; if (!t || !t.dataset || !t.dataset.s || t.type !== 'checkbox') return;
+  buildDone[t.dataset.s] = t.checked; if (!t.checked) delete buildDone[t.dataset.s];
+  try { localStorage.setItem('van-build-done', JSON.stringify(buildDone)); } catch (err) { }
+  renderBuild(L);
+});
 function render() {
   const now = performance.now(), V = curVals(now), vw = VIEWS.find(v => v.id === view);
   L = layout(P);
@@ -176,6 +204,7 @@ function render() {
   // checks (only touch the page when the text changed)
   const ch = computeChecks(L, V), sig = JSON.stringify(ch);
   if (sig !== lastSig) { lastSig = sig; $('#checks').innerHTML = ch.map(c => `<li class="${c.lv}">${c.t}</li>`).join(''); }
+  renderBuild(L);
   // movers: pressed state
   document.querySelectorAll('#movers .chip[data-ids]').forEach(b => b.setAttribute('aria-pressed', isOpenIds(b.dataset.ids.split(',')) ? 'true' : 'false'));
   // auto-sized fields show the value they work out

@@ -31,6 +31,15 @@
   svg text { font-family: -apple-system, "Segoe UI", sans-serif; }
   svg .mv { cursor: pointer; }
   svg .mv:hover { filter: drop-shadow(0 0 3px rgba(186, 117, 23, .95)); }
+  .build { margin: 0; padding: 0; list-style: none; counter-reset: st; }
+  .build li { counter-increment: st; border-top: 1px solid #ECEAE0; padding: 8px 0 8px 34px; position: relative; font-size: 13.5px; line-height: 1.45; }
+  .build li:first-child { border-top: 0; }
+  .build li::before { content: counter(st); position: absolute; left: 0; top: 8px; width: 22px; height: 22px; border-radius: 50%; background: #2C2C2A; color: #fff; font-size: 12px; font-weight: 700; text-align: center; line-height: 22px; }
+  .build li.done::before { content: "\2713"; background: var(--ok); }
+  .build li.done .bt { text-decoration: line-through; color: var(--mute); }
+  .build label { display: flex; gap: 8px; align-items: flex-start; cursor: pointer; }
+  .build .bt { font-weight: 600; display: block; }
+  .build .bb { display: block; color: var(--mute); font-weight: 400; margin-top: 2px; }
   .card { border: 1px solid var(--line); border-radius: 10px; background: var(--panel); padding: 12px; margin-bottom: 12px; }
   .checks { list-style: none; margin: 0; padding: 0; }
   .checks li { font-size: 13.5px; line-height: 1.4; padding: 5px 0 5px 24px; position: relative; border-top: 1px solid #ECEAE0; }
@@ -67,6 +76,7 @@
     <div class="stage"><svg id="svg" role="img" aria-label="Interactive van diagram"></svg></div>
     <aside>
       <div class="card"><h2>Does it fit?</h2><ul class="checks" id="checks"></ul></div>
+      <div class="card"><h2>Build order</h2><p class="note" style="margin:0 0 6px">Tick a step when it is done (kept in this browser only). The numbers follow the sizes below.</p><ol class="build" id="build"></ol></div>
       <div class="card"><h2>Sizes (inches)</h2><div id="sizes"></div>
         <div class="row"><button class="btn" id="reset" type="button">Reset to the current design</button><button class="btn" id="share" type="button">Copy link with these sizes</button></div>
         <p class="note" id="sharemsg"></p>
