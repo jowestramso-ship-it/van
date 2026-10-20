@@ -79,6 +79,7 @@ const PD = [
   { k: 'lightD', g: 'Ceiling', l: 'Light diameter (mounted on a slat)', d: 2, s: .25, a: 1, b: 8 },
   { k: 'fanX', g: 'Ceiling', l: 'Shower fan cutout: along the van (from the back)', d: 14, s: .5, a: 0, b: 220 },
   { k: 'fanY', g: 'Ceiling', l: 'Shower fan cutout: across (from the driver wall)', d: 56, s: .5, a: 0, b: 90 },
+  { k: 'fanUnit', g: 'Ceiling', l: 'Shower fan unit on the roof: square footprint (2012 F36AR exhaust fan: 17.7 x 17.7 x 6.4 tall)', d: 17.75, s: .25, a: 6, b: 40 },
   { k: 'fanW', g: 'Ceiling', l: 'Shower fan cutout: square size', d: 14, s: .25, a: 4, b: 30 },
   { k: 'acX', g: 'Ceiling', l: 'Air conditioning cutout: along the van (from the back)', d: 58, s: .5, a: 0, b: 220 },
   { k: 'acY', g: 'Ceiling', l: 'Air conditioning cutout: across (from the driver wall)', d: 34, s: .5, a: 0, b: 90 },
@@ -179,7 +180,7 @@ function layout(P0) {
       if (P.liningOn && n > 0) { let best = 0, bd = 1e9; L.slatY.forEach((sy, k) => { const d = Math.abs(sy + P.slatW / 2 - target); if (d < bd) { bd = d; best = k; } }); y = L.slatY[best] + P.slatW / 2; L.chanY.push(y); }
       for (let c = 0; c < cnt; c++) L.lights.push({ x: P.ceilLen * (c + .5) / cnt, y });
     }
-    L.fan = { x: P.fanX, y: P.fanY, w: P.fanW, nm: 'shower fan' }; L.ac = { x: P.acX, y: P.acY, w: P.acW, nm: 'A/C', u: P.acUnit };
+    L.fan = { x: P.fanX, y: P.fanY, w: P.fanW, nm: 'shower fan', u: P.fanUnit }; L.ac = { x: P.acX, y: P.acY, w: P.acW, nm: 'A/C', u: P.acUnit };
     L.slatsCut = c => L.slatY.filter((sy, k) => !L.slatOut.has(k) && sy < c.y + c.w / 2 && sy + P.slatW > c.y - c.w / 2).length;
   }
   return L;

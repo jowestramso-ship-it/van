@@ -232,6 +232,7 @@ const PD = [
   { k: 'lightD', g: 'Ceiling', l: 'Light diameter (mounted on a slat)', d: 2, s: .25, a: 1, b: 8 },
   { k: 'fanX', g: 'Ceiling', l: 'Shower fan cutout: along the van (from the back)', d: 14, s: .5, a: 0, b: 220 },
   { k: 'fanY', g: 'Ceiling', l: 'Shower fan cutout: across (from the driver wall)', d: 56, s: .5, a: 0, b: 90 },
+  { k: 'fanUnit', g: 'Ceiling', l: 'Shower fan unit on the roof: square footprint (2012 F36AR exhaust fan: 17.7 x 17.7 x 6.4 tall)', d: 17.75, s: .25, a: 6, b: 40 },
   { k: 'fanW', g: 'Ceiling', l: 'Shower fan cutout: square size', d: 14, s: .25, a: 4, b: 30 },
   { k: 'acX', g: 'Ceiling', l: 'Air conditioning cutout: along the van (from the back)', d: 58, s: .5, a: 0, b: 220 },
   { k: 'acY', g: 'Ceiling', l: 'Air conditioning cutout: across (from the driver wall)', d: 34, s: .5, a: 0, b: 90 },
@@ -332,7 +333,7 @@ function layout(P0) {
       if (P.liningOn && n > 0) { let best = 0, bd = 1e9; L.slatY.forEach((sy, k) => { const d = Math.abs(sy + P.slatW / 2 - target); if (d < bd) { bd = d; best = k; } }); y = L.slatY[best] + P.slatW / 2; L.chanY.push(y); }
       for (let c = 0; c < cnt; c++) L.lights.push({ x: P.ceilLen * (c + .5) / cnt, y });
     }
-    L.fan = { x: P.fanX, y: P.fanY, w: P.fanW, nm: 'shower fan' }; L.ac = { x: P.acX, y: P.acY, w: P.acW, nm: 'A/C', u: P.acUnit };
+    L.fan = { x: P.fanX, y: P.fanY, w: P.fanW, nm: 'shower fan', u: P.fanUnit }; L.ac = { x: P.acX, y: P.acY, w: P.acW, nm: 'A/C', u: P.acUnit };
     L.slatsCut = c => L.slatY.filter((sy, k) => !L.slatOut.has(k) && sy < c.y + c.w / 2 && sy + P.slatW > c.y - c.w / 2).length;
   }
   return L;
@@ -991,6 +992,8 @@ function drawCeiling(L, V) {
     L.lights.forEach(l => { o.push(`<circle cx="${f1(xx(l.x))}" cy="${f1(yy(l.y))}" r="${f1(S * P.lightD / 2)}" fill="#FFE9A0" stroke="#B8860B" stroke-width="1.4"/>`); });
     o.push(R(xx(L.ac.x - L.ac.u / 2), yy(L.ac.y - L.ac.u / 2), S * L.ac.u, S * L.ac.u, { stroke: '#444441', sw: 1.2, dash: '6 4' }));
     o.push(T(xx(L.ac.x), yy(L.ac.y + L.ac.u / 2) + 13, `A/C unit on the roof ${fmt(L.ac.u)} x ${fmt(L.ac.u)}`, { size: 10, fill: '#444441', halo: true }));
+    o.push(R(xx(L.fan.x - L.fan.u / 2), yy(L.fan.y - L.fan.u / 2), S * L.fan.u, S * L.fan.u, { stroke: '#444441', sw: 1.2, dash: '6 4' }));
+    o.push(T(xx(L.fan.x), yy(L.fan.y - L.fan.u / 2) - 5, `fan unit ${fmt(L.fan.u)} sq`, { size: 10, fill: '#444441', halo: true }));
     [L.fan, L.ac].forEach(c => { o.push(R(xx(c.x - c.w / 2), yy(c.y - c.w / 2), S * c.w, S * c.w, { fill: '#2C2C2A', fo: .88, stroke: '#000', sw: 1.4 })); o.push(T(xx(c.x), yy(c.y) - 2, c.nm, { size: 11, fill: '#fff', w: 600, halo: false })); o.push(T(xx(c.x), yy(c.y) + 11, `${fmt(c.w)} x ${fmt(c.w)} cutout`, { size: 9.5, fill: '#fff', halo: false })); });
   } else o.push(R(xx(0), yy(L.ceilOff), S * CL, S * CW, { fill: '#F1EFE8', fo: .7, stroke: '#5F5E5A', sw: 1.2 }));
   // outline (the inside of the van) and dimensions; the flat part being covered is centered in it
@@ -1056,8 +1059,9 @@ function computeChecks(L, V) {
     if (over(L.fan, L.ac)) prob.push('the fan and A/C cutouts overlap');
     if (near(L.fan) + near(L.ac) > 0) prob.push(`${near(L.fan) + near(L.ac)} light${near(L.fan) + near(L.ac) === 1 ? ' is' : 's are'} within 2 in of a cutout`);
     if (!onBath) prob.push('the fan is not over the wet bath (36 x 24 against the passenger wall)');
-    { const h = L.ac.u / 2; if (L.ac.x - h < 0 || L.ac.x + h > P.ceilLen || L.ac.y - h < L.ceilOff || L.ac.y + h > L.ceilOff + P.ceilW) prob.push(`the ${fmt(L.ac.u)} in air conditioner unit does not fit on the flat part of the roof (${fmt(P.ceilW)} wide)`); if (Math.abs(L.ac.x - L.fan.x) < h + L.fan.w / 2 && Math.abs(L.ac.y - L.fan.y) < h + L.fan.w / 2) prob.push('the fan cutout is under the air conditioner unit'); }
-    push(prob.length ? 'warn' : 'ok', `Cutouts: shower fan ${fmt(L.fan.w)} x ${fmt(L.fan.w)} in at ${fmt(L.fan.x)} in from the back and ${fmt(L.fan.y)} across from the driver wall (${onBath ? 'over the wet bath' : 'NOT over the wet bath'}), and air conditioning ${fmt(L.ac.w)} x ${fmt(L.ac.w)} in at ${fmt(L.ac.x)} and ${fmt(L.ac.y)}. They go through the plywood and the slats${P.liningOn ? `, so the fan cuts ${L.slatsCut(L.fan)} slats and the A/C cuts ${L.slatsCut(L.ac)} (each cut slat becomes two pieces, ending at a framed curb)` : ''}.${prob.length ? ' Problem: ' + prob.join('; ') + '.' : ''} The air conditioner is the OutEquip 12 V cooling-only rooftop unit (white, non-ducted): 28.3 x 28.3 in on the roof, 6.3 in tall, 45 lb on the listing (the maker's sheet says 33 lb), a roof opening of at least 14.1 x 13.7 in (drawn at 14 1/4) and an indoor panel up to 14.5 x 10 in; the fan model is not chosen. Both openings need a frame between the roof bows.`);
+    [[L.ac, 'air conditioner'], [L.fan, 'fan']].forEach(([c, nm]) => { const h = c.u / 2; if (c.x - h < 0 || c.x + h > P.ceilLen || c.y - h < L.ceilOff || c.y + h > L.ceilOff + P.ceilW) prob.push(`the ${fmt(c.u)} in ${nm} unit does not fit on the flat part of the roof (${fmt(P.ceilW)} wide)`); });
+    if (Math.abs(L.ac.x - L.fan.x) < (L.ac.u + L.fan.u) / 2 && Math.abs(L.ac.y - L.fan.y) < (L.ac.u + L.fan.u) / 2) prob.push('the fan unit and the air conditioner unit overlap on the roof');
+    push(prob.length ? 'warn' : 'ok', `Cutouts: shower fan ${fmt(L.fan.w)} x ${fmt(L.fan.w)} in at ${fmt(L.fan.x)} in from the back and ${fmt(L.fan.y)} across from the driver wall (${onBath ? 'over the wet bath' : 'NOT over the wet bath'}), and air conditioning ${fmt(L.ac.w)} x ${fmt(L.ac.w)} in at ${fmt(L.ac.x)} and ${fmt(L.ac.y)}. They go through the plywood and the slats${P.liningOn ? `, so the fan cuts ${L.slatsCut(L.fan)} slats and the A/C cuts ${L.slatsCut(L.ac)} (each cut slat becomes two pieces, ending at a framed curb)` : ''}.${prob.length ? ' Problem: ' + prob.join('; ') + '.' : ''} The air conditioner is the OutEquip 12 V cooling-only rooftop unit (white, non-ducted): 28.3 x 28.3 in on the roof, 6.3 in tall, 45 lb on the listing (the maker's sheet says 33 lb), a roof opening of at least 14.1 x 13.7 in (drawn at 14 1/4) and an indoor panel up to 14.5 x 10 in; the fan is the 2012 F36AR exhaust fan (white, 12 V DC): 17.7 x 17.7 in on the roof, 6.4 in tall, cutout size not found (drawn 14 x 14, to confirm). Both openings need a frame between the roof bows.`);
   }
   // dinette bed
   const dbw = Math.min(P.benchD, P.tableD), dbl = L.bB[1] - L.bA[0], cover = Math.min(100, 2 * P.benchLen * (P.backH - P.seatH) / Math.max(1, L.tableLen * P.tableD) * 100);
