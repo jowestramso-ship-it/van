@@ -280,8 +280,8 @@ function drawPass(L, V) {
   o.push(GB('Nook', 'Nook and jar shelf'));
   o.push(box(nx0, nx1, ch, ch + 18.5, { fill: '#7A4A1E', fo: .2, stroke: '#7A4A1E', sw: 1.5, rx: 3, dash: '5 3' }));
   const nd = P.dzNook, ndx = P.dxNook;
-  o.push(box(nx0 + ndx, nx1 + ndx, ch + 7.5 + nd, ch + 8.25 + nd, { fill: '#8A6B4D', stroke: '#3E230B', sw: 1 }));
-  [ch, ch + 8.25 + nd].forEach(base => {
+  if (P.nookOn) o.push(box(nx0 + ndx, nx1 + ndx, ch + 7.5 + nd, ch + 8.25 + nd, { fill: '#8A6B4D', stroke: '#3E230B', sw: 1 }));
+  if (P.nookOn) [ch, ch + 8.25 + nd].forEach(base => {
     for (let i = 0; i < 9; i++) {
       const jx = 58.75 + (base === ch ? 0 : ndx) + 3.75 * i;
       o.push(box(jx + .1, jx + 3.65, base, base + 6.25, { fill: '#A9D4F5', fo: .6, stroke: COL.BL, sw: .9, rx: 2.5 }));
@@ -289,9 +289,9 @@ function drawPass(L, V) {
     }
     o.push(Ln(X(58.4 + (base === ch ? 0 : ndx)), Y(base + 3.5), X(92.85 + (base === ch ? 0 : ndx)), Y(base + 3.5), { stroke: '#7A4A1E', sw: 1.6, dash: '3 2' }));
   });
-  o.push(T(X(67), Y(ch + 16.7), 'Nook: quart jars', { size: 11, fill: '#7A4A1E' }));
-  o.push(T(X(110), Y(ch + 8 + nd), `shelf ${fmt(ch + 7.5 + nd)} up`, { size: 10, fill: '#5A3510' }));
-  o.push(T(X(110), Y(ch + 8 + nd) + 12, '9 jars a tier', { size: 10, fill: '#5A3510' }));
+  o.push(T(X(67), Y(ch + 16.7), P.nookOn ? 'Nook: quart jars' : 'Nook (empty: jars and shelf taken out)', { size: 11, fill: '#7A4A1E' }));
+  if (P.nookOn) o.push(T(X(110), Y(ch + 8 + nd), `shelf ${fmt(ch + 7.5 + nd)} up`, { size: 10, fill: '#5A3510' }));
+  if (P.nookOn) o.push(T(X(110), Y(ch + 8 + nd) + 12, '9 jars a tier', { size: 10, fill: '#5A3510' }));
   o.push(GE());
   // TV
   o.push(GB('tv', 'TV'));
@@ -346,7 +346,7 @@ function drawPass(L, V) {
   o.push(GE());
   // the drawers and shelves under the counter: each one is an entry in L.parts (where it was planned plus how far it was dragged); the rail and the divider stay put
   o.push(GB('drawers', 'Drawers and shelves under the counter'));
-  {
+  if (P.drawersOn) {
     const dm = L.cabS + 14.75, z0 = ch - 6.75, z1 = ch - 2.75, part = id => L.partById[id];
     const board = p => box(p.x0, p.x1, p.z0, p.z1, { fill: '#8A6B4D', fo: 1, stroke: '#3E230B', sw: .8 });
     const drawer = p => box(p.x0, p.x1, p.z0, p.z1, { fill: '#8A5A00', fo: .2, stroke: '#8A5A00', sw: 1.5, rx: 3 });
@@ -363,7 +363,7 @@ function drawPass(L, V) {
     if (part('SB')) {
       if (part('SC')) o.push(board(part('SC')));
       o.push(board(part('SB')));
-      o.push(box(dm, dm + .5, L.can ? 0 : L.wellShelf + .75, z0 - .5, { fill: '#8A6B4D', fo: 1, stroke: '#3E230B', sw: .8 }));
+      o.push(box(dm, dm + .5, L.wellShelf + .75, z0 - .5, { fill: '#8A6B4D', fo: 1, stroke: '#3E230B', sw: .8 }));
       const drw = p => {
         const b0 = p.z0, b1 = p.z1;
         o.push(drawer(p));
@@ -381,6 +381,7 @@ function drawPass(L, V) {
     // the trash can on its pull-out in the cab-side column: a 3/4 in tray and the slides under the can, which stands on the tray; shut here (it slides out toward you)
     const c = L.can, bad = L.coll.ids.has('Can'), col = bad ? '#A32D2D' : '#5F5E5A', cm = (c.x0 + c.x1) / 2, mz = (c.z0 + c.z1) / 2;
     o.push(GB('Can', 'Trash can and its pull-out'));
+    o.push(box(L.cabS + 14.75, L.cabS + 15.25, 0, ch - 7.25, { fill: '#8A6B4D', fo: 1, stroke: '#3E230B', sw: .8 }));   // the divider beside the can runs down to the floor
     o.push(box(c.x0 - .5, c.x1 + .5, c.z0 - .75, c.z0, { fill: '#8A6B4D', fo: 1, stroke: '#3E230B', sw: .8 }));
     o.push(box(c.x0 - .5, c.x1 + .5, c.z0 - 1.25, c.z0 - .75, { fill: '#444441', fo: .8, stroke: '#2C2C2A', sw: .6 }));
     o.push(box(c.x0, c.x1, c.z0, c.z1, { fill: '#C9CCD1', fo: bad ? .35 : .6, stroke: col, sw: 1.6, rx: 4 }));
@@ -472,7 +473,7 @@ function drawPass(L, V) {
     L.parts.filter(p => p.kind === 'shelf').forEach(p => o.push(HIT(p.id, hx(p.x0, p.x1), Y(p.z1) - 4, S * (p.x1 - p.x0), S * (p.z1 - p.z0) + 8, [p.dxk, -1 / S, p.dzk, -1 / S], L.coll.ids.has(p.id), cap(p.n) + ' (along the wall and up)', '', 'drawers')));
     if (L.hook) o.push(HIT('Hook', hx(L.hook.x0, L.hook.x1), Y(L.hook.z1), S * 8, S * (L.hook.z1 - L.hook.z0), ['dxHook', -1 / S, 'dzHook', -1 / S], L.coll.ids.has('Hook'), 'The dish towel hook and its towel (along the wall and up)'));
     if (L.can) o.push(HIT('Can', hx(L.can.x0, L.can.x1), Y(L.can.z1), S * P.canW, S * P.canH, ['dxCan', -1 / S, 'dzCan', -1 / S], L.coll.ids.has('Can'), 'The trash can on its pull-out (along the wall and up)'));
-    o.push(HIT('Nook', hx(nx0 + ndx, nx1 + ndx), Y(ch + 8.25 + nd) - 4, S * (nx1 - nx0), S * .75 + 8, ['dxNook', -1 / S, 'dzNook', -1 / S], L.coll.ids.has('Nook'), 'The jar shelf in the nook with its upper row of jars (along the wall and up)'));
+    if (P.nookOn) o.push(HIT('Nook', hx(nx0 + ndx, nx1 + ndx), Y(ch + 8.25 + nd) - 4, S * (nx1 - nx0), S * .75 + 8, ['dxNook', -1 / S, 'dzNook', -1 / S], L.coll.ids.has('Nook'), 'The jar shelf in the nook with its upper row of jars (along the wall and up)'));
     o.push(HIT('Micro', hx(q0 + mx, q1 + mx), Y(ft + 12.75 + md), S * (q1 - q0), S * 10.75, ['dxMicro', -1 / S, 'dzMicro', -1 / S], L.coll.ids.has('Micro'), 'The microwave and its shelf (along the wall and up)'));
   }
   if (L.jug) o.push(HIT('Jug', Math.min(X(L.jug.x0), X(L.jug.x1)), Y(L.jug.z1), S * P.jugD, S * P.jugH, ['dxJug', -1 / S, 'dzJug', -1 / S], L.coll.ids.has('Jug'), 'The drain jug (along the wall and up)'));
@@ -575,8 +576,8 @@ function drawBedEnd(L, V) {
   o.push(GB('wellbatt', 'Wheel well and battery'));
   o.push(bx(0, 6.25, 0, 7.5, { fill: '#E24B4A', fo: .2, stroke: '#A32D2D', sw: 1.4, dash: '5 3' }));
   o.push(T(xx(3.1), yy(3), 'well', { size: 10, fill: '#791F1F', halo: false }));
-  o.push(bx(6.25, 16.25, 0, 9.5, { fill: '#F2B84B', fo: .35, stroke: '#8A5A00', sw: 1.4, dash: '5 3' }));
-  o.push(T(xx(11.25), yy(4.5), 'battery', { size: 10, fill: '#5A3A00', halo: false }));
+  if (P.battOn) o.push(bx(6.25, 16.25, 0, 9.5, { fill: '#F2B84B', fo: .35, stroke: '#8A5A00', sw: 1.4, dash: '5 3' }));
+  if (P.battOn) o.push(T(xx(11.25), yy(4.5), 'battery', { size: 10, fill: '#5A3A00', halo: false }));
   o.push(GE());
   if (L.chairs) {
     const c = L.chairs, col = L.coll.ids.has('Chairs') ? '#A32D2D' : '#2F5E3F';

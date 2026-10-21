@@ -17,9 +17,9 @@ function obstacles(L, V) {
   });
   const sp = V.pan || 0;
   Q.push({ x0: 0, x1: P.panW, d: 3.5 + (P.panD - 3.5) * (1 - sp), n: sp > .5 ? 'the shower pan (tipped up)' : 'the shower pan' });
-  Q.push({ x0: L.fr[0], x1: L.fr[1], d: P.cabD, n: 'the fridge' });
+  if (P.fridgeOn) Q.push({ x0: L.fr[0], x1: L.fr[1], d: P.cabD, n: 'the fridge' });
   const sf = V.fridge || 0;
-  if (sf > .02) {
+  if (P.fridgeOn && sf > .02) {
     const th = sf * Math.PI / 2;
     for (let k = 0; k <= 24; k++) { const r = P.fridgeW * k / 24; Q.push({ x0: L.fr[0] + r * Math.cos(th) - .4, x1: L.fr[0] + r * Math.cos(th) + .4, d: P.cabD + r * Math.sin(th), n: 'the fridge door' }); }
   }
