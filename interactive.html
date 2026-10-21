@@ -31,6 +31,7 @@
   svg text { font-family: -apple-system, "Segoe UI", sans-serif; }
   svg .mv { cursor: pointer; }
   svg .mv:hover { filter: drop-shadow(0 0 3px rgba(186, 117, 23, .95)); }
+  svg { user-select: none; -webkit-user-select: none; }
   svg .drg { cursor: grab; touch-action: none; }
   svg .drg:hover { fill-opacity: .1; stroke-opacity: 1; }
   body.dragging, body.dragging svg .drg { cursor: grabbing; user-select: none; -webkit-user-select: none; }
@@ -78,7 +79,7 @@
 <body>
 <div class="wrap">
   <h1>Ford Transit van: interactive plan</h1>
-  <p class="lead">Click a door, table, the bed, the shower pan or the fridge to open or close it. Drag the water tanks, the drain line, the shower fan and the air conditioner (the dotted purple boxes) to move them: the message above the drawing says right away what no longer fits or overlaps. Change any size below the drawing and everything redraws, including the walkway checks. Zoom the drawing with the + and − buttons in its corner, Ctrl (Cmd on a Mac) and scroll, or pinch; drag it to move when zoomed. Sizes are in inches, measured from the same zero as the static diagrams (6 in in from the rear edge). <a href="sides.html">Static diagrams, photos and the full measurement tables</a></p>
+  <p class="lead">Click a door, table, the bed, the shower pan or the fridge to open or close it. Drag the drawers and shelves, the jar shelf, the shelf over the fridge, the water tanks, the drain line, the shower fan and the air conditioner (the dotted purple boxes) to move them, and double-click one to put it back: the message above the drawing says right away what no longer fits or overlaps. Change any size below the drawing and everything redraws, including the walkway checks. Zoom the drawing with the + and − buttons in its corner, Ctrl (Cmd on a Mac) and scroll, or pinch; drag it to move when zoomed. Sizes are in inches, measured from the same zero as the static diagrams (6 in in from the rear edge). <a href="sides.html">Static diagrams, photos and the full measurement tables</a></p>
   <noscript>This page needs JavaScript. The static diagrams are on the other page.</noscript>
   <div class="tabs" role="tablist" id="tabs"></div>
   <div class="movers" id="movers"></div>
@@ -223,7 +224,6 @@ const PD = [
   { k: 'flapGap', g: 'Fold-out table and foot ledge', l: 'Gap left to the cab wall', d: 2, s: .5, a: 0, b: 10 },
   { k: 'flapLen', g: 'Fold-out table and foot ledge', l: 'Length', d: 29, s: .5, a: 8, b: 60 },
   { k: 'flapD', g: 'Fold-out table and foot ledge', l: 'Depth', d: 15, s: .5, a: 8, b: 30 },
-  { k: 'microIn', g: 'Fold-out table and foot ledge', l: 'Microwave: set its back in from the passenger wall (the wall leans in, about 2 1/2 in at its top)', d: 2.5, s: .5, a: 0, b: 8 },
   { k: 'cabSeatH', g: 'Fold-out table and foot ledge', l: 'Cab passenger seat: top of the cushion, up from the floor', d: 17, s: .5, a: 10, b: 30 },
   { k: 'cabSeatOut', g: 'Fold-out table and foot ledge', l: 'Cab passenger seat: how far the cushion sticks out past the cab wall into the living area (the back does not)', d: 1, s: .5, a: 0, b: 10 },
   { k: 'cabSeatFwd', g: 'Fold-out table and foot ledge', l: 'Cab passenger seat pulled all the way forward: the cushion rear edge is this far in front of the cab wall', d: 6, s: .5, a: 0, b: 20 },
@@ -298,6 +298,13 @@ const PD = [
   { k: 'fanHighH', g: 'Power', l: 'Hours a day the fan runs on high (the rest of the day is low)', d: 1, s: .5, a: 0, b: 24 },
   { k: 'heaterW', g: 'Power', l: 'Hot water heater power (W, 120 V)', d: 1440, s: 40, a: 200, b: 3000 }
 ];
+// the drawers and shelves under the counter, the jar shelf and the shelf over the fridge: how far each is moved from its planned spot (you can drag them; double-click one to put it back)
+[['TB', 'Top drawer, back side', 1], ['TC', 'Top drawer, cab side', 1], ['C1', 'Cab-side column: upper (or only) drawer', 1], ['C2', 'Cab-side column: lower drawer', 1], ['B1', 'Back-side column: upper (or only) drawer', 1], ['B2', 'Back-side column: middle drawer', 1], ['B3', 'Back-side column: bottom drawer', 1],
+  ['SC', 'Shelf under the cab-side drawers', 0], ['SB', 'Shelf under the back-side drawers', 0], ['SC2', 'Board between the two cab-side lower drawers', 0], ['SB1', 'Board between the upper and middle back-side drawers', 0], ['SB2', 'Board between the middle and bottom back-side drawers', 0],
+  ['Nook', 'Jar shelf in the nook (with its upper row of jars)', 0], ['FShelf', 'Shelf over the fridge', 0]].forEach(([k, nm, along]) => {
+  if (along) PD.push({ k: 'dx' + k, g: 'Drawers and shelves', l: nm + ': moved along the wall (+ toward the cab, - toward the rear)', d: 0, s: .25, a: -60, b: 60 });
+  PD.push({ k: 'dz' + k, g: 'Drawers and shelves', l: nm + ': moved up (+) or down (-)', d: 0, s: .25, a: -40, b: 40 });
+});
 const DEF = {}; PD.forEach(p => DEF[p.k] = p.d);
 let P = Object.assign({}, DEF);
 
@@ -346,34 +353,76 @@ const HITR = (x, y, w, h) => `<rect x="${f1(x)}" y="${f1(y)}" width="${f1(Math.m
 // are negative where the drawing runs the other way. on = a tick box size that the first drag switches on.
 function HIT(id, x, y, w, h, ax, bad, label, on) {
   const k = v => +(+v || 0).toFixed(5);
-  return `<rect class="drg" data-drag="${id}" data-px="${ax[0]}" data-kx="${k(ax[1])}" data-py="${ax[2]}" data-ky="${k(ax[3])}" data-on="${on || ''}" x="${f1(x)}" y="${f1(y)}" width="${f1(Math.max(2, w))}" height="${f1(Math.max(2, h))}" rx="3" fill="#534AB7" fill-opacity="${bad ? .12 : .02}" stroke="${bad ? '#C0392B' : '#534AB7'}" stroke-width="${bad ? 2.6 : 1}" stroke-dasharray="${bad ? '5 2' : '2 3'}" stroke-opacity="${bad ? 1 : .6}"><title>${label}${bad ? ' (overlaps something: see the red message above the drawing)' : ' (drag to move it)'}</title></rect>`;
+  return `<rect class="drg" data-drag="${id}" data-px="${ax[0]}" data-kx="${k(ax[1])}" data-py="${ax[2]}" data-ky="${k(ax[3])}" data-on="${on || ''}" x="${f1(x)}" y="${f1(y)}" width="${f1(Math.max(2, w))}" height="${f1(Math.max(2, h))}" rx="3" fill="#534AB7" fill-opacity="${bad ? .12 : .02}" stroke="${bad ? '#C0392B' : '#534AB7'}" stroke-width="${bad ? 2.6 : 1}" stroke-dasharray="${bad ? '5 2' : '2 3'}" stroke-opacity="${bad ? 1 : .6}"><title>${label}${bad ? ' (overlaps something: see the red message above the drawing)' : ' (drag to move it, double-click to put it back)'}</title></rect>`;
 }
-// solid things on the passenger side (x along the van from the back, y out from the passenger wall, z up) and the roof units; reports what overlaps
-function collisions(L) {
-  const P = L.P, list = [], ids = new Set();
-  const dm = L.cabS + 14.75, ch = P.counterH, tl = ch - 7, bsC = L.cabShelf + 1, bbB = L.backShelf + 1, tot = tl - bsC;
-  const bx = (id, n, x0, x1, y0, y1, z0, z1) => ({ id, n, x0, x1, y0, y1, z0, z1 });
-  const hot = bx('hot', 'the hot water tank', L.hotX[0], L.hotX[1], P.hotBack, P.hotBack + P.hotD, P.hotShelf, P.hotShelf + P.hotH);
-  const fresh = bx('fresh', 'the fresh water tank', L.tankX[0], L.tankX[1], 0, P.tankD, 0, P.tankH);
-  const others = [bx('', 'the wheel well', 42, 76, 0, 7, 0, 7.5), bx('', 'the fridge', L.fr[0], L.fr[1], 2, 21, 8.25, 56.25), bx('', 'the countertop', L.cabS, L.sinkE, 0, P.cabD, ch - 1.2, ch), bx('', 'the cab wall', P.cab, P.cab + 60, 0, 40, 0, 120)];
-  const dr = (n, x0, x1, z0, z1) => others.push(bx('', n, x0, x1, 0, 20, z0, z1));
-  dr('a top drawer', 59.25, 72.25, ch - 6.75, ch - 2.75); dr('a top drawer', 73.75, 86.75, ch - 6.75, ch - 2.75);
+// every drawer and shelf board under the counter as a box: kind, id (the sizes that move it are dx<id> along the wall, drawers only, and dz<id> up), n = its name,
+// x0/x1 along the wall and z0/z1 up (the planned spot plus how far it was dragged), y0/y1 out from the wall. The planned spots fill the space between the shelves, the
+// top drawers and the tanks, as before; dragging only adds to them.
+function cabinetParts(L) {
+  const P = L.P, ch = P.counterH, d0 = L.cabS + 1.25, dm = L.cabS + 14.75, z0 = ch - 6.75, z1 = ch - 2.75, tl = z0 - .25, bs = L.cabShelf + 1, tot = tl - bs, parts = [];
+  const add = (kind, id, n, x0, x1, b0, b1) => {
+    const dx = kind === 'drawer' ? P['dx' + id] || 0 : 0, dz = P['dz' + id] || 0;
+    parts.push({ kind, id, n, x0: x0 + dx, x1: x1 + dx, z0: b0 + dz, z1: b1 + dz, y0: 0, y1: 20, dxk: kind === 'drawer' ? 'dx' + id : '', dzk: 'dz' + id });
+  };
+  L.cabTot = tot; L.wellShelf = tot >= 10 ? L.backShelf : L.cabShelf;
+  add('drawer', 'TB', 'the top drawer on the back side', d0, dm - .5, z0, z1);
+  add('drawer', 'TC', 'the top drawer on the cab side', dm + 1, dm + 14, z0, z1);
   if (tot >= 3) {
-    if (tot >= 10) { dr('a cab-side drawer', 73.75, 86.75, tl - 5, tl); dr('a cab-side drawer', 73.75, 86.75, tl - 11, tl - 6); }
-    else dr('a cab-side drawer', 73.75, 86.75, bsC, tl);
-    const bt = tl - 6, many = tot >= 10 && bt - bbB >= 14.5, rh = (bt - bbB - 1) / 2;
-    if (tot >= 10 && many) { dr('a back-side drawer', 59.25, 72.25, tl - 5, tl); dr('a back-side drawer', 59.25, 72.25, bbB + rh + 1, bt); dr('a back-side drawer', 59.25, 72.25, bbB, bbB + rh); }
-    else dr('a back-side drawer', 59.25, 72.25, (tot >= 10 ? bbB : bsC), tl);
-    others.push(bx('', 'the cab-side shelf', dm, L.angS - .75, 0, 20, L.cabShelf, L.cabShelf + .75), bx('', 'the back-side shelf', L.cabS, dm, 0, 20, L.backShelf, L.backShelf + .75));
+    const ws = L.wellShelf;
+    add('shelf', 'SC', 'the shelf under the cab-side drawers', dm, L.angS - .75, L.cabShelf, L.cabShelf + .75);
+    add('shelf', 'SB', 'the shelf under the back-side drawers', L.cabS, dm, ws, ws + .75);
+    if (tot >= 10) {
+      const bt = tl - 6, bb = ws + 1, many = bt - bb >= 14.5, rh2 = (bt - bb - 1) / 2;
+      add('shelf', 'SC2', 'the board between the two cab-side lower drawers', dm, L.angS - .75, tl - 6, tl - 5.25);
+      add('drawer', 'C1', 'the upper cab-side drawer', dm + 1, dm + 14, tl - 5, tl);
+      add('drawer', 'C2', 'the lower cab-side drawer', dm + 1, dm + 14, tl - 11, tl - 6);
+      if (many) {
+        add('shelf', 'SB1', 'the board between the upper and middle back-side drawers', L.cabS, dm, bt, bt + .75);
+        add('shelf', 'SB2', 'the board between the middle and bottom back-side drawers', L.cabS, dm, bb + rh2, bb + rh2 + .75);
+        add('drawer', 'B1', 'the upper back-side drawer', d0, dm - .5, tl - 5, tl);
+        add('drawer', 'B2', 'the middle back-side drawer', d0, dm - .5, bb + rh2 + 1, bt);
+        add('drawer', 'B3', 'the bottom back-side drawer', d0, dm - .5, bb, bb + rh2);
+      } else add('drawer', 'B1', 'the back-side drawer', d0, dm - .5, bb, tl);
+    } else {
+      add('drawer', 'B1', 'the back-side drawer', d0, dm - .5, bs, tl);
+      add('drawer', 'C1', 'the cab-side drawer', dm + 1, dm + 14, bs, tl);
+    }
   }
-  const ov = (a0, a1, b0, b1) => Math.min(a1, b1) - Math.max(a0, b0), seen = new Set();
-  [hot, fresh].forEach(a => [hot, fresh, ...others].forEach(b => {
-    if (a === b || (b.id && b.id < a.id && b !== a)) return;
+  return parts;
+}
+// solid things on the passenger side (x along the van from the back, y out from the passenger wall, z up) and the roof units; reports what overlaps.
+// Movable things (the tanks, drawers, shelves, jar shelf) are checked against each other and against the fixed ones; a fixed thing with vs only counts for those kinds.
+function collisions(L) {
+  const P = L.P, list = [], ids = new Set(), ch = P.counterH, dm = L.cabS + 14.75, ft = 8.25 + P.fridgeH;
+  const bx = (id, n, x0, x1, y0, y1, z0, z1, o) => Object.assign({ id, n, x0, x1, y0, y1, z0, z1, kind: '' }, o);
+  const hot = bx('hot', 'the hot water tank', L.hotX[0], L.hotX[1], P.hotBack, P.hotBack + P.hotD, P.hotShelf, P.hotShelf + P.hotH, { kind: 'tank' });
+  const fresh = bx('fresh', 'the fresh water tank', L.tankX[0], L.tankX[1], 0, P.tankD, 0, P.tankH, { kind: 'tank' });
+  const mov = [hot, fresh];
+  L.parts.forEach(p => mov.push(bx(p.id, p.n, p.x0, p.x1, p.y0, p.y1, p.z0, p.z1, { kind: p.kind })));
+  const nx0 = 58, nx1 = 93.25;
+  mov.push(bx('Nook', 'the jar shelf in the nook with its upper row of jars', nx0, nx1, 0, 4.5, L.nookZ, L.nookZ + .75 + 7, { kind: 'jars' }));
+  mov.push(bx('FShelf', 'the shelf over the fridge', L.fr[0], L.fr[1], 0, 21, L.fshelfZ, L.fshelfZ + .75, { kind: 'shelf' }));
+  const fix = [
+    bx('', 'the wheel well', 42, 76, 0, 7, 0, 7.5), bx('', 'the fridge', L.fr[0], L.fr[1], 2, 2 + P.fridgeD, 8.25, ft), bx('', 'the cab wall', P.cab, P.cab + 60, 0, 40, 0, 120),
+    bx('', 'the floor', -10, P.cab + 10, -5, 45, -40, 0), bx('', 'the ceiling', -10, P.cab + 10, -5, 45, L.ceilF, L.ceilF + 40),
+    bx('', 'the counter and its rail', L.cabS, L.angS - .75, 0, P.cabD, ch - 2.25, ch), bx('', 'the countertop', L.angS - .75, L.sinkE, 0, P.cabD, ch - 1.2, ch),
+    bx('', 'the lower row of jars', 58.75, 92.5, 0, 4.5, ch, ch + 7), bx('', 'the top of the nook', nx0, nx1, 0, 4.5, ch + 18.5, ch + 40),
+    // the cabinet walls around the drawers (only drawers count: the shelves and the tanks reach into them by design)
+    bx('', 'the end panel on the fridge side', L.cabS, L.cabS + .75, 0, P.cabD, 0, ch, { vs: ['drawer'] }), bx('', 'the end panel at the angled front', L.angS - .75, L.angS, 0, P.cabD, 0, ch, { vs: ['drawer'] }),
+    bx('', 'the divider between the two columns', dm, dm + .5, 0, 20, L.cabTot >= 3 ? L.wellShelf + .75 : ch - 7.25, ch - 2.5, { vs: ['drawer'] })
+  ];
+  const ov = (a0, a1, b0, b1) => Math.min(a1, b1) - Math.max(a0, b0), seen = new Set(), cp = n => n[0].toUpperCase() + n.slice(1);
+  const test = (a, b) => {
+    if (b.vs && !b.vs.includes(a.kind)) return;
     const ox = ov(a.x0, a.x1, b.x0, b.x1), oy = ov(a.y0, a.y1, b.y0, b.y1), oz = ov(a.z0, a.z1, b.z0, b.z1);
-    if (ox > .06 && oy > .06 && oz > .06) { const key = a.n + '|' + b.n + '|' + b.x0 + '|' + b.z0; if (seen.has(key)) return; seen.add(key); ids.add(a.id); if (b.id) ids.add(b.id); list.push({ ids: [a.id, b.id], msg: `${a.n[0].toUpperCase() + a.n.slice(1)} overlaps ${b.n} (${fmt(ox)} in along the wall, ${fmt(oy)} in out from it, ${fmt(oz)} in up).` }); }
-  }));
+    if (ox > .06 && oy > .06 && oz > .06) {
+      const key = a.id + '|' + b.n + '|' + b.id; if (seen.has(key)) return; seen.add(key); ids.add(a.id); if (b.id) ids.add(b.id);
+      list.push({ ids: [a.id, b.id], msg: `${cp(a.n)} overlaps ${b.n} (${fmt(ox)} in along the wall, ${fmt(oy)} in out from it, ${fmt(oz)} in up).` });
+    }
+  };
+  mov.forEach((a, i) => { for (let j = i + 1; j < mov.length; j++) test(a, mov[j]); fix.forEach(b => test(a, b)); });
   // the open floor beside the sink cabinet end is the entry: nothing may stand past the cabinet end panel
-  [hot, fresh].forEach(a => { const past = a.x1 - (L.sinkE - .75); if (past > .06 && a.z0 < ch) { ids.add(a.id); list.push({ ids: [a.id], msg: `${a.n[0].toUpperCase() + a.n.slice(1)} sticks out ${fmt(past)} in past the end of the sink cabinet (${fmt(L.sinkE - .75)} in) into the entry by the sliding door.` }); } });
+  [hot, fresh].forEach(a => { const past = a.x1 - (L.sinkE - .75); if (past > .06 && a.z0 < ch) { ids.add(a.id); list.push({ ids: [a.id], msg: `${cp(a.n)} sticks out ${fmt(past)} in past the end of the sink cabinet (${fmt(L.sinkE - .75)} in) into the entry by the sliding door.` }); } });
   // roof units: the fan and air conditioner bases must not overlap on the roof
   const f = L.fan, a = L.ac, ox = ov(f.x - f.u / 2, f.x + f.u / 2, a.x - a.u / 2, a.x + a.u / 2), oy = ov(f.y - f.u / 2, f.y + f.u / 2, a.y - a.u / 2, a.y + a.u / 2);
   if (ox > .06 && oy > .06) { ids.add('fan'); ids.add('ac'); list.push({ ids: ['fan', 'ac'], msg: `The fan unit and the air conditioner unit overlap on the roof (${fmt(ox)} x ${fmt(oy)} in).` }); }
@@ -459,6 +508,10 @@ function layout(P0) {
     L.fan = { x: P.fanX, y: P.fanY, w: P.fanW, nm: 'shower fan', u: P.fanUnit }; L.ac = { x: P.acX, y: P.acY, w: P.acW, nm: 'A/C', u: P.acUnit };
     L.slatsCut = c => L.slatY.filter((sy, k) => !L.slatOut.has(k) && sy < c.y + c.w / 2 && sy + P.slatW > c.y - c.w / 2).length;
   }
+  // the drawers and shelves under the counter (as planned plus dragged), the jar shelf in the nook and the shelf above the fridge
+  L.parts = cabinetParts(L); L.partById = {}; L.parts.forEach(p => { L.partById[p.id] = p; });
+  L.nookZ = P.counterH + 7.5 + P.dzNook;
+  L.fshelfZ = 8.25 + P.fridgeH + 2 + P.dzFShelf;   // bottom of the shelf over the fridge (it is 3/4 in thick; 2 in over the fridge top)
   L.coll = collisions(L);
   return L;
 }
@@ -695,7 +748,7 @@ function drawPass(L, V) {
   o.push(T(X((sinkS + sinkE) / 2), Y(ch * .68) + 14, `${fmt(P.sinkW)} wide, counter ${fmt(P.sinkD)} deep`, { size: 10.5, fill: COL.C }));
   o.push(box(cabS, sinkE, ch - 1.2, ch, { fill: '#5F5E5A', fo: .75 }));
   o.push(T(X(sinkS - 3), Y(ch) - 4, `countertop at ${fmt(ch)} in`, { size: 10.5, fill: '#5F5E5A', halo: false }));
-  // fridge on a platform over the wheel well, microwave on its shelf
+  // fridge on a platform over the wheel well, a shelf over it
   const q0 = L.fr[0], q1 = L.fr[1], fb = 8.25, ft = fb + P.fridgeH;
   o.push(box(q0, q1, 7.5, 8.25, { fill: '#8A6B4D', stroke: '#3E230B', sw: 1 }));
   o.push(box(q0, q0 + 1.5, 0, 7.5, { fill: '#8A6B4D', stroke: '#3E230B', sw: 1 }));
@@ -714,15 +767,14 @@ function drawPass(L, V) {
     }
     o.push(MV('fridge', g, HITR(Math.min(X(q0), X(q1)), Y(ft), S * P.fridgeW, S * P.fridgeH)));
   }
-  o.push(box(q0, q1, ft + 2, ft + 2.75, { fill: '#8A6B4D', stroke: '#3E230B', sw: 1 }));
-  o.push(box(q0 + (P.fridgeW - 18.5) / 2, q1 - (P.fridgeW - 18.5) / 2, ft + 2.75, ft + 12.75, { fill: COL.G, fo: .25, stroke: COL.G, sw: 1.5, rx: 3 }));
-  o.push(T(X((q0 + q1) / 2), Y(ft + 6.9), 'Microwave', { size: 12, fill: COL.G }));
-  o.push(T(X((q0 + q1) / 2), Y(ft + 6.9) + 14, '18.5 x 10 x 12 in', { size: 10.5, fill: COL.G }));
+  const md = P.dzFShelf;
+  o.push(box(q0, q1, ft + 2 + md, ft + 2.75 + md, { fill: '#8A6B4D', stroke: '#3E230B', sw: 1 }));
   // counter nook (a recess in the wall) with the jar shelf
   const nx0 = 58, nx1 = 93.25;
   o.push(box(nx0, nx1, ch, ch + 18.5, { fill: '#7A4A1E', fo: .2, stroke: '#7A4A1E', sw: 1.5, rx: 3, dash: '5 3' }));
-  o.push(box(nx0, nx1, ch + 7.5, ch + 8.25, { fill: '#8A6B4D', stroke: '#3E230B', sw: 1 }));
-  [ch, ch + 8.25].forEach(base => {
+  const nd = P.dzNook;
+  o.push(box(nx0, nx1, ch + 7.5 + nd, ch + 8.25 + nd, { fill: '#8A6B4D', stroke: '#3E230B', sw: 1 }));
+  [ch, ch + 8.25 + nd].forEach(base => {
     for (let i = 0; i < 9; i++) {
       const jx = 58.75 + 3.75 * i;
       o.push(box(jx + .1, jx + 3.65, base, base + 6.25, { fill: '#A9D4F5', fo: .6, stroke: COL.BL, sw: .9, rx: 2.5 }));
@@ -731,8 +783,8 @@ function drawPass(L, V) {
     o.push(Ln(X(58.4), Y(base + 3.5), X(92.85), Y(base + 3.5), { stroke: '#7A4A1E', sw: 1.6, dash: '3 2' }));
   });
   o.push(T(X(67), Y(ch + 16.7), 'Nook: quart jars', { size: 11, fill: '#7A4A1E' }));
-  o.push(T(X(98.8), Y(ch + 8), `shelf ${fmt(ch + 7.5)} up`, { size: 10, fill: '#5A3510' }));
-  o.push(T(X(98.8), Y(ch + 8) + 12, '9 jars a tier', { size: 10, fill: '#5A3510' }));
+  o.push(T(X(98.8), Y(ch + 8 + nd), `shelf ${fmt(ch + 7.5 + nd)} up`, { size: 10, fill: '#5A3510' }));
+  o.push(T(X(98.8), Y(ch + 8 + nd) + 12, '9 jars a tier', { size: 10, fill: '#5A3510' }));
   // TV
   o.push(box(76.5, 103.5, ch + 16, ch + 31.4, { fill: COL.G, fo: .25, stroke: COL.G, sw: 1.5, rx: 3 }));
   o.push(T(X(90), Y(ch + 25), 'TV 30 in', { size: 12, fill: COL.G }));
@@ -743,13 +795,6 @@ function drawPass(L, V) {
   o.push(T(X((L.tankX[0] + L.tankX[1]) / 2), Y(P.tankH * .62) + 14, `${fmt(L.tankLen)} x ${fmt(P.tankD)} x ${fmt(P.tankH)}, on the floor`, { size: 10.5, fill: COL.BL }));
   // angle marker
   o.push(Ln(X(angS), Y(23), X(angS), Y(ch), { stroke: '#A32D2D', sw: 2, dash: '5 3' }));
-  // paper towels and towel bars in the angled front
-  const pt0 = sinkS - 11.5, pt1 = sinkS - .5;
-  o.push(box(pt0, pt1, 29.75, 35.25, { fill: '#B07A2A', fo: .35, stroke: '#B07A2A', sw: 1.5, rx: 3 }));
-  o.push(T(X((pt0 + pt1) / 2), Y(32.5), 'Paper towels', { size: 12, fill: '#B07A2A' }));
-  o.push(T(X((pt0 + pt1) / 2), Y(32.5) + 14, '11 in roll, recessed', { size: 10.5, fill: '#B07A2A' }));
-  [25.5, 19.5].forEach(zb => { o.push(Ln(X(pt0), Y(zb), X(pt1), Y(zb), { stroke: COL.G, sw: 3.5, cap: 'round' })); o.push(`<circle cx="${f1(X(pt0))}" cy="${f1(Y(zb))}" r="3" fill="#444441"/><circle cx="${f1(X(pt1))}" cy="${f1(Y(zb))}" r="3" fill="#444441"/>`); });
-  o.push(T(X((pt0 + pt1) / 2), Y(22.2), '2 towel bars, 11 in', { size: 9.5, fill: COL.G }));
   // hot water tank on the floor next to the wheel well (or on a shelf if raised), and sink plumbing
   if (P.hotShelf > .5) o.push(box(L.hotX[0] - 1, L.hotX[1] + 1, P.hotShelf - .75, P.hotShelf, { fill: '#8A6B4D', fo: .6, stroke: '#3E230B', sw: 1 }));
   o.push(box(L.hotX[0], L.hotX[1], P.hotShelf, P.hotShelf + P.hotH, { fill: '#C0392B', fo: .18, stroke: '#C0392B', sw: 1.5, rx: 3, dash: '5 3' }));
@@ -763,44 +808,36 @@ function drawPass(L, V) {
     o.push(T(X(dx), Y(topz) - 6, 'relief valve drain', { size: 9.5, fill: '#0F6E56' }));
     o.push(T(X(dx) + (E.flip ? 5 : -5), Y(3), 'through the floor to outside', { size: 8.5, fill: '#0F6E56', anchor: E.flip ? 'start' : 'end' }));
   }
-  // two 4 in drawers side by side under the counter in the flat part, 1/2 in divider between
+  // the drawers and shelves under the counter: each one is an entry in L.parts (where it was planned plus how far it was dragged); the rail and the divider stay put
   {
-    const d0 = L.cabS + 1.25, dm = L.cabS + 14.75, z0 = ch - 6.75, z1 = ch - 2.75;
+    const dm = L.cabS + 14.75, z0 = ch - 6.75, z1 = ch - 2.75, part = id => L.partById[id];
+    const board = p => box(p.x0, p.x1, p.z0, p.z1, { fill: '#8A6B4D', fo: 1, stroke: '#3E230B', sw: .8 });
+    const drawer = p => box(p.x0, p.x1, p.z0, p.z1, { fill: '#8A5A00', fo: .2, stroke: '#8A5A00', sw: 1.5, rx: 3 });
     o.push(box(L.cabS, L.angS - .75, ch - 2.25, ch - 1.5, { fill: '#8A6B4D', fo: 1, stroke: '#3E230B', sw: .8 }));
     o.push(box(dm, dm + .5, z0 - .5, z1 + .25, { fill: '#8A6B4D', fo: 1, stroke: '#3E230B', sw: .8 }));
-    o.push(box(d0, dm - .5, z0, z1, { fill: '#8A5A00', fo: .2, stroke: '#8A5A00', sw: 1.5, rx: 3 }));
-    o.push(box(dm + 1, dm + 14, z0, z1, { fill: '#8A5A00', fo: .2, stroke: '#8A5A00', sw: 1.5, rx: 3 }));
-    o.push(T(X(d0 + 6.5), Y((z0 + z1) / 2) - 5, 'Drawer + tray', { size: 11, fill: '#8A5A00' }));
-    o.push(T(X(d0 + 6.5), Y((z0 + z1) / 2) + 7, '13 x 20 x 4', { size: 9, fill: '#8A5A00' }));
-    o.push(T(X(dm + 7.5), Y((z0 + z1) / 2) - 5, 'Drawer', { size: 11, fill: '#8A5A00' }));
-    o.push(T(X(dm + 7.5), Y((z0 + z1) / 2) + 7, '13 x 20 x 4', { size: 9, fill: '#8A5A00' }));
+    const tb = part('TB'), tc = part('TC');
+    o.push(drawer(tb)); o.push(drawer(tc));
+    o.push(T(X(tb.x0 + 6.5), Y((tb.z0 + tb.z1) / 2) - 5, 'Drawer + tray', { size: 11, fill: '#8A5A00' }));
+    o.push(T(X(tb.x0 + 6.5), Y((tb.z0 + tb.z1) / 2) + 7, '13 x 20 x 4', { size: 9, fill: '#8A5A00' }));
+    o.push(T(X(tc.x0 + 6.5), Y((tc.z0 + tc.z1) / 2) - 5, 'Drawer', { size: 11, fill: '#8A5A00' }));
+    o.push(T(X(tc.x0 + 6.5), Y((tc.z0 + tc.z1) / 2) + 7, '13 x 20 x 4', { size: 9, fill: '#8A5A00' }));
     // lower drawers under the pair: a 3/4 in shelf half an inch over the top of the hot water tank (or the wheel well, 7.5), 20 deep so they reach the wall over both
-    const shelfZ = L.cabShelf, tl = z0 - .25, bs = shelfZ + 1, tot = tl - bs;
-    if (tot >= 3) {
-      const rows = tot >= 10 ? 2 : 1, rh = rows === 2 ? (tot - 1) / 2 : tot;
-      o.push(box(dm, L.angS - .75, shelfZ, shelfZ + .75, { fill: '#8A6B4D', fo: 1, stroke: '#3E230B', sw: .8 }));
-      // the back-side column is over the wheel well only (7.5 tall, to 76 in), so its shelf sits 1/2 in over the well
-      const wellShelf = tot >= 10 ? L.backShelf : shelfZ;
-      o.push(box(L.cabS, dm, wellShelf, wellShelf + .75, { fill: '#8A6B4D', fo: 1, stroke: '#3E230B', sw: .8 }));
-      o.push(box(dm, dm + .5, wellShelf + .75, z0 - .5, { fill: '#8A6B4D', fo: 1, stroke: '#3E230B', sw: .8 }));
-      const drw = (c0, c1, b0, b1) => {
-        o.push(box(c0, c1, b0, b1, { fill: '#8A5A00', fo: .2, stroke: '#8A5A00', sw: 1.5, rx: 3 }));
-        if (b1 - b0 < 5) { o.push(T(X((c0 + c1) / 2), Y((b0 + b1) / 2) + 3, `13 x 20 x ${fmt(b1 - b0)}`, { size: 9, fill: '#8A5A00' })); return; }
-        o.push(T(X((c0 + c1) / 2), Y((b0 + b1) / 2) - 3, 'Drawer', { size: 11, fill: '#8A5A00' }));
-        o.push(T(X((c0 + c1) / 2), Y((b0 + b1) / 2) + 10, `13 x 20 x ${fmt(b1 - b0)}`, { size: 9, fill: '#8A5A00' }));
+    if (part('SC')) {
+      o.push(board(part('SC'))); o.push(board(part('SB')));
+      o.push(box(dm, dm + .5, L.wellShelf + .75, z0 - .5, { fill: '#8A6B4D', fo: 1, stroke: '#3E230B', sw: .8 }));
+      const drw = p => {
+        const b0 = p.z0, b1 = p.z1;
+        o.push(drawer(p));
+        if (b1 - b0 < 5) { o.push(T(X((p.x0 + p.x1) / 2), Y((b0 + b1) / 2) + 3, `13 x 20 x ${fmt(b1 - b0)}`, { size: 9, fill: '#8A5A00' })); return; }
+        o.push(T(X((p.x0 + p.x1) / 2), Y((b0 + b1) / 2) - 3, 'Drawer', { size: 11, fill: '#8A5A00' }));
+        o.push(T(X((p.x0 + p.x1) / 2), Y((b0 + b1) / 2) + 10, `13 x 20 x ${fmt(b1 - b0)}`, { size: 9, fill: '#8A5A00' }));
       };
       // two 5 in drawers on the cab side (under the top pair, with the strip below them open), a 5 in one to the right of it (toward the back) with two equal drawers under it, on their own shelf 1/2 in over the wheel well; one row of two if there is too little height
-      if (tot >= 10) {
+      if (part('SC2')) {
         // cab side: two 5 in drawers; back side: a 5 in over two equal drawers when there is room (over the wheel well alone), else one drawer filling the space over the hot water tank
-        const bt = tl - 6, bb = wellShelf + 1, many = bt - bb >= 14.5, rh2 = (bt - bb - 1) / 2;
-        o.push(box(dm, L.angS - .75, tl - 6, tl - 5.25, { fill: '#8A6B4D', fo: 1, stroke: '#3E230B', sw: .8 }));
-        drw(dm + 1, dm + 14, tl - 5, tl); drw(dm + 1, dm + 14, tl - 11, tl - 6);
-        if (many) {
-          o.push(box(L.cabS, dm, bt, bt + .75, { fill: '#8A6B4D', fo: 1, stroke: '#3E230B', sw: .8 }));
-          o.push(box(L.cabS, dm, bb + rh2, bb + rh2 + .75, { fill: '#8A6B4D', fo: 1, stroke: '#3E230B', sw: .8 }));
-          drw(d0, dm - .5, tl - 5, tl); drw(d0, dm - .5, bb + rh2 + 1, bt); drw(d0, dm - .5, bb, bb + rh2);
-        } else drw(d0, dm - .5, bb, tl);
-      } else { drw(d0, dm - .5, bs, tl); drw(dm + 1, dm + 14, bs, tl); }
+        o.push(board(part('SC2'))); drw(part('C1')); drw(part('C2'));
+        if (part('SB1')) { o.push(board(part('SB1'))); o.push(board(part('SB2'))); drw(part('B1')); drw(part('B2')); drw(part('B3')); } else drw(part('B1'));
+      } else { drw(part('B1')); drw(part('C1')); }
     }
   }
   o.push(Ln(X(sinkS + 8), Y(0), X(sinkS + 8), Y(ch - 7), { stroke: COL.BL, sw: 3, dash: '2 2' }));
@@ -851,7 +888,14 @@ function drawPass(L, V) {
   o.push(Ln(X(P.cab - P.cabSeatOut), Y(P.cabSeatH), X(P.cab + 7), Y(P.cabSeatH), { stroke: '#534AB7', sw: 3 }));
   o.push(T(X(P.cab + 3.5), Y(P.cabSeatH) - 5, `cab seat ${fmt(P.cabSeatH)} up, sticks out ${fmt(P.cabSeatOut)}`, { size: 9, fill: '#534AB7' }));
   o.push(elevTail(E, L, 'inches from where you start measuring at the back'));
-  // things you can drag (this view runs right to left, so a drag to the right moves toward the rear; up is up)
+  // things you can drag (this view runs right to left, so a drag to the right moves toward the rear; up is up): the drawers and boards, then the shelves in the nook and over the fridge, then the tanks
+  {
+    const hx = (x0, x1) => Math.min(X(x0), X(x1));
+    L.parts.filter(p => p.kind === 'drawer' && p.z1 - p.z0 > .5).forEach(p => o.push(HIT(p.id, hx(p.x0, p.x1), Y(p.z1), S * (p.x1 - p.x0), S * (p.z1 - p.z0), [p.dxk, -1 / S, p.dzk, -1 / S], L.coll.ids.has(p.id), cap(p.n) + ' (along the wall and up)')));
+    L.parts.filter(p => p.kind === 'shelf').forEach(p => o.push(HIT(p.id, hx(p.x0, p.x1), Y(p.z1) - 4, S * (p.x1 - p.x0), S * (p.z1 - p.z0) + 8, ['', 0, p.dzk, -1 / S], L.coll.ids.has(p.id), cap(p.n) + ' (up and down)')));
+    o.push(HIT('Nook', hx(nx0, nx1), Y(ch + 8.25 + nd) - 4, S * (nx1 - nx0), S * .75 + 8, ['', 0, 'dzNook', -1 / S], L.coll.ids.has('Nook'), 'The jar shelf in the nook with its upper row of jars (up and down)'));
+    o.push(HIT('FShelf', hx(q0, q1), Y(ft + 2.75 + md) - 4, S * (q1 - q0), S * .75 + 8, ['', 0, 'dzFShelf', -1 / S], L.coll.ids.has('FShelf'), 'The shelf over the fridge (up and down)'));
+  }
   o.push(HIT('fresh', Math.min(X(L.tankX[0]), X(L.tankX[1])), Y(P.tankH), S * L.tankLen, S * P.tankH, ['tankShift', 1 / S, '', 0], L.coll.ids.has('fresh'), 'Fresh water tank (along the wall)'));
   if (P.drainOn && P.hotShelf > 10) o.push(HIT('drain', X(P.drainX) - 8, Y(P.hotShelf + P.hotH + 1.5) - 4, 16, S * (P.hotShelf + P.hotH + 1.5 + 2) + 8, ['drainX', -1 / S, '', 0], false, 'Relief valve drain line (where it comes down)'));
   o.push(HIT('hot', Math.min(X(L.hotX[0]), X(L.hotX[1])), Y(P.hotShelf + P.hotH), S * P.hotW, S * P.hotH, ['hotX0', -1 / S, 'hotShelf', -1 / S], L.coll.ids.has('hot'), 'Hot water tank (along the wall and up)', 'hotFree'));
@@ -880,7 +924,7 @@ function drawCross(L, V) {
   o.push(T(xx(W / 2), yy(L.roofZ(W / 2) - L.lining) + 24, `roof ribs ${fmt(zw)} at the wall, ${fmt(L.roofZ(W / 2))} in the middle`, { size: 11, fill: '#5A3A00' })); if (L.lining > 0) o.push(T(xx(W / 2), yy(L.roofZ(W / 2) - L.lining) + 38, `finished ceiling ${fmt(zw - L.lining)} at the wall, ${fmt(L.roofZ(W / 2) - L.lining)} in the middle`, { size: 11, fill: '#5A3A00' }));
   // width at the two measured heights, at the cabinet bottom and at the finished ceiling
   [[P.leanZ1, 'measured'], [P.leanZ2, 'measured'], [P.cabBot, 'cabinet bottom']].forEach(([z, nm], i) => { const l = lean(z), x0 = xx(l), x1 = xx(W - l); o.push(Ln(x0, yy(z), x1, yy(z), { stroke: '#A32D2D', sw: 1.2, mk: true })); o.push(T(xx(W / 2) + (i === 2 ? 0 : 0), yy(z) - 4, `${fmt(W - 2 * l)} wide at ${fmt(z)} up (${nm})`, { size: 10.5, fill: '#A32D2D' })); });
-  // driver side: couch and the wall cabinets; passenger side: counter, fridge, microwave shelf
+  // driver side: couch and the wall cabinets; passenger side: counter, fridge
   o.push(bx(0, P.bedD, 0, P.seatH, { fill: COL.P, fo: .18, stroke: COL.P, sw: 1.5, rx: 3 })); o.push(T(xx(P.bedD / 2), yy(P.seatH / 2), 'couch', { size: 11, fill: COL.P }));
   o.push(bx(0, 6, P.seatH, P.backH, { fill: COL.P, fo: .18, stroke: COL.P, sw: 1.5, rx: 3 }));
   // wall cabinets and the closet have open backs: the side panels run against the leaning wall, front edge vertical
@@ -894,7 +938,6 @@ function drawCross(L, V) {
   o.push(T(xx(P.cabBackIn + P.cabDepth / 2 + 1.5), yy((P.cabBot + L.ceilF) / 2), 'wall cabinet', { size: 11, fill: '#3C3489' })); o.push(T(xx(P.cabBackIn + P.cabDepth / 2 + 1.5), yy((P.cabBot + L.ceilF) / 2) + 13, `${fmt(P.cabDepth)} deep`, { size: 10, fill: '#3C3489' }));
   o.push(bx(W - P.cabD, W, 0, P.counterH, { fill: COL.C, fo: .12, stroke: COL.C, sw: 1.5, rx: 3 })); o.push(T(xx(W - P.cabD / 2), yy(P.counterH / 2), 'counter and cabinet', { size: 11, fill: COL.C }));
   o.push(bx(W - 2 - 19, W - 2, 8.25, 56.25, { fill: '#0A6A8A', fo: .14, stroke: '#0A6A8A', sw: 1.4, dash: '5 3' })); o.push(T(xx(W - 11.5), yy(40), 'fridge', { size: 11, fill: '#0A6A8A' }));
-  o.push(bx(W - 12 - P.microIn, W - P.microIn, 59, 69, { fill: COL.G, fo: .2, stroke: COL.G, sw: 1.4, rx: 2 })); o.push(T(xx(W - 6 - P.microIn), yy(64.5), 'micro', { size: 10, fill: COL.G }));
   o.push(T(xx(0) + 6, yy(P.roofMidH + P.ribDepth + 5), 'driver side wall', { anchor: 'start', size: 11, fill: '#5F5E5A', halo: false })); o.push(T(xx(W) - 6, yy(P.roofMidH + P.ribDepth + 5), 'passenger side wall', { anchor: 'end', size: 11, fill: '#5F5E5A', halo: false }));
   o.push(Ln(xx(0), yy(0), xx(W), yy(0), { stroke: '#5F5E5A', sw: 2 }));
   o.push(T(20, FL + 58, 'Things at different places along the van are drawn together (the fridge and the counter are side by side along the wall, not on top of each other).', { anchor: 'start', size: 10.5, fill: '#5F5E5A', halo: false }));
@@ -1100,8 +1143,6 @@ function drawPlan(L, V) {
     }
   }
   o.push(ip(L.fr[0], L.fr[1], 0, P.cabD, '#8A6B4D', '', null, { fo: .08, dash: '6 3' }));
-  o.push(ip(L.fr[0] + 1.75, L.fr[1] - 1.75, P.microIn, P.microIn + 12, COL.G, '', null, { fo: .2, dash: '4 3' }));
-  o.push(T(xx((L.fr[0] + L.fr[1]) / 2), yp(5.5 + P.microIn), 'Microwave 18.5 x 12', { size: 9, fill: COL.G, w: 500 }));
   o.push(ip(42, 76, 0, 7, COL.W2, '', null, { fo: .3 }));
   o.push(ip(L.tankX[0], L.tankX[1], 0, P.tankD, COL.BL, '', null, { fo: .1, dash: '5 3' }));
   o.push(ip(L.hotX[0], L.hotX[1], P.hotBack, P.hotBack + P.hotD, '#C0392B', '', null, { fo: .2, dash: '4 3' }));
@@ -1114,23 +1155,17 @@ function drawPlan(L, V) {
     o.push(T(xx(P.drainX), yp(dy) + 11, 'drain down', { size: 8, fill: '#0F6E56' }));
   }
   o.push(T(xx((L.hotX[0] + L.hotX[1]) / 2), yp(P.hotBack + P.hotD / 2) + 3, `hot water tank ${fmt(P.hotW)} x ${fmt(P.hotD)}`, { size: 8.5, fill: '#C0392B' }));
-  o.push(ip(L.cabS + 1.25, L.cabS + 14.25, 0, 20, '#8A5A00', '', null, { fo: .15, dash: '3 2' }));
-  o.push(ip(L.cabS + 15.75, L.cabS + 28.75, 0, 20, '#8A5A00', '', null, { fo: .15, dash: '3 2' }));
-  o.push(T(xx(L.cabS + 14.75), yp(10), `${4 + (P.counterH - 13 - (L.backShelf + 1) >= 14.5 ? 3 : 1)} drawers, 20 deep`, { size: 8.5, fill: '#8A5A00' }));
+  // drawer footprints: drawers that stand over each other share one (a column)
+  const cols = {};
+  L.parts.filter(p => p.kind === 'drawer').forEach(p => { const k = f1(p.x0) + '|' + f1(p.x1); (cols[k] = cols[k] || { x0: p.x0, x1: p.x1, ids: [] }).ids.push(p.id); });
+  Object.values(cols).forEach(c => o.push(ip(c.x0, c.x1, 0, 20, '#8A5A00', '', null, { fo: .15, dash: '3 2' })));
+  o.push(T(xx(L.cabS + 14.75), yp(10), `${L.parts.filter(p => p.kind === 'drawer').length} drawers, 20 deep`, { size: 8.5, fill: '#8A5A00' }));
   o.push(`<circle cx="${f1(xx(L.sinkS + 8))}" cy="${f1(yp(.9))}" r="3.5" fill="#185FA5"/>`);
   o.push(ip(58, 93.25, 0, 4.5, '#7A4A1E', '', null, { fo: .3, dash: '3 2' }));
   o.push(T(xx(66), yp(1.3), 'nook 4.5 deep', { size: 8.5, fill: '#5A3510' }));
   o.push(T(xx((L.tankX[0] + L.tankX[1]) / 2), yp(6.5), `Fresh water tank ${fmt(L.tankLen)} x ${fmt(P.tankD)}`, { size: 9.5, fill: COL.BL, w: 500 }));
   o.push(T(xx((L.tankX[0] + L.tankX[1]) / 2), yp(3.5), 'on the floor, out of the open sink cabinet', { size: 9, fill: COL.BL }));
   o.push(T(xx(53), yp(1.8), 'wheel well 7 out', { size: 9, fill: '#3E230B' }));
-  // paper towel roll on the angled front
-  const nrm = [L.slope, -1], nl = Math.hypot(nrm[0], nrm[1]), nu = [nrm[0] / nl, nrm[1] / nl];
-  const FP = (x, off) => [x + off * nu[0], (Wd - P.cabD) + L.slope * (x - L.angS) + off * nu[1]];
-  const t0 = L.sinkS - 11.5, t1 = L.sinkS - .5;
-  o.push(Poly([FP(t0, -.5), FP(t1, -.5), FP(t1, -6), FP(t0, -6)].map(p => [xx(p[0]), yy(p[1])]), { fill: '#B07A2A', fo: .35, stroke: '#8A5A00', sw: 1.2 }));
-  const b0 = FP(t0, 2.5), b1 = FP(t1, 2.5);
-  o.push(Ln(xx(b0[0]), yy(b0[1]), xx(b1[0]), yy(b1[1]), { stroke: COL.G, sw: 2.5, dash: '2 2' }));
-  o.push(T(xx(L.sinkS + 3), yy(Wd - P.cabD) - 1, 'paper towels (recessed, high)', { size: 8.5, fill: '#8A5A00' }) + T(xx(L.sinkS + 3), yy(Wd - P.cabD) + 9, 'towel bars stick out 2 1/2 in', { size: 8.5, fill: COL.G }));
   // sliding door opening in the passenger wall
   const dxe = Math.min(P.doorX + P.slideW, P.cab);
   o.push(Ln(xx(P.doorX), yy(Wd), xx(dxe), yy(Wd), { stroke: '#BA7517', sw: 5, dash: '10 5' }));
@@ -1160,6 +1195,7 @@ function drawPlan(L, V) {
   if (am.v < 1e8) o.push(dim(clamp(am.x, 1, P.cab - 1), 'aisle (tightest)'));
   o.push(Ln(xx(P.cab) + 18, yy(0), xx(P.cab) + 18, yy(Wd), { stroke: COL.G, sw: 1.5, mk: 1 }) + T(xx(P.cab) + 24, yy(Wd / 2), fmt(Wd) + ' wide', { anchor: 'start', size: 11, fill: COL.G, w: 700, halo: false }));
   // things you can drag (last, so they sit on top of everything)
+  Object.values(cols).forEach(c => o.push(HIT(c.ids[0], xx(c.x0), yp(20), S * (c.x1 - c.x0), S * 20, [c.ids.map(id => 'dx' + id).join(','), 1 / S, '', 0], c.ids.some(id => L.coll.ids.has(id)), c.ids.length > 1 ? `The ${c.ids.length} drawers in this column (along the wall)` : cap(L.partById[c.ids[0]].n) + ' (along the wall)')));
   o.push(HIT('fresh', xx(L.tankX[0]), yp(P.tankD), S * L.tankLen, S * P.tankD, ['tankShift', -1 / S, '', 0], L.coll.ids.has('fresh'), 'Fresh water tank (along the wall)'));
   if (P.drainOn && P.hotShelf > 10) o.push(HIT('drain', xx(P.drainX) - 8, yp(P.tankD + 2.5) - 8, 16, 16, ['drainX', 1 / S, '', 0], false, 'Relief valve drain line (where it comes down)'));
   o.push(HIT('hot', xx(L.hotX[0]), yp(P.hotBack + P.hotD), S * P.hotW, S * P.hotD, ['hotX0', 1 / S, 'hotBack', -1 / S], L.coll.ids.has('hot'), 'Hot water tank (along the wall and out from it)', 'hotFree'));
@@ -1261,7 +1297,12 @@ function computeChecks(L, V) {
   const lvA = v => v < 0 ? 'bad' : v < 12 ? 'bad' : v < 16 ? 'warn' : 'ok';
   // solid things that overlap (the same list that turns the dragged item red)
   L.coll.list.forEach(c => push('bad', c.msg));
-  if (!L.coll.list.length) push('ok', 'Nothing overlaps: the two water tanks clear the wheel well, the fridge, the drawers, the shelves, the counter and the cab wall, and the fan and air conditioner units clear each other.');
+  {
+    const dirs = (dx, dz) => [dx ? `${fmt(Math.abs(dx))} in toward the ${dx > 0 ? 'cab' : 'rear'}` : '', dz ? `${fmt(Math.abs(dz))} in ${dz > 0 ? 'up' : 'down'}` : ''].filter(Boolean).join(', ');
+    const moved = L.parts.map(p => [p.n, p.dxk ? P[p.dxk] : 0, P[p.dzk]]).concat([['the jar shelf in the nook', 0, P.dzNook], ['the shelf over the fridge', 0, P.dzFShelf]]).filter(m => m[1] || m[2]);
+    if (moved.length) push('ok', `Moved by hand from the planned spots: ${moved.map(m => cap(m[0]) + ' (' + dirs(m[1], m[2]) + ')').join('; ')}. The drawers are not resized when you move a shelf, so a shelf pushed into a drawer shows as an overlap. Double-click one in the drawing to put it back; "Reset to the current design" puts everything back.`);
+  }
+  if (!L.coll.list.length) push('ok', 'Nothing overlaps: the two water tanks, the drawers, the shelves, the jar shelf and the shelf over the fridge clear each other, the wheel well, the fridge, the counter and the cab wall, and the fan and air conditioner units clear each other.');
   // dinette
   const dspace = L.bB[1] - L.bA[0];
   if (L.spare < -0.01) push('bad', `The two benches and the table are ${fmt(-L.spare)} in too long for the dinette space (${fmt(dspace)} in from the closet to the cab wall).`);
@@ -1283,14 +1324,13 @@ function computeChecks(L, V) {
   if (P.leanOn) {
     const z0 = P.cabBot, z1 = L.ceilF, l0 = L.leanAt(z0), l1 = L.leanAt(z1), wc = P.vanW - 2 * L.leanAt(P.ceil), d = Math.abs(wc - P.ceilW);
     push(L.leanK <= 0 ? 'warn' : 'ok', `Wall lean: from your two widths (${fmt(P.leanW1)} in at ${fmt(P.leanZ1)} up, ${fmt(P.leanW2)} in at ${fmt(P.leanZ2)} up) each wall is straight up to about ${fmt(L.leanStart)} in (${fmt(P.vanW)} wide), then leans in ${(L.leanK * 12).toFixed(2)} in per foot, ${(Math.atan(L.leanK) * 180 / Math.PI).toFixed(1)} degrees: ${fmt(L.leanAt(P.ceil))} in each side by the bare roof, so ${fmt(wc)} in wide at ${fmt(P.ceil)} up. ${d <= .75 ? `That matches the ${fmt(P.ceilW)} in flat roof.` : `The flat roof is set to ${fmt(P.ceilW)} in; the lean says ${fmt(wc)}.`}`);
-    const bk = P.cabBackIn, mk = P.microIn, m0 = L.leanAt(59), m1 = L.leanAt(69), yf = bk + P.cabDepth, d0 = yf - Math.max(bk, l0), d1 = yf - Math.max(bk, l1), ang = Math.atan((Math.max(bk, l1) - Math.max(bk, l0)) / (z1 - z0)) * 180 / Math.PI;
+    const bk = P.cabBackIn, yf = bk + P.cabDepth, d0 = yf - Math.max(bk, l0), d1 = yf - Math.max(bk, l1), ang = Math.atan((Math.max(bk, l1) - Math.max(bk, l0)) / (z1 - z0)) * 180 / Math.PI;
     if (bk <= .01) push('ok', `The driver side wall cabinets (${fmt(z0)} to ${fmt(z1)} in up) have open backs and sit against the leaning wall, so only their sides follow it: the wall is ${fmt(l0)} in in at the bottom of the cabinets and ${fmt(l1)} in at the top, so each side panel is ${fmt(d0)} in deep at the bottom and ${fmt(d1)} in at the top, the rear edge cut at about ${ang.toFixed(0)} degrees (${fmt(l1 - l0)} in over ${fmt(z1 - z0)} in); the front stays ${fmt(P.cabDepth)} in out from the widest wall line. The shelves and the top are ${fmt(d1)} in deep at the top. Scribe the sides to the real wall when you fit them.`);
     else push(bk < l1 - .01 ? 'bad' : 'ok', `The driver side wall cabinets (${fmt(z0)} to ${fmt(z1)} in up) have a solid back set in ${fmt(bk)} in from the wall: ${fmt(bk - l0)} in off the wall at the bottom and ${fmt(bk - l1)} in at the top${bk < l1 - .01 ? `: it would run into the wall by ${fmt(l1 - bk)} in` : ''}.`);
     {
       const cz = L.ceilF, cl = L.leanAt(cz), st = Math.min(Math.max(L.leanStart, 0), cz), cAng = Math.atan(L.leanK) * 180 / Math.PI;
       push('ok', `The closet (${fmt(P.closetD)} deep, ${fmt(cz)} in tall) has an open back, so its sides follow the wall too: ${fmt(P.closetD)} deep up to ${fmt(st)} in, then the rear edge leans in at about ${cAng.toFixed(0)} degrees to ${fmt(P.closetD - cl)} deep at the top (${fmt(cl)} in less over the last ${fmt(cz - st)} in).`);
     }
-    push(mk < m1 - .01 ? 'bad' : 'ok', `The microwave (59 to 69 in up) is on a wall that leans in ${fmt(m0)} in at its bottom and ${fmt(m1)} in at its top; its back is set in ${fmt(mk)} in, so it is ${fmt(mk - m0)} in off the wall at the bottom and ${fmt(mk - m1)} in at the top${mk < m1 - .01 ? `: it would run into the wall by ${fmt(m1 - mk)} in` : ''}. A microwave has to sit level (its turntable and door seal are made for that), so it cannot lean with the wall: its back touches the wall at the top corner and leaves a ${fmt(m1 - m0)} in wedge behind its bottom (good for its vent and the cord). What follows the wall is everything built around it: the shelf, its side panels and any trim are cut to the same ${(Math.atan(L.leanK) * 180 / Math.PI).toFixed(0)} degree lean. The same wedge is behind the wall covering and the vertical planks.`);
   }
   // rib marks on the bare roof: each rib is a band ribW wide; an opening has to sit in the clear space between two bands
   if (L.ribs.length) {
@@ -1394,7 +1434,7 @@ function computeChecks(L, V) {
     else if (room < -.0625) push('bad', `The hot water tank (${fmt(P.hotD)} deep, with ${fmt(P.hotBack)} in behind it for the fittings and the relief valve, which are at its back, so its front is ${fmt(P.hotBack + P.hotD)} in from the wall) sticks out past where the cabinet door goes by ${fmt(-room)} in at its sink end (the angled front makes the cabinet shallower there, ${fmt(room + P.hotBack + P.hotD)} in clear inside the door). To fit: slide the tank back toward the drawers, use less space behind it, notch the door at that corner, or make the angled front start later.`);
     else if (P.hotShelf > 10) {
       const onT = L.hotX[0] >= L.tankX[0] - .01 && L.hotX[1] <= L.tankX[1] + .01, dr = L.hotX[0] < L.angS - .75 && L.hotX[1] > L.cabS + 1.25, sinkHit = L.hotX[1] > L.sinkS + .01;
-      push(onT && !dr && !sinkHit && P.counterH - 1.5 - hotTop >= 3 ? 'ok' : 'warn', `Hot water tank: ${fmt(P.hotW)} x ${fmt(P.hotD)} x ${fmt(P.hotH)} tall on a 3/4 in shelf on top of the fresh water tank (the shelf at ${fmt(P.hotShelf - .75)} to ${fmt(P.hotShelf)} in, carried by the cabinet sides, not by the tank), ${fmt(L.hotX[0])} to ${fmt(L.hotX[1])} in from the back, top at ${fmt(hotTop)} in, ${fmt(P.counterH - 1.5 - hotTop)} in under the counter for its fittings and relief valve; it holds ${L.hotGal.toFixed(1)} gal (${Math.round(L.hotGal * 8.34)} lb of water; the heater itself weighs ${fmt(P.hotEmptyLb)} lb, so ${Math.round(L.hotGal * 8.34 + P.hotEmptyLb)} lb full). ${room < .0625 ? 'no spare cabinet depth is left' : fmt(room) + ' in of cabinet depth is left'} in front of it at its tightest end (the front is angled from ${fmt(L.angS)} in); the hot and cold fittings and the relief valve are at its back, in the ${fmt(P.hotBack)} in between the tank and the wall (about ${fmt(P.hotBack + P.hotD)} in from the wall to its front). ${onT ? '' : 'It is not all over the fresh tank. '}${dr ? 'It is over the drawers. ' : ''}${sinkHit ? `It reaches ${fmt(L.hotX[1] - L.sinkS)} in into the sink cabinet, under the sink bowl (its bottom is at about 30 1/2 in); keep it to ${fmt(L.sinkS)} in. ` : ''}The paper towel recess (91 1/2 to 102 1/2 in, 29 3/4 to 35 1/4 in up) is just above it: they touch.`);
+      push(onT && !dr && !sinkHit && P.counterH - 1.5 - hotTop >= 3 ? 'ok' : 'warn', `Hot water tank: ${fmt(P.hotW)} x ${fmt(P.hotD)} x ${fmt(P.hotH)} tall on a 3/4 in shelf on top of the fresh water tank (the shelf at ${fmt(P.hotShelf - .75)} to ${fmt(P.hotShelf)} in, carried by the cabinet sides, not by the tank), ${fmt(L.hotX[0])} to ${fmt(L.hotX[1])} in from the back, top at ${fmt(hotTop)} in, ${fmt(P.counterH - 1.5 - hotTop)} in under the counter for its fittings and relief valve; it holds ${L.hotGal.toFixed(1)} gal (${Math.round(L.hotGal * 8.34)} lb of water; the heater itself weighs ${fmt(P.hotEmptyLb)} lb, so ${Math.round(L.hotGal * 8.34 + P.hotEmptyLb)} lb full). ${room < .0625 ? 'no spare cabinet depth is left' : fmt(room) + ' in of cabinet depth is left'} in front of it at its tightest end (the front is angled from ${fmt(L.angS)} in); the hot and cold fittings and the relief valve are at its back, in the ${fmt(P.hotBack)} in between the tank and the wall (about ${fmt(P.hotBack + P.hotD)} in from the wall to its front). ${onT ? '' : 'It is not all over the fresh tank. '}${dr ? 'It is over the drawers. ' : ''}${sinkHit ? `It reaches ${fmt(L.hotX[1] - L.sinkS)} in into the sink cabinet, under the sink bowl (its bottom is at about 30 1/2 in); keep it to ${fmt(L.sinkS)} in. ` : ''}`);
     }
     else push(gapL < P.hotGap - .01 || gapR < P.hotGap - .01 ? 'warn' : 'ok', `Hot water tank: ${fmt(P.hotW)} x ${fmt(P.hotD)} x ${fmt(P.hotH)} tall ${P.hotShelf > .5 ? `on a shelf at ${fmt(P.hotShelf)} in` : 'on the floor'} ${P.hotShelf > .5 ? 'over the wheel well' : 'next to the wheel well'} (${fmt(L.hotX[0])} to ${fmt(L.hotX[1])} in from the back), top at ${fmt(hotTop)} in, ${fmt(P.counterH - hotTop)} in under the counter, holds ${L.hotGal.toFixed(1)} gal (${Math.round(L.hotGal * 8.34)} lb of water; the ${fmt(P.hotW)} x ${fmt(P.hotD)} x ${fmt(P.hotH)} in is the outside of the heater, the heater itself weighs ${fmt(P.hotEmptyLb)} lb, so ${Math.round(L.hotGal * 8.34 + P.hotEmptyLb)} lb full), ${fmt(gapL)} in from the ${P.hotShelf > .5 ? 'fridge platform end (58 in)' : 'wheel well end'} and ${fmt(gapR)} in from the fresh tank${gapL < P.hotGap - .01 || gapR < P.hotGap - .01 ? ` (you wanted ${fmt(P.hotGap)} in each side; the ${fmt(L.tankX[0] - wellEnd)} in between the well and the fresh tank holds the tank plus ${fmt(L.tankX[0] - wellEnd - P.hotW)} in of space)` : ''}; ${fmt(room)} in of cabinet depth is left in front of it at its tightest end.`);
     {
@@ -1439,12 +1479,12 @@ const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
 const ALLDC = ['dc0', 'dc1', 'dc2', 'dc3', 'dc4', 'dc5'];
 const VIEWS = [
   { id: 'driver', label: 'Driver side', draw: drawDriver, movers: [['Couch to bed', ['bed']], ['Dinette to bed', ['dinette']], ['Wall cabinet doors, bed side', ['dc0', 'dc1', 'dc2']], ['Wall cabinet doors, dinette side', ['dc3', 'dc4', 'dc5']], ['Closet doors', ['clo_hi', 'clo_lo']]] },
-  { id: 'pass', label: 'Passenger side', drag: 'the hot water tank (along the wall and up), the fresh water tank (along the wall), the drain line', draw: drawPass, movers: [['Shower pan', ['pan']], ['Fridge door', ['fridge']], ['Fold-out table with the foot ledge', ['flap', 'ledge']], ['Foot ledge only', ['ledge']]] },
+  { id: 'pass', label: 'Passenger side', drag: 'the drawers and shelves under the counter, the jar shelf, the shelf over the fridge, the hot water tank, the fresh water tank and the drain line', draw: drawPass, movers: [['Shower pan', ['pan']], ['Fridge door', ['fridge']], ['Fold-out table with the foot ledge', ['flap', 'ledge']], ['Foot ledge only', ['ledge']]] },
   { id: 'end', label: 'Bed, from the end', draw: drawBedEnd, movers: [['Couch to bed', ['bed']]] },
   { id: 'cross', label: 'Cross-section', draw: drawCross, movers: [] },
   { id: 'bare', label: 'Bare roof (mark the ribs)', drag: 'the shower fan and the air conditioner', draw: drawBare, movers: [] },
   { id: 'ceil', label: 'Ceiling', drag: 'the shower fan and the air conditioner', draw: drawCeiling, movers: [] },
-  { id: 'plan', label: 'From above', drag: 'the hot water tank (along the wall and out from it), the fresh water tank (along the wall), the drain line', draw: drawPlan, movers: [['Couch to bed', ['bed']], ['Dinette to bed', ['dinette']], ['Shower pan', ['pan']], ['Closet doors', ['clo_hi', 'clo_lo']], ['Fridge door', ['fridge']], ['Fold-out table with the foot ledge', ['flap', 'ledge']], ['Foot ledge only', ['ledge']], ['Wall cabinet doors', ALLDC]] }
+  { id: 'plan', label: 'From above', drag: 'the drawers (a whole column along the wall), the hot water tank, the fresh water tank and the drain line', draw: drawPlan, movers: [['Couch to bed', ['bed']], ['Dinette to bed', ['dinette']], ['Shower pan', ['pan']], ['Closet doors', ['clo_hi', 'clo_lo']], ['Fridge door', ['fridge']], ['Fold-out table with the foot ledge', ['flap', 'ledge']], ['Foot ledge only', ['ledge']], ['Wall cabinet doors', ALLDC]] }
 ];
 let view = 'driver', L = layout(P), lastSig = '';
 const DEFS = '<defs><marker id="arq" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker><pattern id="hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="6" stroke="#888780" stroke-width="1"/></pattern><pattern id="hq" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="6" stroke="#888780" stroke-width="1"/></pattern></defs>';
@@ -1502,7 +1542,7 @@ function buildTabs() {
 }
 function buildMovers() {
   const vw = VIEWS.find(v => v.id === view), m = $('#movers');
-  m.innerHTML = (vw.drag ? `<span class="lab drghint">Drag the dotted purple boxes to move ${vw.drag}.</span>` : '') + '<span class="lab">Open or close:</span>' + vw.movers.map(x => `<button type="button" class="chip" data-ids="${x[1].join(',')}" aria-pressed="false">${x[0]}</button>`).join('') + '<button type="button" class="chip all" id="openall">Open everything</button><button type="button" class="chip all" id="closeall">Close everything</button>';
+  m.innerHTML = (vw.drag ? `<span class="lab drghint">Drag the dotted purple boxes to move ${vw.drag}; double-click one to put it back.</span>` : '') + '<span class="lab">Open or close:</span>' + vw.movers.map(x => `<button type="button" class="chip" data-ids="${x[1].join(',')}" aria-pressed="false">${x[0]}</button>`).join('') + '<button type="button" class="chip all" id="openall">Open everything</button><button type="button" class="chip all" id="closeall">Close everything</button>';
   m.querySelectorAll('.chip[data-ids]').forEach(b => b.onclick = () => toggleIds(b.dataset.ids.split(',')));
   const all = [].concat(...vw.movers.map(x => x[1]));
   $('#openall').onclick = () => { all.forEach((id, i) => setTarget(id, 1, i * 240)); kick(); };
@@ -1529,11 +1569,19 @@ const DRAG_SAYS = {
   fan: L => `Shower fan: ${fmt(L.fan.x)} in from the back, ${fmt(L.fan.y)} in across from the driver wall`,
   ac: L => `Air conditioner: ${fmt(L.ac.x)} in from the back, ${fmt(L.ac.y)} in across from the driver wall`
 };
+// drawers, boards, the jar shelf and the shelf over the fridge (their ids are in L.partById, Nook and FShelf)
+const sayMore = (L, id) => {
+  const p = L.partById[id];
+  if (p) return `${cap(p.n)}: ${fmt(p.x0)} to ${fmt(p.x1)} in from the back, ${fmt(p.z0)} to ${fmt(p.z1)} in up`;
+  if (id === 'Nook') return `Jar shelf in the nook: ${fmt(L.nookZ)} in up (${fmt(L.nookZ - L.P.counterH)} in over the counter); the upper row of jars reaches ${fmt(L.nookZ + .75 + 7)} in, the nook top is ${fmt(L.P.counterH + 18.5)} in`;
+  if (id === 'FShelf') return `Shelf over the fridge: ${fmt(L.fshelfZ)} to ${fmt(L.fshelfZ + .75)} in up (the fridge top is ${fmt(8.25 + L.P.fridgeH)} in, the ceiling ${fmt(L.ceilF)} in)`;
+  return '';
+};
 let dragging = null, blockClick = false;
 function renderAlerts(L, ch) {
   const bad = ch.filter(c => c.lv === 'bad'), warn = ch.filter(c => c.lv === 'warn'), el = $('#alerts');
   if (!el) return;
-  const say = dragging && dragging.moved && DRAG_SAYS[dragging.id] ? `<div class="rd">${DRAG_SAYS[dragging.id](L)}</div>` : '';
+  const txt = dragging && dragging.moved ? (DRAG_SAYS[dragging.id] ? DRAG_SAYS[dragging.id](L) : sayMore(L, dragging.id)) : '', say = txt ? `<div class="rd">${txt}</div>` : '';
   const head = bad.length ? `<b>&#10007; ${bad.length === 1 ? '1 thing does not fit' : bad.length + ' things do not fit'}</b>` : '<b>&#10003; Everything fits</b>';
   const cau = warn.length ? ` <span class="cau">${warn.length} caution${warn.length === 1 ? '' : 's'}: see Does it fit? below</span>` : '';
   const html = head + cau + (bad.length ? `<ul>${bad.map(c => `<li>${headline(c.t)}</li>`).join('')}</ul>` : '') + say;
@@ -1546,7 +1594,8 @@ $('#svg').addEventListener('pointerdown', e => {
   if (!h || (e.button != null && e.button > 0)) return;
   const svg = $('#svg'), r = svg.getBoundingClientRect(), vb = svg.viewBox.baseVal;
   if (!r.width || !vb || !vb.width) return;
-  const axis = a => { const k = h.dataset['p' + a]; return k && P[k] != null ? { k, f: parseFloat(h.dataset['k' + a]) || 0, v0: P[k] } : null; };
+  // a handle can move several sizes at once (a whole column of drawers): its size names are a comma list
+  const axis = a => { const ks = (h.dataset['p' + a] || '').split(',').filter(k => k && P[k] != null); return ks.length ? { ks, f: parseFloat(h.dataset['k' + a]) || 0, v0: ks.map(k => P[k]) } : null; };
   dragging = { id: h.dataset.drag, on: h.dataset.on, x0: e.clientX, y0: e.clientY, u: vb.width / r.width, ax: [axis('x'), axis('y')], moved: false };
   e.preventDefault(); e.stopPropagation();   // so the zoom and pan does not also grab it
   document.body.classList.add('dragging'); const sel = window.getSelection && window.getSelection(); if (sel) sel.removeAllRanges();
@@ -1558,8 +1607,7 @@ window.addEventListener('pointermove', e => {
   if (!d.moved) { if (Math.hypot(e.clientX - d.x0, e.clientY - d.y0) < 3) return; d.moved = true; if (d.on) P[d.on] = true; }
   [e.clientX - d.x0, e.clientY - d.y0].forEach((px, i) => {
     const a = d.ax[i]; if (!a) return;
-    const p = PD.find(q => q.k === a.k), v = Math.round((a.v0 + px * d.u * a.f) / .25) * .25;
-    P[a.k] = clamp(v, p.a, p.b);
+    a.ks.forEach((k, j) => { const p = PD.find(q => q.k === k); P[k] = clamp(Math.round((a.v0[j] + px * d.u * a.f) / .25) * .25, p.a, p.b); });
   });
   e.preventDefault(); kick();
 });
@@ -1567,9 +1615,17 @@ function endDrag() {
   if (!dragging) return;
   const moved = dragging.moved; dragging = null;
   document.body.classList.remove('dragging');
-  if (moved) { blockClick = true; setTimeout(() => { blockClick = false; }, 0); syncInputs(); saveHash(); }
-  render();
+  // only redraw after a real move: redrawing replaces the box under the pointer, and a click or double-click needs it to still be there
+  if (moved) { blockClick = true; setTimeout(() => { blockClick = false; }, 0); syncInputs(); saveHash(); render(); }
 }
+// double-click a handle to put the item back to its planned spot
+$('#svg').addEventListener('dblclick', e => {
+  for (const el of document.elementsFromPoint(e.clientX, e.clientY)) {
+    const h = el.closest && el.closest('[data-drag]'); if (!h) continue;
+    [h.dataset.px, h.dataset.py, h.dataset.on].forEach(list => (list || '').split(',').forEach(k => { if (k && k in DEF) P[k] = DEF[k]; }));
+    syncInputs(); saveHash(); render(); return;
+  }
+});
 window.addEventListener('pointerup', endDrag);
 window.addEventListener('pointercancel', endDrag);
 window.addEventListener('touchmove', e => { if (dragging) e.preventDefault(); }, { passive: false });

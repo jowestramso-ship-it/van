@@ -146,8 +146,6 @@ function drawPlan(L, V) {
     }
   }
   o.push(ip(L.fr[0], L.fr[1], 0, P.cabD, '#8A6B4D', '', null, { fo: .08, dash: '6 3' }));
-  o.push(ip(L.fr[0] + 1.75, L.fr[1] - 1.75, P.microIn, P.microIn + 12, COL.G, '', null, { fo: .2, dash: '4 3' }));
-  o.push(T(xx((L.fr[0] + L.fr[1]) / 2), yp(5.5 + P.microIn), 'Microwave 18.5 x 12', { size: 9, fill: COL.G, w: 500 }));
   o.push(ip(42, 76, 0, 7, COL.W2, '', null, { fo: .3 }));
   o.push(ip(L.tankX[0], L.tankX[1], 0, P.tankD, COL.BL, '', null, { fo: .1, dash: '5 3' }));
   o.push(ip(L.hotX[0], L.hotX[1], P.hotBack, P.hotBack + P.hotD, '#C0392B', '', null, { fo: .2, dash: '4 3' }));
@@ -160,23 +158,17 @@ function drawPlan(L, V) {
     o.push(T(xx(P.drainX), yp(dy) + 11, 'drain down', { size: 8, fill: '#0F6E56' }));
   }
   o.push(T(xx((L.hotX[0] + L.hotX[1]) / 2), yp(P.hotBack + P.hotD / 2) + 3, `hot water tank ${fmt(P.hotW)} x ${fmt(P.hotD)}`, { size: 8.5, fill: '#C0392B' }));
-  o.push(ip(L.cabS + 1.25, L.cabS + 14.25, 0, 20, '#8A5A00', '', null, { fo: .15, dash: '3 2' }));
-  o.push(ip(L.cabS + 15.75, L.cabS + 28.75, 0, 20, '#8A5A00', '', null, { fo: .15, dash: '3 2' }));
-  o.push(T(xx(L.cabS + 14.75), yp(10), `${4 + (P.counterH - 13 - (L.backShelf + 1) >= 14.5 ? 3 : 1)} drawers, 20 deep`, { size: 8.5, fill: '#8A5A00' }));
+  // drawer footprints: drawers that stand over each other share one (a column)
+  const cols = {};
+  L.parts.filter(p => p.kind === 'drawer').forEach(p => { const k = f1(p.x0) + '|' + f1(p.x1); (cols[k] = cols[k] || { x0: p.x0, x1: p.x1, ids: [] }).ids.push(p.id); });
+  Object.values(cols).forEach(c => o.push(ip(c.x0, c.x1, 0, 20, '#8A5A00', '', null, { fo: .15, dash: '3 2' })));
+  o.push(T(xx(L.cabS + 14.75), yp(10), `${L.parts.filter(p => p.kind === 'drawer').length} drawers, 20 deep`, { size: 8.5, fill: '#8A5A00' }));
   o.push(`<circle cx="${f1(xx(L.sinkS + 8))}" cy="${f1(yp(.9))}" r="3.5" fill="#185FA5"/>`);
   o.push(ip(58, 93.25, 0, 4.5, '#7A4A1E', '', null, { fo: .3, dash: '3 2' }));
   o.push(T(xx(66), yp(1.3), 'nook 4.5 deep', { size: 8.5, fill: '#5A3510' }));
   o.push(T(xx((L.tankX[0] + L.tankX[1]) / 2), yp(6.5), `Fresh water tank ${fmt(L.tankLen)} x ${fmt(P.tankD)}`, { size: 9.5, fill: COL.BL, w: 500 }));
   o.push(T(xx((L.tankX[0] + L.tankX[1]) / 2), yp(3.5), 'on the floor, out of the open sink cabinet', { size: 9, fill: COL.BL }));
   o.push(T(xx(53), yp(1.8), 'wheel well 7 out', { size: 9, fill: '#3E230B' }));
-  // paper towel roll on the angled front
-  const nrm = [L.slope, -1], nl = Math.hypot(nrm[0], nrm[1]), nu = [nrm[0] / nl, nrm[1] / nl];
-  const FP = (x, off) => [x + off * nu[0], (Wd - P.cabD) + L.slope * (x - L.angS) + off * nu[1]];
-  const t0 = L.sinkS - 11.5, t1 = L.sinkS - .5;
-  o.push(Poly([FP(t0, -.5), FP(t1, -.5), FP(t1, -6), FP(t0, -6)].map(p => [xx(p[0]), yy(p[1])]), { fill: '#B07A2A', fo: .35, stroke: '#8A5A00', sw: 1.2 }));
-  const b0 = FP(t0, 2.5), b1 = FP(t1, 2.5);
-  o.push(Ln(xx(b0[0]), yy(b0[1]), xx(b1[0]), yy(b1[1]), { stroke: COL.G, sw: 2.5, dash: '2 2' }));
-  o.push(T(xx(L.sinkS + 3), yy(Wd - P.cabD) - 1, 'paper towels (recessed, high)', { size: 8.5, fill: '#8A5A00' }) + T(xx(L.sinkS + 3), yy(Wd - P.cabD) + 9, 'towel bars stick out 2 1/2 in', { size: 8.5, fill: COL.G }));
   // sliding door opening in the passenger wall
   const dxe = Math.min(P.doorX + P.slideW, P.cab);
   o.push(Ln(xx(P.doorX), yy(Wd), xx(dxe), yy(Wd), { stroke: '#BA7517', sw: 5, dash: '10 5' }));
@@ -206,6 +198,7 @@ function drawPlan(L, V) {
   if (am.v < 1e8) o.push(dim(clamp(am.x, 1, P.cab - 1), 'aisle (tightest)'));
   o.push(Ln(xx(P.cab) + 18, yy(0), xx(P.cab) + 18, yy(Wd), { stroke: COL.G, sw: 1.5, mk: 1 }) + T(xx(P.cab) + 24, yy(Wd / 2), fmt(Wd) + ' wide', { anchor: 'start', size: 11, fill: COL.G, w: 700, halo: false }));
   // things you can drag (last, so they sit on top of everything)
+  Object.values(cols).forEach(c => o.push(HIT(c.ids[0], xx(c.x0), yp(20), S * (c.x1 - c.x0), S * 20, [c.ids.map(id => 'dx' + id).join(','), 1 / S, '', 0], c.ids.some(id => L.coll.ids.has(id)), c.ids.length > 1 ? `The ${c.ids.length} drawers in this column (along the wall)` : cap(L.partById[c.ids[0]].n) + ' (along the wall)')));
   o.push(HIT('fresh', xx(L.tankX[0]), yp(P.tankD), S * L.tankLen, S * P.tankD, ['tankShift', -1 / S, '', 0], L.coll.ids.has('fresh'), 'Fresh water tank (along the wall)'));
   if (P.drainOn && P.hotShelf > 10) o.push(HIT('drain', xx(P.drainX) - 8, yp(P.tankD + 2.5) - 8, 16, 16, ['drainX', 1 / S, '', 0], false, 'Relief valve drain line (where it comes down)'));
   o.push(HIT('hot', xx(L.hotX[0]), yp(P.hotBack + P.hotD), S * P.hotW, S * P.hotD, ['hotX0', 1 / S, 'hotBack', -1 / S], L.coll.ids.has('hot'), 'Hot water tank (along the wall and out from it)', 'hotFree'));

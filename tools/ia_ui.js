@@ -5,7 +5,12 @@ function computeChecks(L, V) {
   const lvA = v => v < 0 ? 'bad' : v < 12 ? 'bad' : v < 16 ? 'warn' : 'ok';
   // solid things that overlap (the same list that turns the dragged item red)
   L.coll.list.forEach(c => push('bad', c.msg));
-  if (!L.coll.list.length) push('ok', 'Nothing overlaps: the two water tanks clear the wheel well, the fridge, the drawers, the shelves, the counter and the cab wall, and the fan and air conditioner units clear each other.');
+  {
+    const dirs = (dx, dz) => [dx ? `${fmt(Math.abs(dx))} in toward the ${dx > 0 ? 'cab' : 'rear'}` : '', dz ? `${fmt(Math.abs(dz))} in ${dz > 0 ? 'up' : 'down'}` : ''].filter(Boolean).join(', ');
+    const moved = L.parts.map(p => [p.n, p.dxk ? P[p.dxk] : 0, P[p.dzk]]).concat([['the jar shelf in the nook', 0, P.dzNook], ['the shelf over the fridge', 0, P.dzFShelf]]).filter(m => m[1] || m[2]);
+    if (moved.length) push('ok', `Moved by hand from the planned spots: ${moved.map(m => cap(m[0]) + ' (' + dirs(m[1], m[2]) + ')').join('; ')}. The drawers are not resized when you move a shelf, so a shelf pushed into a drawer shows as an overlap. Double-click one in the drawing to put it back; "Reset to the current design" puts everything back.`);
+  }
+  if (!L.coll.list.length) push('ok', 'Nothing overlaps: the two water tanks, the drawers, the shelves, the jar shelf and the shelf over the fridge clear each other, the wheel well, the fridge, the counter and the cab wall, and the fan and air conditioner units clear each other.');
   // dinette
   const dspace = L.bB[1] - L.bA[0];
   if (L.spare < -0.01) push('bad', `The two benches and the table are ${fmt(-L.spare)} in too long for the dinette space (${fmt(dspace)} in from the closet to the cab wall).`);
@@ -27,14 +32,13 @@ function computeChecks(L, V) {
   if (P.leanOn) {
     const z0 = P.cabBot, z1 = L.ceilF, l0 = L.leanAt(z0), l1 = L.leanAt(z1), wc = P.vanW - 2 * L.leanAt(P.ceil), d = Math.abs(wc - P.ceilW);
     push(L.leanK <= 0 ? 'warn' : 'ok', `Wall lean: from your two widths (${fmt(P.leanW1)} in at ${fmt(P.leanZ1)} up, ${fmt(P.leanW2)} in at ${fmt(P.leanZ2)} up) each wall is straight up to about ${fmt(L.leanStart)} in (${fmt(P.vanW)} wide), then leans in ${(L.leanK * 12).toFixed(2)} in per foot, ${(Math.atan(L.leanK) * 180 / Math.PI).toFixed(1)} degrees: ${fmt(L.leanAt(P.ceil))} in each side by the bare roof, so ${fmt(wc)} in wide at ${fmt(P.ceil)} up. ${d <= .75 ? `That matches the ${fmt(P.ceilW)} in flat roof.` : `The flat roof is set to ${fmt(P.ceilW)} in; the lean says ${fmt(wc)}.`}`);
-    const bk = P.cabBackIn, mk = P.microIn, m0 = L.leanAt(59), m1 = L.leanAt(69), yf = bk + P.cabDepth, d0 = yf - Math.max(bk, l0), d1 = yf - Math.max(bk, l1), ang = Math.atan((Math.max(bk, l1) - Math.max(bk, l0)) / (z1 - z0)) * 180 / Math.PI;
+    const bk = P.cabBackIn, yf = bk + P.cabDepth, d0 = yf - Math.max(bk, l0), d1 = yf - Math.max(bk, l1), ang = Math.atan((Math.max(bk, l1) - Math.max(bk, l0)) / (z1 - z0)) * 180 / Math.PI;
     if (bk <= .01) push('ok', `The driver side wall cabinets (${fmt(z0)} to ${fmt(z1)} in up) have open backs and sit against the leaning wall, so only their sides follow it: the wall is ${fmt(l0)} in in at the bottom of the cabinets and ${fmt(l1)} in at the top, so each side panel is ${fmt(d0)} in deep at the bottom and ${fmt(d1)} in at the top, the rear edge cut at about ${ang.toFixed(0)} degrees (${fmt(l1 - l0)} in over ${fmt(z1 - z0)} in); the front stays ${fmt(P.cabDepth)} in out from the widest wall line. The shelves and the top are ${fmt(d1)} in deep at the top. Scribe the sides to the real wall when you fit them.`);
     else push(bk < l1 - .01 ? 'bad' : 'ok', `The driver side wall cabinets (${fmt(z0)} to ${fmt(z1)} in up) have a solid back set in ${fmt(bk)} in from the wall: ${fmt(bk - l0)} in off the wall at the bottom and ${fmt(bk - l1)} in at the top${bk < l1 - .01 ? `: it would run into the wall by ${fmt(l1 - bk)} in` : ''}.`);
     {
       const cz = L.ceilF, cl = L.leanAt(cz), st = Math.min(Math.max(L.leanStart, 0), cz), cAng = Math.atan(L.leanK) * 180 / Math.PI;
       push('ok', `The closet (${fmt(P.closetD)} deep, ${fmt(cz)} in tall) has an open back, so its sides follow the wall too: ${fmt(P.closetD)} deep up to ${fmt(st)} in, then the rear edge leans in at about ${cAng.toFixed(0)} degrees to ${fmt(P.closetD - cl)} deep at the top (${fmt(cl)} in less over the last ${fmt(cz - st)} in).`);
     }
-    push(mk < m1 - .01 ? 'bad' : 'ok', `The microwave (59 to 69 in up) is on a wall that leans in ${fmt(m0)} in at its bottom and ${fmt(m1)} in at its top; its back is set in ${fmt(mk)} in, so it is ${fmt(mk - m0)} in off the wall at the bottom and ${fmt(mk - m1)} in at the top${mk < m1 - .01 ? `: it would run into the wall by ${fmt(m1 - mk)} in` : ''}. A microwave has to sit level (its turntable and door seal are made for that), so it cannot lean with the wall: its back touches the wall at the top corner and leaves a ${fmt(m1 - m0)} in wedge behind its bottom (good for its vent and the cord). What follows the wall is everything built around it: the shelf, its side panels and any trim are cut to the same ${(Math.atan(L.leanK) * 180 / Math.PI).toFixed(0)} degree lean. The same wedge is behind the wall covering and the vertical planks.`);
   }
   // rib marks on the bare roof: each rib is a band ribW wide; an opening has to sit in the clear space between two bands
   if (L.ribs.length) {
@@ -138,7 +142,7 @@ function computeChecks(L, V) {
     else if (room < -.0625) push('bad', `The hot water tank (${fmt(P.hotD)} deep, with ${fmt(P.hotBack)} in behind it for the fittings and the relief valve, which are at its back, so its front is ${fmt(P.hotBack + P.hotD)} in from the wall) sticks out past where the cabinet door goes by ${fmt(-room)} in at its sink end (the angled front makes the cabinet shallower there, ${fmt(room + P.hotBack + P.hotD)} in clear inside the door). To fit: slide the tank back toward the drawers, use less space behind it, notch the door at that corner, or make the angled front start later.`);
     else if (P.hotShelf > 10) {
       const onT = L.hotX[0] >= L.tankX[0] - .01 && L.hotX[1] <= L.tankX[1] + .01, dr = L.hotX[0] < L.angS - .75 && L.hotX[1] > L.cabS + 1.25, sinkHit = L.hotX[1] > L.sinkS + .01;
-      push(onT && !dr && !sinkHit && P.counterH - 1.5 - hotTop >= 3 ? 'ok' : 'warn', `Hot water tank: ${fmt(P.hotW)} x ${fmt(P.hotD)} x ${fmt(P.hotH)} tall on a 3/4 in shelf on top of the fresh water tank (the shelf at ${fmt(P.hotShelf - .75)} to ${fmt(P.hotShelf)} in, carried by the cabinet sides, not by the tank), ${fmt(L.hotX[0])} to ${fmt(L.hotX[1])} in from the back, top at ${fmt(hotTop)} in, ${fmt(P.counterH - 1.5 - hotTop)} in under the counter for its fittings and relief valve; it holds ${L.hotGal.toFixed(1)} gal (${Math.round(L.hotGal * 8.34)} lb of water; the heater itself weighs ${fmt(P.hotEmptyLb)} lb, so ${Math.round(L.hotGal * 8.34 + P.hotEmptyLb)} lb full). ${room < .0625 ? 'no spare cabinet depth is left' : fmt(room) + ' in of cabinet depth is left'} in front of it at its tightest end (the front is angled from ${fmt(L.angS)} in); the hot and cold fittings and the relief valve are at its back, in the ${fmt(P.hotBack)} in between the tank and the wall (about ${fmt(P.hotBack + P.hotD)} in from the wall to its front). ${onT ? '' : 'It is not all over the fresh tank. '}${dr ? 'It is over the drawers. ' : ''}${sinkHit ? `It reaches ${fmt(L.hotX[1] - L.sinkS)} in into the sink cabinet, under the sink bowl (its bottom is at about 30 1/2 in); keep it to ${fmt(L.sinkS)} in. ` : ''}The paper towel recess (91 1/2 to 102 1/2 in, 29 3/4 to 35 1/4 in up) is just above it: they touch.`);
+      push(onT && !dr && !sinkHit && P.counterH - 1.5 - hotTop >= 3 ? 'ok' : 'warn', `Hot water tank: ${fmt(P.hotW)} x ${fmt(P.hotD)} x ${fmt(P.hotH)} tall on a 3/4 in shelf on top of the fresh water tank (the shelf at ${fmt(P.hotShelf - .75)} to ${fmt(P.hotShelf)} in, carried by the cabinet sides, not by the tank), ${fmt(L.hotX[0])} to ${fmt(L.hotX[1])} in from the back, top at ${fmt(hotTop)} in, ${fmt(P.counterH - 1.5 - hotTop)} in under the counter for its fittings and relief valve; it holds ${L.hotGal.toFixed(1)} gal (${Math.round(L.hotGal * 8.34)} lb of water; the heater itself weighs ${fmt(P.hotEmptyLb)} lb, so ${Math.round(L.hotGal * 8.34 + P.hotEmptyLb)} lb full). ${room < .0625 ? 'no spare cabinet depth is left' : fmt(room) + ' in of cabinet depth is left'} in front of it at its tightest end (the front is angled from ${fmt(L.angS)} in); the hot and cold fittings and the relief valve are at its back, in the ${fmt(P.hotBack)} in between the tank and the wall (about ${fmt(P.hotBack + P.hotD)} in from the wall to its front). ${onT ? '' : 'It is not all over the fresh tank. '}${dr ? 'It is over the drawers. ' : ''}${sinkHit ? `It reaches ${fmt(L.hotX[1] - L.sinkS)} in into the sink cabinet, under the sink bowl (its bottom is at about 30 1/2 in); keep it to ${fmt(L.sinkS)} in. ` : ''}`);
     }
     else push(gapL < P.hotGap - .01 || gapR < P.hotGap - .01 ? 'warn' : 'ok', `Hot water tank: ${fmt(P.hotW)} x ${fmt(P.hotD)} x ${fmt(P.hotH)} tall ${P.hotShelf > .5 ? `on a shelf at ${fmt(P.hotShelf)} in` : 'on the floor'} ${P.hotShelf > .5 ? 'over the wheel well' : 'next to the wheel well'} (${fmt(L.hotX[0])} to ${fmt(L.hotX[1])} in from the back), top at ${fmt(hotTop)} in, ${fmt(P.counterH - hotTop)} in under the counter, holds ${L.hotGal.toFixed(1)} gal (${Math.round(L.hotGal * 8.34)} lb of water; the ${fmt(P.hotW)} x ${fmt(P.hotD)} x ${fmt(P.hotH)} in is the outside of the heater, the heater itself weighs ${fmt(P.hotEmptyLb)} lb, so ${Math.round(L.hotGal * 8.34 + P.hotEmptyLb)} lb full), ${fmt(gapL)} in from the ${P.hotShelf > .5 ? 'fridge platform end (58 in)' : 'wheel well end'} and ${fmt(gapR)} in from the fresh tank${gapL < P.hotGap - .01 || gapR < P.hotGap - .01 ? ` (you wanted ${fmt(P.hotGap)} in each side; the ${fmt(L.tankX[0] - wellEnd)} in between the well and the fresh tank holds the tank plus ${fmt(L.tankX[0] - wellEnd - P.hotW)} in of space)` : ''}; ${fmt(room)} in of cabinet depth is left in front of it at its tightest end.`);
     {
@@ -183,12 +187,12 @@ const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
 const ALLDC = ['dc0', 'dc1', 'dc2', 'dc3', 'dc4', 'dc5'];
 const VIEWS = [
   { id: 'driver', label: 'Driver side', draw: drawDriver, movers: [['Couch to bed', ['bed']], ['Dinette to bed', ['dinette']], ['Wall cabinet doors, bed side', ['dc0', 'dc1', 'dc2']], ['Wall cabinet doors, dinette side', ['dc3', 'dc4', 'dc5']], ['Closet doors', ['clo_hi', 'clo_lo']]] },
-  { id: 'pass', label: 'Passenger side', drag: 'the hot water tank (along the wall and up), the fresh water tank (along the wall), the drain line', draw: drawPass, movers: [['Shower pan', ['pan']], ['Fridge door', ['fridge']], ['Fold-out table with the foot ledge', ['flap', 'ledge']], ['Foot ledge only', ['ledge']]] },
+  { id: 'pass', label: 'Passenger side', drag: 'the drawers and shelves under the counter, the jar shelf, the shelf over the fridge, the hot water tank, the fresh water tank and the drain line', draw: drawPass, movers: [['Shower pan', ['pan']], ['Fridge door', ['fridge']], ['Fold-out table with the foot ledge', ['flap', 'ledge']], ['Foot ledge only', ['ledge']]] },
   { id: 'end', label: 'Bed, from the end', draw: drawBedEnd, movers: [['Couch to bed', ['bed']]] },
   { id: 'cross', label: 'Cross-section', draw: drawCross, movers: [] },
   { id: 'bare', label: 'Bare roof (mark the ribs)', drag: 'the shower fan and the air conditioner', draw: drawBare, movers: [] },
   { id: 'ceil', label: 'Ceiling', drag: 'the shower fan and the air conditioner', draw: drawCeiling, movers: [] },
-  { id: 'plan', label: 'From above', drag: 'the hot water tank (along the wall and out from it), the fresh water tank (along the wall), the drain line', draw: drawPlan, movers: [['Couch to bed', ['bed']], ['Dinette to bed', ['dinette']], ['Shower pan', ['pan']], ['Closet doors', ['clo_hi', 'clo_lo']], ['Fridge door', ['fridge']], ['Fold-out table with the foot ledge', ['flap', 'ledge']], ['Foot ledge only', ['ledge']], ['Wall cabinet doors', ALLDC]] }
+  { id: 'plan', label: 'From above', drag: 'the drawers (a whole column along the wall), the hot water tank, the fresh water tank and the drain line', draw: drawPlan, movers: [['Couch to bed', ['bed']], ['Dinette to bed', ['dinette']], ['Shower pan', ['pan']], ['Closet doors', ['clo_hi', 'clo_lo']], ['Fridge door', ['fridge']], ['Fold-out table with the foot ledge', ['flap', 'ledge']], ['Foot ledge only', ['ledge']], ['Wall cabinet doors', ALLDC]] }
 ];
 let view = 'driver', L = layout(P), lastSig = '';
 const DEFS = '<defs><marker id="arq" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker><pattern id="hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="6" stroke="#888780" stroke-width="1"/></pattern><pattern id="hq" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="6" stroke="#888780" stroke-width="1"/></pattern></defs>';
@@ -246,7 +250,7 @@ function buildTabs() {
 }
 function buildMovers() {
   const vw = VIEWS.find(v => v.id === view), m = $('#movers');
-  m.innerHTML = (vw.drag ? `<span class="lab drghint">Drag the dotted purple boxes to move ${vw.drag}.</span>` : '') + '<span class="lab">Open or close:</span>' + vw.movers.map(x => `<button type="button" class="chip" data-ids="${x[1].join(',')}" aria-pressed="false">${x[0]}</button>`).join('') + '<button type="button" class="chip all" id="openall">Open everything</button><button type="button" class="chip all" id="closeall">Close everything</button>';
+  m.innerHTML = (vw.drag ? `<span class="lab drghint">Drag the dotted purple boxes to move ${vw.drag}; double-click one to put it back.</span>` : '') + '<span class="lab">Open or close:</span>' + vw.movers.map(x => `<button type="button" class="chip" data-ids="${x[1].join(',')}" aria-pressed="false">${x[0]}</button>`).join('') + '<button type="button" class="chip all" id="openall">Open everything</button><button type="button" class="chip all" id="closeall">Close everything</button>';
   m.querySelectorAll('.chip[data-ids]').forEach(b => b.onclick = () => toggleIds(b.dataset.ids.split(',')));
   const all = [].concat(...vw.movers.map(x => x[1]));
   $('#openall').onclick = () => { all.forEach((id, i) => setTarget(id, 1, i * 240)); kick(); };
@@ -273,11 +277,19 @@ const DRAG_SAYS = {
   fan: L => `Shower fan: ${fmt(L.fan.x)} in from the back, ${fmt(L.fan.y)} in across from the driver wall`,
   ac: L => `Air conditioner: ${fmt(L.ac.x)} in from the back, ${fmt(L.ac.y)} in across from the driver wall`
 };
+// drawers, boards, the jar shelf and the shelf over the fridge (their ids are in L.partById, Nook and FShelf)
+const sayMore = (L, id) => {
+  const p = L.partById[id];
+  if (p) return `${cap(p.n)}: ${fmt(p.x0)} to ${fmt(p.x1)} in from the back, ${fmt(p.z0)} to ${fmt(p.z1)} in up`;
+  if (id === 'Nook') return `Jar shelf in the nook: ${fmt(L.nookZ)} in up (${fmt(L.nookZ - L.P.counterH)} in over the counter); the upper row of jars reaches ${fmt(L.nookZ + .75 + 7)} in, the nook top is ${fmt(L.P.counterH + 18.5)} in`;
+  if (id === 'FShelf') return `Shelf over the fridge: ${fmt(L.fshelfZ)} to ${fmt(L.fshelfZ + .75)} in up (the fridge top is ${fmt(8.25 + L.P.fridgeH)} in, the ceiling ${fmt(L.ceilF)} in)`;
+  return '';
+};
 let dragging = null, blockClick = false;
 function renderAlerts(L, ch) {
   const bad = ch.filter(c => c.lv === 'bad'), warn = ch.filter(c => c.lv === 'warn'), el = $('#alerts');
   if (!el) return;
-  const say = dragging && dragging.moved && DRAG_SAYS[dragging.id] ? `<div class="rd">${DRAG_SAYS[dragging.id](L)}</div>` : '';
+  const txt = dragging && dragging.moved ? (DRAG_SAYS[dragging.id] ? DRAG_SAYS[dragging.id](L) : sayMore(L, dragging.id)) : '', say = txt ? `<div class="rd">${txt}</div>` : '';
   const head = bad.length ? `<b>&#10007; ${bad.length === 1 ? '1 thing does not fit' : bad.length + ' things do not fit'}</b>` : '<b>&#10003; Everything fits</b>';
   const cau = warn.length ? ` <span class="cau">${warn.length} caution${warn.length === 1 ? '' : 's'}: see Does it fit? below</span>` : '';
   const html = head + cau + (bad.length ? `<ul>${bad.map(c => `<li>${headline(c.t)}</li>`).join('')}</ul>` : '') + say;
@@ -290,7 +302,8 @@ $('#svg').addEventListener('pointerdown', e => {
   if (!h || (e.button != null && e.button > 0)) return;
   const svg = $('#svg'), r = svg.getBoundingClientRect(), vb = svg.viewBox.baseVal;
   if (!r.width || !vb || !vb.width) return;
-  const axis = a => { const k = h.dataset['p' + a]; return k && P[k] != null ? { k, f: parseFloat(h.dataset['k' + a]) || 0, v0: P[k] } : null; };
+  // a handle can move several sizes at once (a whole column of drawers): its size names are a comma list
+  const axis = a => { const ks = (h.dataset['p' + a] || '').split(',').filter(k => k && P[k] != null); return ks.length ? { ks, f: parseFloat(h.dataset['k' + a]) || 0, v0: ks.map(k => P[k]) } : null; };
   dragging = { id: h.dataset.drag, on: h.dataset.on, x0: e.clientX, y0: e.clientY, u: vb.width / r.width, ax: [axis('x'), axis('y')], moved: false };
   e.preventDefault(); e.stopPropagation();   // so the zoom and pan does not also grab it
   document.body.classList.add('dragging'); const sel = window.getSelection && window.getSelection(); if (sel) sel.removeAllRanges();
@@ -302,8 +315,7 @@ window.addEventListener('pointermove', e => {
   if (!d.moved) { if (Math.hypot(e.clientX - d.x0, e.clientY - d.y0) < 3) return; d.moved = true; if (d.on) P[d.on] = true; }
   [e.clientX - d.x0, e.clientY - d.y0].forEach((px, i) => {
     const a = d.ax[i]; if (!a) return;
-    const p = PD.find(q => q.k === a.k), v = Math.round((a.v0 + px * d.u * a.f) / .25) * .25;
-    P[a.k] = clamp(v, p.a, p.b);
+    a.ks.forEach((k, j) => { const p = PD.find(q => q.k === k); P[k] = clamp(Math.round((a.v0[j] + px * d.u * a.f) / .25) * .25, p.a, p.b); });
   });
   e.preventDefault(); kick();
 });
@@ -311,9 +323,17 @@ function endDrag() {
   if (!dragging) return;
   const moved = dragging.moved; dragging = null;
   document.body.classList.remove('dragging');
-  if (moved) { blockClick = true; setTimeout(() => { blockClick = false; }, 0); syncInputs(); saveHash(); }
-  render();
+  // only redraw after a real move: redrawing replaces the box under the pointer, and a click or double-click needs it to still be there
+  if (moved) { blockClick = true; setTimeout(() => { blockClick = false; }, 0); syncInputs(); saveHash(); render(); }
 }
+// double-click a handle to put the item back to its planned spot
+$('#svg').addEventListener('dblclick', e => {
+  for (const el of document.elementsFromPoint(e.clientX, e.clientY)) {
+    const h = el.closest && el.closest('[data-drag]'); if (!h) continue;
+    [h.dataset.px, h.dataset.py, h.dataset.on].forEach(list => (list || '').split(',').forEach(k => { if (k && k in DEF) P[k] = DEF[k]; }));
+    syncInputs(); saveHash(); render(); return;
+  }
+});
 window.addEventListener('pointerup', endDrag);
 window.addEventListener('pointercancel', endDrag);
 window.addEventListener('touchmove', e => { if (dragging) e.preventDefault(); }, { passive: false });
