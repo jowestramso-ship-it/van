@@ -31,6 +31,16 @@
   svg text { font-family: -apple-system, "Segoe UI", sans-serif; }
   svg .mv { cursor: pointer; }
   svg .mv:hover { filter: drop-shadow(0 0 3px rgba(186, 117, 23, .95)); }
+  svg .drg { cursor: grab; touch-action: none; }
+  svg .drg:hover { fill-opacity: .1; stroke-opacity: 1; }
+  body.dragging, body.dragging svg .drg { cursor: grabbing; user-select: none; -webkit-user-select: none; }
+  .alerts { position: sticky; top: 0; z-index: 8; height: 96px; overflow: auto; margin: 0 0 8px; padding: 7px 12px; border-radius: 10px; border: 1px solid #9FD5BF; background: #F0FAF5; font-size: 13.5px; line-height: 1.4; color: var(--ok); }
+  .alerts.bad { border-color: #E5A39B; background: #FDF0EE; color: var(--bad); }
+  .alerts ul { margin: 3px 0 0; padding-left: 18px; }
+  .alerts .rd { margin-top: 3px; color: var(--ink); font-weight: 600; }
+  .alerts .cau { color: var(--warn); font-size: 12.5px; margin-left: 6px; }
+  .stage.bad { border-color: #E5A39B; }
+  .drghint { color: #3C3489; margin-right: 10px; }
   .build { margin: 0; padding: 0; list-style: none; counter-reset: st; }
   .build li { counter-increment: st; border-top: 1px solid #ECEAE0; padding: 8px 0 8px 34px; position: relative; font-size: 13.5px; line-height: 1.45; }
   .build li:first-child { border-top: 0; }
@@ -68,11 +78,12 @@
 <body>
 <div class="wrap">
   <h1>Ford Transit van: interactive plan</h1>
-  <p class="lead">Click a door, table, the bed, the shower pan or the fridge to open or close it. Change any size below the drawing and everything redraws, including the walkway checks. Zoom the drawing with the + and − buttons in its corner, Ctrl (Cmd on a Mac) and scroll, or pinch; drag it to move when zoomed. Sizes are in inches, measured from the same zero as the static diagrams (6 in in from the rear edge). <a href="sides.html">Static diagrams, photos and the full measurement tables</a></p>
+  <p class="lead">Click a door, table, the bed, the shower pan or the fridge to open or close it. Drag the water tanks, the drain line, the shower fan and the air conditioner (the dotted purple boxes) to move them: the message above the drawing says right away what no longer fits or overlaps. Change any size below the drawing and everything redraws, including the walkway checks. Zoom the drawing with the + and − buttons in its corner, Ctrl (Cmd on a Mac) and scroll, or pinch; drag it to move when zoomed. Sizes are in inches, measured from the same zero as the static diagrams (6 in in from the rear edge). <a href="sides.html">Static diagrams, photos and the full measurement tables</a></p>
   <noscript>This page needs JavaScript. The static diagrams are on the other page.</noscript>
   <div class="tabs" role="tablist" id="tabs"></div>
   <div class="movers" id="movers"></div>
   <div class="layout">
+    <div class="alerts" id="alerts" role="status" aria-live="polite"></div>
     <div class="stage"><svg id="svg" role="img" aria-label="Interactive van diagram"></svg></div>
     <aside>
       <div class="card"><h2>Does it fit?</h2><ul class="checks" id="checks"></ul></div>
@@ -148,7 +159,7 @@
       if (!Object.keys(ptrs).length) { listening = false; window.removeEventListener('pointermove', mv); window.removeEventListener('pointerup', up); window.removeEventListener('pointercancel', up); }
     }
     vp.addEventListener('pointerdown', function (e) {
-      if (e.target.closest('.zbar')) return;
+      if (e.target.closest('.zbar') || e.target.closest('[data-drag]')) return;
       if (!Object.keys(ptrs).length) dragged = false;
       ptrs[e.pointerId] = { x: e.clientX, y: e.clientY }; down = { x: e.clientX, y: e.clientY };
       last = Object.keys(ptrs).length === 2 ? { d: dist(), m: mid() } : null;
@@ -229,10 +240,12 @@ const PD = [
   { k: 'hotGap', g: 'Water tanks', l: 'Clear space each side of the hot water tank', d: 6, s: .5, a: 0, b: 20 },
   { k: 'hotGal', g: 'Water tanks', l: 'Hot water tank: how much water it holds (gallons; 3.96 gal is 15 liters; its 14 x 14 x 13 in size is the outside of the heater)', d: 3.96, s: .1, a: 1, b: 20 },
   { k: 'hotEmptyLb', g: 'Water tanks', l: 'Heater weight: the hot water tank empty (lb)', d: 2, s: .5, a: 0, b: 60 },
-  { k: 'hotX0', g: 'Water tanks', l: 'Hot water tank: where it starts along the wall when it sits on the fresh tank (from the back)', d: 87.25, s: .5, a: 60, b: 120 },
+  { k: 'hotX0', g: 'Water tanks', l: 'Hot water tank: where it starts along the wall when it sits on the fresh tank or is placed by hand (from the back; you can drag it)', d: 87.25, s: .5, a: 0, b: 140 },
+  { k: 'hotFree', g: 'Water tanks', l: 'Hot water tank: place it by hand at any height and spot (dragging it turns this on; turn it off to go back to the floor or shelf spots)', d: false, t: 'c' },
   { k: 'hotShelf', g: 'Water tanks', l: 'Hot water tank bottom, up from the floor (0 = on the floor; 7.5 = on a shelf over the wheel well; 16.75 = on a shelf on top of the fresh tank)', d: 16.75, s: .5, a: 0, b: 30 },
   { k: 'hotW', g: 'Water tanks', l: 'Hot water tank length along the wall', d: 14, s: .5, a: 6, b: 18 },
-  { k: 'hotBack', g: 'Water tanks', l: 'Hot water tank: space behind it for the hot and cold fittings and the relief valve (they are at the back)', d: 1.625, s: .125, a: 0, b: 8 },
+  { k: 'hotBack', g: 'Water tanks', l: 'Hot water tank: space behind it for the hot and cold fittings and the relief valve (they are at the back)', d: 1.625, s: .125, a: 0, b: 24 },
+  { k: 'tankShift', g: 'Water tanks', l: 'Fresh water tank: moved toward the rear from the sink end (you can drag it)', d: 0, s: .5, a: 0, b: 50 },
   { k: 'drainOn', g: 'Water tanks', l: 'Draw the relief valve drain line (over the top of the tank, down in front of the fresh tank, out through the floor)', d: true, t: 'c' },
   { k: 'drainX', g: 'Water tanks', l: 'Relief valve drain line: where it comes down (from the back)', d: 89, s: .5, a: 60, b: 125 },
   { k: 'drainDia', g: 'Water tanks', l: 'Relief valve drain line: pipe size (at least the valve outlet, usually 3/4)', d: .75, s: .125, a: .375, b: 1.5 },
@@ -326,6 +339,47 @@ function MV(ids, inner, hit) {
 const HITR = (x, y, w, h) => `<rect x="${f1(x)}" y="${f1(y)}" width="${f1(Math.max(0, w))}" height="${f1(Math.max(0, h))}" fill="#000" fill-opacity="0"/>`;
 
 /* ================= layout (everything derived from the sizes) ================= */
+
+/* ================= things you can drag, and the overlap finder ================= */
+// a see-through rectangle over an item that can be dragged.
+// ax = [size changed by sideways drags, inches per drawing unit, size changed by up and down drags, inches per drawing unit]; a size name may be '' for none, and the inches
+// are negative where the drawing runs the other way. on = a tick box size that the first drag switches on.
+function HIT(id, x, y, w, h, ax, bad, label, on) {
+  const k = v => +(+v || 0).toFixed(5);
+  return `<rect class="drg" data-drag="${id}" data-px="${ax[0]}" data-kx="${k(ax[1])}" data-py="${ax[2]}" data-ky="${k(ax[3])}" data-on="${on || ''}" x="${f1(x)}" y="${f1(y)}" width="${f1(Math.max(2, w))}" height="${f1(Math.max(2, h))}" rx="3" fill="#534AB7" fill-opacity="${bad ? .12 : .02}" stroke="${bad ? '#C0392B' : '#534AB7'}" stroke-width="${bad ? 2.6 : 1}" stroke-dasharray="${bad ? '5 2' : '2 3'}" stroke-opacity="${bad ? 1 : .6}"><title>${label}${bad ? ' (overlaps something: see the red message above the drawing)' : ' (drag to move it)'}</title></rect>`;
+}
+// solid things on the passenger side (x along the van from the back, y out from the passenger wall, z up) and the roof units; reports what overlaps
+function collisions(L) {
+  const P = L.P, list = [], ids = new Set();
+  const dm = L.cabS + 14.75, ch = P.counterH, tl = ch - 7, bsC = L.cabShelf + 1, bbB = L.backShelf + 1, tot = tl - bsC;
+  const bx = (id, n, x0, x1, y0, y1, z0, z1) => ({ id, n, x0, x1, y0, y1, z0, z1 });
+  const hot = bx('hot', 'the hot water tank', L.hotX[0], L.hotX[1], P.hotBack, P.hotBack + P.hotD, P.hotShelf, P.hotShelf + P.hotH);
+  const fresh = bx('fresh', 'the fresh water tank', L.tankX[0], L.tankX[1], 0, P.tankD, 0, P.tankH);
+  const others = [bx('', 'the wheel well', 42, 76, 0, 7, 0, 7.5), bx('', 'the fridge', L.fr[0], L.fr[1], 2, 21, 8.25, 56.25), bx('', 'the countertop', L.cabS, L.sinkE, 0, P.cabD, ch - 1.2, ch), bx('', 'the cab wall', P.cab, P.cab + 60, 0, 40, 0, 120)];
+  const dr = (n, x0, x1, z0, z1) => others.push(bx('', n, x0, x1, 0, 20, z0, z1));
+  dr('a top drawer', 59.25, 72.25, ch - 6.75, ch - 2.75); dr('a top drawer', 73.75, 86.75, ch - 6.75, ch - 2.75);
+  if (tot >= 3) {
+    if (tot >= 10) { dr('a cab-side drawer', 73.75, 86.75, tl - 5, tl); dr('a cab-side drawer', 73.75, 86.75, tl - 11, tl - 6); }
+    else dr('a cab-side drawer', 73.75, 86.75, bsC, tl);
+    const bt = tl - 6, many = tot >= 10 && bt - bbB >= 14.5, rh = (bt - bbB - 1) / 2;
+    if (tot >= 10 && many) { dr('a back-side drawer', 59.25, 72.25, tl - 5, tl); dr('a back-side drawer', 59.25, 72.25, bbB + rh + 1, bt); dr('a back-side drawer', 59.25, 72.25, bbB, bbB + rh); }
+    else dr('a back-side drawer', 59.25, 72.25, (tot >= 10 ? bbB : bsC), tl);
+    others.push(bx('', 'the cab-side shelf', dm, L.angS - .75, 0, 20, L.cabShelf, L.cabShelf + .75), bx('', 'the back-side shelf', L.cabS, dm, 0, 20, L.backShelf, L.backShelf + .75));
+  }
+  const ov = (a0, a1, b0, b1) => Math.min(a1, b1) - Math.max(a0, b0), seen = new Set();
+  [hot, fresh].forEach(a => [hot, fresh, ...others].forEach(b => {
+    if (a === b || (b.id && b.id < a.id && b !== a)) return;
+    const ox = ov(a.x0, a.x1, b.x0, b.x1), oy = ov(a.y0, a.y1, b.y0, b.y1), oz = ov(a.z0, a.z1, b.z0, b.z1);
+    if (ox > .06 && oy > .06 && oz > .06) { const key = a.n + '|' + b.n + '|' + b.x0 + '|' + b.z0; if (seen.has(key)) return; seen.add(key); ids.add(a.id); if (b.id) ids.add(b.id); list.push({ ids: [a.id, b.id], msg: `${a.n[0].toUpperCase() + a.n.slice(1)} overlaps ${b.n} (${fmt(ox)} in along the wall, ${fmt(oy)} in out from it, ${fmt(oz)} in up).` }); }
+  }));
+  // the open floor beside the sink cabinet end is the entry: nothing may stand past the cabinet end panel
+  [hot, fresh].forEach(a => { const past = a.x1 - (L.sinkE - .75); if (past > .06 && a.z0 < ch) { ids.add(a.id); list.push({ ids: [a.id], msg: `${a.n[0].toUpperCase() + a.n.slice(1)} sticks out ${fmt(past)} in past the end of the sink cabinet (${fmt(L.sinkE - .75)} in) into the entry by the sliding door.` }); } });
+  // roof units: the fan and air conditioner bases must not overlap on the roof
+  const f = L.fan, a = L.ac, ox = ov(f.x - f.u / 2, f.x + f.u / 2, a.x - a.u / 2, a.x + a.u / 2), oy = ov(f.y - f.u / 2, f.y + f.u / 2, a.y - a.u / 2, a.y + a.u / 2);
+  if (ox > .06 && oy > .06) { ids.add('fan'); ids.add('ac'); list.push({ ids: ['fan', 'ac'], msg: `The fan unit and the air conditioner unit overlap on the roof (${fmt(ox)} x ${fmt(oy)} in).` }); }
+  return { list, ids };
+}
+
 function layout(P0) {
   // the wall covering takes its thickness off each side of the inside width, only if the 'take it off' box is on
   const P = Object.assign({}, P0, { vanW: P0.vanW - (P0.wallOn && P0.wallSub ? 2 * P0.wallT : 0) });
@@ -354,10 +408,10 @@ function layout(P0) {
   L.flapLen = P.flapAuto ? Math.max(1, L.entry - P.flapGap) : P.flapLen;
   // the sink cabinet is open to the area beside it, so the fresh water tank sits on the floor at the sink end (against the cab-side end panel);
   // the hot water tank is on the floor next to the wheel well (which ends at 76 in), between the well and the fresh tank, with up to hotGap in clear each side
-  const endX = L.sinkE - .75, wellEnd = 76;
+  const endX = L.sinkE - .75 - P.tankShift, wellEnd = 76;
   if (P.tankAuto) { L.hotX = [wellEnd + P.hotGap, wellEnd + P.hotGap + P.hotW]; L.tankX = [L.hotX[1] + P.hotGap, endX]; }
   else { L.tankX = [endX - P.tankLen, endX]; const gap = Math.max(0, Math.min(P.hotGap, (L.tankX[0] - wellEnd - P.hotW) / 2)); L.hotX = [wellEnd + gap, wellEnd + gap + P.hotW]; }
-  if (P.hotShelf > 10) L.hotX = [P.hotX0, P.hotX0 + P.hotW]; // on a shelf on top of the fresh tank
+  if (P.hotShelf > 10 || P.hotFree) L.hotX = [P.hotX0, P.hotX0 + P.hotW]; // on a shelf on top of the fresh tank, or put where you dragged it
   else if (P.hotShelf > .5) L.hotX = [L.fr[1] + 1.5, L.fr[1] + 1.5 + P.hotW]; // on a shelf over the wheel well, 1 1/2 in past the fridge platform
   L.tankLen = L.tankX[1] - L.tankX[0];
   L.hotGal = P.hotGal;
@@ -405,6 +459,7 @@ function layout(P0) {
     L.fan = { x: P.fanX, y: P.fanY, w: P.fanW, nm: 'shower fan', u: P.fanUnit }; L.ac = { x: P.acX, y: P.acY, w: P.acW, nm: 'A/C', u: P.acUnit };
     L.slatsCut = c => L.slatY.filter((sy, k) => !L.slatOut.has(k) && sy < c.y + c.w / 2 && sy + P.slatW > c.y - c.w / 2).length;
   }
+  L.coll = collisions(L);
   return L;
 }
 
@@ -796,6 +851,10 @@ function drawPass(L, V) {
   o.push(Ln(X(P.cab - P.cabSeatOut), Y(P.cabSeatH), X(P.cab + 7), Y(P.cabSeatH), { stroke: '#534AB7', sw: 3 }));
   o.push(T(X(P.cab + 3.5), Y(P.cabSeatH) - 5, `cab seat ${fmt(P.cabSeatH)} up, sticks out ${fmt(P.cabSeatOut)}`, { size: 9, fill: '#534AB7' }));
   o.push(elevTail(E, L, 'inches from where you start measuring at the back'));
+  // things you can drag (this view runs right to left, so a drag to the right moves toward the rear; up is up)
+  o.push(HIT('fresh', Math.min(X(L.tankX[0]), X(L.tankX[1])), Y(P.tankH), S * L.tankLen, S * P.tankH, ['tankShift', 1 / S, '', 0], L.coll.ids.has('fresh'), 'Fresh water tank (along the wall)'));
+  if (P.drainOn && P.hotShelf > 10) o.push(HIT('drain', X(P.drainX) - 8, Y(P.hotShelf + P.hotH + 1.5) - 4, 16, S * (P.hotShelf + P.hotH + 1.5 + 2) + 8, ['drainX', -1 / S, '', 0], false, 'Relief valve drain line (where it comes down)'));
+  o.push(HIT('hot', Math.min(X(L.hotX[0]), X(L.hotX[1])), Y(P.hotShelf + P.hotH), S * P.hotW, S * P.hotH, ['hotX0', -1 / S, 'hotShelf', -1 / S], L.coll.ids.has('hot'), 'Hot water tank (along the wall and up)', 'hotFree'));
   return { w: E.W, h: E.H, body: o.join('') };
 }
 
@@ -1100,13 +1159,17 @@ function drawPlan(L, V) {
   const am = aisleMin(L, O);
   if (am.v < 1e8) o.push(dim(clamp(am.x, 1, P.cab - 1), 'aisle (tightest)'));
   o.push(Ln(xx(P.cab) + 18, yy(0), xx(P.cab) + 18, yy(Wd), { stroke: COL.G, sw: 1.5, mk: 1 }) + T(xx(P.cab) + 24, yy(Wd / 2), fmt(Wd) + ' wide', { anchor: 'start', size: 11, fill: COL.G, w: 700, halo: false }));
+  // things you can drag (last, so they sit on top of everything)
+  o.push(HIT('fresh', xx(L.tankX[0]), yp(P.tankD), S * L.tankLen, S * P.tankD, ['tankShift', -1 / S, '', 0], L.coll.ids.has('fresh'), 'Fresh water tank (along the wall)'));
+  if (P.drainOn && P.hotShelf > 10) o.push(HIT('drain', xx(P.drainX) - 8, yp(P.tankD + 2.5) - 8, 16, 16, ['drainX', 1 / S, '', 0], false, 'Relief valve drain line (where it comes down)'));
+  o.push(HIT('hot', xx(L.hotX[0]), yp(P.hotBack + P.hotD), S * P.hotW, S * P.hotD, ['hotX0', 1 / S, 'hotBack', -1 / S], L.coll.ids.has('hot'), 'Hot water tank (along the wall and out from it)', 'hotFree'));
   return { w: W, h: H, body: o.join('') };
 }
 
 /* ================= the ceiling covering: plywood sheets and slats ================= */
 function drawCeiling(L, V) {
   const P = L.P, S = 5, X0 = 70, Y0 = 90, CL = P.ceilLen, CW = P.ceilW, o = [];
-  const xx = x => X0 + S * x, yy = y => Y0 + S * y;
+  const xx = x => X0 + S * x, yy = y => Y0 + S * y, hits = [];
   o.push(T(X0, 22, 'The ceiling covering seen from above through the roof: rear doors on the left, cab wall on the right, driver side at the top.', { anchor: 'start', size: 14, fill: '#5F5E5A', halo: false }));
   o.push(T(X0, 40, P.liningOn ? `${fmt(P.plyT)} in plywood against the roof, then ${L.nSlats - L.slatOut.size} slats (${fmt(P.slatW)} wide x ${fmt(P.slatT)} thick x ${fmt(L.slatLen)} long) with ${fmt(P.slatGap)} in gaps and the lights mounted on the slats. Finished ceiling at ${fmt(L.ceilF)} in.` : 'The covering is turned off (Ceiling sizes on the right).', { anchor: 'start', size: 12, fill: '#5F5E5A', halo: false }));
   // plywood sheets (4 x 8 ft, long way along the van): pieces
@@ -1130,6 +1193,8 @@ function drawCeiling(L, V) {
     o.push(R(xx(L.fan.x - L.fan.u / 2), yy(L.fan.y - L.fan.u / 2), S * L.fan.u, S * L.fan.u, { stroke: '#444441', sw: 1.2, dash: '6 4' }));
     o.push(T(xx(L.fan.x), yy(L.fan.y - L.fan.u / 2) - 5, `fan unit ${fmt(L.fan.u)} sq`, { size: 10, fill: '#444441', halo: true }));
     [L.fan, L.ac].forEach(c => { o.push(R(xx(c.x - c.w / 2), yy(c.y - c.w / 2), S * c.w, S * c.w, { fill: '#2C2C2A', fo: .88, stroke: '#000', sw: 1.4 })); o.push(T(xx(c.x), yy(c.y) - 2, c.nm, { size: 11, fill: '#fff', w: 600, halo: false })); o.push(T(xx(c.x), yy(c.y) + 11, `${fmt(c.w)} x ${fmt(c.w)} cutout`, { size: 9.5, fill: '#fff', halo: false })); });
+    hits.push(HIT('ac', xx(L.ac.x - L.ac.u / 2), yy(L.ac.y - L.ac.u / 2), S * L.ac.u, S * L.ac.u, ['acX', 1 / S, 'acY', 1 / S], L.coll.ids.has('ac'), 'Air conditioner (along the van and across)'));
+    hits.push(HIT('fan', xx(L.fan.x - L.fan.u / 2), yy(L.fan.y - L.fan.u / 2), S * L.fan.u, S * L.fan.u, ['fanX', 1 / S, 'fanY', 1 / S], L.coll.ids.has('fan'), 'Shower fan (along the van and across)'));
   } else o.push(R(xx(0), yy(L.ceilOff), S * CL, S * CW, { fill: '#F1EFE8', fo: .7, stroke: '#5F5E5A', sw: 1.2 }));
   // the roof ribs marked on the Bare roof tab (from the back edge): dashed red lines across the roof
   L.ribBands.forEach((b, i) => { o.push(R(xx(b[0]), yy(0), S * (b[1] - b[0]), S * P.vanW, { fill: '#A32D2D', fo: .16, stroke: '#A32D2D', sw: 1.4, dash: '9 4' })); o.push(T(xx((b[0] + b[1]) / 2), yy(0) - 6 - (i % 2) * 12, `rib ${fmt(L.ribs[i])}`, { size: 10.5, fill: '#A32D2D', w: 700 })); });
@@ -1144,13 +1209,13 @@ function drawCeiling(L, V) {
   o.push(T(xx(CL) + 28, yy(L.ceilOff + CW / 2) + 10, `${fmt(L.ceilOff)} each side`, { size: 11, fill: '#A32D2D', halo: false, anchor: 'start' }));
   o.push(T(xx(0) - 6, yy(VW / 2), 'rear', { size: 11, fill: '#5F5E5A', halo: false, anchor: 'end' })); o.push(T(xx(CL) - 4, yy(0) - 6, 'cab wall', { size: 11, fill: '#5F5E5A', halo: false, anchor: 'end' }));
   o.push(T(xx(CL / 2), yy(0) - 6, 'driver side wall', { size: 11, fill: '#5F5E5A', halo: false })); o.push(T(xx(CL / 2), yy(VW) + 52, 'passenger side wall', { size: 11, fill: '#5F5E5A', halo: false }));
-  return { w: xx(CL) + 130, h: yy(VW) + 70, body: o.join('') };
+  return { w: xx(CL) + 130, h: yy(VW) + 70, body: o.join('') + hits.join('') };
 }
 
 /* ================= the bare roof from above, before any covering, to mark where the ribs are ================= */
 function drawBare(L, V) {
   const P = L.P, S = 5, X0 = 70, Y0 = 100, CL = P.ceilLen, W = P.vanW, o = [];
-  const xx = x => X0 + S * x, yy = y => Y0 + S * y;
+  const xx = x => X0 + S * x, yy = y => Y0 + S * y, hits = [];
   o.push(T(20, 22, 'The bare roof seen from above, before any covering: rear doors on the left, cab wall on the right, driver side at the top.', { anchor: 'start', size: 14, fill: '#5F5E5A', halo: false }));
   o.push(T(20, 40, 'Measure from the back edge (the rear doors). Type the rib positions in the Roof ribs box below the drawing, separated by commas.', { anchor: 'start', size: 12, fill: '#5F5E5A', halo: false }));
   o.push(T(20, 56, `Heights from the floor: ${fmt(P.roofWallH)} in to the rib at the wall, ${fmt(P.roofMidH)} in to the rib in the middle (the roof arcs ${fmt(L.roofSag)} in across the ${fmt(L.roofW)} in between the wall tops).`, { anchor: 'start', size: 12, fill: '#5F5E5A', halo: false }));
@@ -1182,16 +1247,21 @@ function drawBare(L, V) {
     o.push(T(xx(c.x), yy(c.y) + 4, c.nm === 'A/C' ? 'A/C' : 'fan', { size: 11, fill: '#fff', w: 600, halo: false }));
     o.push(T(xx(c.x), yy(c.y - c.u / 2) - 4, `${c.nm === 'A/C' ? 'A/C' : 'fan'} unit ${fmt(c.u)} sq, opening ${fmt(c.w)} sq at ${fmt(c.x)} / ${fmt(c.y)}`, { size: 9.5, fill: '#444441' }));
   });
+  hits.push(HIT('ac', xx(L.ac.x - L.ac.u / 2), yy(L.ac.y - L.ac.u / 2), S * L.ac.u, S * L.ac.u, ['acX', 1 / S, 'acY', 1 / S], L.coll.ids.has('ac'), 'Air conditioner (along the van and across)'));
+  hits.push(HIT('fan', xx(L.fan.x - L.fan.u / 2), yy(L.fan.y - L.fan.u / 2), S * L.fan.u, S * L.fan.u, ['fanX', 1 / S, 'fanY', 1 / S], L.coll.ids.has('fan'), 'Shower fan (along the van and across)'));
   // the ribs the user has marked: full width lines with their position
   L.ribBands.forEach((b, i) => { o.push(R(xx(b[0]), yy(0), S * (b[1] - b[0]), S * W, { fill: '#A32D2D', fo: .3, stroke: '#A32D2D', sw: 1.6 })); o.push(T(xx((b[0] + b[1]) / 2), yy(W) - 6 - (i % 2) * 12, `${fmt(L.ribs[i])}${P.ribRef === 'center' ? '' : P.ribRef === 'front' ? ' (front edge)' : ' (back edge)'}`, { size: 10.5, fill: '#A32D2D', w: 700 })); });
   if (!L.ribs.length) o.push(T(xx(CL / 2), yy(W / 2) + 40, 'No ribs marked yet', { size: 13, fill: '#8A8A8A', halo: false }));
-  return { w: xx(CL) + 130, h: yy(W) + 70, body: o.join('') };
+  return { w: xx(CL) + 130, h: yy(W) + 70, body: o.join('') + hits.join('') };
 }
 /* ================= checks ================= */
 function computeChecks(L, V) {
   const P = L.P, out = [], push = (lv, t) => out.push({ lv, t });
   const O = obstacles(L, V), O0 = obstacles(L, {});
   const lvA = v => v < 0 ? 'bad' : v < 12 ? 'bad' : v < 16 ? 'warn' : 'ok';
+  // solid things that overlap (the same list that turns the dragged item red)
+  L.coll.list.forEach(c => push('bad', c.msg));
+  if (!L.coll.list.length) push('ok', 'Nothing overlaps: the two water tanks clear the wheel well, the fridge, the drawers, the shelves, the counter and the cab wall, and the fan and air conditioner units clear each other.');
   // dinette
   const dspace = L.bB[1] - L.bA[0];
   if (L.spare < -0.01) push('bad', `The two benches and the table are ${fmt(-L.spare)} in too long for the dinette space (${fmt(dspace)} in from the closet to the cab wall).`);
@@ -1369,12 +1439,12 @@ const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
 const ALLDC = ['dc0', 'dc1', 'dc2', 'dc3', 'dc4', 'dc5'];
 const VIEWS = [
   { id: 'driver', label: 'Driver side', draw: drawDriver, movers: [['Couch to bed', ['bed']], ['Dinette to bed', ['dinette']], ['Wall cabinet doors, bed side', ['dc0', 'dc1', 'dc2']], ['Wall cabinet doors, dinette side', ['dc3', 'dc4', 'dc5']], ['Closet doors', ['clo_hi', 'clo_lo']]] },
-  { id: 'pass', label: 'Passenger side', draw: drawPass, movers: [['Shower pan', ['pan']], ['Fridge door', ['fridge']], ['Fold-out table with the foot ledge', ['flap', 'ledge']], ['Foot ledge only', ['ledge']]] },
+  { id: 'pass', label: 'Passenger side', drag: 'the hot water tank (along the wall and up), the fresh water tank (along the wall), the drain line', draw: drawPass, movers: [['Shower pan', ['pan']], ['Fridge door', ['fridge']], ['Fold-out table with the foot ledge', ['flap', 'ledge']], ['Foot ledge only', ['ledge']]] },
   { id: 'end', label: 'Bed, from the end', draw: drawBedEnd, movers: [['Couch to bed', ['bed']]] },
   { id: 'cross', label: 'Cross-section', draw: drawCross, movers: [] },
-  { id: 'bare', label: 'Bare roof (mark the ribs)', draw: drawBare, movers: [] },
-  { id: 'ceil', label: 'Ceiling', draw: drawCeiling, movers: [] },
-  { id: 'plan', label: 'From above', draw: drawPlan, movers: [['Couch to bed', ['bed']], ['Dinette to bed', ['dinette']], ['Shower pan', ['pan']], ['Closet doors', ['clo_hi', 'clo_lo']], ['Fridge door', ['fridge']], ['Fold-out table with the foot ledge', ['flap', 'ledge']], ['Foot ledge only', ['ledge']], ['Wall cabinet doors', ALLDC]] }
+  { id: 'bare', label: 'Bare roof (mark the ribs)', drag: 'the shower fan and the air conditioner', draw: drawBare, movers: [] },
+  { id: 'ceil', label: 'Ceiling', drag: 'the shower fan and the air conditioner', draw: drawCeiling, movers: [] },
+  { id: 'plan', label: 'From above', drag: 'the hot water tank (along the wall and out from it), the fresh water tank (along the wall), the drain line', draw: drawPlan, movers: [['Couch to bed', ['bed']], ['Dinette to bed', ['dinette']], ['Shower pan', ['pan']], ['Closet doors', ['clo_hi', 'clo_lo']], ['Fridge door', ['fridge']], ['Fold-out table with the foot ledge', ['flap', 'ledge']], ['Foot ledge only', ['ledge']], ['Wall cabinet doors', ALLDC]] }
 ];
 let view = 'driver', L = layout(P), lastSig = '';
 const DEFS = '<defs><marker id="arq" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker><pattern id="hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="6" stroke="#888780" stroke-width="1"/></pattern><pattern id="hq" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="6" stroke="#888780" stroke-width="1"/></pattern></defs>';
@@ -1418,6 +1488,7 @@ function render() {
   // checks (only touch the page when the text changed)
   const ch = computeChecks(L, V), sig = JSON.stringify(ch);
   if (sig !== lastSig) { lastSig = sig; $('#checks').innerHTML = ch.map(c => `<li class="${c.lv}">${c.t}</li>`).join(''); }
+  renderAlerts(L, ch);
   renderBuild(L);
   // movers: pressed state
   document.querySelectorAll('#movers .chip[data-ids]').forEach(b => b.setAttribute('aria-pressed', isOpenIds(b.dataset.ids.split(',')) ? 'true' : 'false'));
@@ -1431,7 +1502,7 @@ function buildTabs() {
 }
 function buildMovers() {
   const vw = VIEWS.find(v => v.id === view), m = $('#movers');
-  m.innerHTML = '<span class="lab">Open or close:</span>' + vw.movers.map(x => `<button type="button" class="chip" data-ids="${x[1].join(',')}" aria-pressed="false">${x[0]}</button>`).join('') + '<button type="button" class="chip all" id="openall">Open everything</button><button type="button" class="chip all" id="closeall">Close everything</button>';
+  m.innerHTML = (vw.drag ? `<span class="lab drghint">Drag the dotted purple boxes to move ${vw.drag}.</span>` : '') + '<span class="lab">Open or close:</span>' + vw.movers.map(x => `<button type="button" class="chip" data-ids="${x[1].join(',')}" aria-pressed="false">${x[0]}</button>`).join('') + '<button type="button" class="chip all" id="openall">Open everything</button><button type="button" class="chip all" id="closeall">Close everything</button>';
   m.querySelectorAll('.chip[data-ids]').forEach(b => b.onclick = () => toggleIds(b.dataset.ids.split(',')));
   const all = [].concat(...vw.movers.map(x => x[1]));
   $('#openall').onclick = () => { all.forEach((id, i) => setTarget(id, 1, i * 240)); kick(); };
@@ -1440,11 +1511,68 @@ function buildMovers() {
 }
 // click anything marked data-act in the drawing (looked up by position, so it still works while the drawing is redrawing)
 $('#svg').addEventListener('click', e => {
+  if (blockClick) return;
   for (const el of document.elementsFromPoint(e.clientX, e.clientY)) {
     const g = el.closest && el.closest('[data-act]');
     if (g) { toggleIds(g.dataset.act.split(',')); return; }
   }
 });
+
+/* ================= dragging items, and the message that says right away what does not fit ================= */
+// the first sentence of a check, for the message above the drawing
+const headline = t => { const s = String(t).replace(/\s+/g, ' ').trim(), m = s.match(/^.*?[.!?](?=\s|$)/), h = m ? m[0] : s; return h.length > 230 ? h.slice(0, 227) + '...' : h; };
+// what to say while an item is being moved
+const DRAG_SAYS = {
+  hot: L => `Hot water tank: ${fmt(L.hotX[0])} to ${fmt(L.hotX[1])} in from the back, bottom ${fmt(L.P.hotShelf)} in up, ${fmt(L.P.hotBack)} in behind it (${fmt(L.P.hotBack + L.P.hotD)} in from the wall to its front)`,
+  fresh: L => `Fresh water tank: ${fmt(L.tankX[0])} to ${fmt(L.tankX[1])} in from the back (${fmt(L.P.tankShift)} in toward the rear from the sink end)`,
+  drain: L => `Relief valve drain line comes down at ${fmt(L.P.drainX)} in from the back`,
+  fan: L => `Shower fan: ${fmt(L.fan.x)} in from the back, ${fmt(L.fan.y)} in across from the driver wall`,
+  ac: L => `Air conditioner: ${fmt(L.ac.x)} in from the back, ${fmt(L.ac.y)} in across from the driver wall`
+};
+let dragging = null, blockClick = false;
+function renderAlerts(L, ch) {
+  const bad = ch.filter(c => c.lv === 'bad'), warn = ch.filter(c => c.lv === 'warn'), el = $('#alerts');
+  if (!el) return;
+  const say = dragging && dragging.moved && DRAG_SAYS[dragging.id] ? `<div class="rd">${DRAG_SAYS[dragging.id](L)}</div>` : '';
+  const head = bad.length ? `<b>&#10007; ${bad.length === 1 ? '1 thing does not fit' : bad.length + ' things do not fit'}</b>` : '<b>&#10003; Everything fits</b>';
+  const cau = warn.length ? ` <span class="cau">${warn.length} caution${warn.length === 1 ? '' : 's'}: see Does it fit? below</span>` : '';
+  const html = head + cau + (bad.length ? `<ul>${bad.map(c => `<li>${headline(c.t)}</li>`).join('')}</ul>` : '') + say;
+  el.className = 'alerts' + (bad.length ? ' bad' : '');
+  if (el.innerHTML !== html) el.innerHTML = html;
+  $('.stage').classList.toggle('bad', bad.length > 0);
+}
+$('#svg').addEventListener('pointerdown', e => {
+  const h = e.target.closest && e.target.closest('[data-drag]');
+  if (!h || (e.button != null && e.button > 0)) return;
+  const svg = $('#svg'), r = svg.getBoundingClientRect(), vb = svg.viewBox.baseVal;
+  if (!r.width || !vb || !vb.width) return;
+  const axis = a => { const k = h.dataset['p' + a]; return k && P[k] != null ? { k, f: parseFloat(h.dataset['k' + a]) || 0, v0: P[k] } : null; };
+  dragging = { id: h.dataset.drag, on: h.dataset.on, x0: e.clientX, y0: e.clientY, u: vb.width / r.width, ax: [axis('x'), axis('y')], moved: false };
+  e.preventDefault(); e.stopPropagation();   // so the zoom and pan does not also grab it
+  document.body.classList.add('dragging'); const sel = window.getSelection && window.getSelection(); if (sel) sel.removeAllRanges();
+});
+document.addEventListener('selectstart', e => { if (dragging) e.preventDefault(); });
+window.addEventListener('pointermove', e => {
+  if (!dragging) return;
+  const d = dragging;
+  if (!d.moved) { if (Math.hypot(e.clientX - d.x0, e.clientY - d.y0) < 3) return; d.moved = true; if (d.on) P[d.on] = true; }
+  [e.clientX - d.x0, e.clientY - d.y0].forEach((px, i) => {
+    const a = d.ax[i]; if (!a) return;
+    const p = PD.find(q => q.k === a.k), v = Math.round((a.v0 + px * d.u * a.f) / .25) * .25;
+    P[a.k] = clamp(v, p.a, p.b);
+  });
+  e.preventDefault(); kick();
+});
+function endDrag() {
+  if (!dragging) return;
+  const moved = dragging.moved; dragging = null;
+  document.body.classList.remove('dragging');
+  if (moved) { blockClick = true; setTimeout(() => { blockClick = false; }, 0); syncInputs(); saveHash(); }
+  render();
+}
+window.addEventListener('pointerup', endDrag);
+window.addEventListener('pointercancel', endDrag);
+window.addEventListener('touchmove', e => { if (dragging) e.preventDefault(); }, { passive: false });
 
 /* ================= sizes panel ================= */
 function buildSizes() {
@@ -1465,6 +1593,11 @@ function buildSizes() {
       el.onchange = () => { const v = parseFloat(el.value); P[p.k] = isNaN(v) ? p.d : clamp(v, p.a, p.b); el.value = P[p.k]; syncAuto(); saveHash(); render(); };
     }
   });
+  syncAuto();
+}
+// put the current sizes into the boxes (after a drag changed them)
+function syncInputs() {
+  PD.forEach(p => { const el = $('#in_' + p.k); if (!el || document.activeElement === el) return; if (p.t === 'c') el.checked = !!P[p.k]; else el.value = P[p.k]; });
   syncAuto();
 }
 function syncAuto() {

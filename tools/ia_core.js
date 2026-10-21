@@ -66,10 +66,12 @@ const PD = [
   { k: 'hotGap', g: 'Water tanks', l: 'Clear space each side of the hot water tank', d: 6, s: .5, a: 0, b: 20 },
   { k: 'hotGal', g: 'Water tanks', l: 'Hot water tank: how much water it holds (gallons; 3.96 gal is 15 liters; its 14 x 14 x 13 in size is the outside of the heater)', d: 3.96, s: .1, a: 1, b: 20 },
   { k: 'hotEmptyLb', g: 'Water tanks', l: 'Heater weight: the hot water tank empty (lb)', d: 2, s: .5, a: 0, b: 60 },
-  { k: 'hotX0', g: 'Water tanks', l: 'Hot water tank: where it starts along the wall when it sits on the fresh tank (from the back)', d: 87.25, s: .5, a: 60, b: 120 },
+  { k: 'hotX0', g: 'Water tanks', l: 'Hot water tank: where it starts along the wall when it sits on the fresh tank or is placed by hand (from the back; you can drag it)', d: 87.25, s: .5, a: 0, b: 140 },
+  { k: 'hotFree', g: 'Water tanks', l: 'Hot water tank: place it by hand at any height and spot (dragging it turns this on; turn it off to go back to the floor or shelf spots)', d: false, t: 'c' },
   { k: 'hotShelf', g: 'Water tanks', l: 'Hot water tank bottom, up from the floor (0 = on the floor; 7.5 = on a shelf over the wheel well; 16.75 = on a shelf on top of the fresh tank)', d: 16.75, s: .5, a: 0, b: 30 },
   { k: 'hotW', g: 'Water tanks', l: 'Hot water tank length along the wall', d: 14, s: .5, a: 6, b: 18 },
-  { k: 'hotBack', g: 'Water tanks', l: 'Hot water tank: space behind it for the hot and cold fittings and the relief valve (they are at the back)', d: 1.625, s: .125, a: 0, b: 8 },
+  { k: 'hotBack', g: 'Water tanks', l: 'Hot water tank: space behind it for the hot and cold fittings and the relief valve (they are at the back)', d: 1.625, s: .125, a: 0, b: 24 },
+  { k: 'tankShift', g: 'Water tanks', l: 'Fresh water tank: moved toward the rear from the sink end (you can drag it)', d: 0, s: .5, a: 0, b: 50 },
   { k: 'drainOn', g: 'Water tanks', l: 'Draw the relief valve drain line (over the top of the tank, down in front of the fresh tank, out through the floor)', d: true, t: 'c' },
   { k: 'drainX', g: 'Water tanks', l: 'Relief valve drain line: where it comes down (from the back)', d: 89, s: .5, a: 60, b: 125 },
   { k: 'drainDia', g: 'Water tanks', l: 'Relief valve drain line: pipe size (at least the valve outlet, usually 3/4)', d: .75, s: .125, a: .375, b: 1.5 },
@@ -163,6 +165,47 @@ function MV(ids, inner, hit) {
 const HITR = (x, y, w, h) => `<rect x="${f1(x)}" y="${f1(y)}" width="${f1(Math.max(0, w))}" height="${f1(Math.max(0, h))}" fill="#000" fill-opacity="0"/>`;
 
 /* ================= layout (everything derived from the sizes) ================= */
+
+/* ================= things you can drag, and the overlap finder ================= */
+// a see-through rectangle over an item that can be dragged.
+// ax = [size changed by sideways drags, inches per drawing unit, size changed by up and down drags, inches per drawing unit]; a size name may be '' for none, and the inches
+// are negative where the drawing runs the other way. on = a tick box size that the first drag switches on.
+function HIT(id, x, y, w, h, ax, bad, label, on) {
+  const k = v => +(+v || 0).toFixed(5);
+  return `<rect class="drg" data-drag="${id}" data-px="${ax[0]}" data-kx="${k(ax[1])}" data-py="${ax[2]}" data-ky="${k(ax[3])}" data-on="${on || ''}" x="${f1(x)}" y="${f1(y)}" width="${f1(Math.max(2, w))}" height="${f1(Math.max(2, h))}" rx="3" fill="#534AB7" fill-opacity="${bad ? .12 : .02}" stroke="${bad ? '#C0392B' : '#534AB7'}" stroke-width="${bad ? 2.6 : 1}" stroke-dasharray="${bad ? '5 2' : '2 3'}" stroke-opacity="${bad ? 1 : .6}"><title>${label}${bad ? ' (overlaps something: see the red message above the drawing)' : ' (drag to move it)'}</title></rect>`;
+}
+// solid things on the passenger side (x along the van from the back, y out from the passenger wall, z up) and the roof units; reports what overlaps
+function collisions(L) {
+  const P = L.P, list = [], ids = new Set();
+  const dm = L.cabS + 14.75, ch = P.counterH, tl = ch - 7, bsC = L.cabShelf + 1, bbB = L.backShelf + 1, tot = tl - bsC;
+  const bx = (id, n, x0, x1, y0, y1, z0, z1) => ({ id, n, x0, x1, y0, y1, z0, z1 });
+  const hot = bx('hot', 'the hot water tank', L.hotX[0], L.hotX[1], P.hotBack, P.hotBack + P.hotD, P.hotShelf, P.hotShelf + P.hotH);
+  const fresh = bx('fresh', 'the fresh water tank', L.tankX[0], L.tankX[1], 0, P.tankD, 0, P.tankH);
+  const others = [bx('', 'the wheel well', 42, 76, 0, 7, 0, 7.5), bx('', 'the fridge', L.fr[0], L.fr[1], 2, 21, 8.25, 56.25), bx('', 'the countertop', L.cabS, L.sinkE, 0, P.cabD, ch - 1.2, ch), bx('', 'the cab wall', P.cab, P.cab + 60, 0, 40, 0, 120)];
+  const dr = (n, x0, x1, z0, z1) => others.push(bx('', n, x0, x1, 0, 20, z0, z1));
+  dr('a top drawer', 59.25, 72.25, ch - 6.75, ch - 2.75); dr('a top drawer', 73.75, 86.75, ch - 6.75, ch - 2.75);
+  if (tot >= 3) {
+    if (tot >= 10) { dr('a cab-side drawer', 73.75, 86.75, tl - 5, tl); dr('a cab-side drawer', 73.75, 86.75, tl - 11, tl - 6); }
+    else dr('a cab-side drawer', 73.75, 86.75, bsC, tl);
+    const bt = tl - 6, many = tot >= 10 && bt - bbB >= 14.5, rh = (bt - bbB - 1) / 2;
+    if (tot >= 10 && many) { dr('a back-side drawer', 59.25, 72.25, tl - 5, tl); dr('a back-side drawer', 59.25, 72.25, bbB + rh + 1, bt); dr('a back-side drawer', 59.25, 72.25, bbB, bbB + rh); }
+    else dr('a back-side drawer', 59.25, 72.25, (tot >= 10 ? bbB : bsC), tl);
+    others.push(bx('', 'the cab-side shelf', dm, L.angS - .75, 0, 20, L.cabShelf, L.cabShelf + .75), bx('', 'the back-side shelf', L.cabS, dm, 0, 20, L.backShelf, L.backShelf + .75));
+  }
+  const ov = (a0, a1, b0, b1) => Math.min(a1, b1) - Math.max(a0, b0), seen = new Set();
+  [hot, fresh].forEach(a => [hot, fresh, ...others].forEach(b => {
+    if (a === b || (b.id && b.id < a.id && b !== a)) return;
+    const ox = ov(a.x0, a.x1, b.x0, b.x1), oy = ov(a.y0, a.y1, b.y0, b.y1), oz = ov(a.z0, a.z1, b.z0, b.z1);
+    if (ox > .06 && oy > .06 && oz > .06) { const key = a.n + '|' + b.n + '|' + b.x0 + '|' + b.z0; if (seen.has(key)) return; seen.add(key); ids.add(a.id); if (b.id) ids.add(b.id); list.push({ ids: [a.id, b.id], msg: `${a.n[0].toUpperCase() + a.n.slice(1)} overlaps ${b.n} (${fmt(ox)} in along the wall, ${fmt(oy)} in out from it, ${fmt(oz)} in up).` }); }
+  }));
+  // the open floor beside the sink cabinet end is the entry: nothing may stand past the cabinet end panel
+  [hot, fresh].forEach(a => { const past = a.x1 - (L.sinkE - .75); if (past > .06 && a.z0 < ch) { ids.add(a.id); list.push({ ids: [a.id], msg: `${a.n[0].toUpperCase() + a.n.slice(1)} sticks out ${fmt(past)} in past the end of the sink cabinet (${fmt(L.sinkE - .75)} in) into the entry by the sliding door.` }); } });
+  // roof units: the fan and air conditioner bases must not overlap on the roof
+  const f = L.fan, a = L.ac, ox = ov(f.x - f.u / 2, f.x + f.u / 2, a.x - a.u / 2, a.x + a.u / 2), oy = ov(f.y - f.u / 2, f.y + f.u / 2, a.y - a.u / 2, a.y + a.u / 2);
+  if (ox > .06 && oy > .06) { ids.add('fan'); ids.add('ac'); list.push({ ids: ['fan', 'ac'], msg: `The fan unit and the air conditioner unit overlap on the roof (${fmt(ox)} x ${fmt(oy)} in).` }); }
+  return { list, ids };
+}
+
 function layout(P0) {
   // the wall covering takes its thickness off each side of the inside width, only if the 'take it off' box is on
   const P = Object.assign({}, P0, { vanW: P0.vanW - (P0.wallOn && P0.wallSub ? 2 * P0.wallT : 0) });
@@ -191,10 +234,10 @@ function layout(P0) {
   L.flapLen = P.flapAuto ? Math.max(1, L.entry - P.flapGap) : P.flapLen;
   // the sink cabinet is open to the area beside it, so the fresh water tank sits on the floor at the sink end (against the cab-side end panel);
   // the hot water tank is on the floor next to the wheel well (which ends at 76 in), between the well and the fresh tank, with up to hotGap in clear each side
-  const endX = L.sinkE - .75, wellEnd = 76;
+  const endX = L.sinkE - .75 - P.tankShift, wellEnd = 76;
   if (P.tankAuto) { L.hotX = [wellEnd + P.hotGap, wellEnd + P.hotGap + P.hotW]; L.tankX = [L.hotX[1] + P.hotGap, endX]; }
   else { L.tankX = [endX - P.tankLen, endX]; const gap = Math.max(0, Math.min(P.hotGap, (L.tankX[0] - wellEnd - P.hotW) / 2)); L.hotX = [wellEnd + gap, wellEnd + gap + P.hotW]; }
-  if (P.hotShelf > 10) L.hotX = [P.hotX0, P.hotX0 + P.hotW]; // on a shelf on top of the fresh tank
+  if (P.hotShelf > 10 || P.hotFree) L.hotX = [P.hotX0, P.hotX0 + P.hotW]; // on a shelf on top of the fresh tank, or put where you dragged it
   else if (P.hotShelf > .5) L.hotX = [L.fr[1] + 1.5, L.fr[1] + 1.5 + P.hotW]; // on a shelf over the wheel well, 1 1/2 in past the fridge platform
   L.tankLen = L.tankX[1] - L.tankX[0];
   L.hotGal = P.hotGal;
@@ -242,6 +285,7 @@ function layout(P0) {
     L.fan = { x: P.fanX, y: P.fanY, w: P.fanW, nm: 'shower fan', u: P.fanUnit }; L.ac = { x: P.acX, y: P.acY, w: P.acW, nm: 'A/C', u: P.acUnit };
     L.slatsCut = c => L.slatY.filter((sy, k) => !L.slatOut.has(k) && sy < c.y + c.w / 2 && sy + P.slatW > c.y - c.w / 2).length;
   }
+  L.coll = collisions(L);
   return L;
 }
 

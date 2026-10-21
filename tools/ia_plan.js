@@ -205,13 +205,17 @@ function drawPlan(L, V) {
   const am = aisleMin(L, O);
   if (am.v < 1e8) o.push(dim(clamp(am.x, 1, P.cab - 1), 'aisle (tightest)'));
   o.push(Ln(xx(P.cab) + 18, yy(0), xx(P.cab) + 18, yy(Wd), { stroke: COL.G, sw: 1.5, mk: 1 }) + T(xx(P.cab) + 24, yy(Wd / 2), fmt(Wd) + ' wide', { anchor: 'start', size: 11, fill: COL.G, w: 700, halo: false }));
+  // things you can drag (last, so they sit on top of everything)
+  o.push(HIT('fresh', xx(L.tankX[0]), yp(P.tankD), S * L.tankLen, S * P.tankD, ['tankShift', -1 / S, '', 0], L.coll.ids.has('fresh'), 'Fresh water tank (along the wall)'));
+  if (P.drainOn && P.hotShelf > 10) o.push(HIT('drain', xx(P.drainX) - 8, yp(P.tankD + 2.5) - 8, 16, 16, ['drainX', 1 / S, '', 0], false, 'Relief valve drain line (where it comes down)'));
+  o.push(HIT('hot', xx(L.hotX[0]), yp(P.hotBack + P.hotD), S * P.hotW, S * P.hotD, ['hotX0', 1 / S, 'hotBack', -1 / S], L.coll.ids.has('hot'), 'Hot water tank (along the wall and out from it)', 'hotFree'));
   return { w: W, h: H, body: o.join('') };
 }
 
 /* ================= the ceiling covering: plywood sheets and slats ================= */
 function drawCeiling(L, V) {
   const P = L.P, S = 5, X0 = 70, Y0 = 90, CL = P.ceilLen, CW = P.ceilW, o = [];
-  const xx = x => X0 + S * x, yy = y => Y0 + S * y;
+  const xx = x => X0 + S * x, yy = y => Y0 + S * y, hits = [];
   o.push(T(X0, 22, 'The ceiling covering seen from above through the roof: rear doors on the left, cab wall on the right, driver side at the top.', { anchor: 'start', size: 14, fill: '#5F5E5A', halo: false }));
   o.push(T(X0, 40, P.liningOn ? `${fmt(P.plyT)} in plywood against the roof, then ${L.nSlats - L.slatOut.size} slats (${fmt(P.slatW)} wide x ${fmt(P.slatT)} thick x ${fmt(L.slatLen)} long) with ${fmt(P.slatGap)} in gaps and the lights mounted on the slats. Finished ceiling at ${fmt(L.ceilF)} in.` : 'The covering is turned off (Ceiling sizes on the right).', { anchor: 'start', size: 12, fill: '#5F5E5A', halo: false }));
   // plywood sheets (4 x 8 ft, long way along the van): pieces
@@ -235,6 +239,8 @@ function drawCeiling(L, V) {
     o.push(R(xx(L.fan.x - L.fan.u / 2), yy(L.fan.y - L.fan.u / 2), S * L.fan.u, S * L.fan.u, { stroke: '#444441', sw: 1.2, dash: '6 4' }));
     o.push(T(xx(L.fan.x), yy(L.fan.y - L.fan.u / 2) - 5, `fan unit ${fmt(L.fan.u)} sq`, { size: 10, fill: '#444441', halo: true }));
     [L.fan, L.ac].forEach(c => { o.push(R(xx(c.x - c.w / 2), yy(c.y - c.w / 2), S * c.w, S * c.w, { fill: '#2C2C2A', fo: .88, stroke: '#000', sw: 1.4 })); o.push(T(xx(c.x), yy(c.y) - 2, c.nm, { size: 11, fill: '#fff', w: 600, halo: false })); o.push(T(xx(c.x), yy(c.y) + 11, `${fmt(c.w)} x ${fmt(c.w)} cutout`, { size: 9.5, fill: '#fff', halo: false })); });
+    hits.push(HIT('ac', xx(L.ac.x - L.ac.u / 2), yy(L.ac.y - L.ac.u / 2), S * L.ac.u, S * L.ac.u, ['acX', 1 / S, 'acY', 1 / S], L.coll.ids.has('ac'), 'Air conditioner (along the van and across)'));
+    hits.push(HIT('fan', xx(L.fan.x - L.fan.u / 2), yy(L.fan.y - L.fan.u / 2), S * L.fan.u, S * L.fan.u, ['fanX', 1 / S, 'fanY', 1 / S], L.coll.ids.has('fan'), 'Shower fan (along the van and across)'));
   } else o.push(R(xx(0), yy(L.ceilOff), S * CL, S * CW, { fill: '#F1EFE8', fo: .7, stroke: '#5F5E5A', sw: 1.2 }));
   // the roof ribs marked on the Bare roof tab (from the back edge): dashed red lines across the roof
   L.ribBands.forEach((b, i) => { o.push(R(xx(b[0]), yy(0), S * (b[1] - b[0]), S * P.vanW, { fill: '#A32D2D', fo: .16, stroke: '#A32D2D', sw: 1.4, dash: '9 4' })); o.push(T(xx((b[0] + b[1]) / 2), yy(0) - 6 - (i % 2) * 12, `rib ${fmt(L.ribs[i])}`, { size: 10.5, fill: '#A32D2D', w: 700 })); });
@@ -249,13 +255,13 @@ function drawCeiling(L, V) {
   o.push(T(xx(CL) + 28, yy(L.ceilOff + CW / 2) + 10, `${fmt(L.ceilOff)} each side`, { size: 11, fill: '#A32D2D', halo: false, anchor: 'start' }));
   o.push(T(xx(0) - 6, yy(VW / 2), 'rear', { size: 11, fill: '#5F5E5A', halo: false, anchor: 'end' })); o.push(T(xx(CL) - 4, yy(0) - 6, 'cab wall', { size: 11, fill: '#5F5E5A', halo: false, anchor: 'end' }));
   o.push(T(xx(CL / 2), yy(0) - 6, 'driver side wall', { size: 11, fill: '#5F5E5A', halo: false })); o.push(T(xx(CL / 2), yy(VW) + 52, 'passenger side wall', { size: 11, fill: '#5F5E5A', halo: false }));
-  return { w: xx(CL) + 130, h: yy(VW) + 70, body: o.join('') };
+  return { w: xx(CL) + 130, h: yy(VW) + 70, body: o.join('') + hits.join('') };
 }
 
 /* ================= the bare roof from above, before any covering, to mark where the ribs are ================= */
 function drawBare(L, V) {
   const P = L.P, S = 5, X0 = 70, Y0 = 100, CL = P.ceilLen, W = P.vanW, o = [];
-  const xx = x => X0 + S * x, yy = y => Y0 + S * y;
+  const xx = x => X0 + S * x, yy = y => Y0 + S * y, hits = [];
   o.push(T(20, 22, 'The bare roof seen from above, before any covering: rear doors on the left, cab wall on the right, driver side at the top.', { anchor: 'start', size: 14, fill: '#5F5E5A', halo: false }));
   o.push(T(20, 40, 'Measure from the back edge (the rear doors). Type the rib positions in the Roof ribs box below the drawing, separated by commas.', { anchor: 'start', size: 12, fill: '#5F5E5A', halo: false }));
   o.push(T(20, 56, `Heights from the floor: ${fmt(P.roofWallH)} in to the rib at the wall, ${fmt(P.roofMidH)} in to the rib in the middle (the roof arcs ${fmt(L.roofSag)} in across the ${fmt(L.roofW)} in between the wall tops).`, { anchor: 'start', size: 12, fill: '#5F5E5A', halo: false }));
@@ -287,8 +293,10 @@ function drawBare(L, V) {
     o.push(T(xx(c.x), yy(c.y) + 4, c.nm === 'A/C' ? 'A/C' : 'fan', { size: 11, fill: '#fff', w: 600, halo: false }));
     o.push(T(xx(c.x), yy(c.y - c.u / 2) - 4, `${c.nm === 'A/C' ? 'A/C' : 'fan'} unit ${fmt(c.u)} sq, opening ${fmt(c.w)} sq at ${fmt(c.x)} / ${fmt(c.y)}`, { size: 9.5, fill: '#444441' }));
   });
+  hits.push(HIT('ac', xx(L.ac.x - L.ac.u / 2), yy(L.ac.y - L.ac.u / 2), S * L.ac.u, S * L.ac.u, ['acX', 1 / S, 'acY', 1 / S], L.coll.ids.has('ac'), 'Air conditioner (along the van and across)'));
+  hits.push(HIT('fan', xx(L.fan.x - L.fan.u / 2), yy(L.fan.y - L.fan.u / 2), S * L.fan.u, S * L.fan.u, ['fanX', 1 / S, 'fanY', 1 / S], L.coll.ids.has('fan'), 'Shower fan (along the van and across)'));
   // the ribs the user has marked: full width lines with their position
   L.ribBands.forEach((b, i) => { o.push(R(xx(b[0]), yy(0), S * (b[1] - b[0]), S * W, { fill: '#A32D2D', fo: .3, stroke: '#A32D2D', sw: 1.6 })); o.push(T(xx((b[0] + b[1]) / 2), yy(W) - 6 - (i % 2) * 12, `${fmt(L.ribs[i])}${P.ribRef === 'center' ? '' : P.ribRef === 'front' ? ' (front edge)' : ' (back edge)'}`, { size: 10.5, fill: '#A32D2D', w: 700 })); });
   if (!L.ribs.length) o.push(T(xx(CL / 2), yy(W / 2) + 40, 'No ribs marked yet', { size: 13, fill: '#8A8A8A', halo: false }));
-  return { w: xx(CL) + 130, h: yy(W) + 70, body: o.join('') };
+  return { w: xx(CL) + 130, h: yy(W) + 70, body: o.join('') + hits.join('') };
 }

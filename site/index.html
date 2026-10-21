@@ -1577,7 +1577,7 @@
       if (!Object.keys(ptrs).length) { listening = false; window.removeEventListener('pointermove', mv); window.removeEventListener('pointerup', up); window.removeEventListener('pointercancel', up); }
     }
     vp.addEventListener('pointerdown', function (e) {
-      if (e.target.closest('.zbar')) return;
+      if (e.target.closest('.zbar') || e.target.closest('[data-drag]')) return;
       if (!Object.keys(ptrs).length) dragged = false;
       ptrs[e.pointerId] = { x: e.clientX, y: e.clientY }; down = { x: e.clientX, y: e.clientY };
       last = Object.keys(ptrs).length === 2 ? { d: dist(), m: mid() } : null;

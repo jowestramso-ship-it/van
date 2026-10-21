@@ -3,6 +3,9 @@ function computeChecks(L, V) {
   const P = L.P, out = [], push = (lv, t) => out.push({ lv, t });
   const O = obstacles(L, V), O0 = obstacles(L, {});
   const lvA = v => v < 0 ? 'bad' : v < 12 ? 'bad' : v < 16 ? 'warn' : 'ok';
+  // solid things that overlap (the same list that turns the dragged item red)
+  L.coll.list.forEach(c => push('bad', c.msg));
+  if (!L.coll.list.length) push('ok', 'Nothing overlaps: the two water tanks clear the wheel well, the fridge, the drawers, the shelves, the counter and the cab wall, and the fan and air conditioner units clear each other.');
   // dinette
   const dspace = L.bB[1] - L.bA[0];
   if (L.spare < -0.01) push('bad', `The two benches and the table are ${fmt(-L.spare)} in too long for the dinette space (${fmt(dspace)} in from the closet to the cab wall).`);
@@ -180,12 +183,12 @@ const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
 const ALLDC = ['dc0', 'dc1', 'dc2', 'dc3', 'dc4', 'dc5'];
 const VIEWS = [
   { id: 'driver', label: 'Driver side', draw: drawDriver, movers: [['Couch to bed', ['bed']], ['Dinette to bed', ['dinette']], ['Wall cabinet doors, bed side', ['dc0', 'dc1', 'dc2']], ['Wall cabinet doors, dinette side', ['dc3', 'dc4', 'dc5']], ['Closet doors', ['clo_hi', 'clo_lo']]] },
-  { id: 'pass', label: 'Passenger side', draw: drawPass, movers: [['Shower pan', ['pan']], ['Fridge door', ['fridge']], ['Fold-out table with the foot ledge', ['flap', 'ledge']], ['Foot ledge only', ['ledge']]] },
+  { id: 'pass', label: 'Passenger side', drag: 'the hot water tank (along the wall and up), the fresh water tank (along the wall), the drain line', draw: drawPass, movers: [['Shower pan', ['pan']], ['Fridge door', ['fridge']], ['Fold-out table with the foot ledge', ['flap', 'ledge']], ['Foot ledge only', ['ledge']]] },
   { id: 'end', label: 'Bed, from the end', draw: drawBedEnd, movers: [['Couch to bed', ['bed']]] },
   { id: 'cross', label: 'Cross-section', draw: drawCross, movers: [] },
-  { id: 'bare', label: 'Bare roof (mark the ribs)', draw: drawBare, movers: [] },
-  { id: 'ceil', label: 'Ceiling', draw: drawCeiling, movers: [] },
-  { id: 'plan', label: 'From above', draw: drawPlan, movers: [['Couch to bed', ['bed']], ['Dinette to bed', ['dinette']], ['Shower pan', ['pan']], ['Closet doors', ['clo_hi', 'clo_lo']], ['Fridge door', ['fridge']], ['Fold-out table with the foot ledge', ['flap', 'ledge']], ['Foot ledge only', ['ledge']], ['Wall cabinet doors', ALLDC]] }
+  { id: 'bare', label: 'Bare roof (mark the ribs)', drag: 'the shower fan and the air conditioner', draw: drawBare, movers: [] },
+  { id: 'ceil', label: 'Ceiling', drag: 'the shower fan and the air conditioner', draw: drawCeiling, movers: [] },
+  { id: 'plan', label: 'From above', drag: 'the hot water tank (along the wall and out from it), the fresh water tank (along the wall), the drain line', draw: drawPlan, movers: [['Couch to bed', ['bed']], ['Dinette to bed', ['dinette']], ['Shower pan', ['pan']], ['Closet doors', ['clo_hi', 'clo_lo']], ['Fridge door', ['fridge']], ['Fold-out table with the foot ledge', ['flap', 'ledge']], ['Foot ledge only', ['ledge']], ['Wall cabinet doors', ALLDC]] }
 ];
 let view = 'driver', L = layout(P), lastSig = '';
 const DEFS = '<defs><marker id="arq" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker><pattern id="hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="6" stroke="#888780" stroke-width="1"/></pattern><pattern id="hq" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="6" stroke="#888780" stroke-width="1"/></pattern></defs>';
@@ -229,6 +232,7 @@ function render() {
   // checks (only touch the page when the text changed)
   const ch = computeChecks(L, V), sig = JSON.stringify(ch);
   if (sig !== lastSig) { lastSig = sig; $('#checks').innerHTML = ch.map(c => `<li class="${c.lv}">${c.t}</li>`).join(''); }
+  renderAlerts(L, ch);
   renderBuild(L);
   // movers: pressed state
   document.querySelectorAll('#movers .chip[data-ids]').forEach(b => b.setAttribute('aria-pressed', isOpenIds(b.dataset.ids.split(',')) ? 'true' : 'false'));
@@ -242,7 +246,7 @@ function buildTabs() {
 }
 function buildMovers() {
   const vw = VIEWS.find(v => v.id === view), m = $('#movers');
-  m.innerHTML = '<span class="lab">Open or close:</span>' + vw.movers.map(x => `<button type="button" class="chip" data-ids="${x[1].join(',')}" aria-pressed="false">${x[0]}</button>`).join('') + '<button type="button" class="chip all" id="openall">Open everything</button><button type="button" class="chip all" id="closeall">Close everything</button>';
+  m.innerHTML = (vw.drag ? `<span class="lab drghint">Drag the dotted purple boxes to move ${vw.drag}.</span>` : '') + '<span class="lab">Open or close:</span>' + vw.movers.map(x => `<button type="button" class="chip" data-ids="${x[1].join(',')}" aria-pressed="false">${x[0]}</button>`).join('') + '<button type="button" class="chip all" id="openall">Open everything</button><button type="button" class="chip all" id="closeall">Close everything</button>';
   m.querySelectorAll('.chip[data-ids]').forEach(b => b.onclick = () => toggleIds(b.dataset.ids.split(',')));
   const all = [].concat(...vw.movers.map(x => x[1]));
   $('#openall').onclick = () => { all.forEach((id, i) => setTarget(id, 1, i * 240)); kick(); };
@@ -251,11 +255,68 @@ function buildMovers() {
 }
 // click anything marked data-act in the drawing (looked up by position, so it still works while the drawing is redrawing)
 $('#svg').addEventListener('click', e => {
+  if (blockClick) return;
   for (const el of document.elementsFromPoint(e.clientX, e.clientY)) {
     const g = el.closest && el.closest('[data-act]');
     if (g) { toggleIds(g.dataset.act.split(',')); return; }
   }
 });
+
+/* ================= dragging items, and the message that says right away what does not fit ================= */
+// the first sentence of a check, for the message above the drawing
+const headline = t => { const s = String(t).replace(/\s+/g, ' ').trim(), m = s.match(/^.*?[.!?](?=\s|$)/), h = m ? m[0] : s; return h.length > 230 ? h.slice(0, 227) + '...' : h; };
+// what to say while an item is being moved
+const DRAG_SAYS = {
+  hot: L => `Hot water tank: ${fmt(L.hotX[0])} to ${fmt(L.hotX[1])} in from the back, bottom ${fmt(L.P.hotShelf)} in up, ${fmt(L.P.hotBack)} in behind it (${fmt(L.P.hotBack + L.P.hotD)} in from the wall to its front)`,
+  fresh: L => `Fresh water tank: ${fmt(L.tankX[0])} to ${fmt(L.tankX[1])} in from the back (${fmt(L.P.tankShift)} in toward the rear from the sink end)`,
+  drain: L => `Relief valve drain line comes down at ${fmt(L.P.drainX)} in from the back`,
+  fan: L => `Shower fan: ${fmt(L.fan.x)} in from the back, ${fmt(L.fan.y)} in across from the driver wall`,
+  ac: L => `Air conditioner: ${fmt(L.ac.x)} in from the back, ${fmt(L.ac.y)} in across from the driver wall`
+};
+let dragging = null, blockClick = false;
+function renderAlerts(L, ch) {
+  const bad = ch.filter(c => c.lv === 'bad'), warn = ch.filter(c => c.lv === 'warn'), el = $('#alerts');
+  if (!el) return;
+  const say = dragging && dragging.moved && DRAG_SAYS[dragging.id] ? `<div class="rd">${DRAG_SAYS[dragging.id](L)}</div>` : '';
+  const head = bad.length ? `<b>&#10007; ${bad.length === 1 ? '1 thing does not fit' : bad.length + ' things do not fit'}</b>` : '<b>&#10003; Everything fits</b>';
+  const cau = warn.length ? ` <span class="cau">${warn.length} caution${warn.length === 1 ? '' : 's'}: see Does it fit? below</span>` : '';
+  const html = head + cau + (bad.length ? `<ul>${bad.map(c => `<li>${headline(c.t)}</li>`).join('')}</ul>` : '') + say;
+  el.className = 'alerts' + (bad.length ? ' bad' : '');
+  if (el.innerHTML !== html) el.innerHTML = html;
+  $('.stage').classList.toggle('bad', bad.length > 0);
+}
+$('#svg').addEventListener('pointerdown', e => {
+  const h = e.target.closest && e.target.closest('[data-drag]');
+  if (!h || (e.button != null && e.button > 0)) return;
+  const svg = $('#svg'), r = svg.getBoundingClientRect(), vb = svg.viewBox.baseVal;
+  if (!r.width || !vb || !vb.width) return;
+  const axis = a => { const k = h.dataset['p' + a]; return k && P[k] != null ? { k, f: parseFloat(h.dataset['k' + a]) || 0, v0: P[k] } : null; };
+  dragging = { id: h.dataset.drag, on: h.dataset.on, x0: e.clientX, y0: e.clientY, u: vb.width / r.width, ax: [axis('x'), axis('y')], moved: false };
+  e.preventDefault(); e.stopPropagation();   // so the zoom and pan does not also grab it
+  document.body.classList.add('dragging'); const sel = window.getSelection && window.getSelection(); if (sel) sel.removeAllRanges();
+});
+document.addEventListener('selectstart', e => { if (dragging) e.preventDefault(); });
+window.addEventListener('pointermove', e => {
+  if (!dragging) return;
+  const d = dragging;
+  if (!d.moved) { if (Math.hypot(e.clientX - d.x0, e.clientY - d.y0) < 3) return; d.moved = true; if (d.on) P[d.on] = true; }
+  [e.clientX - d.x0, e.clientY - d.y0].forEach((px, i) => {
+    const a = d.ax[i]; if (!a) return;
+    const p = PD.find(q => q.k === a.k), v = Math.round((a.v0 + px * d.u * a.f) / .25) * .25;
+    P[a.k] = clamp(v, p.a, p.b);
+  });
+  e.preventDefault(); kick();
+});
+function endDrag() {
+  if (!dragging) return;
+  const moved = dragging.moved; dragging = null;
+  document.body.classList.remove('dragging');
+  if (moved) { blockClick = true; setTimeout(() => { blockClick = false; }, 0); syncInputs(); saveHash(); }
+  render();
+}
+window.addEventListener('pointerup', endDrag);
+window.addEventListener('pointercancel', endDrag);
+window.addEventListener('touchmove', e => { if (dragging) e.preventDefault(); }, { passive: false });
 
 /* ================= sizes panel ================= */
 function buildSizes() {
@@ -276,6 +337,11 @@ function buildSizes() {
       el.onchange = () => { const v = parseFloat(el.value); P[p.k] = isNaN(v) ? p.d : clamp(v, p.a, p.b); el.value = P[p.k]; syncAuto(); saveHash(); render(); };
     }
   });
+  syncAuto();
+}
+// put the current sizes into the boxes (after a drag changed them)
+function syncInputs() {
+  PD.forEach(p => { const el = $('#in_' + p.k); if (!el || document.activeElement === el) return; if (p.t === 'c') el.checked = !!P[p.k]; else el.value = P[p.k]; });
   syncAuto();
 }
 function syncAuto() {

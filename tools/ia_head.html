@@ -31,6 +31,16 @@
   svg text { font-family: -apple-system, "Segoe UI", sans-serif; }
   svg .mv { cursor: pointer; }
   svg .mv:hover { filter: drop-shadow(0 0 3px rgba(186, 117, 23, .95)); }
+  svg .drg { cursor: grab; touch-action: none; }
+  svg .drg:hover { fill-opacity: .1; stroke-opacity: 1; }
+  body.dragging, body.dragging svg .drg { cursor: grabbing; user-select: none; -webkit-user-select: none; }
+  .alerts { position: sticky; top: 0; z-index: 8; height: 96px; overflow: auto; margin: 0 0 8px; padding: 7px 12px; border-radius: 10px; border: 1px solid #9FD5BF; background: #F0FAF5; font-size: 13.5px; line-height: 1.4; color: var(--ok); }
+  .alerts.bad { border-color: #E5A39B; background: #FDF0EE; color: var(--bad); }
+  .alerts ul { margin: 3px 0 0; padding-left: 18px; }
+  .alerts .rd { margin-top: 3px; color: var(--ink); font-weight: 600; }
+  .alerts .cau { color: var(--warn); font-size: 12.5px; margin-left: 6px; }
+  .stage.bad { border-color: #E5A39B; }
+  .drghint { color: #3C3489; margin-right: 10px; }
   .build { margin: 0; padding: 0; list-style: none; counter-reset: st; }
   .build li { counter-increment: st; border-top: 1px solid #ECEAE0; padding: 8px 0 8px 34px; position: relative; font-size: 13.5px; line-height: 1.45; }
   .build li:first-child { border-top: 0; }
@@ -68,11 +78,12 @@
 <body>
 <div class="wrap">
   <h1>Ford Transit van: interactive plan</h1>
-  <p class="lead">Click a door, table, the bed, the shower pan or the fridge to open or close it. Change any size below the drawing and everything redraws, including the walkway checks. Zoom the drawing with the + and − buttons in its corner, Ctrl (Cmd on a Mac) and scroll, or pinch; drag it to move when zoomed. Sizes are in inches, measured from the same zero as the static diagrams (6 in in from the rear edge). <a href="sides.html">Static diagrams, photos and the full measurement tables</a></p>
+  <p class="lead">Click a door, table, the bed, the shower pan or the fridge to open or close it. Drag the water tanks, the drain line, the shower fan and the air conditioner (the dotted purple boxes) to move them: the message above the drawing says right away what no longer fits or overlaps. Change any size below the drawing and everything redraws, including the walkway checks. Zoom the drawing with the + and − buttons in its corner, Ctrl (Cmd on a Mac) and scroll, or pinch; drag it to move when zoomed. Sizes are in inches, measured from the same zero as the static diagrams (6 in in from the rear edge). <a href="sides.html">Static diagrams, photos and the full measurement tables</a></p>
   <noscript>This page needs JavaScript. The static diagrams are on the other page.</noscript>
   <div class="tabs" role="tablist" id="tabs"></div>
   <div class="movers" id="movers"></div>
   <div class="layout">
+    <div class="alerts" id="alerts" role="status" aria-live="polite"></div>
     <div class="stage"><svg id="svg" role="img" aria-label="Interactive van diagram"></svg></div>
     <aside>
       <div class="card"><h2>Does it fit?</h2><ul class="checks" id="checks"></ul></div>
