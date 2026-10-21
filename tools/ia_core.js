@@ -194,14 +194,14 @@ function cabinetParts(L) {
     const dx = P['dx' + id] || 0, dz = P['dz' + id] || 0;
     parts.push({ kind, id, n, x0: x0 + dx, x1: x1 + dx, z0: b0 + dz, z1: b1 + dz, y0: 0, y1: 20, dxk: 'dx' + id, dzk: 'dz' + id });
   };
-  L.cabTot = tot; L.wellShelf = tot >= 10 ? L.backShelf : L.cabShelf;
+  L.cabTot = tot; L.wellShelf = tot >= 11 ? L.backShelf : L.cabShelf;
   add('drawer', 'TB', 'the top drawer on the back side', d0, dm - .5, z0, z1);
   add('drawer', 'TC', 'the top drawer on the cab side', dm + 1, dm + 14, z0, z1);
   if (tot >= 3) {
     const ws = L.wellShelf;
     add('shelf', 'SC', 'the shelf under the cab-side drawers', dm, L.angS - .75, L.cabShelf, L.cabShelf + .75);
     add('shelf', 'SB', 'the shelf under the back-side drawers', L.cabS, dm, ws, ws + .75);
-    if (tot >= 10) {
+    if (tot >= 11) {
       const bt = tl - 6, bb = ws + 1, many = bt - bb >= 14.5, rh2 = (bt - bb - 1) / 2;
       add('shelf', 'SC2', 'the board between the two cab-side lower drawers', dm, L.angS - .75, tl - 6, tl - 5.25);
       add('drawer', 'C1', 'the upper cab-side drawer', dm + 1, dm + 14, tl - 5, tl);
@@ -232,26 +232,36 @@ function collisions(L) {
   const nx0 = 58, nx1 = 93.25;
   mov.push(bx('Nook', 'the jar shelf in the nook with its upper row of jars', L.nookX[0], L.nookX[1], 0, 4.5, L.nookZ, L.nookZ + .75 + 7, { kind: 'jars' }));
   mov.push(bx('Micro', 'the microwave and its shelf', L.microX[0], L.microX[1], 0, P.microIn + 12, L.microZ[0] - .75, L.microZ[1], { kind: 'micro' }));
+  // the wheel well is a trapezoid: 2 in high at 42, 7.5 from 51.25 to 66.75, 2 in high at 76
+  const wellH = x => x < 42 || x > 76 ? 0 : x < 51.25 ? 2 + (x - 42) * 5.5 / 9.25 : x <= 66.75 ? 7.5 : 7.5 - (x - 66.75) * 5.5 / 9.25;
+  if (P.hotShelf > .5) mov.push(bx('hot', 'the hot water tank shelf', L.hotX[0] - 1, L.hotX[1] + 1, P.hotBack, P.hotBack + P.hotD, P.hotShelf - .75, P.hotShelf, { kind: 'hotboard', vs: ['drawer', 'tank'] }));
   const fix = [
-    bx('', 'the wheel well', 42, 76, 0, 7, 0, 7.5), bx('', 'the fridge', L.fr[0], L.fr[1], 2, 2 + P.fridgeD, 8.25, ft), bx('', 'the cab wall', P.cab, P.cab + 60, 0, 40, 0, 120),
+    bx('', 'the wheel well', 42, 76, 0, 7, 0, 7.5, { prof: wellH }), bx('', 'the fridge', L.fr[0], L.fr[1], 2, 2 + P.fridgeD, 8.25, ft), bx('', 'the cab wall', P.cab, P.cab + 60, 0, 40, 0, 120),
     bx('', 'the floor', -10, P.cab + 10, -5, 45, -40, 0), bx('', 'the ceiling', -10, P.cab + 10, -5, 45, L.ceilF, L.ceilF + 40),
     bx('', 'the counter and its rail', L.cabS, L.angS - .75, 0, P.cabD, ch - 2.25, ch), bx('', 'the countertop', L.angS - .75, L.sinkE, 0, P.cabD, ch - 1.2, ch),
     bx('', 'the sink under the counter', L.sinkS, L.sinkE, 0, P.sinkD, ch - P.sinkBowlD, ch - 1.2),
     bx('', 'the lower row of jars', 58.75, 92.5, 0, 4.5, ch, ch + 7), bx('', 'the top of the nook', nx0, nx1, 0, 4.5, ch + 18.5, ch + 40),
-    // the cabinet walls around the drawers (only drawers count: the shelves and the tanks reach into them by design)
-    bx('', 'the end panel on the fridge side', L.cabS, L.cabS + .75, 0, P.cabD, 0, ch, { vs: ['drawer'] }), bx('', 'the end panel at the angled front', L.angS - .75, L.angS, 0, P.cabD, 0, ch, { vs: ['drawer'] }),
+    bx('', 'the TV', 76.5, 103.5, 0, 4.5, ch + 16, ch + 31.4),
+    // the divider between the two drawer columns (only drawers count: the shelves meet it by design)
     bx('', 'the divider between the two columns', dm, dm + .5, 0, 20, L.cabTot >= 3 ? L.wellShelf + .75 : ch - 7.25, ch - 2.5, { vs: ['drawer'] })
   ];
   const ov = (a0, a1, b0, b1) => Math.min(a1, b1) - Math.max(a0, b0), seen = new Set(), cp = n => n[0].toUpperCase() + n.slice(1);
   const test = (a, b) => {
-    if (b.vs && !b.vs.includes(a.kind)) return;
-    const ox = ov(a.x0, a.x1, b.x0, b.x1), oy = ov(a.y0, a.y1, b.y0, b.y1), oz = ov(a.z0, a.z1, b.z0, b.z1);
+    if ((b.vs && !b.vs.includes(a.kind)) || (a.vs && !a.vs.includes(b.kind)) || (a.id && a.id === b.id)) return;
+    let bz1 = b.z1;
+    if (b.prof) { const lo = Math.max(a.x0, b.x0), hi = Math.min(a.x1, b.x1); bz1 = Math.max(b.prof(lo), b.prof(hi), lo <= 51.25 && hi >= 51.25 ? 7.5 : 0, lo <= 66.75 && hi >= 66.75 ? 7.5 : 0); }
+    const ox = ov(a.x0, a.x1, b.x0, b.x1), oy = ov(a.y0, a.y1, b.y0, b.y1), oz = ov(a.z0, a.z1, b.z0, bz1);
     if (ox > .06 && oy > .06 && oz > .06) {
       const key = a.id + '|' + b.n + '|' + b.id; if (seen.has(key)) return; seen.add(key); ids.add(a.id); if (b.id) ids.add(b.id);
       list.push({ ids: [a.id, b.id], msg: `${cp(a.n)} overlaps ${b.n} (${fmt(ox)} in along the wall, ${fmt(oy)} in out from it, ${fmt(oz)} in up).` });
     }
   };
   mov.forEach((a, i) => { for (let j = i + 1; j < mov.length; j++) test(a, mov[j]); fix.forEach(b => test(a, b)); });
+  // drawers and boards must stay inside the flat part of the cabinet, the jar shelf inside the nook, the microwave shelf over the fridge
+  const outOf = (id, n, x0, x1, lo, hi, what) => { const out = Math.max(lo - x0, x1 - hi); if (out > .06) { ids.add(id); list.push({ ids: [id], msg: `${cp(n)} sticks out ${fmt(out)} in past ${what} (${fmt(lo)} to ${fmt(hi)} in).` }); } };
+  L.parts.forEach(p => outOf(p.id, p.n, p.x0, p.x1, p.kind === 'drawer' ? L.cabS + .75 : L.cabS, L.angS - .75, 'the flat part of the cabinet'));
+  outOf('Nook', 'the jar shelf in the nook', L.nookX[0], L.nookX[1], nx0, nx1, 'the nook');
+  outOf('Micro', 'the microwave and its shelf', L.microX[0], L.microX[1], L.fr[0], L.fr[1], 'the top of the fridge');
   // the open floor beside the sink cabinet end is the entry: nothing may stand past the cabinet end panel
   [hot, fresh].forEach(a => { const past = a.x1 - (L.sinkE - .75); if (past > .06 && a.z0 < ch) { ids.add(a.id); list.push({ ids: [a.id], msg: `${cp(a.n)} sticks out ${fmt(past)} in past the end of the sink cabinet (${fmt(L.sinkE - .75)} in) into the entry by the sliding door.` }); } });
   // roof units: the fan and air conditioner bases must not overlap on the roof
@@ -298,8 +308,8 @@ function layout(P0) {
   {
     // the shelves under the drawers: each column's shelf sits half an inch over whatever is under it (a tank or the wheel well, 7.5)
     const dm = L.cabS + 14.75, hotTopZ = P.hotShelf + P.hotH, ov = (x0, x1, a, b) => x1 > a && x0 < b;
-    const overCab = ov(L.hotX[0], L.hotX[1], dm + .9, dm + 14), overBack = ov(L.hotX[0], L.hotX[1], L.cabS + 1.25, dm - .5);
-    const freshCab = ov(L.tankX[0], L.tankX[1], dm + .9, dm + 14), freshBack = ov(L.tankX[0], L.tankX[1], L.cabS + 1.25, dm - .5);
+    const overCab = ov(L.hotX[0], L.hotX[1], dm, L.angS - .75), overBack = ov(L.hotX[0], L.hotX[1], L.cabS, dm);
+    const freshCab = ov(L.tankX[0], L.tankX[1], dm, L.angS - .75), freshBack = ov(L.tankX[0], L.tankX[1], L.cabS, dm);
     L.cabShelf = Math.max(7.5, overCab ? hotTopZ : 0, freshCab ? P.tankLift + P.tankH : 0) + .5;
     L.backShelf = Math.max(7.5, overBack ? hotTopZ : 0, freshBack ? P.tankLift + P.tankH : 0) + .5;
   }

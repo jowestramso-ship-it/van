@@ -37,7 +37,9 @@
   body.dragging, body.dragging svg .drg { cursor: grabbing; user-select: none; -webkit-user-select: none; }
   .alerts { position: sticky; top: 0; z-index: 8; height: 96px; overflow: auto; margin: 0 0 8px; padding: 7px 12px; border-radius: 10px; border: 1px solid #9FD5BF; background: #F0FAF5; font-size: 13.5px; line-height: 1.4; color: var(--ok); }
   .alerts.bad { border-color: #E5A39B; background: #FDF0EE; color: var(--bad); }
-  .alerts ul { margin: 3px 0 0; padding-left: 18px; }
+  .alerts ul { margin: 3px 0 0; padding-left: 0; list-style: none; }
+  .alerts li { margin: 2px 0; }
+  .no { display: inline-block; min-width: 1.7em; padding: 0 5px; margin-right: 3px; border-radius: 9px; background: #E4E2D8; color: var(--ink); font-size: 11.5px; font-weight: 700; text-align: center; line-height: 1.5; }
   .alerts .rd { margin-top: 3px; color: var(--ink); font-weight: 600; }
   .alerts .cau { color: var(--warn); font-size: 12.5px; margin-left: 6px; }
   .stage.bad { border-color: #E5A39B; }
@@ -369,14 +371,14 @@ function cabinetParts(L) {
     const dx = P['dx' + id] || 0, dz = P['dz' + id] || 0;
     parts.push({ kind, id, n, x0: x0 + dx, x1: x1 + dx, z0: b0 + dz, z1: b1 + dz, y0: 0, y1: 20, dxk: 'dx' + id, dzk: 'dz' + id });
   };
-  L.cabTot = tot; L.wellShelf = tot >= 10 ? L.backShelf : L.cabShelf;
+  L.cabTot = tot; L.wellShelf = tot >= 11 ? L.backShelf : L.cabShelf;
   add('drawer', 'TB', 'the top drawer on the back side', d0, dm - .5, z0, z1);
   add('drawer', 'TC', 'the top drawer on the cab side', dm + 1, dm + 14, z0, z1);
   if (tot >= 3) {
     const ws = L.wellShelf;
     add('shelf', 'SC', 'the shelf under the cab-side drawers', dm, L.angS - .75, L.cabShelf, L.cabShelf + .75);
     add('shelf', 'SB', 'the shelf under the back-side drawers', L.cabS, dm, ws, ws + .75);
-    if (tot >= 10) {
+    if (tot >= 11) {
       const bt = tl - 6, bb = ws + 1, many = bt - bb >= 14.5, rh2 = (bt - bb - 1) / 2;
       add('shelf', 'SC2', 'the board between the two cab-side lower drawers', dm, L.angS - .75, tl - 6, tl - 5.25);
       add('drawer', 'C1', 'the upper cab-side drawer', dm + 1, dm + 14, tl - 5, tl);
@@ -407,26 +409,36 @@ function collisions(L) {
   const nx0 = 58, nx1 = 93.25;
   mov.push(bx('Nook', 'the jar shelf in the nook with its upper row of jars', L.nookX[0], L.nookX[1], 0, 4.5, L.nookZ, L.nookZ + .75 + 7, { kind: 'jars' }));
   mov.push(bx('Micro', 'the microwave and its shelf', L.microX[0], L.microX[1], 0, P.microIn + 12, L.microZ[0] - .75, L.microZ[1], { kind: 'micro' }));
+  // the wheel well is a trapezoid: 2 in high at 42, 7.5 from 51.25 to 66.75, 2 in high at 76
+  const wellH = x => x < 42 || x > 76 ? 0 : x < 51.25 ? 2 + (x - 42) * 5.5 / 9.25 : x <= 66.75 ? 7.5 : 7.5 - (x - 66.75) * 5.5 / 9.25;
+  if (P.hotShelf > .5) mov.push(bx('hot', 'the hot water tank shelf', L.hotX[0] - 1, L.hotX[1] + 1, P.hotBack, P.hotBack + P.hotD, P.hotShelf - .75, P.hotShelf, { kind: 'hotboard', vs: ['drawer', 'tank'] }));
   const fix = [
-    bx('', 'the wheel well', 42, 76, 0, 7, 0, 7.5), bx('', 'the fridge', L.fr[0], L.fr[1], 2, 2 + P.fridgeD, 8.25, ft), bx('', 'the cab wall', P.cab, P.cab + 60, 0, 40, 0, 120),
+    bx('', 'the wheel well', 42, 76, 0, 7, 0, 7.5, { prof: wellH }), bx('', 'the fridge', L.fr[0], L.fr[1], 2, 2 + P.fridgeD, 8.25, ft), bx('', 'the cab wall', P.cab, P.cab + 60, 0, 40, 0, 120),
     bx('', 'the floor', -10, P.cab + 10, -5, 45, -40, 0), bx('', 'the ceiling', -10, P.cab + 10, -5, 45, L.ceilF, L.ceilF + 40),
     bx('', 'the counter and its rail', L.cabS, L.angS - .75, 0, P.cabD, ch - 2.25, ch), bx('', 'the countertop', L.angS - .75, L.sinkE, 0, P.cabD, ch - 1.2, ch),
     bx('', 'the sink under the counter', L.sinkS, L.sinkE, 0, P.sinkD, ch - P.sinkBowlD, ch - 1.2),
     bx('', 'the lower row of jars', 58.75, 92.5, 0, 4.5, ch, ch + 7), bx('', 'the top of the nook', nx0, nx1, 0, 4.5, ch + 18.5, ch + 40),
-    // the cabinet walls around the drawers (only drawers count: the shelves and the tanks reach into them by design)
-    bx('', 'the end panel on the fridge side', L.cabS, L.cabS + .75, 0, P.cabD, 0, ch, { vs: ['drawer'] }), bx('', 'the end panel at the angled front', L.angS - .75, L.angS, 0, P.cabD, 0, ch, { vs: ['drawer'] }),
+    bx('', 'the TV', 76.5, 103.5, 0, 4.5, ch + 16, ch + 31.4),
+    // the divider between the two drawer columns (only drawers count: the shelves meet it by design)
     bx('', 'the divider between the two columns', dm, dm + .5, 0, 20, L.cabTot >= 3 ? L.wellShelf + .75 : ch - 7.25, ch - 2.5, { vs: ['drawer'] })
   ];
   const ov = (a0, a1, b0, b1) => Math.min(a1, b1) - Math.max(a0, b0), seen = new Set(), cp = n => n[0].toUpperCase() + n.slice(1);
   const test = (a, b) => {
-    if (b.vs && !b.vs.includes(a.kind)) return;
-    const ox = ov(a.x0, a.x1, b.x0, b.x1), oy = ov(a.y0, a.y1, b.y0, b.y1), oz = ov(a.z0, a.z1, b.z0, b.z1);
+    if ((b.vs && !b.vs.includes(a.kind)) || (a.vs && !a.vs.includes(b.kind)) || (a.id && a.id === b.id)) return;
+    let bz1 = b.z1;
+    if (b.prof) { const lo = Math.max(a.x0, b.x0), hi = Math.min(a.x1, b.x1); bz1 = Math.max(b.prof(lo), b.prof(hi), lo <= 51.25 && hi >= 51.25 ? 7.5 : 0, lo <= 66.75 && hi >= 66.75 ? 7.5 : 0); }
+    const ox = ov(a.x0, a.x1, b.x0, b.x1), oy = ov(a.y0, a.y1, b.y0, b.y1), oz = ov(a.z0, a.z1, b.z0, bz1);
     if (ox > .06 && oy > .06 && oz > .06) {
       const key = a.id + '|' + b.n + '|' + b.id; if (seen.has(key)) return; seen.add(key); ids.add(a.id); if (b.id) ids.add(b.id);
       list.push({ ids: [a.id, b.id], msg: `${cp(a.n)} overlaps ${b.n} (${fmt(ox)} in along the wall, ${fmt(oy)} in out from it, ${fmt(oz)} in up).` });
     }
   };
   mov.forEach((a, i) => { for (let j = i + 1; j < mov.length; j++) test(a, mov[j]); fix.forEach(b => test(a, b)); });
+  // drawers and boards must stay inside the flat part of the cabinet, the jar shelf inside the nook, the microwave shelf over the fridge
+  const outOf = (id, n, x0, x1, lo, hi, what) => { const out = Math.max(lo - x0, x1 - hi); if (out > .06) { ids.add(id); list.push({ ids: [id], msg: `${cp(n)} sticks out ${fmt(out)} in past ${what} (${fmt(lo)} to ${fmt(hi)} in).` }); } };
+  L.parts.forEach(p => outOf(p.id, p.n, p.x0, p.x1, p.kind === 'drawer' ? L.cabS + .75 : L.cabS, L.angS - .75, 'the flat part of the cabinet'));
+  outOf('Nook', 'the jar shelf in the nook', L.nookX[0], L.nookX[1], nx0, nx1, 'the nook');
+  outOf('Micro', 'the microwave and its shelf', L.microX[0], L.microX[1], L.fr[0], L.fr[1], 'the top of the fridge');
   // the open floor beside the sink cabinet end is the entry: nothing may stand past the cabinet end panel
   [hot, fresh].forEach(a => { const past = a.x1 - (L.sinkE - .75); if (past > .06 && a.z0 < ch) { ids.add(a.id); list.push({ ids: [a.id], msg: `${cp(a.n)} sticks out ${fmt(past)} in past the end of the sink cabinet (${fmt(L.sinkE - .75)} in) into the entry by the sliding door.` }); } });
   // roof units: the fan and air conditioner bases must not overlap on the roof
@@ -473,8 +485,8 @@ function layout(P0) {
   {
     // the shelves under the drawers: each column's shelf sits half an inch over whatever is under it (a tank or the wheel well, 7.5)
     const dm = L.cabS + 14.75, hotTopZ = P.hotShelf + P.hotH, ov = (x0, x1, a, b) => x1 > a && x0 < b;
-    const overCab = ov(L.hotX[0], L.hotX[1], dm + .9, dm + 14), overBack = ov(L.hotX[0], L.hotX[1], L.cabS + 1.25, dm - .5);
-    const freshCab = ov(L.tankX[0], L.tankX[1], dm + .9, dm + 14), freshBack = ov(L.tankX[0], L.tankX[1], L.cabS + 1.25, dm - .5);
+    const overCab = ov(L.hotX[0], L.hotX[1], dm, L.angS - .75), overBack = ov(L.hotX[0], L.hotX[1], L.cabS, dm);
+    const freshCab = ov(L.tankX[0], L.tankX[1], dm, L.angS - .75), freshBack = ov(L.tankX[0], L.tankX[1], L.cabS, dm);
     L.cabShelf = Math.max(7.5, overCab ? hotTopZ : 0, freshCab ? P.tankLift + P.tankH : 0) + .5;
     L.backShelf = Math.max(7.5, overBack ? hotTopZ : 0, freshBack ? P.tankLift + P.tankH : 0) + .5;
   }
@@ -956,8 +968,8 @@ function drawCross(L, V) {
   }
   o.push(T(xx(P.cabBackIn + P.cabDepth / 2 + 1.5), yy((P.cabBot + L.ceilF) / 2), 'wall cabinet', { size: 11, fill: '#3C3489' })); o.push(T(xx(P.cabBackIn + P.cabDepth / 2 + 1.5), yy((P.cabBot + L.ceilF) / 2) + 13, `${fmt(P.cabDepth)} deep`, { size: 10, fill: '#3C3489' }));
   o.push(bx(W - P.cabD, W, 0, P.counterH, { fill: COL.C, fo: .12, stroke: COL.C, sw: 1.5, rx: 3 })); o.push(T(xx(W - P.cabD / 2), yy(P.counterH / 2), 'counter and cabinet', { size: 11, fill: COL.C }));
-  o.push(bx(W - 2 - 19, W - 2, 8.25, 56.25, { fill: '#0A6A8A', fo: .14, stroke: '#0A6A8A', sw: 1.4, dash: '5 3' })); o.push(T(xx(W - 11.5), yy(40), 'fridge', { size: 11, fill: '#0A6A8A' }));
-  o.push(bx(W - 12 - P.microIn, W - P.microIn, 59, 69, { fill: COL.G, fo: .2, stroke: COL.G, sw: 1.4, rx: 2 })); o.push(T(xx(W - 6 - P.microIn), yy(64.5), 'micro', { size: 10, fill: COL.G }));
+  o.push(bx(W - 2 - P.fridgeD, W - 2, 8.25, 8.25 + P.fridgeH, { fill: '#0A6A8A', fo: .14, stroke: '#0A6A8A', sw: 1.4, dash: '5 3' })); o.push(T(xx(W - 11.5), yy(40), 'fridge', { size: 11, fill: '#0A6A8A' }));
+  o.push(bx(W - 12 - P.microIn, W - P.microIn, L.microZ[0], L.microZ[1], { fill: COL.G, fo: .2, stroke: COL.G, sw: 1.4, rx: 2 })); o.push(T(xx(W - 6 - P.microIn), yy((L.microZ[0] + L.microZ[1]) / 2), 'micro', { size: 10, fill: COL.G }));
   o.push(T(xx(0) + 6, yy(P.roofMidH + P.ribDepth + 5), 'driver side wall', { anchor: 'start', size: 11, fill: '#5F5E5A', halo: false })); o.push(T(xx(W) - 6, yy(P.roofMidH + P.ribDepth + 5), 'passenger side wall', { anchor: 'end', size: 11, fill: '#5F5E5A', halo: false }));
   o.push(Ln(xx(0), yy(0), xx(W), yy(0), { stroke: '#5F5E5A', sw: 2 }));
   o.push(T(20, FL + 58, 'Things at different places along the van are drawn together (the fridge and the counter are side by side along the wall, not on top of each other).', { anchor: 'start', size: 10.5, fill: '#5F5E5A', halo: false }));
@@ -1362,7 +1374,8 @@ function computeChecks(L, V) {
       const cz = L.ceilF, cl = L.leanAt(cz), st = Math.min(Math.max(L.leanStart, 0), cz), cAng = Math.atan(L.leanK) * 180 / Math.PI;
       push('ok', `The closet (${fmt(P.closetD)} deep, ${fmt(cz)} in tall) has an open back, so its sides follow the wall too: ${fmt(P.closetD)} deep up to ${fmt(st)} in, then the rear edge leans in at about ${cAng.toFixed(0)} degrees to ${fmt(P.closetD - cl)} deep at the top (${fmt(cl)} in less over the last ${fmt(cz - st)} in).`);
     }
-    push(mk < m1 - .01 ? 'bad' : 'ok', `The microwave (${fmt(L.microZ[0])} to ${fmt(L.microZ[1])} in up) is on a wall that leans in ${fmt(m0)} in at its bottom and ${fmt(m1)} in at its top; its back is set in ${fmt(mk)} in, so it is ${fmt(mk - m0)} in off the wall at the bottom and ${fmt(mk - m1)} in at the top${mk < m1 - .01 ? `: it would run into the wall by ${fmt(m1 - mk)} in` : ''}. A microwave has to sit level (its turntable and door seal are made for that), so it cannot lean with the wall: its back touches the wall at the top corner and leaves a ${fmt(m1 - m0)} in wedge behind its bottom (good for its vent and the cord). What follows the wall is everything built around it: the shelf, its side panels and any trim are cut to the same ${(Math.atan(L.leanK) * 180 / Math.PI).toFixed(0)} degree lean. The same wedge is behind the wall covering and the vertical planks.`);
+    const mAt = Math.abs(mk - m1) < .0625 ? 0 : mk - m1;
+    push(mk < m1 - .0625 ? 'bad' : 'ok', `The microwave (${fmt(L.microZ[0])} to ${fmt(L.microZ[1])} in up) is on a wall that leans in ${fmt(m0)} in at its bottom and ${fmt(m1)} in at its top; its back is set in ${fmt(mk)} in, so it is ${fmt(mk - m0)} in off the wall at the bottom and ${fmt(mAt)} in at the top${mk < m1 - .0625 ? `: it would run into the wall by ${fmt(m1 - mk)} in` : ''}. A microwave has to sit level (its turntable and door seal are made for that), so it cannot lean with the wall: its back touches the wall at the top corner and leaves a ${fmt(m1 - m0)} in wedge behind its bottom (good for its vent and the cord). What follows the wall is everything built around it: the shelf, its side panels and any trim are cut to the same ${(Math.atan(L.leanK) * 180 / Math.PI).toFixed(0)} degree lean. The same wedge is behind the wall covering and the vertical planks.`);
   }
   // rib marks on the bare roof: each rib is a band ribW wide; an opening has to sit in the clear space between two bands
   if (L.ribs.length) {
@@ -1478,7 +1491,7 @@ function computeChecks(L, V) {
       const fitL = L.angS - .75 - L.cabS, fitD = P.cabD - .75;
       if (fitL < 29.2 || fitD < 19.95) push('bad', `The drawers under the counter need a flat part 29 1/4 in long between end panels (58 to 87 1/4 in) and a cabinet 20 3/4 in deep (20 in boxes plus a 3/4 in front); here the flat part is ${fmt(fitL)} in and the cabinet is ${fmt(P.cabD)} in deep.`);
       else if (tot < 3) push('bad', `The lower drawers under the top pair do not fit: only ${fmt(Math.max(0, tot))} in is left between the shelf over the hot water tank (${fmt(shelfZ)} in up) and the top drawers.`);
-      else push(tot < 10 ? 'warn' : 'ok', `Lower drawers: ${tot >= 10 ? `two 13 x 20 x 5 in drawers one above the other on the cab side (shelf at ${fmt(shelfZ)} in up, 1/2 in over what is under it) and, toward the back, ${manyB ? `a 13 x 20 x 5 in drawer over two 13 x 20 x ${fmt((tlz - 6 - bbz - 1) / 2)} in ones` : `one 13 x 20 x ${fmt(tlz - bbz)} in drawer`} on a shelf at ${fmt(L.backShelf)} in up (1/2 in over ${L.backShelf > 8 ? 'the hot water tank' : 'the wheel well'}), all under the top pair` : `one row of two, 13 x 20 x ${fmt(tot)} in`}. All are 20 deep so they reach the wall. Nothing may come out of the top of the hot water tank (fittings, relief valve).`);
+      else push(tot < 11 ? 'warn' : 'ok', `Lower drawers: ${tot >= 11 ? `two 13 x 20 x 5 in drawers one above the other on the cab side (shelf at ${fmt(shelfZ)} in up, 1/2 in over what is under it) and, toward the back, ${manyB ? `a 13 x 20 x 5 in drawer over two 13 x 20 x ${fmt((tlz - 6 - bbz - 1) / 2)} in ones` : `one 13 x 20 x ${fmt(tlz - bbz)} in drawer`} on a shelf at ${fmt(L.backShelf)} in up (1/2 in over ${L.backShelf > 8 ? 'the hot water tank' : 'the wheel well'}), all under the top pair` : `one row of two, 13 x 20 x ${fmt(tot)} in`}. All are 20 deep so they reach the wall. Nothing may come out of the top of the hot water tank (fittings, relief valve).`);
     }
     if (P.drainOn && P.hotShelf > 10) {
       const rx = L.hotX[0] + .8 * P.hotW, dx = P.drainX, dyy = P.tankBack + P.tankD + 2.5, topz = P.hotShelf + P.hotH + 1.5 + P.drainDz, above = P.counterH - 1.5 - topz - P.drainDia, strip = dAt(dx) - .75 - P.tankBack - P.tankD;
@@ -1563,7 +1576,7 @@ function render() {
   svg.innerHTML = DEFS + r.body;
   // checks (only touch the page when the text changed)
   const ch = computeChecks(L, V), sig = JSON.stringify(ch);
-  if (sig !== lastSig) { lastSig = sig; $('#checks').innerHTML = ch.map(c => `<li class="${c.lv}">${c.t}</li>`).join(''); }
+  if (sig !== lastSig) { lastSig = sig; $('#checks').innerHTML = ch.map((c, i) => `<li class="${c.lv}"><span class="no">${i + 1}</span> ${c.t}</li>`).join(''); }
   renderAlerts(L, ch);
   renderBuild(L);
   // movers: pressed state
@@ -1619,8 +1632,8 @@ function renderAlerts(L, ch) {
   if (!el) return;
   const txt = dragging && dragging.moved ? (DRAG_SAYS[dragging.id] ? DRAG_SAYS[dragging.id](L) : sayMore(L, dragging.id)) : '', say = txt ? `<div class="rd">${txt}</div>` : '';
   const head = bad.length ? `<b>&#10007; ${bad.length === 1 ? '1 thing does not fit' : bad.length + ' things do not fit'}</b>` : '<b>&#10003; Everything fits</b>';
-  const cau = warn.length ? ` <span class="cau">${warn.length} caution${warn.length === 1 ? '' : 's'}: see Does it fit? below</span>` : '';
-  const html = head + cau + (bad.length ? `<ul>${bad.map(c => `<li>${headline(c.t)}</li>`).join('')}</ul>` : '') + say;
+  const cau = warn.length ? ` <span class="cau">${warn.length} caution${warn.length === 1 ? '' : 's'}: number${warn.length === 1 ? '' : 's'} ${warn.map(c => ch.indexOf(c) + 1).join(', ')} in Does it fit? below</span>` : '';
+  const html = head + cau + (bad.length ? `<ul>${bad.map(c => `<li><span class="no">${ch.indexOf(c) + 1}</span> ${headline(c.t)}</li>`).join('')}</ul>` : '') + say;
   el.className = 'alerts' + (bad.length ? ' bad' : '');
   if (el.innerHTML !== html) el.innerHTML = html;
   $('.stage').classList.toggle('bad', bad.length > 0);
