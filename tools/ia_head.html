@@ -43,6 +43,14 @@
   .alerts .rd { margin-top: 3px; color: var(--ink); font-weight: 600; }
   .alerts .cau { color: var(--warn); font-size: 12.5px; margin-left: 6px; }
   .stage.bad { border-color: #E5A39B; }
+  .hidebar { margin: 0 0 8px; border: 1px solid var(--line); border-radius: 10px; background: var(--panel); padding: 4px 10px; }
+  .hidebar summary { font-size: 13.5px; }
+  .hidebar .hdbody { padding: 4px 0 6px; }
+  .hdrow { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 4px; }
+  .hdrow .note { margin: 0; }
+  .hdlist { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 2px 14px; }
+  .hdlist label { font-size: 13px; display: flex; gap: 6px; align-items: center; cursor: pointer; }
+  .hdlist label.off { color: var(--mute); text-decoration: line-through; }
   .drghint { color: #3C3489; margin-right: 10px; }
   .build { margin: 0; padding: 0; list-style: none; counter-reset: st; }
   .build li { counter-increment: st; border-top: 1px solid #ECEAE0; padding: 8px 0 8px 34px; position: relative; font-size: 13.5px; line-height: 1.45; }
@@ -77,14 +85,16 @@
   @media (max-width: 760px) { .stage { overflow-x: auto; } svg#svg { min-width: 760px; } }
   noscript { display: block; padding: 12px; background: #FAEEDA; border-radius: 8px; }
 </style>
+<style id="hidecss"></style>
 </head>
 <body>
 <div class="wrap">
   <h1>Ford Transit van: interactive plan</h1>
-  <p class="lead">Click a door, table, the bed, the shower pan or the fridge to open or close it. Drag the drawers and shelves, the jar shelf, the microwave, the water tanks, the drain line, the shower fan and the air conditioner (the dotted purple boxes) to move them, and double-click one to put it back: the message above the drawing says right away what no longer fits or overlaps. Change any size below the drawing and everything redraws, including the walkway checks. Zoom the drawing with the + and − buttons in its corner, Ctrl (Cmd on a Mac) and scroll, or pinch; drag it to move when zoomed. Sizes are in inches, measured from the same zero as the static diagrams (6 in in from the rear edge). <a href="sides.html">Static diagrams, photos and the full measurement tables</a></p>
+  <p class="lead">Click a door, table, the bed, the shower pan or the fridge to open or close it. Right-click an item (or use Show or hide things) to hide it. Drag the drawers and shelves, the jar shelf, the microwave, the water tanks, the drain line, the shower fan and the air conditioner (the dotted purple boxes) to move them, and double-click one to put it back: the message above the drawing says right away what no longer fits or overlaps. Change any size below the drawing and everything redraws, including the walkway checks. Zoom the drawing with the + and − buttons in its corner, Ctrl (Cmd on a Mac) and scroll, or pinch; drag it to move when zoomed. Sizes are in inches, measured from the same zero as the static diagrams (6 in in from the rear edge). <a href="sides.html">Static diagrams, photos and the full measurement tables</a></p>
   <noscript>This page needs JavaScript. The static diagrams are on the other page.</noscript>
   <div class="tabs" role="tablist" id="tabs"></div>
   <div class="movers" id="movers"></div>
+  <details class="hidebar" id="hidebar"><summary>Show or hide things</summary><div class="hdbody"><div class="hdrow"><button type="button" class="chip all" id="hdshow">Show everything</button><span class="note" id="hdmsg">Right-click an item in the drawing to hide it, or untick it here. This only hides the drawing: the checks still count it.</span></div><div class="hdlist" id="hdlist"></div></div></details>
   <div class="layout">
     <div class="alerts" id="alerts" role="status" aria-live="polite"></div>
     <div class="stage"><svg id="svg" role="img" aria-label="Interactive van diagram"></svg></div>

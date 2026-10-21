@@ -248,6 +248,7 @@ function render() {
   const ch = computeChecks(L, V), sig = JSON.stringify(ch);
   if (sig !== lastSig) { lastSig = sig; $('#checks').innerHTML = ch.map((c, i) => `<li class="${c.lv}"><span class="no">${i + 1}</span> ${c.t}</li>`).join(''); }
   renderAlerts(L, ch);
+  renderHideBar();
   renderBuild(L);
   // movers: pressed state
   document.querySelectorAll('#movers .chip[data-ids]').forEach(b => b.setAttribute('aria-pressed', isOpenIds(b.dataset.ids.split(',')) ? 'true' : 'false'));
@@ -349,6 +350,34 @@ window.addEventListener('pointerup', endDrag);
 window.addEventListener('pointercancel', endDrag);
 window.addEventListener('touchmove', e => { if (dragging) e.preventDefault(); }, { passive: false });
 
+/* ================= hiding things ================= */
+// every item in a drawing is a group (GB/GE) with an id and a name; hidden ids are kept in this browser and in the link (hide=a,b), and a style rule hides them (handles too)
+let HID = {}, hideSig = '';
+try { HID = JSON.parse(localStorage.getItem('van-hidden') || '{}') || {}; } catch (e) { HID = {}; }
+function applyHidden() { $('#hidecss').textContent = Object.keys(HID).filter(k => HID[k]).map(k => `#svg [data-grp="${k}"]{display:none}`).join('\n'); }
+function saveHidden() { try { localStorage.setItem('van-hidden', JSON.stringify(HID)); } catch (e) { } applyHidden(); saveHash(); renderHideBar(true); }
+function renderHideBar(force) {
+  const groups = [], seen = {};
+  document.querySelectorAll('#svg g.hg[data-grp]').forEach(g => { const id = g.dataset.grp; if (!seen[id]) { seen[id] = 1; groups.push([id, g.dataset.label || id]); } });
+  const sig = JSON.stringify(groups) + JSON.stringify(HID);
+  if (!force && sig === hideSig) return; hideSig = sig;
+  const n = groups.filter(g => HID[g[0]]).length;
+  $('#hidebar summary').textContent = 'Show or hide things' + (n ? ` (${n} hidden)` : '');
+  if (!groups.length) { $('#hdlist').innerHTML = '<span class="note">Nothing in this view can be hidden.</span>'; $('#hdshow').disabled = !Object.keys(HID).some(k => HID[k]); return; }
+  $('#hdlist').innerHTML = groups.map(g => `<label class="${HID[g[0]] ? 'off' : ''}"><input type="checkbox" data-hg="${g[0]}"${HID[g[0]] ? '' : ' checked'}> ${g[1]}</label>`).join('');
+  $('#hdshow').disabled = !Object.keys(HID).some(k => HID[k]);
+}
+$('#hdlist').addEventListener('change', e => { const t = e.target; if (!t || !t.dataset || !t.dataset.hg) return; if (t.checked) delete HID[t.dataset.hg]; else HID[t.dataset.hg] = true; saveHidden(); });
+$('#hdshow').onclick = () => { HID = {}; $('#hdmsg').textContent = 'Everything is showing again.'; saveHidden(); };
+// right-click an item to hide it (the item on top at that spot)
+$('#svg').addEventListener('contextmenu', e => {
+  for (const el of document.elementsFromPoint(e.clientX, e.clientY)) {
+    const g = el.closest && el.closest('[data-grp]'); if (!g) continue;
+    e.preventDefault(); const id = g.dataset.grp, nm = (document.querySelector(`#svg g.hg[data-grp="${id}"]`) || g).dataset.label || id;
+    HID[id] = true; $('#hdmsg').textContent = `Hid "${nm}". Tick it again in the list below to bring it back.`; $('#hidebar').open = true; saveHidden(); return;
+  }
+});
+
 /* ================= sizes panel ================= */
 function buildSizes() {
   const groups = []; PD.forEach(p => { if (!groups.includes(p.g)) groups.push(p.g); });
@@ -389,11 +418,13 @@ $('#reset').onclick = () => setAll({});
 function saveHash() {
   const q = new URLSearchParams(); q.set('view', view);
   PD.forEach(p => { if (P[p.k] !== p.d) q.set(p.k, p.t === 'c' ? (P[p.k] ? '1' : '0') : P[p.k]); });
+  const hk = Object.keys(HID).filter(k => HID[k]); if (hk.length) q.set('hide', hk.join(','));
   try { history.replaceState(null, '', '#' + q.toString()); } catch (e) { }
 }
 function loadHash() {
   const q = new URLSearchParams(location.hash.replace(/^#/, '')), vals = {};
   if (VIEWS.some(v => v.id === q.get('view'))) view = q.get('view');
+  if (q.has('hide')) { HID = {}; q.get('hide').split(',').filter(k => /^[A-Za-z0-9_]+$/.test(k)).forEach(k => { HID[k] = true; }); }
   PD.forEach(p => {
     if (!q.has(p.k)) return;
     const raw = q.get(p.k);
@@ -411,7 +442,7 @@ $('#share').onclick = () => {
   try { navigator.clipboard.writeText(url).then(() => done(true), () => done(false)); } catch (e) { done(false); }
 };
 
-loadHash();
+loadHash(); applyHidden();
 buildTabs(); buildSizes(); buildMovers();
 makeZoomable($('#svg'));
 </script>

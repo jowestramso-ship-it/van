@@ -181,12 +181,15 @@ const HITR = (x, y, w, h) => `<rect x="${f1(x)}" y="${f1(y)}" width="${f1(Math.m
 /* ================= layout (everything derived from the sizes) ================= */
 
 /* ================= things you can drag, and the overlap finder ================= */
+// named groups in a drawing, so the page can hide an item: everything drawn between GB and GE carries data-grp (and so does the item's drag handle)
+const GB = (id, label) => `<g class="hg" data-grp="${id}" data-label="${label}">`;
+const GE = () => '</g>';
 // a see-through rectangle over an item that can be dragged.
 // ax = [size changed by sideways drags, inches per drawing unit, size changed by up and down drags, inches per drawing unit]; a size name may be '' for none, and the inches
 // are negative where the drawing runs the other way. on = a tick box size that the first drag switches on.
-function HIT(id, x, y, w, h, ax, bad, label, on) {
+function HIT(id, x, y, w, h, ax, bad, label, on, grp) {
   const k = v => +(+v || 0).toFixed(5);
-  return `<rect class="drg" data-drag="${id}" data-px="${ax[0]}" data-kx="${k(ax[1])}" data-py="${ax[2]}" data-ky="${k(ax[3])}" data-on="${on || ''}" x="${f1(x)}" y="${f1(y)}" width="${f1(Math.max(2, w))}" height="${f1(Math.max(2, h))}" rx="3" fill="#534AB7" fill-opacity="${bad ? .12 : .02}" stroke="${bad ? '#C0392B' : '#534AB7'}" stroke-width="${bad ? 2.6 : 1}" stroke-dasharray="${bad ? '5 2' : '2 3'}" stroke-opacity="${bad ? 1 : .6}"><title>${label}${bad ? ' (overlaps something: see the red message above the drawing)' : ' (drag to move it, double-click to put it back)'}</title></rect>`;
+  return `<rect class="drg" data-drag="${id}" data-grp="${grp || id}" data-px="${ax[0]}" data-kx="${k(ax[1])}" data-py="${ax[2]}" data-ky="${k(ax[3])}" data-on="${on || ''}" x="${f1(x)}" y="${f1(y)}" width="${f1(Math.max(2, w))}" height="${f1(Math.max(2, h))}" rx="3" fill="#534AB7" fill-opacity="${bad ? .12 : .02}" stroke="${bad ? '#C0392B' : '#534AB7'}" stroke-width="${bad ? 2.6 : 1}" stroke-dasharray="${bad ? '5 2' : '2 3'}" stroke-opacity="${bad ? 1 : .6}"><title>${label}${bad ? ' (overlaps something: see the red message above the drawing)' : ' (drag to move it, double-click to put it back)'}</title></rect>`;
 }
 // every drawer and shelf board under the counter as a box: kind, id (the sizes that move it are dx<id> along the wall and dz<id> up), n = its name,
 // x0/x1 along the wall and z0/z1 up (the planned spot plus how far it was dragged, both ways), y0/y1 out from the wall. The planned spots fill the space between the shelves, the
