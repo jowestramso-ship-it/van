@@ -9,9 +9,9 @@ def _panel(ox, night):
     r=lambda x0,x1,z0,z1: f'x="{X(x0):g}" y="{Y(z1):g}" width="{S*(x1-x0):g}" height="{S*(z1-z0):g}"'
     o=[]
     o.append(f'<rect class="box" {r(0,92,0,76)} stroke-width="0.5"/>')
-    o.append(f'<g class="c-amber"><rect {r(0,92,75.75,76)} stroke-width="0.5"/><rect {r(0,92,74.75,75.75)} stroke-width="0.5"/></g>')
-    o.append(f'<g class="c-purple"><rect {r(0,74,61,74.75)} stroke-width="0.5" stroke-dasharray="5 3"/><text class="ts" x="{X(37):g}" y="{Y(68.5):g}" text-anchor="middle" dominant-baseline="central">Wall cabinets</text></g>')
-    o.append(f'<g class="c-gray"><rect {r(74,89,0,74.75)} stroke-width="0.5"/><text class="ts" x="{X(81.5):g}" y="{Y(40):g}" text-anchor="middle" dominant-baseline="central">Closet</text></g>')
+    o.append(f'<g class="c-amber"><rect {r(0,92,75.875,76)} stroke-width="0.5"/><rect {r(0,92,74.875,75.875)} stroke-width="0.5"/></g>')
+    o.append(f'<g class="c-purple"><rect {r(0,74,61,74.875)} stroke-width="0.5" stroke-dasharray="5 3"/><text class="ts" x="{X(37):g}" y="{Y(68.5):g}" text-anchor="middle" dominant-baseline="central">Wall cabinets</text></g>')
+    o.append(f'<g class="c-gray"><rect {r(74,89,0,74.875)} stroke-width="0.5"/><text class="ts" x="{X(81.5):g}" y="{Y(40):g}" text-anchor="middle" dominant-baseline="central">Closet</text></g>')
     o.append(f'<g class="c-gray"><rect {r(0,74,0,DU)} stroke-width="0.5" stroke-dasharray="5 3"/>' + ('' if night else f'<text class="ts" x="{X(37):g}" y="{Y(6):g}" text-anchor="middle" dominant-baseline="central">Storage under the deck, 12 1/2 in tall</text>') + f'<rect {r(0,74,DU,DECK)} stroke-width="0.5"/></g>')
     if not night:
         o.append(f'<g class="c-amber"><rect {r(0,74,DECK,14)} stroke-width="0.5"/></g>')

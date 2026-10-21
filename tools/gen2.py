@@ -158,8 +158,8 @@ def item(a,b,h0,h1,col,label,sub=None,ly=None):
     if sub: BA(f'<text class="ts" x="{X((a+b)/2)}" y="{yy+15}" text-anchor="middle" style="fill:{col};font-size:11px;paint-order:stroke;stroke:#fff;stroke-width:3px;stroke-opacity:.8">{sub}</text>')
 P='#534AB7'; G='#444441'; K='#993556'
 BG('wallcab','Wall cabinets')
-item(0,74,61,74.75,P,'',None,Y(67.5))
-item(89,154,61,74.75,P,'',None,Y(67.5))
+item(0,74,61,74.875,P,'',None,Y(67.5))
+item(89,154,61,74.875,P,'',None,Y(67.5))
 BA(f'<text class="th" x="{X(37)}" y="{Y(58.6)}" text-anchor="middle" style="fill:{P};font-size:12px;paint-order:stroke;stroke:#fff;stroke-width:3px">Wall cabinet, 74 long x 14 deep x 15 tall (61 to 76 in up)</text>')
 BA(f'<text class="th" x="{X(121.5)}" y="{Y(58.6)}" text-anchor="middle" style="fill:{P};font-size:12px;paint-order:stroke;stroke:#fff;stroke-width:3px">Wall cabinet, 65 long x 14 deep x 15 tall (61 to 76 in up)</text>')
 BG('pockets','Closet door pockets')
@@ -178,15 +178,15 @@ item(0,74,14,20,P,'Seat cushion, top at 20 in (deck at 13 1/4, leaf folded on it
 item(0,74,20,40,P,'Back cushion, upright (20 tall)',None,Y(30))
 BA(f'<line x1="{X(0)}" y1="{Y(14)}" x2="{X(74)}" y2="{Y(14)}" stroke="{P}" stroke-opacity="0.9" stroke-width="1.6"/>')
 BG('closet','Closet')
-item(74,89,0,74.75,G,'Closet','15 in',Y(47))
+item(74,89,0,74.875,G,'Closet','15 in',Y(47))
 BG('ceil','Ceiling covering')
-BA(box(0,154,75.75,76,'fill="#D9C7A5" stroke="#8A6B4D" stroke-width="0.8"'))
-BA(box(0,154,74.75,75.75,'fill="#9A6B3A" fill-opacity="0.85" stroke="#5A3A00" stroke-width="0.8"'))
+BA(box(0,154,75.875,76,'fill="#D9C7A5" stroke="#8A6B4D" stroke-width="0.8"'))
+BA(box(0,154,74.875,75.875,'fill="#9A6B3A" fill-opacity="0.85" stroke="#5A3A00" stroke-width="0.8"'))
 for _x0,_x1,_nm in ((0.25,14.25,'shower fan'),(36.375,50.625,'A/C')):
-    BA(box(_x0,_x1,74.75,76,'fill="#2C2C2A" fill-opacity="0.85"'))
+    BA(box(_x0,_x1,74.875,76,'fill="#2C2C2A" fill-opacity="0.85"'))
     BA(f'<text class="ts" x="{X((_x0+_x1)/2)}" y="{Y(77.4)}" text-anchor="middle" style="font-size:10px;fill:#2C2C2A;paint-order:stroke;stroke:#fff;stroke-width:3px">{_nm}</text>')
 for _lx in (20.67,74,127.33): BA(f'<circle cx="{X(_lx)}" cy="{Y(74.4)}" r="3" fill="#FFD84A" stroke="#B8860B" stroke-width="0.8"/>')
-BA(f'<text class="ts" x="{X(152)}" y="{Y(77.4)}" text-anchor="end" style="font-size:10px;fill:#5A3A00;paint-order:stroke;stroke:#fff;stroke-width:3px">ceiling covering: 1/4 plywood + 1 in slats, finished ceiling at 74 3/4</text>')
+BA(f'<text class="ts" x="{X(152)}" y="{Y(77.4)}" text-anchor="end" style="font-size:10px;fill:#5A3A00;paint-order:stroke;stroke:#fff;stroke-width:3px">ceiling covering: 1/8 plywood + 1 in cedar slats, finished ceiling at 74 7/8</text>')
 BG('cdoors','Closet doors')
 # two doors on the closet, stacked, split at 38 so each opens one rod
 for _z0,_z1,_n in ((0.25,37.9,'lower door'),(38.1,75.75,'upper door')):
@@ -956,7 +956,7 @@ def passenger_items(tank=False):
     a(f'<text class="ts" x="{xx(59):.1f}" y="{yy(3.2):.1f}" text-anchor="middle" style="font-size:10px">wheel well (same as the driver side)</text>')
     grp('ceil','Ceiling covering')
     a(f'<rect x="{xx(0):.1f}" y="{yy(76):.1f}" width="{S*154:.1f}" height="{S*0.25:.1f}" fill="#D9C7A5" stroke="#8A6B4D" stroke-width="0.8"/>')
-    a(f'<rect x="{xx(0):.1f}" y="{yy(75.75):.1f}" width="{S*154:.1f}" height="{S*1:.1f}" fill="#9A6B3A" fill-opacity="0.85" stroke="#5A3A00" stroke-width="0.8"/>')
+    a(f'<rect x="{xx(0):.1f}" y="{yy(75.875):.1f}" width="{S*154:.1f}" height="{S*1:.1f}" fill="#9A6B3A" fill-opacity="0.85" stroke="#5A3A00" stroke-width="0.8"/>')
     for _x0,_x1,_nm in ((0.25,14.25,'shower fan'),(36.375,50.625,'A/C')):
         a(f'<rect x="{xx(_x0):.1f}" y="{yy(76):.1f}" width="{S*(_x1-_x0):.1f}" height="{S*1.25:.1f}" fill="#2C2C2A" fill-opacity="0.85"/>')
         a(f'<text class="ts" x="{xx((_x0+_x1)/2):.1f}" y="{yy(77.4):.1f}" text-anchor="middle" style="font-size:10px;fill:#2C2C2A;paint-order:stroke;stroke:#fff;stroke-width:3px">{_nm}</text>')
@@ -964,12 +964,12 @@ def passenger_items(tank=False):
     grp('bath','Wet bath (shower pan)')
     if tank:
         TK='#6D6A62'
-        box(0,36,9.5,74.75,T,'Wet bath','shower floor at 9.5 up, 65 1/4 in headroom',yy(68),0.08)
+        box(0,36,9.5,74.875,T,'Wet bath','shower floor at 9.5 up, 65 3/8 in headroom',yy(68),0.08)
         box(0,30,0,9.5,TK,'Grey water tank','30 x 15 x 9.5 in, about 15 gal',yy(6.2),0.3)
         a(f'<line x1="{xx(0):.1f}" y1="{yy(9.5):.1f}" x2="{xx(36):.1f}" y2="{yy(9.5):.1f}" stroke="{T}" stroke-width="4"/>')
         a(f'<line x1="{xx(29):.1f}" y1="{yy(9.5):.1f}" x2="{xx(29):.1f}" y2="{yy(6.5):.1f}" stroke="#A32D2D" stroke-width="2" marker-end="url(#arq)"/><text class="ts" x="{xx(29):.1f}" y="{yy(11.6):.1f}" text-anchor="middle" style="font-size:10px;fill:#A32D2D;paint-order:stroke;stroke:#fff;stroke-width:3px">drain</text>')
     else:
-        box(0,36,0,74.75,T,'Wet bath','36 x 24 in, shower curtain',yy(68),0.08)
+        box(0,36,0,74.875,T,'Wet bath','36 x 24 in, shower curtain',yy(68),0.08)
     grp('snook','Shower nook')
     box(6,29.75,31,56.5,'#7A4A1E','Shower nook','23.75 x 25.5, 4.5 deep',yy(44),0.2,'stroke-dasharray="5 3"')
     grp('cabs','Cabinets and countertop')

@@ -221,7 +221,7 @@ function drawCeiling(L, V) {
   const P = L.P, S = 5, X0 = 70, Y0 = 90, CL = P.ceilLen, CW = P.ceilW, o = [];
   const xx = x => X0 + S * x, yy = y => Y0 + S * y, hits = [];
   o.push(T(X0, 22, 'The ceiling covering seen from above through the roof: rear doors on the left, cab wall on the right, driver side at the top.', { anchor: 'start', size: 14, fill: '#5F5E5A', halo: false }));
-  o.push(T(X0, 40, P.liningOn ? `${fmt(P.plyT)} in plywood against the roof, then ${L.nSlats - L.slatOut.size} slats (${fmt(P.slatW)} wide x ${fmt(P.slatT)} thick x ${fmt(L.slatLen)} long) with ${fmt(P.slatGap)} in gaps and the lights mounted on the slats. Finished ceiling at ${fmt(L.ceilF)} in.` : 'The covering is turned off (Ceiling sizes on the right).', { anchor: 'start', size: 12, fill: '#5F5E5A', halo: false }));
+  o.push(T(X0, 40, P.liningOn ? `${fmt(P.plyT)} in plywood against the roof, then ${L.nSlats - L.slatOut.size} cedar slats (${fmt(P.slatW)} wide x ${fmt(P.slatT)} thick x ${fmt(L.slatLen)} long) with ${fmt(P.slatGap)} in gaps and the lights mounted on the slats. Finished ceiling at ${fmt(L.ceilF)} in.` : 'The covering is turned off (Ceiling sizes on the right).', { anchor: 'start', size: 12, fill: '#5F5E5A', halo: false }));
   // plywood sheets (4 x 8 ft, long way along the van): pieces
   const cx = [0], cy = [0]; for (let x = 96; x < CL; x += 96) cx.push(x); cx.push(CL); for (let y = 48; y < CW; y += 48) cy.push(y); cy.push(CW);
   if (P.liningOn) {
