@@ -16,6 +16,9 @@ User: 'add the storage under the countertop', drawers, 'the same top drawers'. R
 ## Zoomable diagrams (latest)
 User: 'Make the diagrams zoomable'. Every diagram in sides.html and the drawing in interactive.html now has + / minus / Reset buttons in its top right corner, Ctrl (Cmd on a Mac) + scroll, and pinch on a touch screen; once zoomed, drag to move (a drag does not count as a click, so it does not hide or open parts). Plain scrolling still scrolls the page. Up to 8x. The interactive page resets the zoom when you change views. Source: tools/zoom.js (shared; joined into interactive.html by build.sh and injected into sides.html by tools/zoom.py).
 
+## Heater weight on the page, gallons (latest)
+User: 'add the heater weight to the page and use gals'. The hot water tank size on the page is back in gallons (3.96, which is the 15 liters; shown as 4.0 gal), and the 2 lb heater weight is its own size ('Heater weight: the hot water tank empty', 2 lb) used in 'Does it fit?': the hot tank line says it holds 4.0 gal (33 lb of water), the heater itself weighs 2 lb, so 35 lb full, and the fresh tank line gives 262 lb of water on the passenger side (264 lb with the heater). The plan table and diagram E text say about 4 gal and 2 lb. No change in positions or sizes.
+
 ## Hot water tank holds 15 liters (latest)
 User: 'it hold 15 liters'. So the hot water tank holds 15 L, about 4 gal (3.96), 33 lb of water, not 5 gal (42 lb); with its own 2 lb it is about 35 lb full. The size on the page is now in liters (15; 'hot water tank: how much water it holds'), shown with the gallons. Water on the passenger side: about 262 lb (264 lb with the hot tank itself). Heating the 15 L from cold by 80 F: about 0.77 kWh, 72 Ah (26 percent of the 280 Ah battery) and about 32 minutes at 1,440 W; about one short shower of hot water before mixing with cold. Updated in the interactive page, the plan table and diagram E's text. No change to the tank's outside size or position.
 
