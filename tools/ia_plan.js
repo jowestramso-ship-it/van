@@ -171,6 +171,14 @@ function drawPlan(L, V) {
   o.push(T(xx((L.tankX[0] + L.tankX[1]) / 2), yp(P.tankBack + 6.5), `Fresh water tank ${fmt(L.tankLen)} x ${fmt(P.tankD)}`, { size: 9.5, fill: COL.BL, w: 500 }));
   o.push(T(xx((L.tankX[0] + L.tankX[1]) / 2), yp(P.tankBack + 3.5), 'on the floor, out of the open sink cabinet', { size: 9, fill: COL.BL }));
   o.push(T(xx(53), yp(1.8), 'wheel well 7 out', { size: 9, fill: '#3E230B' }));
+  // paper towel roll on the angled front
+  const nrm = [L.slope, -1], nl = Math.hypot(nrm[0], nrm[1]), nu = [nrm[0] / nl, nrm[1] / nl];
+  const FP = (x, off) => [x + off * nu[0], (Wd - P.cabD) + L.slope * (x - L.angS) + off * nu[1]];
+  const t0 = L.sinkS - 11.5, t1 = L.sinkS - .5;
+  o.push(Poly([FP(t0, -.5), FP(t1, -.5), FP(t1, -6), FP(t0, -6)].map(p => [xx(p[0]), yy(p[1])]), { fill: '#B07A2A', fo: .35, stroke: '#8A5A00', sw: 1.2 }));
+  const b0 = FP(t0, 2.5), b1 = FP(t1, 2.5);
+  o.push(Ln(xx(b0[0]), yy(b0[1]), xx(b1[0]), yy(b1[1]), { stroke: COL.G, sw: 2.5, dash: '2 2' }));
+  o.push(T(xx(L.sinkS + 3), yy(Wd - P.cabD) - 1, 'paper towels (recessed, high)', { size: 8.5, fill: '#8A5A00' }) + T(xx(L.sinkS + 3), yy(Wd - P.cabD) + 9, 'towel bars stick out 2 1/2 in', { size: 8.5, fill: COL.G }));
   // sliding door opening in the passenger wall
   const dxe = Math.min(P.doorX + P.slideW, P.cab);
   o.push(Ln(xx(P.doorX), yy(Wd), xx(dxe), yy(Wd), { stroke: '#BA7517', sw: 5, dash: '10 5' }));
