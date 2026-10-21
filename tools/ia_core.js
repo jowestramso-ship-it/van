@@ -12,6 +12,7 @@ const PD = [
   { k: 'nookOn', g: 'Take items out', l: 'Jar shelf and the quart jars in the nook (the nook recess itself stays)', d: true, t: 'c' },
   { k: 'drawersOn', g: 'Take items out', l: 'Drawers and shelves under the counter (all of them, with the rail)', d: true, t: 'c' },
   { k: 'battOn', g: 'Take items out', l: 'Battery under the couch', d: true, t: 'c' },
+  { k: 'closetOn', g: 'Take items out', l: 'Closet and its doors (the space it leaves stays empty; the dinette still starts where the closet ends)', d: true, t: 'c' },
   { k: 'bedLen', g: 'Bed / couch', l: 'Length', d: 74, s: .5, a: 40, b: 120 },
   { k: 'bedD', g: 'Bed / couch', l: 'Depth, closed (the couch on its base)', d: 26, s: .5, a: 15, b: 40 },
   { k: 'bedBack', g: 'Bed / couch', l: 'Leaf width (flips out in front; = back cushion length)', d: 20, s: .5, a: 0, b: 40 },
@@ -215,7 +216,7 @@ const HITR = (x, y, w, h) => `<rect x="${f1(x)}" y="${f1(y)}" width="${f1(Math.m
 const GB = (id, label) => `<g class="hg" data-grp="${id}" data-label="${label}">`;
 const GE = () => '</g>';
 // items that were taken out (their tick box in Sizes is off): cut their groups and drag handles out of a finished drawing
-const REMOVED = () => [['microOn', 'Micro'], ['tvOn', 'tv'], ['towelOn', 'towels'], ['fridgeOn', 'fridge'], ['drawersOn', 'drawers'], ['battOn', 'batt']].filter(r => !P[r[0]]).map(r => r[1]);
+const REMOVED = () => [['microOn', 'Micro'], ['tvOn', 'tv'], ['towelOn', 'towels'], ['fridgeOn', 'fridge'], ['drawersOn', 'drawers'], ['battOn', 'batt'], ['closetOn', 'closet']].filter(r => !P[r[0]]).map(r => r[1]);
 function stripGroups(html, ids) {
   ids.forEach(id => {
     const open = `<g class="hg" data-grp="${id}"`;
@@ -315,7 +316,7 @@ function collisions(L) {
     bx('', 'the divider between the two columns', dm, dm + .5, 0, 20, L.cabTot >= 3 ? L.wellShelf + .75 : ch - 7.25, ch - 2.5, { vs: ['drawer'] }),
     // under the couch: the driver wheel well, the battery, the underside of the deck, the closet and the rear doors; the lawn chairs have to stay between them (y is out from the passenger wall: the driver side is at y = vanW)
     bx('', 'the driver side wheel well', 42, 76, P.vanW - 7, P.vanW, 0, 7.5, { prof: wellH, vs: ['chair'] }), P.battOn && bx('', 'the battery', L.batt[0], L.batt[1], P.vanW - 17, P.vanW - 7, 0, 9.5, { vs: ['chair'] }),
-    bx('', 'the underside of the couch deck', 0, P.bedLen, P.vanW - P.bedD, P.vanW + 5, P.platform - 1.5, P.platform + 40, { vs: ['chair'] }), bx('', 'the closet', L.c0, L.c1, P.vanW - P.closetD, P.vanW + 5, 0, 80, { vs: ['chair'] }),
+    bx('', 'the underside of the couch deck', 0, P.bedLen, P.vanW - P.bedD, P.vanW + 5, P.platform - 1.5, P.platform + 40, { vs: ['chair'] }), P.closetOn && bx('', 'the closet', L.c0, L.c1, P.vanW - P.closetD, P.vanW + 5, 0, 80, { vs: ['chair'] }),
     bx('', 'the rear doors', -30, -6, -5, P.vanW + 5, 0, 90, { vs: ['chair'] }), bx('', 'the driver side wall', -30, P.cab, P.vanW, P.vanW + 5, 0, 90, { vs: ['chair'] }), bx('', 'the floor', -30, P.cab + 10, -5, P.vanW + 5, -40, 0, { vs: ['chair'] }),
     // the trash can has the divider (down to the floor for it) beside it and the cabinet door in front of it
     P.canOn && bx('', 'the divider between the two columns', dm, dm + .5, 0, 20, 0, ch - 2.5, { vs: ['can', 'tank', 'hotboard'] }), bx('', 'the cabinet door', L.cabS, L.angS - .75, P.cabD - .75, P.cabD, 0, ch - 2.5, { vs: ['can'] })

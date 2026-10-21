@@ -4,14 +4,14 @@ function obstacles(L, V) {
   const P = L.P, D = [], Q = [], rad = Math.PI / 180;
   const sb = V.bed || 0;
   D.push({ x0: 0, x1: L.c0, d: P.bedD + P.bedBack * bedState(sb).ext, n: sb > .02 ? 'the bed (made up)' : 'the bed' });
-  D.push({ x0: L.c0, x1: L.c1, d: P.closetD, n: 'the closet' });
+  if (P.closetOn) D.push({ x0: L.c0, x1: L.c1, d: P.closetD, n: 'the closet' });
   if (L.chairs && L.chairs.d1 > P.bedD) D.push({ x0: L.chairs.x0, x1: L.chairs.x1, d: L.chairs.d1, n: 'the lawn chairs' });
   D.push({ x0: L.bA[0], x1: L.bA[1], d: P.benchD, n: 'the bench' });
   if (L.tableLen > 0) D.push({ x0: L.tbl[0], x1: L.tbl[1], d: P.tableD, n: 'the dinette table' });
   D.push({ x0: L.bB[0], x1: L.bB[1], d: P.benchD, n: 'the bench' });
   const hx = P.hinge === 'rear' ? L.c0 + 0.125 : L.c1 - 0.125, wC = P.closetW - 0.25, sg = P.hinge === 'rear' ? 1 : -1;
   ['clo_lo', 'clo_hi'].forEach(id => {
-    const s = V[id] || 0; if (s < .02) return;
+    const s = V[id] || 0; if (s < .02 || !P.closetOn) return;
     const th = s * P.openAng * rad;
     for (let k = 0; k <= 24; k++) { const r = wC * k / 24; D.push({ x0: hx + sg * r * Math.cos(th) - .4, x1: hx + sg * r * Math.cos(th) + .4, d: P.closetD + r * Math.sin(th), n: 'the closet door', door: true, px: hx + sg * r * Math.cos(th) }); }
   });
