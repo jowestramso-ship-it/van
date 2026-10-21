@@ -79,6 +79,15 @@ const PD = [
   { k: 'jugH', g: 'Water tanks', l: 'Drain jug height (a 5 gallon water bottle is about 19 1/2 tall, with its neck)', d: 19.5, s: .25, a: 6, b: 30 },
   { k: 'jugD', g: 'Water tanks', l: 'Drain jug diameter (a 5 gallon water bottle is about 10 3/4 across)', d: 10.75, s: .25, a: 4, b: 18 },
   { k: 'jugGal', g: 'Water tanks', l: 'Drain jug: how much it holds (gallons; a 5 gallon water bottle holds 5)', d: 5, s: .5, a: 1, b: 15 },
+  { k: 'hookOn', g: 'Dish towel hook', l: 'Dish towel hook on the wall to the cab side of the nook, under the TV (the strip between the end of the nook and the sliding door opening)', d: true, t: 'c' },
+  { k: 'hookTowel', g: 'Dish towel hook', l: 'Dish towel hook: how far the towel hangs below the hook (a dish towel folded over a hook hangs about 11 in)', d: 11, s: .5, a: 4, b: 30 },
+  { k: 'hookOut', g: 'Dish towel hook', l: 'Dish towel hook: how far it sticks out from the wall', d: 2, s: .25, a: .5, b: 6 },
+  { k: 'chairOn', g: 'Lawn chairs', l: 'Lawn chairs folded and stored flat on the floor under the couch (they slide in from the rear doors)', d: true, t: 'c' },
+  { k: 'chairN', g: 'Lawn chairs', l: 'Lawn chairs: how many (stacked flat)', d: 2, s: 1, a: 1, b: 6 },
+  { k: 'chairLen', g: 'Lawn chairs', l: 'Lawn chair folded: length (a standard aluminum webbed chair folds to about 34.5 x 21.7 x 2.8; a camp quad chair in its bag is about 39 x 8 x 7)', d: 34.5, s: .25, a: 12, b: 60 },
+  { k: 'chairWid', g: 'Lawn chairs', l: 'Lawn chair folded: width', d: 21.7, s: .25, a: 4, b: 40 },
+  { k: 'chairThk', g: 'Lawn chairs', l: 'Lawn chair folded: thickness of each one', d: 2.8, s: .1, a: 1, b: 12 },
+  { k: 'chairTurn', g: 'Lawn chairs', l: 'Lawn chairs: turn them so the long side runs across the van instead of along it', d: false, t: 'c' },
   { k: 'canOn', g: 'Trash can', l: 'Trash can on a pull-out in the cab-side column under the counter (replaces the two lower cab-side drawers and their shelves; turn it off to bring them back)', d: true, t: 'c' },
   { k: 'canGal', g: 'Trash can', l: 'Trash can: size in gallons (a tall kitchen can is 13)', d: 13, s: 1, a: 4, b: 30 },
   { k: 'canW', g: 'Trash can', l: 'Trash can: width along the wall (the column is 13 wide between the drawer slides)', d: 12, s: .25, a: 6, b: 20 },
@@ -143,10 +152,11 @@ const PD = [
 // the drawers and shelves under the counter, the jar shelf and the microwave shelf: how far each is moved from its planned spot (you can drag them; double-click one to put it back)
 [['TB', 'Top drawer, back side', 1], ['TC', 'Top drawer, cab side', 1], ['C1', 'Cab-side column: upper (or only) drawer', 1], ['C2', 'Cab-side column: lower drawer', 1], ['B1', 'Back-side column: upper (or only) drawer', 1], ['B2', 'Back-side column: middle drawer', 1], ['B3', 'Back-side column: bottom drawer', 1],
   ['SC', 'Shelf under the cab-side drawers', 0], ['SB', 'Shelf under the back-side drawers', 0], ['SC2', 'Board between the two cab-side lower drawers', 0], ['SB1', 'Board between the upper and middle back-side drawers', 0], ['SB2', 'Board between the middle and bottom back-side drawers', 0],
-  ['Nook', 'Jar shelf in the nook (with its upper row of jars)', 0], ['Micro', 'Microwave and its shelf', 0], ['Jug', 'Drain jug (the 5 gallon bottle under the sink)', 0], ['Can', 'Trash can on its pull-out', 0]].forEach(([k, nm, along]) => {
+  ['Nook', 'Jar shelf in the nook (with its upper row of jars)', 0], ['Micro', 'Microwave and its shelf', 0], ['Jug', 'Drain jug (the 5 gallon bottle under the sink)', 0], ['Can', 'Trash can on its pull-out', 0], ['Hook', 'Dish towel hook', 0], ['Chairs', 'Lawn chairs under the couch', 0]].forEach(([k, nm, along]) => {
   PD.push({ k: 'dx' + k, g: 'Drawers and shelves', l: nm + ': moved along the wall (+ toward the cab, - toward the rear)', d: 0, s: .25, a: -60, b: 60 });
   PD.push({ k: 'dz' + k, g: 'Drawers and shelves', l: nm + ': moved up (+) or down (-)', d: 0, s: .25, a: -40, b: 40 });
 });
+PD.push({ k: 'dyChairs', g: 'Drawers and shelves', l: 'Lawn chairs under the couch: moved out from the driver wall (+) or toward it (-)', d: 0, s: .25, a: -30, b: 30 });
 PD.push({ k: 'dyCan', g: 'Drawers and shelves', l: 'Trash can on its pull-out: moved out from the wall (+) or toward it (-)', d: 0, s: .25, a: -12, b: 12 });
 PD.push({ k: 'dyJug', g: 'Drawers and shelves', l: 'Drain jug (the 5 gallon bottle under the sink): moved out from the wall (+) or toward it (-)', d: 0, s: .25, a: -12, b: 12 });
 const DEF = {}; PD.forEach(p => DEF[p.k] = p.d);
@@ -255,6 +265,8 @@ function collisions(L) {
   mov.push(bx('Micro', 'the microwave and its shelf', L.microX[0], L.microX[1], 0, P.microIn + 12, L.microZ[0] - .75, L.microZ[1], { kind: 'micro' }));
   // the drain jug (a bottle) is checked by its square outline; it stands on the fresh water tank
   // the trash can with its tray and slides (a 3/4 in tray and 1/2 in slide under the can), closed in its place under the counter
+  if (L.hook) mov.push(bx('Hook', 'the dish towel hook with its towel', L.hook.x0, L.hook.x1, L.hook.y0, L.hook.y1, L.hook.z0, L.hook.z1, { kind: 'hook' }));
+  if (L.chairs) mov.push(bx('Chairs', 'the stack of lawn chairs', L.chairs.x0, L.chairs.x1, L.chairs.y0, L.chairs.y1, L.chairs.z0, L.chairs.z1, { kind: 'chair' }));
   if (L.can) mov.push(bx('Can', 'the trash can and its pull-out', L.can.x0, L.can.x1, L.can.y0, L.can.y1, L.can.z0 - 1.25, L.can.z1, { kind: 'can' }));
   if (L.jug) mov.push(bx('Jug', 'the drain jug', L.jug.x0, L.jug.x1, L.jug.y0, L.jug.y1, L.jug.z0, L.jug.z1, { kind: 'jug' }));
   // the wheel well is a trapezoid: 2 in high at 42, 7.5 from 51.25 to 66.75, 2 in high at 76
@@ -273,6 +285,10 @@ function collisions(L) {
     bx('', 'the sink cabinet door', L.sinkS, L.sinkE, P.sinkD - .75, P.sinkD, 0, ch, { vs: ['jug'] }), bx('', 'the van wall', L.sinkS - 20, L.sinkE + 20, -5, 0, 0, ch, { vs: ['jug'] }),
     // the divider between the two drawer columns (only drawers count: the shelves meet it by design)
     bx('', 'the divider between the two columns', dm, dm + .5, 0, 20, L.cabTot >= 3 ? L.wellShelf + .75 : ch - 7.25, ch - 2.5, { vs: ['drawer'] }),
+    // under the couch: the driver wheel well, the battery, the underside of the deck, the closet and the rear doors; the lawn chairs have to stay between them (y is out from the passenger wall: the driver side is at y = vanW)
+    bx('', 'the driver side wheel well', 42, 76, P.vanW - 7, P.vanW, 0, 7.5, { prof: wellH, vs: ['chair'] }), bx('', 'the battery', L.batt[0], L.batt[1], P.vanW - 17, P.vanW - 7, 0, 9.5, { vs: ['chair'] }),
+    bx('', 'the underside of the couch deck', 0, P.bedLen, P.vanW - P.bedD, P.vanW + 5, P.platform - 1.5, P.platform + 40, { vs: ['chair'] }), bx('', 'the closet', L.c0, L.c1, P.vanW - P.closetD, P.vanW + 5, 0, 80, { vs: ['chair'] }),
+    bx('', 'the rear doors', -30, -6, -5, P.vanW + 5, 0, 90, { vs: ['chair'] }), bx('', 'the driver side wall', -30, P.cab, P.vanW, P.vanW + 5, 0, 90, { vs: ['chair'] }), bx('', 'the floor', -30, P.cab + 10, -5, P.vanW + 5, -40, 0, { vs: ['chair'] }),
     // the trash can has the divider (down to the floor for it) beside it and the cabinet door in front of it
     bx('', 'the divider between the two columns', dm, dm + .5, 0, 20, 0, ch - 2.5, { vs: ['can'] }), bx('', 'the cabinet door', L.cabS, L.angS - .75, P.cabD - .75, P.cabD, 0, ch - 2.5, { vs: ['can'] })
   ];
@@ -293,6 +309,11 @@ function collisions(L) {
   L.parts.forEach(p => outOf(p.id, p.n, p.x0, p.x1, p.kind === 'drawer' ? L.cabS + .75 : L.cabS, L.angS - .75, 'the flat part of the cabinet'));
   outOf('Nook', 'the jar shelf in the nook', L.nookX[0], L.nookX[1], nx0, nx1, 'the nook');
   outOf('Micro', 'the microwave and its shelf', L.microX[0], L.microX[1], L.fr[0], L.fr[1], 'the top of the fridge');
+  if (L.hook) outOf('Hook', 'the dish towel hook with its towel', L.hook.x0, L.hook.x1, 0, P.doorX, 'the wall before the sliding door opening');
+  if (L.chairs) {
+    const c = L.chairs, over = c.d1 - P.bedD;
+    if (over > .06 && c.x1 > 0 && c.x0 < P.bedLen) { ids.add('Chairs'); list.push({ ids: ['Chairs'], msg: `The stack of lawn chairs sticks out ${fmt(over)} in past the front of the couch deck (${fmt(P.bedD)} in out from the driver wall) into the aisle.` }); }
+  }
   if (L.can) outOf('Can', 'the trash can and its pull-out', L.can.x0, L.can.x1, L.cabS, L.angS - .75, 'the flat part of the cabinet');
   if (L.jug) {
     // under the sink, and standing on the top of the fresh water tank (its footprint is the tank's: along the wall and out from it)
@@ -400,6 +421,18 @@ function layout(P0) {
   L.nookZ = P.counterH + 7.5 + P.dzNook; L.nookX = [58 + P.dxNook, 93.25 + P.dxNook];
   L.microX = [L.fr[0] + P.dxMicro, L.fr[1] + P.dxMicro];
   L.microZ = [8.25 + P.fridgeH + 2.75 + P.dzMicro, 8.25 + P.fridgeH + 12.75 + P.dzMicro];   // the microwave bottom and top; its shelf is the 3/4 in under it, 2 in over the fridge top
+  // the dish towel hook on the wall strip between the end of the nook (93 1/4) and the sliding door opening, under the TV; the folded towel (8 in wide) hangs from it
+  L.hook = null;
+  if (P.hookOn) {
+    const hx = 98.5 + P.dxHook, hz = 50 + P.dzHook;
+    L.hook = { x: hx, z: hz, x0: hx - 4, x1: hx + 4, y0: 0, y1: P.hookOut, z0: hz - P.hookTowel, z1: hz + 1 };
+  }
+  // the lawn chairs: folded and stacked flat on the floor under the couch, against the driver wall at the rear end of the deck, plus how far they were dragged (d = out from the driver wall, y = out from the passenger wall)
+  L.chairs = null;
+  if (P.chairOn) {
+    const n = Math.max(1, Math.round(P.chairN)), lx = P.chairTurn ? P.chairWid : P.chairLen, ld = P.chairTurn ? P.chairLen : P.chairWid, cx0 = P.dxChairs, cd0 = P.dyChairs, cz0 = P.dzChairs;
+    L.chairs = { n, x0: cx0, x1: cx0 + lx, d0: cd0, d1: cd0 + ld, y0: P.vanW - cd0 - ld, y1: P.vanW - cd0, z0: cz0, z1: cz0 + n * P.chairThk };
+  }
   // the trash can on its pull-out in the cab-side column (centered between the drawer slides, 1 1/2 in off the wall), plus how far it was dragged; z0 is the bottom of the can (the tray and slides are under it)
   L.can = null;
   if (P.canOn) {

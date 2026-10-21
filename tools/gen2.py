@@ -976,7 +976,7 @@ def passenger_items(tank=False):
     box(58,103,0,38,C,'',None,yy(31),0.08)
     box(103,123,0,38,C,'Sink cabinet','20 wide, 17 deep',yy(35.3),0.08)   # label up under the countertop, over the sink, so the drain jug below does not cover it
     a(f'<rect x="{xx(58):.1f}" y="{yy(38):.1f}" width="{S*65:.1f}" height="{S*1.2:.1f}" fill="#5F5E5A" fill-opacity="0.75"/>')
-    a(f'<text class="ts" x="{xx(100):.1f}" y="{yy(38)-4:.1f}" text-anchor="middle" style="font-size:10.5px">countertop at 38 in</text>')
+    a(f'<text class="ts" x="{xx(113):.1f}" y="{yy(38)-4:.1f}" text-anchor="middle" style="font-size:10.5px">countertop at 38 in</text>')
     # tall fridge on a platform over the wheel well, next to the shower
     grp('fridge','Fridge')
     a(f'<rect x="{xx(36):.1f}" y="{yy(8.25):.1f}" width="{S*22:.1f}" height="{S*0.75:.1f}" fill="#8A6B4D" stroke="#3E230B" stroke-width="1"/>')
@@ -996,10 +996,17 @@ def passenger_items(tank=False):
         _cy=_base+3.5
         a(f'<line x1="{xx(58.4):.1f}" y1="{yy(_cy):.1f}" x2="{xx(92.85):.1f}" y2="{yy(_cy):.1f}" stroke="#7A4A1E" stroke-width="1.6" stroke-dasharray="3 2"/>')
     a(f'<text class="th" x="{xx(67):.1f}" y="{yy(54.7):.1f}" text-anchor="middle" style="fill:#7A4A1E;font-size:11px;paint-order:stroke;stroke:#fff;stroke-width:3px">Nook: quart jars</text>')
-    a(f'<text class="ts" x="{xx(98.8):.1f}" y="{yy(46):.1f}" text-anchor="middle" style="fill:#5A3510;font-size:10px;paint-order:stroke;stroke:#fff;stroke-width:3px">shelf 45.5 up</text>')
-    a(f'<text class="ts" x="{xx(98.8):.1f}" y="{yy(46)+12:.1f}" text-anchor="middle" style="fill:#5A3510;font-size:10px;paint-order:stroke;stroke:#fff;stroke-width:3px">9 jars a tier</text>')
+    a(f'<text class="ts" x="{xx(110):.1f}" y="{yy(46):.1f}" text-anchor="middle" style="fill:#5A3510;font-size:10px;paint-order:stroke;stroke:#fff;stroke-width:3px">shelf 45.5 up</text>')
+    a(f'<text class="ts" x="{xx(110):.1f}" y="{yy(46)+12:.1f}" text-anchor="middle" style="fill:#5A3510;font-size:10px;paint-order:stroke;stroke:#fff;stroke-width:3px">9 jars a tier</text>')
     grp('tv','TV')
     box(76.5,103.5,54,69.4,G,'TV 30 in','27 x 15.4, over the cabinet',yy(63),0.25)
+    # dish towel hook on the wall strip between the end of the nook (93 1/4) and the sliding door opening (104), under the TV (which starts at 54); the towel (8 wide) hangs 11 in
+    grp('hook','Dish towel hook')
+    a(f'<rect x="{xx(94.5):.1f}" y="{yy(49.5):.1f}" width="{S*8:.1f}" height="{S*10.5:.1f}" rx="2" fill="#F3E3B3" fill-opacity="0.95" stroke="#8A5A00" stroke-width="1.3"/>')
+    a(f'<line x1="{xx(94.5):.1f}" y1="{yy(40.6):.1f}" x2="{xx(102.5):.1f}" y2="{yy(40.6):.1f}" stroke="#C0392B" stroke-width="1.4"/>')
+    a(f'<circle cx="{xx(98.5):.1f}" cy="{yy(50):.1f}" r="3.4" fill="#444441" stroke="#2C2C2A" stroke-width="1"/>')
+    a(f'<text class="ts" x="{xx(98.5):.1f}" y="{yy(49.5)+16:.1f}" text-anchor="middle" style="font-size:9px;fill:#8A5A00">dish towel</text>')
+    a(f'<text class="ts" x="{xx(98.5):.1f}" y="{yy(49.5)+27:.1f}" text-anchor="middle" style="font-size:9px;fill:#8A5A00">hook 50 up</text>')
     grp('fresh','Fresh water tank')
     box(87.25,122.25,0,10,'#185FA5','Fresh water tank','35 x 16 x 10, on the floor',yy(6.6),0.14,'stroke-dasharray="5 3"')
     grp('angle','Counter angle marker')

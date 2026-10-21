@@ -5,6 +5,7 @@ function obstacles(L, V) {
   const sb = V.bed || 0;
   D.push({ x0: 0, x1: L.c0, d: P.bedD + P.bedBack * bedState(sb).ext, n: sb > .02 ? 'the bed (made up)' : 'the bed' });
   D.push({ x0: L.c0, x1: L.c1, d: P.closetD, n: 'the closet' });
+  if (L.chairs && L.chairs.d1 > P.bedD) D.push({ x0: L.chairs.x0, x1: L.chairs.x1, d: L.chairs.d1, n: 'the lawn chairs' });
   D.push({ x0: L.bA[0], x1: L.bA[1], d: P.benchD, n: 'the bench' });
   if (L.tableLen > 0) D.push({ x0: L.tbl[0], x1: L.tbl[1], d: P.tableD, n: 'the dinette table' });
   D.push({ x0: L.bB[0], x1: L.bB[1], d: P.benchD, n: 'the bench' });
@@ -118,6 +119,15 @@ function drawPlan(L, V) {
   o.push(it(L.batt[0], L.batt[1], 7, 17, COL.B, 'Battery', '21 x 10 x 9.5', { fo: .5, fs: 10 }));
   o.push(Ln(xx(50), yy(0), xx(50), yy(17), { stroke: '#A32D2D', sw: 1.5, mk: 1 }) + T(xx(48.6), yy(10), '17', { anchor: 'end', size: 10, fill: '#A32D2D', w: 700, halo: false }));
   o.push(GE());
+  if (L.chairs) {
+    // the lawn chairs stacked flat on the floor under the couch (the outline shows the footprint)
+    const c = L.chairs, cc = L.coll.ids.has('Chairs') ? '#A32D2D' : '#2F5E3F';
+    o.push(GB('Chairs', 'Lawn chairs under the couch'));
+    o.push(R(xx(c.x0), yy(c.d0), S * (c.x1 - c.x0), S * (c.d1 - c.d0), { rx: 2, fill: '#7FB08F', fo: .3, stroke: cc, sw: 1.6, dash: '5 3' }));
+    o.push(T(xx(c.x0) + 5, yy(c.d0) + 13, `${c.n} lawn chair${c.n === 1 ? '' : 's'} flat under the couch`, { anchor: 'start', size: 9, fill: cc, w: 500 }));
+    o.push(T(xx(c.x0) + 5, yy(c.d0) + 24, `${fmt(c.x1 - c.x0)} x ${fmt(c.d1 - c.d0)} x ${fmt(c.z1 - c.z0)} tall`, { anchor: 'start', size: 8.5, fill: cc }));
+    o.push(GE());
+  }
   // closet doors in plan: a line swinging out from the hinge, with the dashed sweep
   const hx = P.hinge === 'rear' ? L.c0 + 0.125 : L.c1 - 0.125, wC = P.closetW - 0.25, sg = P.hinge === 'rear' ? 1 : -1;
   o.push(GB('closet', 'Closet'));
@@ -289,6 +299,7 @@ function drawPlan(L, V) {
   o.push(GE());
   // things you can drag (last, so they sit on top of everything)
   Object.values(cols).forEach(c => o.push(HIT(c.ids[0], xx(c.x0), yp(20), S * (c.x1 - c.x0), S * 20, [c.ids.map(id => 'dx' + id).join(','), 1 / S, '', 0], c.ids.some(id => L.coll.ids.has(id)), c.ids.length > 1 ? `The ${c.ids.length} drawers in this column (along the wall)` : cap(L.partById[c.ids[0]].n) + ' (along the wall)', '', 'drawers')));
+  if (L.chairs) o.push(HIT('Chairs', xx(L.chairs.x0), yy(L.chairs.d0), S * (L.chairs.x1 - L.chairs.x0), S * (L.chairs.d1 - L.chairs.d0), ['dxChairs', 1 / S, 'dyChairs', 1 / S], L.coll.ids.has('Chairs'), 'The lawn chairs under the couch (along the wall and out from the driver wall)'));
   if (L.can) o.push(HIT('Can', xx(L.can.x0), yp(L.can.y1 + P.canTravel * (V.can || 0)), S * P.canW, S * P.canD, ['dxCan', 1 / S, 'dyCan', -1 / S], L.coll.ids.has('Can'), 'The trash can (along the wall and out from it)'));
   o.push(HIT('Micro', xx(L.microX[0] + 1.75), yp(P.microIn + 12), S * (L.microX[1] - L.microX[0] - 3.5), S * 12, ['dxMicro', 1 / S, 'microIn', -1 / S], L.coll.ids.has('Micro'), 'The microwave (along the wall and out from it)'));
   o.push(HIT('fresh', xx(L.tankX[0]), yp(P.tankBack + P.tankD), S * L.tankLen, S * P.tankD, ['tankShift', -1 / S, 'tankBack', -1 / S], L.coll.ids.has('fresh'), 'Fresh water tank (along the wall and out from it)'));

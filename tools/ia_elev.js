@@ -185,7 +185,18 @@ function drawDriver(L, V) {
   o.push(T(X((L.batt[0] + L.batt[1]) / 2), Y(5.8), 'Battery', { size: 11, fill: '#5A3A00' }));
   o.push(T(X((L.batt[0] + L.batt[1]) / 2), Y(5.8) + 13, `21 x 9.5 in, ${fmt(L.batt[0])} to ${fmt(L.batt[1])} in`, { size: 10, fill: '#5A3A00' }));
   o.push(GE());
+  if (L.chairs) {
+    // lawn chairs folded flat, stacked on the floor under the couch (seen from the aisle: the stack is against the wall behind the deck's dashed outline)
+    const c = L.chairs, bad = L.coll.ids.has('Chairs'), col = bad ? '#A32D2D' : '#2F5E3F', th = P.chairThk;
+    o.push(GB('Chairs', 'Lawn chairs under the couch'));
+    for (let i = 0; i < c.n; i++) o.push(box(c.x0, c.x1, c.z0 + i * th, c.z0 + (i + 1) * th, { fill: '#7FB08F', fo: bad ? .35 : .6, stroke: col, sw: 1.3, rx: 1.5 }));
+    o.push(T(X((c.x0 + c.x1) / 2), Y(c.z1) - 18, `${c.n} lawn chair${c.n === 1 ? '' : 's'}, folded flat`, { size: 11, fill: col }));
+    o.push(T(X((c.x0 + c.x1) / 2), Y(c.z1) - 5, `${fmt(c.x1 - c.x0)} x ${fmt(c.d1 - c.d0)} x ${fmt(c.z1 - c.z0)} in`, { size: 9.5, fill: col }));
+    o.push(GE());
+  }
   o.push(elevTail(E, L, 'inches from where you start measuring at the back (about 6 in in from the rear edge; the rear lip is not counted)'));
+  // things you can drag (last, so they sit on top of everything)
+  if (L.chairs) o.push(HIT('Chairs', Math.min(X(L.chairs.x0), X(L.chairs.x1)), Y(L.chairs.z1), S * (L.chairs.x1 - L.chairs.x0), S * (L.chairs.z1 - L.chairs.z0), ['dxChairs', 1 / S, 'dzChairs', -1 / S], L.coll.ids.has('Chairs'), 'The lawn chairs under the couch (along the wall and up)'));
   return { w: E.W, h: E.H, body: o.join('') };
 }
 
@@ -234,7 +245,7 @@ function drawPass(L, V) {
   o.push(T(X((sinkS + sinkE) / 2), Y(ch - 2.7), 'Sink cabinet', { size: 12, fill: COL.C }));
   o.push(T(X((sinkS + sinkE) / 2), Y(ch - 2.7) + 13, `${fmt(P.sinkW)} wide, ${fmt(P.sinkD)} deep`, { size: 10.5, fill: COL.C }));
   o.push(box(cabS, sinkE, ch - 1.2, ch, { fill: '#5F5E5A', fo: .75 }));
-  o.push(T(X(sinkS - 3), Y(ch) - 4, `countertop at ${fmt(ch)} in`, { size: 10.5, fill: '#5F5E5A', halo: false }));
+  o.push(T(X((sinkS + sinkE) / 2), Y(ch) - 4, `countertop at ${fmt(ch)} in`, { size: 10.5, fill: '#5F5E5A', halo: false }));   // over the sink end, clear of the dish towel beside the nook
   o.push(GE());
   // fridge on a platform over the wheel well, microwave on its shelf
   const q0 = L.fr[0], q1 = L.fr[1], fb = 8.25, ft = fb + P.fridgeH;
@@ -279,8 +290,8 @@ function drawPass(L, V) {
     o.push(Ln(X(58.4 + (base === ch ? 0 : ndx)), Y(base + 3.5), X(92.85 + (base === ch ? 0 : ndx)), Y(base + 3.5), { stroke: '#7A4A1E', sw: 1.6, dash: '3 2' }));
   });
   o.push(T(X(67), Y(ch + 16.7), 'Nook: quart jars', { size: 11, fill: '#7A4A1E' }));
-  o.push(T(X(98.8), Y(ch + 8 + nd), `shelf ${fmt(ch + 7.5 + nd)} up`, { size: 10, fill: '#5A3510' }));
-  o.push(T(X(98.8), Y(ch + 8 + nd) + 12, '9 jars a tier', { size: 10, fill: '#5A3510' }));
+  o.push(T(X(110), Y(ch + 8 + nd), `shelf ${fmt(ch + 7.5 + nd)} up`, { size: 10, fill: '#5A3510' }));
+  o.push(T(X(110), Y(ch + 8 + nd) + 12, '9 jars a tier', { size: 10, fill: '#5A3510' }));
   o.push(GE());
   // TV
   o.push(GB('tv', 'TV'));
@@ -288,6 +299,17 @@ function drawPass(L, V) {
   o.push(T(X(90), Y(ch + 25), 'TV 30 in', { size: 12, fill: COL.G }));
   o.push(T(X(90), Y(ch + 25) + 14, '27 x 15.4, over the cabinet', { size: 10.5, fill: COL.G }));
   o.push(GE());
+  if (L.hook) {
+    // dish towel hook on the wall beside the nook, under the TV; a dish towel (8 in wide, folded over it) hangs from it
+    const h = L.hook, bad = L.coll.ids.has('Hook'), col = bad ? '#A32D2D' : '#8A5A00';
+    o.push(GB('Hook', 'Dish towel hook and towel'));
+    o.push(box(h.x0, h.x1, h.z0, h.z - .5, { fill: '#F3E3B3', fo: bad ? .6 : .95, stroke: col, sw: 1.3, rx: 2 }));
+    o.push(Ln(X(h.x0), Y(h.z0 + 1.6), X(h.x1), Y(h.z0 + 1.6), { stroke: '#C0392B', sw: 1.4, so: .8 }));
+    o.push(`<circle cx="${f1(X(h.x))}" cy="${f1(Y(h.z))}" r="3.4" fill="#444441" stroke="#2C2C2A" stroke-width="1"/>`);
+    o.push(T(X(h.x), Y(h.z - .5) + 16, 'dish towel', { size: 9, fill: col, halo: false }));
+    o.push(T(X(h.x), Y(h.z - .5) + 27, `hook ${fmt(h.z)} up`, { size: 9, fill: col, halo: false }));
+    o.push(GE());
+  }
   // fresh water tank on the floor at the sink end (runs out of the open sink cabinet)
   o.push(GB('fresh', 'Fresh water tank'));
   o.push(box(L.tankX[0], L.tankX[1], P.tankLift, P.tankLift + P.tankH, { fill: COL.BL, fo: .14, stroke: COL.BL, sw: 1.5, rx: 3, dash: '5 3' }));
@@ -448,6 +470,7 @@ function drawPass(L, V) {
     const hx = (x0, x1) => Math.min(X(x0), X(x1));
     L.parts.filter(p => p.kind === 'drawer' && p.z1 - p.z0 > .5).forEach(p => o.push(HIT(p.id, hx(p.x0, p.x1), Y(p.z1), S * (p.x1 - p.x0), S * (p.z1 - p.z0), [p.dxk, -1 / S, p.dzk, -1 / S], L.coll.ids.has(p.id), cap(p.n) + ' (along the wall and up)', '', 'drawers')));
     L.parts.filter(p => p.kind === 'shelf').forEach(p => o.push(HIT(p.id, hx(p.x0, p.x1), Y(p.z1) - 4, S * (p.x1 - p.x0), S * (p.z1 - p.z0) + 8, [p.dxk, -1 / S, p.dzk, -1 / S], L.coll.ids.has(p.id), cap(p.n) + ' (along the wall and up)', '', 'drawers')));
+    if (L.hook) o.push(HIT('Hook', hx(L.hook.x0, L.hook.x1), Y(L.hook.z1), S * 8, S * (L.hook.z1 - L.hook.z0), ['dxHook', -1 / S, 'dzHook', -1 / S], L.coll.ids.has('Hook'), 'The dish towel hook and its towel (along the wall and up)'));
     if (L.can) o.push(HIT('Can', hx(L.can.x0, L.can.x1), Y(L.can.z1), S * P.canW, S * P.canH, ['dxCan', -1 / S, 'dzCan', -1 / S], L.coll.ids.has('Can'), 'The trash can on its pull-out (along the wall and up)'));
     o.push(HIT('Nook', hx(nx0 + ndx, nx1 + ndx), Y(ch + 8.25 + nd) - 4, S * (nx1 - nx0), S * .75 + 8, ['dxNook', -1 / S, 'dzNook', -1 / S], L.coll.ids.has('Nook'), 'The jar shelf in the nook with its upper row of jars (along the wall and up)'));
     o.push(HIT('Micro', hx(q0 + mx, q1 + mx), Y(ft + 12.75 + md), S * (q1 - q0), S * 10.75, ['dxMicro', -1 / S, 'dzMicro', -1 / S], L.coll.ids.has('Micro'), 'The microwave and its shelf (along the wall and up)'));
@@ -496,6 +519,13 @@ function drawCross(L, V) {
   o.push(bx(0, P.bedD, 0, P.seatH, { fill: COL.P, fo: .18, stroke: COL.P, sw: 1.5, rx: 3 })); o.push(T(xx(P.bedD / 2), yy(P.seatH / 2), 'couch', { size: 11, fill: COL.P }));
   o.push(bx(0, 6, P.seatH, P.backH, { fill: COL.P, fo: .18, stroke: COL.P, sw: 1.5, rx: 3 }));
   o.push(GE());
+  if (L.chairs) {
+    const c = L.chairs, col = L.coll.ids.has('Chairs') ? '#A32D2D' : '#2F5E3F';
+    o.push(GB('Chairs', 'Lawn chairs under the couch'));
+    for (let i = 0; i < c.n; i++) o.push(bx(c.d0, c.d1, c.z0 + i * P.chairThk, c.z0 + (i + 1) * P.chairThk, { fill: '#7FB08F', fo: .55, stroke: col, sw: 1.3 }));
+    o.push(T(xx((c.d0 + c.d1) / 2), yy(c.z1) - 5, 'lawn chairs', { size: 10, fill: col, halo: false }));
+    o.push(GE());
+  }
   // wall cabinets and the closet have open backs: the side panels run against the leaning wall, front edge vertical
   o.push(GB('wallcab', 'Wall cabinets'));
   {
@@ -548,6 +578,13 @@ function drawBedEnd(L, V) {
   o.push(bx(6.25, 16.25, 0, 9.5, { fill: '#F2B84B', fo: .35, stroke: '#8A5A00', sw: 1.4, dash: '5 3' }));
   o.push(T(xx(11.25), yy(4.5), 'battery', { size: 10, fill: '#5A3A00', halo: false }));
   o.push(GE());
+  if (L.chairs) {
+    const c = L.chairs, col = L.coll.ids.has('Chairs') ? '#A32D2D' : '#2F5E3F';
+    o.push(GB('Chairs', 'Lawn chairs under the couch'));
+    for (let i = 0; i < c.n; i++) o.push(bx(c.d0, c.d1, c.z0 + i * P.chairThk, c.z0 + (i + 1) * P.chairThk, { fill: '#7FB08F', fo: .55, stroke: col, sw: 1.3, dash: '4 2' }));
+    o.push(T(xx((c.d0 + c.d1) / 2), yy(c.z1) - 5, 'lawn chairs', { size: 10, fill: col, halo: false }));
+    o.push(GE());
+  }
   const pe = P.vanW - P.panD;
   o.push(GB('panedge', 'Shower pan front edge'));
   if (pe < yMax) { o.push(bx(pe, Math.min(yMax, P.vanW), 0, 3, { fill: '#185FA5', fo: .15, stroke: '#185FA5', sw: 1.2, dash: '4 3' })); o.push(T(xx(pe + 1), yy(1.2), 'shower pan, down', { anchor: 'start', size: 9.5, fill: '#185FA5', halo: false })); }
