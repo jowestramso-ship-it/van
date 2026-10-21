@@ -72,9 +72,12 @@ const PD = [
   { k: 'hotShelf', g: 'Water tanks', l: 'Hot water tank bottom, up from the floor (0 = on the floor; 7.5 = on a shelf over the wheel well; 16.75 = on a shelf on top of the fresh tank)', d: 16.75, s: .5, a: 0, b: 30 },
   { k: 'hotW', g: 'Water tanks', l: 'Hot water tank length along the wall', d: 14, s: .5, a: 6, b: 18 },
   { k: 'hotBack', g: 'Water tanks', l: 'Hot water tank: space behind it for the hot and cold fittings and the relief valve (they are at the back)', d: 1.625, s: .125, a: 0, b: 24 },
-  { k: 'tankShift', g: 'Water tanks', l: 'Fresh water tank: moved toward the rear from the sink end (you can drag it)', d: 0, s: .5, a: 0, b: 50 },
+  { k: 'tankShift', g: 'Water tanks', l: 'Fresh water tank: moved toward the rear from the sink end (negative = toward the cab; you can drag it)', d: 0, s: .5, a: -40, b: 50 },
+  { k: 'tankLift', g: 'Water tanks', l: 'Fresh water tank: lifted off the floor (you can drag it)', d: 0, s: .25, a: 0, b: 40 },
+  { k: 'tankBack', g: 'Water tanks', l: 'Fresh water tank: space between it and the wall (you can drag it)', d: 0, s: .25, a: 0, b: 24 },
   { k: 'drainOn', g: 'Water tanks', l: 'Draw the relief valve drain line (over the top of the tank, down in front of the fresh tank, out through the floor)', d: true, t: 'c' },
   { k: 'drainX', g: 'Water tanks', l: 'Relief valve drain line: where it comes down (from the back)', d: 89, s: .5, a: 60, b: 125 },
+  { k: 'drainDz', g: 'Water tanks', l: 'Relief valve drain line: the run over the tank moved up (+) or down (-) (you can drag it)', d: 0, s: .25, a: -12, b: 6 },
   { k: 'drainDia', g: 'Water tanks', l: 'Relief valve drain line: pipe size (at least the valve outlet, usually 3/4)', d: .75, s: .125, a: .375, b: 1.5 },
   { k: 'hotD', g: 'Water tanks', l: 'Hot water tank depth (out from the wall)', d: 14, s: .5, a: 6, b: 20 },
   { k: 'hotH', g: 'Water tanks', l: 'Hot water tank height', d: 13, s: .5, a: 8, b: 34 },
@@ -129,7 +132,7 @@ const PD = [
 [['TB', 'Top drawer, back side', 1], ['TC', 'Top drawer, cab side', 1], ['C1', 'Cab-side column: upper (or only) drawer', 1], ['C2', 'Cab-side column: lower drawer', 1], ['B1', 'Back-side column: upper (or only) drawer', 1], ['B2', 'Back-side column: middle drawer', 1], ['B3', 'Back-side column: bottom drawer', 1],
   ['SC', 'Shelf under the cab-side drawers', 0], ['SB', 'Shelf under the back-side drawers', 0], ['SC2', 'Board between the two cab-side lower drawers', 0], ['SB1', 'Board between the upper and middle back-side drawers', 0], ['SB2', 'Board between the middle and bottom back-side drawers', 0],
   ['Nook', 'Jar shelf in the nook (with its upper row of jars)', 0], ['Micro', 'Microwave and its shelf', 0]].forEach(([k, nm, along]) => {
-  if (along) PD.push({ k: 'dx' + k, g: 'Drawers and shelves', l: nm + ': moved along the wall (+ toward the cab, - toward the rear)', d: 0, s: .25, a: -60, b: 60 });
+  PD.push({ k: 'dx' + k, g: 'Drawers and shelves', l: nm + ': moved along the wall (+ toward the cab, - toward the rear)', d: 0, s: .25, a: -60, b: 60 });
   PD.push({ k: 'dz' + k, g: 'Drawers and shelves', l: nm + ': moved up (+) or down (-)', d: 0, s: .25, a: -40, b: 40 });
 });
 const DEF = {}; PD.forEach(p => DEF[p.k] = p.d);
@@ -182,14 +185,14 @@ function HIT(id, x, y, w, h, ax, bad, label, on) {
   const k = v => +(+v || 0).toFixed(5);
   return `<rect class="drg" data-drag="${id}" data-px="${ax[0]}" data-kx="${k(ax[1])}" data-py="${ax[2]}" data-ky="${k(ax[3])}" data-on="${on || ''}" x="${f1(x)}" y="${f1(y)}" width="${f1(Math.max(2, w))}" height="${f1(Math.max(2, h))}" rx="3" fill="#534AB7" fill-opacity="${bad ? .12 : .02}" stroke="${bad ? '#C0392B' : '#534AB7'}" stroke-width="${bad ? 2.6 : 1}" stroke-dasharray="${bad ? '5 2' : '2 3'}" stroke-opacity="${bad ? 1 : .6}"><title>${label}${bad ? ' (overlaps something: see the red message above the drawing)' : ' (drag to move it, double-click to put it back)'}</title></rect>`;
 }
-// every drawer and shelf board under the counter as a box: kind, id (the sizes that move it are dx<id> along the wall, drawers only, and dz<id> up), n = its name,
-// x0/x1 along the wall and z0/z1 up (the planned spot plus how far it was dragged), y0/y1 out from the wall. The planned spots fill the space between the shelves, the
+// every drawer and shelf board under the counter as a box: kind, id (the sizes that move it are dx<id> along the wall and dz<id> up), n = its name,
+// x0/x1 along the wall and z0/z1 up (the planned spot plus how far it was dragged, both ways), y0/y1 out from the wall. The planned spots fill the space between the shelves, the
 // top drawers and the tanks, as before; dragging only adds to them.
 function cabinetParts(L) {
   const P = L.P, ch = P.counterH, d0 = L.cabS + 1.25, dm = L.cabS + 14.75, z0 = ch - 6.75, z1 = ch - 2.75, tl = z0 - .25, bs = L.cabShelf + 1, tot = tl - bs, parts = [];
   const add = (kind, id, n, x0, x1, b0, b1) => {
-    const dx = kind === 'drawer' ? P['dx' + id] || 0 : 0, dz = P['dz' + id] || 0;
-    parts.push({ kind, id, n, x0: x0 + dx, x1: x1 + dx, z0: b0 + dz, z1: b1 + dz, y0: 0, y1: 20, dxk: kind === 'drawer' ? 'dx' + id : '', dzk: 'dz' + id });
+    const dx = P['dx' + id] || 0, dz = P['dz' + id] || 0;
+    parts.push({ kind, id, n, x0: x0 + dx, x1: x1 + dx, z0: b0 + dz, z1: b1 + dz, y0: 0, y1: 20, dxk: 'dx' + id, dzk: 'dz' + id });
   };
   L.cabTot = tot; L.wellShelf = tot >= 10 ? L.backShelf : L.cabShelf;
   add('drawer', 'TB', 'the top drawer on the back side', d0, dm - .5, z0, z1);
@@ -223,12 +226,12 @@ function collisions(L) {
   const P = L.P, list = [], ids = new Set(), ch = P.counterH, dm = L.cabS + 14.75, ft = 8.25 + P.fridgeH;
   const bx = (id, n, x0, x1, y0, y1, z0, z1, o) => Object.assign({ id, n, x0, x1, y0, y1, z0, z1, kind: '' }, o);
   const hot = bx('hot', 'the hot water tank', L.hotX[0], L.hotX[1], P.hotBack, P.hotBack + P.hotD, P.hotShelf, P.hotShelf + P.hotH, { kind: 'tank' });
-  const fresh = bx('fresh', 'the fresh water tank', L.tankX[0], L.tankX[1], 0, P.tankD, 0, P.tankH, { kind: 'tank' });
+  const fresh = bx('fresh', 'the fresh water tank', L.tankX[0], L.tankX[1], P.tankBack, P.tankBack + P.tankD, P.tankLift, P.tankLift + P.tankH, { kind: 'tank' });
   const mov = [hot, fresh];
   L.parts.forEach(p => mov.push(bx(p.id, p.n, p.x0, p.x1, p.y0, p.y1, p.z0, p.z1, { kind: p.kind })));
   const nx0 = 58, nx1 = 93.25;
-  mov.push(bx('Nook', 'the jar shelf in the nook with its upper row of jars', nx0, nx1, 0, 4.5, L.nookZ, L.nookZ + .75 + 7, { kind: 'jars' }));
-  mov.push(bx('Micro', 'the microwave and its shelf', L.fr[0], L.fr[1], 0, P.microIn + 12, L.microZ[0] - .75, L.microZ[1], { kind: 'micro' }));
+  mov.push(bx('Nook', 'the jar shelf in the nook with its upper row of jars', L.nookX[0], L.nookX[1], 0, 4.5, L.nookZ, L.nookZ + .75 + 7, { kind: 'jars' }));
+  mov.push(bx('Micro', 'the microwave and its shelf', L.microX[0], L.microX[1], 0, P.microIn + 12, L.microZ[0] - .75, L.microZ[1], { kind: 'micro' }));
   const fix = [
     bx('', 'the wheel well', 42, 76, 0, 7, 0, 7.5), bx('', 'the fridge', L.fr[0], L.fr[1], 2, 2 + P.fridgeD, 8.25, ft), bx('', 'the cab wall', P.cab, P.cab + 60, 0, 40, 0, 120),
     bx('', 'the floor', -10, P.cab + 10, -5, 45, -40, 0), bx('', 'the ceiling', -10, P.cab + 10, -5, 45, L.ceilF, L.ceilF + 40),
@@ -297,8 +300,8 @@ function layout(P0) {
     const dm = L.cabS + 14.75, hotTopZ = P.hotShelf + P.hotH, ov = (x0, x1, a, b) => x1 > a && x0 < b;
     const overCab = ov(L.hotX[0], L.hotX[1], dm + .9, dm + 14), overBack = ov(L.hotX[0], L.hotX[1], L.cabS + 1.25, dm - .5);
     const freshCab = ov(L.tankX[0], L.tankX[1], dm + .9, dm + 14), freshBack = ov(L.tankX[0], L.tankX[1], L.cabS + 1.25, dm - .5);
-    L.cabShelf = Math.max(7.5, overCab ? hotTopZ : 0, freshCab ? P.tankH : 0) + .5;
-    L.backShelf = Math.max(7.5, overBack ? hotTopZ : 0, freshBack ? P.tankH : 0) + .5;
+    L.cabShelf = Math.max(7.5, overCab ? hotTopZ : 0, freshCab ? P.tankLift + P.tankH : 0) + .5;
+    L.backShelf = Math.max(7.5, overBack ? hotTopZ : 0, freshBack ? P.tankLift + P.tankH : 0) + .5;
   }
   L.hotY = [P.hotBack, P.hotBack + P.hotD];
   // ceiling covering: plywood against the roof, slats on it; everything that reaches the ceiling stops at the finished ceiling
@@ -338,7 +341,8 @@ function layout(P0) {
   }
   // the drawers and shelves under the counter (as planned plus dragged), the jar shelf in the nook and the microwave shelf above the fridge
   L.parts = cabinetParts(L); L.partById = {}; L.parts.forEach(p => { L.partById[p.id] = p; });
-  L.nookZ = P.counterH + 7.5 + P.dzNook;
+  L.nookZ = P.counterH + 7.5 + P.dzNook; L.nookX = [58 + P.dxNook, 93.25 + P.dxNook];
+  L.microX = [L.fr[0] + P.dxMicro, L.fr[1] + P.dxMicro];
   L.microZ = [8.25 + P.fridgeH + 2.75 + P.dzMicro, 8.25 + P.fridgeH + 12.75 + P.dzMicro];   // the microwave bottom and top; its shelf is the 3/4 in under it, 2 in over the fridge top
   L.coll = collisions(L);
   return L;

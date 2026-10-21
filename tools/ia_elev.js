@@ -218,23 +218,23 @@ function drawPass(L, V) {
     }
     o.push(MV('fridge', g, HITR(Math.min(X(q0), X(q1)), Y(ft), S * P.fridgeW, S * P.fridgeH)));
   }
-  const md = P.dzMicro;
-  o.push(box(q0, q1, ft + 2 + md, ft + 2.75 + md, { fill: '#8A6B4D', stroke: '#3E230B', sw: 1 }));
-  o.push(box(q0 + (P.fridgeW - 18.5) / 2, q1 - (P.fridgeW - 18.5) / 2, ft + 2.75 + md, ft + 12.75 + md, { fill: COL.G, fo: .25, stroke: COL.G, sw: 1.5, rx: 3 }));
-  o.push(T(X((q0 + q1) / 2), Y(ft + 6.9 + md), 'Microwave', { size: 12, fill: COL.G }));
-  o.push(T(X((q0 + q1) / 2), Y(ft + 6.9 + md) + 14, '18.5 x 10 x 12 in', { size: 10.5, fill: COL.G }));
+  const md = P.dzMicro, mx = P.dxMicro;
+  o.push(box(q0 + mx, q1 + mx, ft + 2 + md, ft + 2.75 + md, { fill: '#8A6B4D', stroke: '#3E230B', sw: 1 }));
+  o.push(box(q0 + mx + (P.fridgeW - 18.5) / 2, q1 + mx - (P.fridgeW - 18.5) / 2, ft + 2.75 + md, ft + 12.75 + md, { fill: COL.G, fo: .25, stroke: COL.G, sw: 1.5, rx: 3 }));
+  o.push(T(X((q0 + q1) / 2 + mx), Y(ft + 6.9 + md), 'Microwave', { size: 12, fill: COL.G }));
+  o.push(T(X((q0 + q1) / 2 + mx), Y(ft + 6.9 + md) + 14, '18.5 x 10 x 12 in', { size: 10.5, fill: COL.G }));
   // counter nook (a recess in the wall) with the jar shelf
   const nx0 = 58, nx1 = 93.25;
   o.push(box(nx0, nx1, ch, ch + 18.5, { fill: '#7A4A1E', fo: .2, stroke: '#7A4A1E', sw: 1.5, rx: 3, dash: '5 3' }));
-  const nd = P.dzNook;
-  o.push(box(nx0, nx1, ch + 7.5 + nd, ch + 8.25 + nd, { fill: '#8A6B4D', stroke: '#3E230B', sw: 1 }));
+  const nd = P.dzNook, ndx = P.dxNook;
+  o.push(box(nx0 + ndx, nx1 + ndx, ch + 7.5 + nd, ch + 8.25 + nd, { fill: '#8A6B4D', stroke: '#3E230B', sw: 1 }));
   [ch, ch + 8.25 + nd].forEach(base => {
     for (let i = 0; i < 9; i++) {
-      const jx = 58.75 + 3.75 * i;
+      const jx = 58.75 + ndx + 3.75 * i;
       o.push(box(jx + .1, jx + 3.65, base, base + 6.25, { fill: '#A9D4F5', fo: .6, stroke: COL.BL, sw: .9, rx: 2.5 }));
       o.push(box(jx + .45, jx + 3.3, base + 6.25, base + 7, { fill: '#8A8A8A', stroke: COL.G, sw: .6 }));
     }
-    o.push(Ln(X(58.4), Y(base + 3.5), X(92.85), Y(base + 3.5), { stroke: '#7A4A1E', sw: 1.6, dash: '3 2' }));
+    o.push(Ln(X(58.4 + ndx), Y(base + 3.5), X(92.85 + ndx), Y(base + 3.5), { stroke: '#7A4A1E', sw: 1.6, dash: '3 2' }));
   });
   o.push(T(X(67), Y(ch + 16.7), 'Nook: quart jars', { size: 11, fill: '#7A4A1E' }));
   o.push(T(X(98.8), Y(ch + 8 + nd), `shelf ${fmt(ch + 7.5 + nd)} up`, { size: 10, fill: '#5A3510' }));
@@ -244,9 +244,9 @@ function drawPass(L, V) {
   o.push(T(X(90), Y(ch + 25), 'TV 30 in', { size: 12, fill: COL.G }));
   o.push(T(X(90), Y(ch + 25) + 14, '27 x 15.4, over the cabinet', { size: 10.5, fill: COL.G }));
   // fresh water tank on the floor at the sink end (runs out of the open sink cabinet)
-  o.push(box(L.tankX[0], L.tankX[1], 0, P.tankH, { fill: COL.BL, fo: .14, stroke: COL.BL, sw: 1.5, rx: 3, dash: '5 3' }));
-  o.push(T(X((L.tankX[0] + L.tankX[1]) / 2), Y(P.tankH * .62), 'Fresh water tank', { size: 12, fill: COL.BL }));
-  o.push(T(X((L.tankX[0] + L.tankX[1]) / 2), Y(P.tankH * .62) + 14, `${fmt(L.tankLen)} x ${fmt(P.tankD)} x ${fmt(P.tankH)}, on the floor`, { size: 10.5, fill: COL.BL }));
+  o.push(box(L.tankX[0], L.tankX[1], P.tankLift, P.tankLift + P.tankH, { fill: COL.BL, fo: .14, stroke: COL.BL, sw: 1.5, rx: 3, dash: '5 3' }));
+  o.push(T(X((L.tankX[0] + L.tankX[1]) / 2), Y(P.tankLift + P.tankH * .62), 'Fresh water tank', { size: 12, fill: COL.BL }));
+  o.push(T(X((L.tankX[0] + L.tankX[1]) / 2), Y(P.tankLift + P.tankH * .62) + 14, `${fmt(L.tankLen)} x ${fmt(P.tankD)} x ${fmt(P.tankH)}, ${P.tankLift > .01 ? fmt(P.tankLift) + ' in off the floor' : 'on the floor'}`, { size: 10.5, fill: COL.BL }));
   // angle marker
   o.push(Ln(X(angS), Y(23), X(angS), Y(ch), { stroke: '#A32D2D', sw: 2, dash: '5 3' }));
   // hot water tank on the floor next to the wheel well (or on a shelf if raised), and sink plumbing
@@ -256,7 +256,7 @@ function drawPass(L, V) {
   o.push(T(X((L.hotX[0] + L.hotX[1]) / 2), Y(P.hotShelf + P.hotH * .6) + 14, `${fmt(P.hotW)} x ${fmt(P.hotD)}, ${fmt(P.hotH)} tall; fittings at the back`, { size: 10.5, fill: '#C0392B' }));
   // relief valve drain line: from the valve on the back of the tank, up and over the top, forward, down in front of the fresh tank, out through the floor
   if (P.drainOn && P.hotShelf > 10) {
-    const rx = L.hotX[0] + .8 * P.hotW, topz = P.hotShelf + P.hotH + 1.5, dx = P.drainX, st = { stroke: '#0F6E56', sw: 3, dash: '5 2' };
+    const rx = L.hotX[0] + .8 * P.hotW, topz = P.hotShelf + P.hotH + 1.5 + P.drainDz, dx = P.drainX, st = { stroke: '#0F6E56', sw: 3, dash: '5 2' };
     o.push(Ln(X(rx), Y(P.hotShelf + P.hotH - 2), X(rx), Y(topz), st)); o.push(Ln(X(rx), Y(topz), X(dx), Y(topz), st)); o.push(Ln(X(dx), Y(topz), X(dx), Y(-2), st));
     o.push(`<circle cx="${f1(X(rx))}" cy="${f1(Y(P.hotShelf + P.hotH - 2))}" r="3.6" fill="#444441"/>`);
     o.push(T(X(dx), Y(topz) - 6, 'relief valve drain', { size: 9.5, fill: '#0F6E56' }));
@@ -348,12 +348,12 @@ function drawPass(L, V) {
   {
     const hx = (x0, x1) => Math.min(X(x0), X(x1));
     L.parts.filter(p => p.kind === 'drawer' && p.z1 - p.z0 > .5).forEach(p => o.push(HIT(p.id, hx(p.x0, p.x1), Y(p.z1), S * (p.x1 - p.x0), S * (p.z1 - p.z0), [p.dxk, -1 / S, p.dzk, -1 / S], L.coll.ids.has(p.id), cap(p.n) + ' (along the wall and up)')));
-    L.parts.filter(p => p.kind === 'shelf').forEach(p => o.push(HIT(p.id, hx(p.x0, p.x1), Y(p.z1) - 4, S * (p.x1 - p.x0), S * (p.z1 - p.z0) + 8, ['', 0, p.dzk, -1 / S], L.coll.ids.has(p.id), cap(p.n) + ' (up and down)')));
-    o.push(HIT('Nook', hx(nx0, nx1), Y(ch + 8.25 + nd) - 4, S * (nx1 - nx0), S * .75 + 8, ['', 0, 'dzNook', -1 / S], L.coll.ids.has('Nook'), 'The jar shelf in the nook with its upper row of jars (up and down)'));
-    o.push(HIT('Micro', hx(q0, q1), Y(ft + 12.75 + md), S * (q1 - q0), S * 10.75, ['', 0, 'dzMicro', -1 / S], L.coll.ids.has('Micro'), 'The microwave and its shelf (up and down)'));
+    L.parts.filter(p => p.kind === 'shelf').forEach(p => o.push(HIT(p.id, hx(p.x0, p.x1), Y(p.z1) - 4, S * (p.x1 - p.x0), S * (p.z1 - p.z0) + 8, [p.dxk, -1 / S, p.dzk, -1 / S], L.coll.ids.has(p.id), cap(p.n) + ' (along the wall and up)')));
+    o.push(HIT('Nook', hx(nx0 + ndx, nx1 + ndx), Y(ch + 8.25 + nd) - 4, S * (nx1 - nx0), S * .75 + 8, ['dxNook', -1 / S, 'dzNook', -1 / S], L.coll.ids.has('Nook'), 'The jar shelf in the nook with its upper row of jars (along the wall and up)'));
+    o.push(HIT('Micro', hx(q0 + mx, q1 + mx), Y(ft + 12.75 + md), S * (q1 - q0), S * 10.75, ['dxMicro', -1 / S, 'dzMicro', -1 / S], L.coll.ids.has('Micro'), 'The microwave and its shelf (along the wall and up)'));
   }
-  o.push(HIT('fresh', Math.min(X(L.tankX[0]), X(L.tankX[1])), Y(P.tankH), S * L.tankLen, S * P.tankH, ['tankShift', 1 / S, '', 0], L.coll.ids.has('fresh'), 'Fresh water tank (along the wall)'));
-  if (P.drainOn && P.hotShelf > 10) o.push(HIT('drain', X(P.drainX) - 8, Y(P.hotShelf + P.hotH + 1.5) - 4, 16, S * (P.hotShelf + P.hotH + 1.5 + 2) + 8, ['drainX', -1 / S, '', 0], false, 'Relief valve drain line (where it comes down)'));
+  o.push(HIT('fresh', Math.min(X(L.tankX[0]), X(L.tankX[1])), Y(P.tankLift + P.tankH), S * L.tankLen, S * P.tankH, ['tankShift', 1 / S, 'tankLift', -1 / S], L.coll.ids.has('fresh'), 'Fresh water tank (along the wall and up)'));
+  if (P.drainOn && P.hotShelf > 10) o.push(HIT('drain', X(P.drainX) - 8, Y(P.hotShelf + P.hotH + 1.5) - 4, 16, S * (P.hotShelf + P.hotH + 1.5 + 2) + 8, ['drainX', -1 / S, 'drainDz', -1 / S], false, 'Relief valve drain line (where it comes down, and the height of its run)'));
   o.push(HIT('hot', Math.min(X(L.hotX[0]), X(L.hotX[1])), Y(P.hotShelf + P.hotH), S * P.hotW, S * P.hotH, ['hotX0', -1 / S, 'hotShelf', -1 / S], L.coll.ids.has('hot'), 'Hot water tank (along the wall and up)', 'hotFree'));
   return { w: E.W, h: E.H, body: o.join('') };
 }
