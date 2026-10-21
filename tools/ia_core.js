@@ -60,11 +60,11 @@ const PD = [
   { k: 'ledgeLen', g: 'Fold-out table and foot ledge', l: 'Foot ledge: length of the foot platform (it ends this far from the cabinet end when the distance above is 0)', d: 13, s: .5, a: 4, b: 20 },
   { k: 'ledgeH', g: 'Fold-out table and foot ledge', l: 'Foot ledge top, up from floor', d: 8.5, s: .5, a: 3, b: 20 },
   { k: 'tankAuto', g: 'Water tanks', l: 'Fresh water tank fills the floor space to the sink end', d: false, t: 'c', f: 'tankLen' },
-  { k: 'tankLen', g: 'Water tanks', l: 'Fresh water tank length', d: 25, s: .5, a: 10, b: 70 },
-  { k: 'tankD', g: 'Water tanks', l: 'Fresh water tank depth (out from the wall)', d: 9, s: .5, a: 4, b: 20 },
-  { k: 'tankH', g: 'Water tanks', l: 'Fresh water tank height', d: 15, s: .5, a: 6, b: 24 },
+  { k: 'tankLen', g: 'Water tanks', l: 'Fresh water tank length', d: 41, s: .5, a: 10, b: 70 },
+  { k: 'tankD', g: 'Water tanks', l: 'Fresh water tank depth (out from the wall)', d: 10, s: .5, a: 4, b: 20 },
+  { k: 'tankH', g: 'Water tanks', l: 'Fresh water tank height', d: 15.5, s: .5, a: 6, b: 24 },
   { k: 'hotGap', g: 'Water tanks', l: 'Clear space each side of the hot water tank', d: 6, s: .5, a: 0, b: 20 },
-  { k: 'hotShelf', g: 'Water tanks', l: 'Hot water tank height off the floor (0 = on the floor)', d: 0, s: .5, a: 0, b: 30 },
+  { k: 'hotShelf', g: 'Water tanks', l: 'Hot water tank height off the floor (0 = on the floor; 7.5 = on a shelf over the wheel well, right after the fridge platform)', d: 7.5, s: .5, a: 0, b: 30 },
   { k: 'hotW', g: 'Water tanks', l: 'Hot water tank length along the wall', d: 14, s: .5, a: 6, b: 18 },
   { k: 'hotD', g: 'Water tanks', l: 'Hot water tank depth (out from the wall)', d: 15, s: .5, a: 6, b: 20 },
   { k: 'hotH', g: 'Water tanks', l: 'Hot water tank height', d: 15, s: .5, a: 8, b: 34 },
@@ -187,7 +187,16 @@ function layout(P0) {
   const endX = L.sinkE - .75, wellEnd = 76;
   if (P.tankAuto) { L.hotX = [wellEnd + P.hotGap, wellEnd + P.hotGap + P.hotW]; L.tankX = [L.hotX[1] + P.hotGap, endX]; }
   else { L.tankX = [endX - P.tankLen, endX]; const gap = Math.max(0, Math.min(P.hotGap, (L.tankX[0] - wellEnd - P.hotW) / 2)); L.hotX = [wellEnd + gap, wellEnd + gap + P.hotW]; }
+  if (P.hotShelf > .5) L.hotX = [L.fr[1] + 1.5, L.fr[1] + 1.5 + P.hotW]; // on a shelf over the wheel well, 1 1/2 in past the fridge platform
   L.tankLen = L.tankX[1] - L.tankX[0];
+  {
+    // the shelves under the drawers: each column's shelf sits half an inch over whatever is under it (a tank or the wheel well, 7.5)
+    const dm = L.cabS + 14.75, hotTopZ = P.hotShelf + P.hotH, ov = (x0, x1, a, b) => x1 > a && x0 < b;
+    const overCab = ov(L.hotX[0], L.hotX[1], dm + .9, dm + 14), overBack = ov(L.hotX[0], L.hotX[1], L.cabS + 1.25, dm - .5);
+    const freshCab = ov(L.tankX[0], L.tankX[1], dm + .9, dm + 14), freshBack = ov(L.tankX[0], L.tankX[1], L.cabS + 1.25, dm - .5);
+    L.cabShelf = Math.max(7.5, overCab ? hotTopZ : 0, freshCab ? P.tankH : 0) + .5;
+    L.backShelf = Math.max(7.5, overBack ? hotTopZ : 0, freshBack ? P.tankH : 0) + .5;
+  }
   L.hotY = [0, P.hotD];
   // ceiling covering: plywood against the roof, slats on it; everything that reaches the ceiling stops at the finished ceiling
   // wall lean from two width measurements: each wall comes in k per inch of height above where it stops being vertical (found from the full width)
