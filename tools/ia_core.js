@@ -66,7 +66,8 @@ const PD = [
   { k: 'hotGap', g: 'Water tanks', l: 'Clear space each side of the hot water tank', d: 6, s: .5, a: 0, b: 20 },
   { k: 'hotGal', g: 'Water tanks', l: 'Hot water tank: how much water it holds (gallons; 3.96 gal is 15 liters; its 14 x 14 x 13 in size is the outside of the heater)', d: 3.96, s: .1, a: 1, b: 20 },
   { k: 'hotEmptyLb', g: 'Water tanks', l: 'Heater weight: the hot water tank empty (lb)', d: 2, s: .5, a: 0, b: 60 },
-  { k: 'hotShelf', g: 'Water tanks', l: 'Hot water tank height off the floor (0 = on the floor; 7.5 = on a shelf over the wheel well, right after the fridge platform)', d: 7.5, s: .5, a: 0, b: 30 },
+  { k: 'hotX0', g: 'Water tanks', l: 'Hot water tank: where it starts along the wall when it sits on the fresh tank (from the back)', d: 88.5, s: .5, a: 60, b: 120 },
+  { k: 'hotShelf', g: 'Water tanks', l: 'Hot water tank bottom, up from the floor (0 = on the floor; 7.5 = on a shelf over the wheel well; 16.75 = on a shelf on top of the fresh tank)', d: 16.75, s: .5, a: 0, b: 30 },
   { k: 'hotW', g: 'Water tanks', l: 'Hot water tank length along the wall', d: 14, s: .5, a: 6, b: 18 },
   { k: 'hotD', g: 'Water tanks', l: 'Hot water tank depth (out from the wall)', d: 14, s: .5, a: 6, b: 20 },
   { k: 'hotH', g: 'Water tanks', l: 'Hot water tank height', d: 13, s: .5, a: 8, b: 34 },
@@ -189,7 +190,8 @@ function layout(P0) {
   const endX = L.sinkE - .75, wellEnd = 76;
   if (P.tankAuto) { L.hotX = [wellEnd + P.hotGap, wellEnd + P.hotGap + P.hotW]; L.tankX = [L.hotX[1] + P.hotGap, endX]; }
   else { L.tankX = [endX - P.tankLen, endX]; const gap = Math.max(0, Math.min(P.hotGap, (L.tankX[0] - wellEnd - P.hotW) / 2)); L.hotX = [wellEnd + gap, wellEnd + gap + P.hotW]; }
-  if (P.hotShelf > .5) L.hotX = [L.fr[1] + 1.5, L.fr[1] + 1.5 + P.hotW]; // on a shelf over the wheel well, 1 1/2 in past the fridge platform
+  if (P.hotShelf > 10) L.hotX = [P.hotX0, P.hotX0 + P.hotW]; // on a shelf on top of the fresh tank
+  else if (P.hotShelf > .5) L.hotX = [L.fr[1] + 1.5, L.fr[1] + 1.5 + P.hotW]; // on a shelf over the wheel well, 1 1/2 in past the fridge platform
   L.tankLen = L.tankX[1] - L.tankX[0];
   L.hotGal = P.hotGal;
   {
