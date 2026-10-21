@@ -64,7 +64,7 @@ const PD = [
   { k: 'tankD', g: 'Water tanks', l: 'Fresh water tank depth (out from the wall)', d: 10, s: .5, a: 4, b: 20 },
   { k: 'tankH', g: 'Water tanks', l: 'Fresh water tank height', d: 15.5, s: .5, a: 6, b: 24 },
   { k: 'hotGap', g: 'Water tanks', l: 'Clear space each side of the hot water tank', d: 6, s: .5, a: 0, b: 20 },
-  { k: 'hotGal', g: 'Water tanks', l: 'Hot water tank: how much water it holds (gallons; its 14 x 14 x 13 in size is the outside of the heater)', d: 5, s: .5, a: 1, b: 20 },
+  { k: 'hotL', g: 'Water tanks', l: 'Hot water tank: how much water it holds (liters; 15 L is about 4 gal; its 14 x 14 x 13 in size is the outside of the heater)', d: 15, s: .5, a: 2, b: 80 },
   { k: 'hotEmptyLb', g: 'Water tanks', l: 'Hot water tank weight empty (lb)', d: 2, s: .5, a: 0, b: 60 },
   { k: 'hotShelf', g: 'Water tanks', l: 'Hot water tank height off the floor (0 = on the floor; 7.5 = on a shelf over the wheel well, right after the fridge platform)', d: 7.5, s: .5, a: 0, b: 30 },
   { k: 'hotW', g: 'Water tanks', l: 'Hot water tank length along the wall', d: 14, s: .5, a: 6, b: 18 },
@@ -191,6 +191,7 @@ function layout(P0) {
   else { L.tankX = [endX - P.tankLen, endX]; const gap = Math.max(0, Math.min(P.hotGap, (L.tankX[0] - wellEnd - P.hotW) / 2)); L.hotX = [wellEnd + gap, wellEnd + gap + P.hotW]; }
   if (P.hotShelf > .5) L.hotX = [L.fr[1] + 1.5, L.fr[1] + 1.5 + P.hotW]; // on a shelf over the wheel well, 1 1/2 in past the fridge platform
   L.tankLen = L.tankX[1] - L.tankX[0];
+  L.hotGal = P.hotL / 3.78541; // the hot water tank is given in liters
   {
     // the shelves under the drawers: each column's shelf sits half an inch over whatever is under it (a tank or the wheel well, 7.5)
     const dm = L.cabS + 14.75, hotTopZ = P.hotShelf + P.hotH, ov = (x0, x1, a, b) => x1 > a && x0 < b;
