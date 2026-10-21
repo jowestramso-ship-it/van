@@ -32,9 +32,11 @@ function obstacles(L, V) {
 }
 function depthAt(list, x) { let m = 0, n = ''; for (const o of list) if (x >= o.x0 && x <= o.x1 && o.d > m) { m = o.d; n = o.n; } return { m, n }; }
 function aisleAt(L, O, x) { const a = depthAt(O.D, x), b = depthAt(O.Q, x); return { v: L.P.vanW - a.m - b.m, dn: a.n, qn: b.n, dm: a.m, qm: b.m }; }
+// the made-up bed floats above the shower pan (and the curtain can be pushed aside), so where those two overlap it is not a walkway problem
+const bedOverPan = r => r.dn === 'the bed (made up)' && /^the shower pan/.test(r.qn);
 function aisleMin(L, O) {
   let best = { v: 1e9 };
-  for (let x = 0; x <= L.P.cab + 1e-9; x += .25) { const r = aisleAt(L, O, x); if (r.dm > 0 && r.qm > 0 && r.v < best.v) best = Object.assign({ x }, r); }
+  for (let x = 0; x <= L.P.cab + 1e-9; x += .25) { const r = aisleAt(L, O, x); if (bedOverPan(r)) continue; if (r.dm > 0 && r.qm > 0 && r.v < best.v) best = Object.assign({ x }, r); }
   return best;
 }
 // does an open closet door run into the bed, a bench or the table?
@@ -196,6 +198,7 @@ function drawPlan(L, V) {
   const O = obstacles(L, V);
   const dim = (x, label) => {
     const r = aisleAt(L, O, x); if (!(r.dm > 0 && r.qm > 0)) return '';
+    if (bedOverPan(r) && r.v < 0) return Ln(xx(x), yy(r.dm), xx(x), yy(Wd - r.qm), { stroke: '#5F5E5A', sw: 1.4, dash: '4 3' }) + `<text x="${f1(xx(x) + 5)}" y="${f1(yy((r.dm + Wd - r.qm) / 2) + 4)}" style="font-size:11px;font-weight:700;fill:#5F5E5A;${HALO}">bed above the pan, overlaps ${fmt(-r.v)} (fine)</text>`;
     const bad = r.v < 0, col = bad ? '#A32D2D' : (r.v < 14 ? '#BA7517' : '#A32D2D');
     return Ln(xx(x), yy(r.dm), xx(x), yy(Wd - r.qm), { stroke: col, sw: 1.6, mk: !bad }) + `<text x="${f1(xx(x) + 5)}" y="${f1(yy((r.dm + Wd - r.qm) / 2) + 4)}" style="font-size:11px;font-weight:700;fill:${col};${HALO}">${bad ? 'overlap ' + fmt(-r.v) : fmt(r.v)} ${label}</text>`;
   };

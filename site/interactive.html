@@ -1068,9 +1068,11 @@ function obstacles(L, V) {
 }
 function depthAt(list, x) { let m = 0, n = ''; for (const o of list) if (x >= o.x0 && x <= o.x1 && o.d > m) { m = o.d; n = o.n; } return { m, n }; }
 function aisleAt(L, O, x) { const a = depthAt(O.D, x), b = depthAt(O.Q, x); return { v: L.P.vanW - a.m - b.m, dn: a.n, qn: b.n, dm: a.m, qm: b.m }; }
+// the made-up bed floats above the shower pan (and the curtain can be pushed aside), so where those two overlap it is not a walkway problem
+const bedOverPan = r => r.dn === 'the bed (made up)' && /^the shower pan/.test(r.qn);
 function aisleMin(L, O) {
   let best = { v: 1e9 };
-  for (let x = 0; x <= L.P.cab + 1e-9; x += .25) { const r = aisleAt(L, O, x); if (r.dm > 0 && r.qm > 0 && r.v < best.v) best = Object.assign({ x }, r); }
+  for (let x = 0; x <= L.P.cab + 1e-9; x += .25) { const r = aisleAt(L, O, x); if (bedOverPan(r)) continue; if (r.dm > 0 && r.qm > 0 && r.v < best.v) best = Object.assign({ x }, r); }
   return best;
 }
 // does an open closet door run into the bed, a bench or the table?
@@ -1232,6 +1234,7 @@ function drawPlan(L, V) {
   const O = obstacles(L, V);
   const dim = (x, label) => {
     const r = aisleAt(L, O, x); if (!(r.dm > 0 && r.qm > 0)) return '';
+    if (bedOverPan(r) && r.v < 0) return Ln(xx(x), yy(r.dm), xx(x), yy(Wd - r.qm), { stroke: '#5F5E5A', sw: 1.4, dash: '4 3' }) + `<text x="${f1(xx(x) + 5)}" y="${f1(yy((r.dm + Wd - r.qm) / 2) + 4)}" style="font-size:11px;font-weight:700;fill:#5F5E5A;${HALO}">bed above the pan, overlaps ${fmt(-r.v)} (fine)</text>`;
     const bad = r.v < 0, col = bad ? '#A32D2D' : (r.v < 14 ? '#BA7517' : '#A32D2D');
     return Ln(xx(x), yy(r.dm), xx(x), yy(Wd - r.qm), { stroke: col, sw: 1.6, mk: !bad }) + `<text x="${f1(xx(x) + 5)}" y="${f1(yy((r.dm + Wd - r.qm) / 2) + 4)}" style="font-size:11px;font-weight:700;fill:${col};${HALO}">${bad ? 'overlap ' + fmt(-r.v) : fmt(r.v)} ${label}</text>`;
   };
@@ -1363,7 +1366,9 @@ function computeChecks(L, V) {
   const anyOpen = Object.keys(V).some(k => V[k] > .02);
   if (anyOpen) {
     const a1 = aisleMin(L, O);
-    if (a1.v < 1e8) push(a1.v < 0 ? 'bad' : lvA(a1.v), a1.v < 0 ? `Right now ${a1.dn} and ${a1.qn} overlap by ${fmt(-a1.v)} in at ${fmt(a1.x)} in from the back.` : `Narrowest walkway right now: ${fmt(a1.v)} in at ${fmt(a1.x)} in from the back (${a1.dn} against ${a1.qn}).`);
+    // with the bed made up the space beside it is the bed, not a walkway (and it floats above the shower pan), so that is information, not a problem
+    const bedUp = a1.dn === 'the bed (made up)';
+    if (a1.v < 1e8) push(bedUp ? 'ok' : a1.v < 0 ? 'bad' : lvA(a1.v), a1.v < 0 ? `Right now ${a1.dn} and ${a1.qn} overlap by ${fmt(-a1.v)} in at ${fmt(a1.x)} in from the back.` : `Narrowest walkway right now: ${fmt(a1.v)} in at ${fmt(a1.x)} in from the back (${a1.dn} against ${a1.qn})${bedUp ? ': with the bed made up that is where you step onto it, not a walkway' : ''}.`);
   }
   // bed leaf
   const LEG = P.platform - .75 - .375 - .25, slotEnd = P.legIn + LEG + .25;
@@ -1454,7 +1459,7 @@ function computeChecks(L, V) {
   if (rb.v < 0) push('ok', `With the bed made up (${fmt(P.bedD + P.bedBack)} in) it floats above the shower pan, so with the pan down they overlap by ${fmt(-rb.v)} in in the drawing; you said that does not matter (tipped up the pan leaves ${fmt(rbp.v)} in).`);
   else push('ok', `Bed made up (${fmt(P.bedD + P.bedBack)} in) leaves ${fmt(rb.v)} in in front of the shower pan.`);
   { const legY = P.bedD + P.bedBack - P.legIn, panEdge = P.vanW - P.panD, legX = 1; // the end leg at 1 in from the rear is across from the pan (the pan is panW long)
-    push('ok', panEdge - legY >= 0 ? `The leg at the rear end of the leaf lands ${fmt(legY)} in out from the wall, ${fmt(panEdge - legY)} in short of the shower pan's front edge (${fmt(panEdge)} in) when the pan is down; the leaf edge hangs ${fmt(Math.max(0, P.bedD + P.bedBack - panEdge))} in over the pan.` : `The leg at the rear end of the leaf lands ${fmt(legY)} in out from the wall, ${fmt(-(panEdge - legY))} in over the shower pan (its front edge is at ${fmt(panEdge)} in), so with the pan down the leaf overlaps it there; you said the bed floats above the shower pan, so that does not matter.`); }
+    push('ok', panEdge - legY >= 0 ? `The leg at the rear end of the leaf lands ${fmt(legY)} in out from the wall, ${fmt(panEdge - legY)} in short of the shower pan's front edge (${fmt(panEdge)} in) when the pan is down; the leaf edge hangs ${fmt(Math.max(0, P.bedD + P.bedBack - panEdge))} in over the pan.` : `The leg at the rear end of the leaf lands ${fmt(legY)} in out from the wall, ${fmt(-(panEdge - legY))} in over the shower pan (its front edge is at ${fmt(panEdge)} in), so with the pan down the leaf overlaps it there; you said the bed floats above the shower pan and the leg sits in front of it, so that does not matter.`); }
   // fold-out table
   const reach = L.sinkE + L.flapLen, left = P.cab - reach;
   if (left < -0.01) push('bad', `The fold-out table (${fmt(L.flapLen)} long) runs ${fmt(-left)} in past the cab wall.`);
