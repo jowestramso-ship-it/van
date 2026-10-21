@@ -298,14 +298,12 @@ function drawPass(L, V) {
   o.push(GB('angle', 'Counter angle marker'));
   o.push(Ln(X(angS), Y(23), X(angS), Y(ch), { stroke: '#A32D2D', sw: 2, dash: '5 3' }));
   o.push(GE());
-  // paper towels and towel bars in the angled front
+  // paper towels in the angled front
   const pt0 = sinkS - 11.5, pt1 = sinkS - .5;
-  o.push(GB('towels', 'Paper towels and towel bars'));
+  o.push(GB('towels', 'Paper towels'));
   o.push(box(pt0, pt1, 29.75, 35.25, { fill: '#B07A2A', fo: .35, stroke: '#B07A2A', sw: 1.5, rx: 3 }));
   o.push(T(X((pt0 + pt1) / 2), Y(32.5), 'Paper towels', { size: 12, fill: '#B07A2A' }));
   o.push(T(X((pt0 + pt1) / 2), Y(32.5) + 14, '11 in roll, recessed', { size: 10.5, fill: '#B07A2A' }));
-  [25.5, 19.5].forEach(zb => { o.push(Ln(X(pt0), Y(zb), X(pt1), Y(zb), { stroke: COL.G, sw: 3.5, cap: 'round' })); o.push(`<circle cx="${f1(X(pt0))}" cy="${f1(Y(zb))}" r="3" fill="#444441"/><circle cx="${f1(X(pt1))}" cy="${f1(Y(zb))}" r="3" fill="#444441"/>`); });
-  o.push(T(X((pt0 + pt1) / 2), Y(22.2), '2 towel bars, 11 in', { size: 9.5, fill: COL.G }));
   o.push(GE());
   // hot water tank on the floor next to the wheel well (or on a shelf if raised), and sink plumbing
   o.push(GB('hot', 'Hot water tank'));
