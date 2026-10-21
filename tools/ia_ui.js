@@ -420,9 +420,12 @@ function saveHash() {
   PD.forEach(p => { if (P[p.k] !== p.d) q.set(p.k, p.t === 'c' ? (P[p.k] ? '1' : '0') : P[p.k]); });
   const hk = Object.keys(HID).filter(k => HID[k]); if (hk.length) q.set('hide', hk.join(','));
   try { history.replaceState(null, '', '#' + q.toString()); } catch (e) { }
+  try { localStorage.setItem('van-state', q.toString()); } catch (e) { }   // kept in this browser: opening the bare file again brings it back
 }
 function loadHash() {
-  const q = new URLSearchParams(location.hash.replace(/^#/, '')), vals = {};
+  let hs = location.hash.replace(/^#/, ''), restored = false;
+  if (!hs) { try { hs = localStorage.getItem('van-state') || ''; restored = !!hs; } catch (e) { hs = ''; } }   // a bare file: use what this browser remembers
+  const q = new URLSearchParams(hs), vals = {};
   if (VIEWS.some(v => v.id === q.get('view'))) view = q.get('view');
   if (q.has('hide')) { HID = {}; q.get('hide').split(',').filter(k => /^[A-Za-z0-9_]+$/.test(k)).forEach(k => { HID[k] = true; }); }
   PD.forEach(p => {
@@ -434,6 +437,7 @@ function loadHash() {
     else { const v = parseFloat(raw); if (!isNaN(v)) vals[p.k] = clamp(v, p.a, p.b); }
   });
   P = Object.assign({}, DEF, vals);
+  return restored;
 }
 $('#share').onclick = () => {
   saveHash();
@@ -442,7 +446,8 @@ $('#share').onclick = () => {
   try { navigator.clipboard.writeText(url).then(() => done(true), () => done(false)); } catch (e) { done(false); }
 };
 
-loadHash(); applyHidden();
+if (loadHash()) saveHash();
+applyHidden();
 buildTabs(); buildSizes(); buildMovers();
 makeZoomable($('#svg'));
 </script>
