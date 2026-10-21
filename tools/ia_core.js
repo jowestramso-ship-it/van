@@ -62,7 +62,7 @@ const PD = [
   { k: 'ledgeH', g: 'Fold-out table and foot ledge', l: 'Foot ledge top, up from floor', d: 8.5, s: .5, a: 3, b: 20 },
   { k: 'tankAuto', g: 'Water tanks', l: 'Fresh water tank fills the floor space to the sink end', d: false, t: 'c', f: 'tankLen' },
   { k: 'tankLen', g: 'Water tanks', l: 'Fresh water tank length', d: 41, s: .5, a: 10, b: 70 },
-  { k: 'tankD', g: 'Water tanks', l: 'Fresh water tank depth (out from the wall)', d: 16.5, s: .5, a: 4, b: 20 },
+  { k: 'tankD', g: 'Water tanks', l: 'Fresh water tank depth (out from the wall)', d: 16, s: .5, a: 4, b: 20 },
   { k: 'tankH', g: 'Water tanks', l: 'Fresh water tank height', d: 10, s: .5, a: 6, b: 24 },
   { k: 'hotGap', g: 'Water tanks', l: 'Clear space each side of the hot water tank', d: 6, s: .5, a: 0, b: 20 },
   { k: 'hotGal', g: 'Water tanks', l: 'Hot water tank: how much water it holds (gallons; 3.96 gal is 15 liters; its 14 x 14 x 13 in size is the outside of the heater)', d: 3.96, s: .1, a: 1, b: 20 },
