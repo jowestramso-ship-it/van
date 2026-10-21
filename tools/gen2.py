@@ -1027,8 +1027,9 @@ def passenger_items(tank=False):
     grp('plumb','Sink plumbing')
     a(f'<line x1="{xx(111):.1f}" y1="{yy(0):.1f}" x2="{xx(111):.1f}" y2="{yy(31):.1f}" stroke="#185FA5" stroke-width="3" stroke-dasharray="2 2"/>')
     a(f'<text class="ts" x="{xx(113):.1f}" y="{yy(34):.1f}" text-anchor="middle" style="font-size:9.5px;fill:#185FA5;paint-order:stroke;stroke:#fff;stroke-width:3px">sink plumbing, 12 in from the cab-side edge</text>')
-    grp('fshelf','Shelf over the fridge')
+    grp('micro','Microwave and shelf')
     a(f'<rect x="{xx(36):.1f}" y="{yy(59):.1f}" width="{S*22:.1f}" height="{S*0.75:.1f}" fill="#8A6B4D" stroke="#3E230B" stroke-width="1"/>')
+    box(37.75,56.25,59,69,G,'Microwave','18.5 x 10 x 12 in',yy(66),0.25)
     # foot ledge on the cabinet end: 10 long x 15 wide, top at 8 up, hinged on the end, folds up into a recess in the end panel
     grp('ledge','Foot ledge')
     _lh=8.5; _ll=13

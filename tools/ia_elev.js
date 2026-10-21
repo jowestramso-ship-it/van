@@ -199,7 +199,7 @@ function drawPass(L, V) {
   o.push(T(X((sinkS + sinkE) / 2), Y(ch * .68) + 14, `${fmt(P.sinkW)} wide, counter ${fmt(P.sinkD)} deep`, { size: 10.5, fill: COL.C }));
   o.push(box(cabS, sinkE, ch - 1.2, ch, { fill: '#5F5E5A', fo: .75 }));
   o.push(T(X(sinkS - 3), Y(ch) - 4, `countertop at ${fmt(ch)} in`, { size: 10.5, fill: '#5F5E5A', halo: false }));
-  // fridge on a platform over the wheel well, a shelf over it
+  // fridge on a platform over the wheel well, microwave on its shelf
   const q0 = L.fr[0], q1 = L.fr[1], fb = 8.25, ft = fb + P.fridgeH;
   o.push(box(q0, q1, 7.5, 8.25, { fill: '#8A6B4D', stroke: '#3E230B', sw: 1 }));
   o.push(box(q0, q0 + 1.5, 0, 7.5, { fill: '#8A6B4D', stroke: '#3E230B', sw: 1 }));
@@ -218,8 +218,11 @@ function drawPass(L, V) {
     }
     o.push(MV('fridge', g, HITR(Math.min(X(q0), X(q1)), Y(ft), S * P.fridgeW, S * P.fridgeH)));
   }
-  const md = P.dzFShelf;
+  const md = P.dzMicro;
   o.push(box(q0, q1, ft + 2 + md, ft + 2.75 + md, { fill: '#8A6B4D', stroke: '#3E230B', sw: 1 }));
+  o.push(box(q0 + (P.fridgeW - 18.5) / 2, q1 - (P.fridgeW - 18.5) / 2, ft + 2.75 + md, ft + 12.75 + md, { fill: COL.G, fo: .25, stroke: COL.G, sw: 1.5, rx: 3 }));
+  o.push(T(X((q0 + q1) / 2), Y(ft + 6.9 + md), 'Microwave', { size: 12, fill: COL.G }));
+  o.push(T(X((q0 + q1) / 2), Y(ft + 6.9 + md) + 14, '18.5 x 10 x 12 in', { size: 10.5, fill: COL.G }));
   // counter nook (a recess in the wall) with the jar shelf
   const nx0 = 58, nx1 = 93.25;
   o.push(box(nx0, nx1, ch, ch + 18.5, { fill: '#7A4A1E', fo: .2, stroke: '#7A4A1E', sw: 1.5, rx: 3, dash: '5 3' }));
@@ -345,7 +348,7 @@ function drawPass(L, V) {
     L.parts.filter(p => p.kind === 'drawer' && p.z1 - p.z0 > .5).forEach(p => o.push(HIT(p.id, hx(p.x0, p.x1), Y(p.z1), S * (p.x1 - p.x0), S * (p.z1 - p.z0), [p.dxk, -1 / S, p.dzk, -1 / S], L.coll.ids.has(p.id), cap(p.n) + ' (along the wall and up)')));
     L.parts.filter(p => p.kind === 'shelf').forEach(p => o.push(HIT(p.id, hx(p.x0, p.x1), Y(p.z1) - 4, S * (p.x1 - p.x0), S * (p.z1 - p.z0) + 8, ['', 0, p.dzk, -1 / S], L.coll.ids.has(p.id), cap(p.n) + ' (up and down)')));
     o.push(HIT('Nook', hx(nx0, nx1), Y(ch + 8.25 + nd) - 4, S * (nx1 - nx0), S * .75 + 8, ['', 0, 'dzNook', -1 / S], L.coll.ids.has('Nook'), 'The jar shelf in the nook with its upper row of jars (up and down)'));
-    o.push(HIT('FShelf', hx(q0, q1), Y(ft + 2.75 + md) - 4, S * (q1 - q0), S * .75 + 8, ['', 0, 'dzFShelf', -1 / S], L.coll.ids.has('FShelf'), 'The shelf over the fridge (up and down)'));
+    o.push(HIT('Micro', hx(q0, q1), Y(ft + 12.75 + md), S * (q1 - q0), S * 10.75, ['', 0, 'dzMicro', -1 / S], L.coll.ids.has('Micro'), 'The microwave and its shelf (up and down)'));
   }
   o.push(HIT('fresh', Math.min(X(L.tankX[0]), X(L.tankX[1])), Y(P.tankH), S * L.tankLen, S * P.tankH, ['tankShift', 1 / S, '', 0], L.coll.ids.has('fresh'), 'Fresh water tank (along the wall)'));
   if (P.drainOn && P.hotShelf > 10) o.push(HIT('drain', X(P.drainX) - 8, Y(P.hotShelf + P.hotH + 1.5) - 4, 16, S * (P.hotShelf + P.hotH + 1.5 + 2) + 8, ['drainX', -1 / S, '', 0], false, 'Relief valve drain line (where it comes down)'));
@@ -375,7 +378,7 @@ function drawCross(L, V) {
   o.push(T(xx(W / 2), yy(L.roofZ(W / 2) - L.lining) + 24, `roof ribs ${fmt(zw)} at the wall, ${fmt(L.roofZ(W / 2))} in the middle`, { size: 11, fill: '#5A3A00' })); if (L.lining > 0) o.push(T(xx(W / 2), yy(L.roofZ(W / 2) - L.lining) + 38, `finished ceiling ${fmt(zw - L.lining)} at the wall, ${fmt(L.roofZ(W / 2) - L.lining)} in the middle`, { size: 11, fill: '#5A3A00' }));
   // width at the two measured heights, at the cabinet bottom and at the finished ceiling
   [[P.leanZ1, 'measured'], [P.leanZ2, 'measured'], [P.cabBot, 'cabinet bottom']].forEach(([z, nm], i) => { const l = lean(z), x0 = xx(l), x1 = xx(W - l); o.push(Ln(x0, yy(z), x1, yy(z), { stroke: '#A32D2D', sw: 1.2, mk: true })); o.push(T(xx(W / 2) + (i === 2 ? 0 : 0), yy(z) - 4, `${fmt(W - 2 * l)} wide at ${fmt(z)} up (${nm})`, { size: 10.5, fill: '#A32D2D' })); });
-  // driver side: couch and the wall cabinets; passenger side: counter, fridge
+  // driver side: couch and the wall cabinets; passenger side: counter, fridge, microwave shelf
   o.push(bx(0, P.bedD, 0, P.seatH, { fill: COL.P, fo: .18, stroke: COL.P, sw: 1.5, rx: 3 })); o.push(T(xx(P.bedD / 2), yy(P.seatH / 2), 'couch', { size: 11, fill: COL.P }));
   o.push(bx(0, 6, P.seatH, P.backH, { fill: COL.P, fo: .18, stroke: COL.P, sw: 1.5, rx: 3 }));
   // wall cabinets and the closet have open backs: the side panels run against the leaning wall, front edge vertical
@@ -389,6 +392,7 @@ function drawCross(L, V) {
   o.push(T(xx(P.cabBackIn + P.cabDepth / 2 + 1.5), yy((P.cabBot + L.ceilF) / 2), 'wall cabinet', { size: 11, fill: '#3C3489' })); o.push(T(xx(P.cabBackIn + P.cabDepth / 2 + 1.5), yy((P.cabBot + L.ceilF) / 2) + 13, `${fmt(P.cabDepth)} deep`, { size: 10, fill: '#3C3489' }));
   o.push(bx(W - P.cabD, W, 0, P.counterH, { fill: COL.C, fo: .12, stroke: COL.C, sw: 1.5, rx: 3 })); o.push(T(xx(W - P.cabD / 2), yy(P.counterH / 2), 'counter and cabinet', { size: 11, fill: COL.C }));
   o.push(bx(W - 2 - 19, W - 2, 8.25, 56.25, { fill: '#0A6A8A', fo: .14, stroke: '#0A6A8A', sw: 1.4, dash: '5 3' })); o.push(T(xx(W - 11.5), yy(40), 'fridge', { size: 11, fill: '#0A6A8A' }));
+  o.push(bx(W - 12 - P.microIn, W - P.microIn, 59, 69, { fill: COL.G, fo: .2, stroke: COL.G, sw: 1.4, rx: 2 })); o.push(T(xx(W - 6 - P.microIn), yy(64.5), 'micro', { size: 10, fill: COL.G }));
   o.push(T(xx(0) + 6, yy(P.roofMidH + P.ribDepth + 5), 'driver side wall', { anchor: 'start', size: 11, fill: '#5F5E5A', halo: false })); o.push(T(xx(W) - 6, yy(P.roofMidH + P.ribDepth + 5), 'passenger side wall', { anchor: 'end', size: 11, fill: '#5F5E5A', halo: false }));
   o.push(Ln(xx(0), yy(0), xx(W), yy(0), { stroke: '#5F5E5A', sw: 2 }));
   o.push(T(20, FL + 58, 'Things at different places along the van are drawn together (the fridge and the counter are side by side along the wall, not on top of each other).', { anchor: 'start', size: 10.5, fill: '#5F5E5A', halo: false }));

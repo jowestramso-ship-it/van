@@ -7,10 +7,10 @@ function computeChecks(L, V) {
   L.coll.list.forEach(c => push('bad', c.msg));
   {
     const dirs = (dx, dz) => [dx ? `${fmt(Math.abs(dx))} in toward the ${dx > 0 ? 'cab' : 'rear'}` : '', dz ? `${fmt(Math.abs(dz))} in ${dz > 0 ? 'up' : 'down'}` : ''].filter(Boolean).join(', ');
-    const moved = L.parts.map(p => [p.n, p.dxk ? P[p.dxk] : 0, P[p.dzk]]).concat([['the jar shelf in the nook', 0, P.dzNook], ['the shelf over the fridge', 0, P.dzFShelf]]).filter(m => m[1] || m[2]);
+    const moved = L.parts.map(p => [p.n, p.dxk ? P[p.dxk] : 0, P[p.dzk]]).concat([['the jar shelf in the nook', 0, P.dzNook], ['the microwave and its shelf', 0, P.dzMicro]]).filter(m => m[1] || m[2]);
     if (moved.length) push('ok', `Moved by hand from the planned spots: ${moved.map(m => cap(m[0]) + ' (' + dirs(m[1], m[2]) + ')').join('; ')}. The drawers are not resized when you move a shelf, so a shelf pushed into a drawer shows as an overlap. Double-click one in the drawing to put it back; "Reset to the current design" puts everything back.`);
   }
-  if (!L.coll.list.length) push('ok', 'Nothing overlaps: the two water tanks, the drawers, the shelves, the jar shelf and the shelf over the fridge clear each other, the wheel well, the fridge, the counter and the cab wall, and the fan and air conditioner units clear each other.');
+  if (!L.coll.list.length) push('ok', 'Nothing overlaps: the two water tanks, the drawers, the shelves, the jar shelf and the microwave clear each other, the wheel well, the fridge, the counter and the cab wall, and the fan and air conditioner units clear each other.');
   // dinette
   const dspace = L.bB[1] - L.bA[0];
   if (L.spare < -0.01) push('bad', `The two benches and the table are ${fmt(-L.spare)} in too long for the dinette space (${fmt(dspace)} in from the closet to the cab wall).`);
@@ -32,13 +32,14 @@ function computeChecks(L, V) {
   if (P.leanOn) {
     const z0 = P.cabBot, z1 = L.ceilF, l0 = L.leanAt(z0), l1 = L.leanAt(z1), wc = P.vanW - 2 * L.leanAt(P.ceil), d = Math.abs(wc - P.ceilW);
     push(L.leanK <= 0 ? 'warn' : 'ok', `Wall lean: from your two widths (${fmt(P.leanW1)} in at ${fmt(P.leanZ1)} up, ${fmt(P.leanW2)} in at ${fmt(P.leanZ2)} up) each wall is straight up to about ${fmt(L.leanStart)} in (${fmt(P.vanW)} wide), then leans in ${(L.leanK * 12).toFixed(2)} in per foot, ${(Math.atan(L.leanK) * 180 / Math.PI).toFixed(1)} degrees: ${fmt(L.leanAt(P.ceil))} in each side by the bare roof, so ${fmt(wc)} in wide at ${fmt(P.ceil)} up. ${d <= .75 ? `That matches the ${fmt(P.ceilW)} in flat roof.` : `The flat roof is set to ${fmt(P.ceilW)} in; the lean says ${fmt(wc)}.`}`);
-    const bk = P.cabBackIn, yf = bk + P.cabDepth, d0 = yf - Math.max(bk, l0), d1 = yf - Math.max(bk, l1), ang = Math.atan((Math.max(bk, l1) - Math.max(bk, l0)) / (z1 - z0)) * 180 / Math.PI;
+    const bk = P.cabBackIn, mk = P.microIn, m0 = L.leanAt(L.microZ[0]), m1 = L.leanAt(L.microZ[1]), yf = bk + P.cabDepth, d0 = yf - Math.max(bk, l0), d1 = yf - Math.max(bk, l1), ang = Math.atan((Math.max(bk, l1) - Math.max(bk, l0)) / (z1 - z0)) * 180 / Math.PI;
     if (bk <= .01) push('ok', `The driver side wall cabinets (${fmt(z0)} to ${fmt(z1)} in up) have open backs and sit against the leaning wall, so only their sides follow it: the wall is ${fmt(l0)} in in at the bottom of the cabinets and ${fmt(l1)} in at the top, so each side panel is ${fmt(d0)} in deep at the bottom and ${fmt(d1)} in at the top, the rear edge cut at about ${ang.toFixed(0)} degrees (${fmt(l1 - l0)} in over ${fmt(z1 - z0)} in); the front stays ${fmt(P.cabDepth)} in out from the widest wall line. The shelves and the top are ${fmt(d1)} in deep at the top. Scribe the sides to the real wall when you fit them.`);
     else push(bk < l1 - .01 ? 'bad' : 'ok', `The driver side wall cabinets (${fmt(z0)} to ${fmt(z1)} in up) have a solid back set in ${fmt(bk)} in from the wall: ${fmt(bk - l0)} in off the wall at the bottom and ${fmt(bk - l1)} in at the top${bk < l1 - .01 ? `: it would run into the wall by ${fmt(l1 - bk)} in` : ''}.`);
     {
       const cz = L.ceilF, cl = L.leanAt(cz), st = Math.min(Math.max(L.leanStart, 0), cz), cAng = Math.atan(L.leanK) * 180 / Math.PI;
       push('ok', `The closet (${fmt(P.closetD)} deep, ${fmt(cz)} in tall) has an open back, so its sides follow the wall too: ${fmt(P.closetD)} deep up to ${fmt(st)} in, then the rear edge leans in at about ${cAng.toFixed(0)} degrees to ${fmt(P.closetD - cl)} deep at the top (${fmt(cl)} in less over the last ${fmt(cz - st)} in).`);
     }
+    push(mk < m1 - .01 ? 'bad' : 'ok', `The microwave (${fmt(L.microZ[0])} to ${fmt(L.microZ[1])} in up) is on a wall that leans in ${fmt(m0)} in at its bottom and ${fmt(m1)} in at its top; its back is set in ${fmt(mk)} in, so it is ${fmt(mk - m0)} in off the wall at the bottom and ${fmt(mk - m1)} in at the top${mk < m1 - .01 ? `: it would run into the wall by ${fmt(m1 - mk)} in` : ''}. A microwave has to sit level (its turntable and door seal are made for that), so it cannot lean with the wall: its back touches the wall at the top corner and leaves a ${fmt(m1 - m0)} in wedge behind its bottom (good for its vent and the cord). What follows the wall is everything built around it: the shelf, its side panels and any trim are cut to the same ${(Math.atan(L.leanK) * 180 / Math.PI).toFixed(0)} degree lean. The same wedge is behind the wall covering and the vertical planks.`);
   }
   // rib marks on the bare roof: each rib is a band ribW wide; an opening has to sit in the clear space between two bands
   if (L.ribs.length) {
@@ -187,7 +188,7 @@ const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
 const ALLDC = ['dc0', 'dc1', 'dc2', 'dc3', 'dc4', 'dc5'];
 const VIEWS = [
   { id: 'driver', label: 'Driver side', draw: drawDriver, movers: [['Couch to bed', ['bed']], ['Dinette to bed', ['dinette']], ['Wall cabinet doors, bed side', ['dc0', 'dc1', 'dc2']], ['Wall cabinet doors, dinette side', ['dc3', 'dc4', 'dc5']], ['Closet doors', ['clo_hi', 'clo_lo']]] },
-  { id: 'pass', label: 'Passenger side', drag: 'the drawers and shelves under the counter, the jar shelf, the shelf over the fridge, the hot water tank, the fresh water tank and the drain line', draw: drawPass, movers: [['Shower pan', ['pan']], ['Fridge door', ['fridge']], ['Fold-out table with the foot ledge', ['flap', 'ledge']], ['Foot ledge only', ['ledge']]] },
+  { id: 'pass', label: 'Passenger side', drag: 'the drawers and shelves under the counter, the jar shelf, the microwave, the hot water tank, the fresh water tank and the drain line', draw: drawPass, movers: [['Shower pan', ['pan']], ['Fridge door', ['fridge']], ['Fold-out table with the foot ledge', ['flap', 'ledge']], ['Foot ledge only', ['ledge']]] },
   { id: 'end', label: 'Bed, from the end', draw: drawBedEnd, movers: [['Couch to bed', ['bed']]] },
   { id: 'cross', label: 'Cross-section', draw: drawCross, movers: [] },
   { id: 'bare', label: 'Bare roof (mark the ribs)', drag: 'the shower fan and the air conditioner', draw: drawBare, movers: [] },
@@ -277,12 +278,12 @@ const DRAG_SAYS = {
   fan: L => `Shower fan: ${fmt(L.fan.x)} in from the back, ${fmt(L.fan.y)} in across from the driver wall`,
   ac: L => `Air conditioner: ${fmt(L.ac.x)} in from the back, ${fmt(L.ac.y)} in across from the driver wall`
 };
-// drawers, boards, the jar shelf and the shelf over the fridge (their ids are in L.partById, Nook and FShelf)
+// drawers, boards, the jar shelf and the microwave (their ids are in L.partById, Nook and Micro)
 const sayMore = (L, id) => {
   const p = L.partById[id];
   if (p) return `${cap(p.n)}: ${fmt(p.x0)} to ${fmt(p.x1)} in from the back, ${fmt(p.z0)} to ${fmt(p.z1)} in up`;
   if (id === 'Nook') return `Jar shelf in the nook: ${fmt(L.nookZ)} in up (${fmt(L.nookZ - L.P.counterH)} in over the counter); the upper row of jars reaches ${fmt(L.nookZ + .75 + 7)} in, the nook top is ${fmt(L.P.counterH + 18.5)} in`;
-  if (id === 'FShelf') return `Shelf over the fridge: ${fmt(L.fshelfZ)} to ${fmt(L.fshelfZ + .75)} in up (the fridge top is ${fmt(8.25 + L.P.fridgeH)} in, the ceiling ${fmt(L.ceilF)} in)`;
+  if (id === 'Micro') return `Microwave: ${fmt(L.microZ[0])} to ${fmt(L.microZ[1])} in up, its shelf at ${fmt(L.microZ[0] - .75)} in (the fridge top is ${fmt(8.25 + L.P.fridgeH)} in)`;
   return '';
 };
 let dragging = null, blockClick = false;

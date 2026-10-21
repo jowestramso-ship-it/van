@@ -79,7 +79,7 @@
 <body>
 <div class="wrap">
   <h1>Ford Transit van: interactive plan</h1>
-  <p class="lead">Click a door, table, the bed, the shower pan or the fridge to open or close it. Drag the drawers and shelves, the jar shelf, the shelf over the fridge, the water tanks, the drain line, the shower fan and the air conditioner (the dotted purple boxes) to move them, and double-click one to put it back: the message above the drawing says right away what no longer fits or overlaps. Change any size below the drawing and everything redraws, including the walkway checks. Zoom the drawing with the + and − buttons in its corner, Ctrl (Cmd on a Mac) and scroll, or pinch; drag it to move when zoomed. Sizes are in inches, measured from the same zero as the static diagrams (6 in in from the rear edge). <a href="sides.html">Static diagrams, photos and the full measurement tables</a></p>
+  <p class="lead">Click a door, table, the bed, the shower pan or the fridge to open or close it. Drag the drawers and shelves, the jar shelf, the microwave, the water tanks, the drain line, the shower fan and the air conditioner (the dotted purple boxes) to move them, and double-click one to put it back: the message above the drawing says right away what no longer fits or overlaps. Change any size below the drawing and everything redraws, including the walkway checks. Zoom the drawing with the + and − buttons in its corner, Ctrl (Cmd on a Mac) and scroll, or pinch; drag it to move when zoomed. Sizes are in inches, measured from the same zero as the static diagrams (6 in in from the rear edge). <a href="sides.html">Static diagrams, photos and the full measurement tables</a></p>
   <noscript>This page needs JavaScript. The static diagrams are on the other page.</noscript>
   <div class="tabs" role="tablist" id="tabs"></div>
   <div class="movers" id="movers"></div>
@@ -224,6 +224,7 @@ const PD = [
   { k: 'flapGap', g: 'Fold-out table and foot ledge', l: 'Gap left to the cab wall', d: 2, s: .5, a: 0, b: 10 },
   { k: 'flapLen', g: 'Fold-out table and foot ledge', l: 'Length', d: 29, s: .5, a: 8, b: 60 },
   { k: 'flapD', g: 'Fold-out table and foot ledge', l: 'Depth', d: 15, s: .5, a: 8, b: 30 },
+  { k: 'microIn', g: 'Fold-out table and foot ledge', l: 'Microwave: set its back in from the passenger wall (the wall leans in, about 2 1/2 in at its top)', d: 2.5, s: .5, a: 0, b: 8 },
   { k: 'cabSeatH', g: 'Fold-out table and foot ledge', l: 'Cab passenger seat: top of the cushion, up from the floor', d: 17, s: .5, a: 10, b: 30 },
   { k: 'cabSeatOut', g: 'Fold-out table and foot ledge', l: 'Cab passenger seat: how far the cushion sticks out past the cab wall into the living area (the back does not)', d: 1, s: .5, a: 0, b: 10 },
   { k: 'cabSeatFwd', g: 'Fold-out table and foot ledge', l: 'Cab passenger seat pulled all the way forward: the cushion rear edge is this far in front of the cab wall', d: 6, s: .5, a: 0, b: 20 },
@@ -298,10 +299,10 @@ const PD = [
   { k: 'fanHighH', g: 'Power', l: 'Hours a day the fan runs on high (the rest of the day is low)', d: 1, s: .5, a: 0, b: 24 },
   { k: 'heaterW', g: 'Power', l: 'Hot water heater power (W, 120 V)', d: 1440, s: 40, a: 200, b: 3000 }
 ];
-// the drawers and shelves under the counter, the jar shelf and the shelf over the fridge: how far each is moved from its planned spot (you can drag them; double-click one to put it back)
+// the drawers and shelves under the counter, the jar shelf and the microwave shelf: how far each is moved from its planned spot (you can drag them; double-click one to put it back)
 [['TB', 'Top drawer, back side', 1], ['TC', 'Top drawer, cab side', 1], ['C1', 'Cab-side column: upper (or only) drawer', 1], ['C2', 'Cab-side column: lower drawer', 1], ['B1', 'Back-side column: upper (or only) drawer', 1], ['B2', 'Back-side column: middle drawer', 1], ['B3', 'Back-side column: bottom drawer', 1],
   ['SC', 'Shelf under the cab-side drawers', 0], ['SB', 'Shelf under the back-side drawers', 0], ['SC2', 'Board between the two cab-side lower drawers', 0], ['SB1', 'Board between the upper and middle back-side drawers', 0], ['SB2', 'Board between the middle and bottom back-side drawers', 0],
-  ['Nook', 'Jar shelf in the nook (with its upper row of jars)', 0], ['FShelf', 'Shelf over the fridge', 0]].forEach(([k, nm, along]) => {
+  ['Nook', 'Jar shelf in the nook (with its upper row of jars)', 0], ['Micro', 'Microwave and its shelf', 0]].forEach(([k, nm, along]) => {
   if (along) PD.push({ k: 'dx' + k, g: 'Drawers and shelves', l: nm + ': moved along the wall (+ toward the cab, - toward the rear)', d: 0, s: .25, a: -60, b: 60 });
   PD.push({ k: 'dz' + k, g: 'Drawers and shelves', l: nm + ': moved up (+) or down (-)', d: 0, s: .25, a: -40, b: 40 });
 });
@@ -391,7 +392,7 @@ function cabinetParts(L) {
   return parts;
 }
 // solid things on the passenger side (x along the van from the back, y out from the passenger wall, z up) and the roof units; reports what overlaps.
-// Movable things (the tanks, drawers, shelves, jar shelf) are checked against each other and against the fixed ones; a fixed thing with vs only counts for those kinds.
+// Movable things (the tanks, drawers, shelves, jar shelf, microwave) are checked against each other and against the fixed ones; a fixed thing with vs only counts for those kinds.
 function collisions(L) {
   const P = L.P, list = [], ids = new Set(), ch = P.counterH, dm = L.cabS + 14.75, ft = 8.25 + P.fridgeH;
   const bx = (id, n, x0, x1, y0, y1, z0, z1, o) => Object.assign({ id, n, x0, x1, y0, y1, z0, z1, kind: '' }, o);
@@ -401,7 +402,7 @@ function collisions(L) {
   L.parts.forEach(p => mov.push(bx(p.id, p.n, p.x0, p.x1, p.y0, p.y1, p.z0, p.z1, { kind: p.kind })));
   const nx0 = 58, nx1 = 93.25;
   mov.push(bx('Nook', 'the jar shelf in the nook with its upper row of jars', nx0, nx1, 0, 4.5, L.nookZ, L.nookZ + .75 + 7, { kind: 'jars' }));
-  mov.push(bx('FShelf', 'the shelf over the fridge', L.fr[0], L.fr[1], 0, 21, L.fshelfZ, L.fshelfZ + .75, { kind: 'shelf' }));
+  mov.push(bx('Micro', 'the microwave and its shelf', L.fr[0], L.fr[1], 0, P.microIn + 12, L.microZ[0] - .75, L.microZ[1], { kind: 'micro' }));
   const fix = [
     bx('', 'the wheel well', 42, 76, 0, 7, 0, 7.5), bx('', 'the fridge', L.fr[0], L.fr[1], 2, 2 + P.fridgeD, 8.25, ft), bx('', 'the cab wall', P.cab, P.cab + 60, 0, 40, 0, 120),
     bx('', 'the floor', -10, P.cab + 10, -5, 45, -40, 0), bx('', 'the ceiling', -10, P.cab + 10, -5, 45, L.ceilF, L.ceilF + 40),
@@ -508,10 +509,10 @@ function layout(P0) {
     L.fan = { x: P.fanX, y: P.fanY, w: P.fanW, nm: 'shower fan', u: P.fanUnit }; L.ac = { x: P.acX, y: P.acY, w: P.acW, nm: 'A/C', u: P.acUnit };
     L.slatsCut = c => L.slatY.filter((sy, k) => !L.slatOut.has(k) && sy < c.y + c.w / 2 && sy + P.slatW > c.y - c.w / 2).length;
   }
-  // the drawers and shelves under the counter (as planned plus dragged), the jar shelf in the nook and the shelf above the fridge
+  // the drawers and shelves under the counter (as planned plus dragged), the jar shelf in the nook and the microwave shelf above the fridge
   L.parts = cabinetParts(L); L.partById = {}; L.parts.forEach(p => { L.partById[p.id] = p; });
   L.nookZ = P.counterH + 7.5 + P.dzNook;
-  L.fshelfZ = 8.25 + P.fridgeH + 2 + P.dzFShelf;   // bottom of the shelf over the fridge (it is 3/4 in thick; 2 in over the fridge top)
+  L.microZ = [8.25 + P.fridgeH + 2.75 + P.dzMicro, 8.25 + P.fridgeH + 12.75 + P.dzMicro];   // the microwave bottom and top; its shelf is the 3/4 in under it, 2 in over the fridge top
   L.coll = collisions(L);
   return L;
 }
@@ -748,7 +749,7 @@ function drawPass(L, V) {
   o.push(T(X((sinkS + sinkE) / 2), Y(ch * .68) + 14, `${fmt(P.sinkW)} wide, counter ${fmt(P.sinkD)} deep`, { size: 10.5, fill: COL.C }));
   o.push(box(cabS, sinkE, ch - 1.2, ch, { fill: '#5F5E5A', fo: .75 }));
   o.push(T(X(sinkS - 3), Y(ch) - 4, `countertop at ${fmt(ch)} in`, { size: 10.5, fill: '#5F5E5A', halo: false }));
-  // fridge on a platform over the wheel well, a shelf over it
+  // fridge on a platform over the wheel well, microwave on its shelf
   const q0 = L.fr[0], q1 = L.fr[1], fb = 8.25, ft = fb + P.fridgeH;
   o.push(box(q0, q1, 7.5, 8.25, { fill: '#8A6B4D', stroke: '#3E230B', sw: 1 }));
   o.push(box(q0, q0 + 1.5, 0, 7.5, { fill: '#8A6B4D', stroke: '#3E230B', sw: 1 }));
@@ -767,8 +768,11 @@ function drawPass(L, V) {
     }
     o.push(MV('fridge', g, HITR(Math.min(X(q0), X(q1)), Y(ft), S * P.fridgeW, S * P.fridgeH)));
   }
-  const md = P.dzFShelf;
+  const md = P.dzMicro;
   o.push(box(q0, q1, ft + 2 + md, ft + 2.75 + md, { fill: '#8A6B4D', stroke: '#3E230B', sw: 1 }));
+  o.push(box(q0 + (P.fridgeW - 18.5) / 2, q1 - (P.fridgeW - 18.5) / 2, ft + 2.75 + md, ft + 12.75 + md, { fill: COL.G, fo: .25, stroke: COL.G, sw: 1.5, rx: 3 }));
+  o.push(T(X((q0 + q1) / 2), Y(ft + 6.9 + md), 'Microwave', { size: 12, fill: COL.G }));
+  o.push(T(X((q0 + q1) / 2), Y(ft + 6.9 + md) + 14, '18.5 x 10 x 12 in', { size: 10.5, fill: COL.G }));
   // counter nook (a recess in the wall) with the jar shelf
   const nx0 = 58, nx1 = 93.25;
   o.push(box(nx0, nx1, ch, ch + 18.5, { fill: '#7A4A1E', fo: .2, stroke: '#7A4A1E', sw: 1.5, rx: 3, dash: '5 3' }));
@@ -894,7 +898,7 @@ function drawPass(L, V) {
     L.parts.filter(p => p.kind === 'drawer' && p.z1 - p.z0 > .5).forEach(p => o.push(HIT(p.id, hx(p.x0, p.x1), Y(p.z1), S * (p.x1 - p.x0), S * (p.z1 - p.z0), [p.dxk, -1 / S, p.dzk, -1 / S], L.coll.ids.has(p.id), cap(p.n) + ' (along the wall and up)')));
     L.parts.filter(p => p.kind === 'shelf').forEach(p => o.push(HIT(p.id, hx(p.x0, p.x1), Y(p.z1) - 4, S * (p.x1 - p.x0), S * (p.z1 - p.z0) + 8, ['', 0, p.dzk, -1 / S], L.coll.ids.has(p.id), cap(p.n) + ' (up and down)')));
     o.push(HIT('Nook', hx(nx0, nx1), Y(ch + 8.25 + nd) - 4, S * (nx1 - nx0), S * .75 + 8, ['', 0, 'dzNook', -1 / S], L.coll.ids.has('Nook'), 'The jar shelf in the nook with its upper row of jars (up and down)'));
-    o.push(HIT('FShelf', hx(q0, q1), Y(ft + 2.75 + md) - 4, S * (q1 - q0), S * .75 + 8, ['', 0, 'dzFShelf', -1 / S], L.coll.ids.has('FShelf'), 'The shelf over the fridge (up and down)'));
+    o.push(HIT('Micro', hx(q0, q1), Y(ft + 12.75 + md), S * (q1 - q0), S * 10.75, ['', 0, 'dzMicro', -1 / S], L.coll.ids.has('Micro'), 'The microwave and its shelf (up and down)'));
   }
   o.push(HIT('fresh', Math.min(X(L.tankX[0]), X(L.tankX[1])), Y(P.tankH), S * L.tankLen, S * P.tankH, ['tankShift', 1 / S, '', 0], L.coll.ids.has('fresh'), 'Fresh water tank (along the wall)'));
   if (P.drainOn && P.hotShelf > 10) o.push(HIT('drain', X(P.drainX) - 8, Y(P.hotShelf + P.hotH + 1.5) - 4, 16, S * (P.hotShelf + P.hotH + 1.5 + 2) + 8, ['drainX', -1 / S, '', 0], false, 'Relief valve drain line (where it comes down)'));
@@ -924,7 +928,7 @@ function drawCross(L, V) {
   o.push(T(xx(W / 2), yy(L.roofZ(W / 2) - L.lining) + 24, `roof ribs ${fmt(zw)} at the wall, ${fmt(L.roofZ(W / 2))} in the middle`, { size: 11, fill: '#5A3A00' })); if (L.lining > 0) o.push(T(xx(W / 2), yy(L.roofZ(W / 2) - L.lining) + 38, `finished ceiling ${fmt(zw - L.lining)} at the wall, ${fmt(L.roofZ(W / 2) - L.lining)} in the middle`, { size: 11, fill: '#5A3A00' }));
   // width at the two measured heights, at the cabinet bottom and at the finished ceiling
   [[P.leanZ1, 'measured'], [P.leanZ2, 'measured'], [P.cabBot, 'cabinet bottom']].forEach(([z, nm], i) => { const l = lean(z), x0 = xx(l), x1 = xx(W - l); o.push(Ln(x0, yy(z), x1, yy(z), { stroke: '#A32D2D', sw: 1.2, mk: true })); o.push(T(xx(W / 2) + (i === 2 ? 0 : 0), yy(z) - 4, `${fmt(W - 2 * l)} wide at ${fmt(z)} up (${nm})`, { size: 10.5, fill: '#A32D2D' })); });
-  // driver side: couch and the wall cabinets; passenger side: counter, fridge
+  // driver side: couch and the wall cabinets; passenger side: counter, fridge, microwave shelf
   o.push(bx(0, P.bedD, 0, P.seatH, { fill: COL.P, fo: .18, stroke: COL.P, sw: 1.5, rx: 3 })); o.push(T(xx(P.bedD / 2), yy(P.seatH / 2), 'couch', { size: 11, fill: COL.P }));
   o.push(bx(0, 6, P.seatH, P.backH, { fill: COL.P, fo: .18, stroke: COL.P, sw: 1.5, rx: 3 }));
   // wall cabinets and the closet have open backs: the side panels run against the leaning wall, front edge vertical
@@ -938,6 +942,7 @@ function drawCross(L, V) {
   o.push(T(xx(P.cabBackIn + P.cabDepth / 2 + 1.5), yy((P.cabBot + L.ceilF) / 2), 'wall cabinet', { size: 11, fill: '#3C3489' })); o.push(T(xx(P.cabBackIn + P.cabDepth / 2 + 1.5), yy((P.cabBot + L.ceilF) / 2) + 13, `${fmt(P.cabDepth)} deep`, { size: 10, fill: '#3C3489' }));
   o.push(bx(W - P.cabD, W, 0, P.counterH, { fill: COL.C, fo: .12, stroke: COL.C, sw: 1.5, rx: 3 })); o.push(T(xx(W - P.cabD / 2), yy(P.counterH / 2), 'counter and cabinet', { size: 11, fill: COL.C }));
   o.push(bx(W - 2 - 19, W - 2, 8.25, 56.25, { fill: '#0A6A8A', fo: .14, stroke: '#0A6A8A', sw: 1.4, dash: '5 3' })); o.push(T(xx(W - 11.5), yy(40), 'fridge', { size: 11, fill: '#0A6A8A' }));
+  o.push(bx(W - 12 - P.microIn, W - P.microIn, 59, 69, { fill: COL.G, fo: .2, stroke: COL.G, sw: 1.4, rx: 2 })); o.push(T(xx(W - 6 - P.microIn), yy(64.5), 'micro', { size: 10, fill: COL.G }));
   o.push(T(xx(0) + 6, yy(P.roofMidH + P.ribDepth + 5), 'driver side wall', { anchor: 'start', size: 11, fill: '#5F5E5A', halo: false })); o.push(T(xx(W) - 6, yy(P.roofMidH + P.ribDepth + 5), 'passenger side wall', { anchor: 'end', size: 11, fill: '#5F5E5A', halo: false }));
   o.push(Ln(xx(0), yy(0), xx(W), yy(0), { stroke: '#5F5E5A', sw: 2 }));
   o.push(T(20, FL + 58, 'Things at different places along the van are drawn together (the fridge and the counter are side by side along the wall, not on top of each other).', { anchor: 'start', size: 10.5, fill: '#5F5E5A', halo: false }));
@@ -1143,6 +1148,8 @@ function drawPlan(L, V) {
     }
   }
   o.push(ip(L.fr[0], L.fr[1], 0, P.cabD, '#8A6B4D', '', null, { fo: .08, dash: '6 3' }));
+  o.push(ip(L.fr[0] + 1.75, L.fr[1] - 1.75, P.microIn, P.microIn + 12, COL.G, '', null, { fo: .2, dash: '4 3' }));
+  o.push(T(xx((L.fr[0] + L.fr[1]) / 2), yp(5.5 + P.microIn), 'Microwave 18.5 x 12', { size: 9, fill: COL.G, w: 500 }));
   o.push(ip(42, 76, 0, 7, COL.W2, '', null, { fo: .3 }));
   o.push(ip(L.tankX[0], L.tankX[1], 0, P.tankD, COL.BL, '', null, { fo: .1, dash: '5 3' }));
   o.push(ip(L.hotX[0], L.hotX[1], P.hotBack, P.hotBack + P.hotD, '#C0392B', '', null, { fo: .2, dash: '4 3' }));
@@ -1299,10 +1306,10 @@ function computeChecks(L, V) {
   L.coll.list.forEach(c => push('bad', c.msg));
   {
     const dirs = (dx, dz) => [dx ? `${fmt(Math.abs(dx))} in toward the ${dx > 0 ? 'cab' : 'rear'}` : '', dz ? `${fmt(Math.abs(dz))} in ${dz > 0 ? 'up' : 'down'}` : ''].filter(Boolean).join(', ');
-    const moved = L.parts.map(p => [p.n, p.dxk ? P[p.dxk] : 0, P[p.dzk]]).concat([['the jar shelf in the nook', 0, P.dzNook], ['the shelf over the fridge', 0, P.dzFShelf]]).filter(m => m[1] || m[2]);
+    const moved = L.parts.map(p => [p.n, p.dxk ? P[p.dxk] : 0, P[p.dzk]]).concat([['the jar shelf in the nook', 0, P.dzNook], ['the microwave and its shelf', 0, P.dzMicro]]).filter(m => m[1] || m[2]);
     if (moved.length) push('ok', `Moved by hand from the planned spots: ${moved.map(m => cap(m[0]) + ' (' + dirs(m[1], m[2]) + ')').join('; ')}. The drawers are not resized when you move a shelf, so a shelf pushed into a drawer shows as an overlap. Double-click one in the drawing to put it back; "Reset to the current design" puts everything back.`);
   }
-  if (!L.coll.list.length) push('ok', 'Nothing overlaps: the two water tanks, the drawers, the shelves, the jar shelf and the shelf over the fridge clear each other, the wheel well, the fridge, the counter and the cab wall, and the fan and air conditioner units clear each other.');
+  if (!L.coll.list.length) push('ok', 'Nothing overlaps: the two water tanks, the drawers, the shelves, the jar shelf and the microwave clear each other, the wheel well, the fridge, the counter and the cab wall, and the fan and air conditioner units clear each other.');
   // dinette
   const dspace = L.bB[1] - L.bA[0];
   if (L.spare < -0.01) push('bad', `The two benches and the table are ${fmt(-L.spare)} in too long for the dinette space (${fmt(dspace)} in from the closet to the cab wall).`);
@@ -1324,13 +1331,14 @@ function computeChecks(L, V) {
   if (P.leanOn) {
     const z0 = P.cabBot, z1 = L.ceilF, l0 = L.leanAt(z0), l1 = L.leanAt(z1), wc = P.vanW - 2 * L.leanAt(P.ceil), d = Math.abs(wc - P.ceilW);
     push(L.leanK <= 0 ? 'warn' : 'ok', `Wall lean: from your two widths (${fmt(P.leanW1)} in at ${fmt(P.leanZ1)} up, ${fmt(P.leanW2)} in at ${fmt(P.leanZ2)} up) each wall is straight up to about ${fmt(L.leanStart)} in (${fmt(P.vanW)} wide), then leans in ${(L.leanK * 12).toFixed(2)} in per foot, ${(Math.atan(L.leanK) * 180 / Math.PI).toFixed(1)} degrees: ${fmt(L.leanAt(P.ceil))} in each side by the bare roof, so ${fmt(wc)} in wide at ${fmt(P.ceil)} up. ${d <= .75 ? `That matches the ${fmt(P.ceilW)} in flat roof.` : `The flat roof is set to ${fmt(P.ceilW)} in; the lean says ${fmt(wc)}.`}`);
-    const bk = P.cabBackIn, yf = bk + P.cabDepth, d0 = yf - Math.max(bk, l0), d1 = yf - Math.max(bk, l1), ang = Math.atan((Math.max(bk, l1) - Math.max(bk, l0)) / (z1 - z0)) * 180 / Math.PI;
+    const bk = P.cabBackIn, mk = P.microIn, m0 = L.leanAt(L.microZ[0]), m1 = L.leanAt(L.microZ[1]), yf = bk + P.cabDepth, d0 = yf - Math.max(bk, l0), d1 = yf - Math.max(bk, l1), ang = Math.atan((Math.max(bk, l1) - Math.max(bk, l0)) / (z1 - z0)) * 180 / Math.PI;
     if (bk <= .01) push('ok', `The driver side wall cabinets (${fmt(z0)} to ${fmt(z1)} in up) have open backs and sit against the leaning wall, so only their sides follow it: the wall is ${fmt(l0)} in in at the bottom of the cabinets and ${fmt(l1)} in at the top, so each side panel is ${fmt(d0)} in deep at the bottom and ${fmt(d1)} in at the top, the rear edge cut at about ${ang.toFixed(0)} degrees (${fmt(l1 - l0)} in over ${fmt(z1 - z0)} in); the front stays ${fmt(P.cabDepth)} in out from the widest wall line. The shelves and the top are ${fmt(d1)} in deep at the top. Scribe the sides to the real wall when you fit them.`);
     else push(bk < l1 - .01 ? 'bad' : 'ok', `The driver side wall cabinets (${fmt(z0)} to ${fmt(z1)} in up) have a solid back set in ${fmt(bk)} in from the wall: ${fmt(bk - l0)} in off the wall at the bottom and ${fmt(bk - l1)} in at the top${bk < l1 - .01 ? `: it would run into the wall by ${fmt(l1 - bk)} in` : ''}.`);
     {
       const cz = L.ceilF, cl = L.leanAt(cz), st = Math.min(Math.max(L.leanStart, 0), cz), cAng = Math.atan(L.leanK) * 180 / Math.PI;
       push('ok', `The closet (${fmt(P.closetD)} deep, ${fmt(cz)} in tall) has an open back, so its sides follow the wall too: ${fmt(P.closetD)} deep up to ${fmt(st)} in, then the rear edge leans in at about ${cAng.toFixed(0)} degrees to ${fmt(P.closetD - cl)} deep at the top (${fmt(cl)} in less over the last ${fmt(cz - st)} in).`);
     }
+    push(mk < m1 - .01 ? 'bad' : 'ok', `The microwave (${fmt(L.microZ[0])} to ${fmt(L.microZ[1])} in up) is on a wall that leans in ${fmt(m0)} in at its bottom and ${fmt(m1)} in at its top; its back is set in ${fmt(mk)} in, so it is ${fmt(mk - m0)} in off the wall at the bottom and ${fmt(mk - m1)} in at the top${mk < m1 - .01 ? `: it would run into the wall by ${fmt(m1 - mk)} in` : ''}. A microwave has to sit level (its turntable and door seal are made for that), so it cannot lean with the wall: its back touches the wall at the top corner and leaves a ${fmt(m1 - m0)} in wedge behind its bottom (good for its vent and the cord). What follows the wall is everything built around it: the shelf, its side panels and any trim are cut to the same ${(Math.atan(L.leanK) * 180 / Math.PI).toFixed(0)} degree lean. The same wedge is behind the wall covering and the vertical planks.`);
   }
   // rib marks on the bare roof: each rib is a band ribW wide; an opening has to sit in the clear space between two bands
   if (L.ribs.length) {
@@ -1479,7 +1487,7 @@ const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
 const ALLDC = ['dc0', 'dc1', 'dc2', 'dc3', 'dc4', 'dc5'];
 const VIEWS = [
   { id: 'driver', label: 'Driver side', draw: drawDriver, movers: [['Couch to bed', ['bed']], ['Dinette to bed', ['dinette']], ['Wall cabinet doors, bed side', ['dc0', 'dc1', 'dc2']], ['Wall cabinet doors, dinette side', ['dc3', 'dc4', 'dc5']], ['Closet doors', ['clo_hi', 'clo_lo']]] },
-  { id: 'pass', label: 'Passenger side', drag: 'the drawers and shelves under the counter, the jar shelf, the shelf over the fridge, the hot water tank, the fresh water tank and the drain line', draw: drawPass, movers: [['Shower pan', ['pan']], ['Fridge door', ['fridge']], ['Fold-out table with the foot ledge', ['flap', 'ledge']], ['Foot ledge only', ['ledge']]] },
+  { id: 'pass', label: 'Passenger side', drag: 'the drawers and shelves under the counter, the jar shelf, the microwave, the hot water tank, the fresh water tank and the drain line', draw: drawPass, movers: [['Shower pan', ['pan']], ['Fridge door', ['fridge']], ['Fold-out table with the foot ledge', ['flap', 'ledge']], ['Foot ledge only', ['ledge']]] },
   { id: 'end', label: 'Bed, from the end', draw: drawBedEnd, movers: [['Couch to bed', ['bed']]] },
   { id: 'cross', label: 'Cross-section', draw: drawCross, movers: [] },
   { id: 'bare', label: 'Bare roof (mark the ribs)', drag: 'the shower fan and the air conditioner', draw: drawBare, movers: [] },
@@ -1569,12 +1577,12 @@ const DRAG_SAYS = {
   fan: L => `Shower fan: ${fmt(L.fan.x)} in from the back, ${fmt(L.fan.y)} in across from the driver wall`,
   ac: L => `Air conditioner: ${fmt(L.ac.x)} in from the back, ${fmt(L.ac.y)} in across from the driver wall`
 };
-// drawers, boards, the jar shelf and the shelf over the fridge (their ids are in L.partById, Nook and FShelf)
+// drawers, boards, the jar shelf and the microwave (their ids are in L.partById, Nook and Micro)
 const sayMore = (L, id) => {
   const p = L.partById[id];
   if (p) return `${cap(p.n)}: ${fmt(p.x0)} to ${fmt(p.x1)} in from the back, ${fmt(p.z0)} to ${fmt(p.z1)} in up`;
   if (id === 'Nook') return `Jar shelf in the nook: ${fmt(L.nookZ)} in up (${fmt(L.nookZ - L.P.counterH)} in over the counter); the upper row of jars reaches ${fmt(L.nookZ + .75 + 7)} in, the nook top is ${fmt(L.P.counterH + 18.5)} in`;
-  if (id === 'FShelf') return `Shelf over the fridge: ${fmt(L.fshelfZ)} to ${fmt(L.fshelfZ + .75)} in up (the fridge top is ${fmt(8.25 + L.P.fridgeH)} in, the ceiling ${fmt(L.ceilF)} in)`;
+  if (id === 'Micro') return `Microwave: ${fmt(L.microZ[0])} to ${fmt(L.microZ[1])} in up, its shelf at ${fmt(L.microZ[0] - .75)} in (the fridge top is ${fmt(8.25 + L.P.fridgeH)} in)`;
   return '';
 };
 let dragging = null, blockClick = false;

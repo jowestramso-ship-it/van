@@ -146,6 +146,8 @@ function drawPlan(L, V) {
     }
   }
   o.push(ip(L.fr[0], L.fr[1], 0, P.cabD, '#8A6B4D', '', null, { fo: .08, dash: '6 3' }));
+  o.push(ip(L.fr[0] + 1.75, L.fr[1] - 1.75, P.microIn, P.microIn + 12, COL.G, '', null, { fo: .2, dash: '4 3' }));
+  o.push(T(xx((L.fr[0] + L.fr[1]) / 2), yp(5.5 + P.microIn), 'Microwave 18.5 x 12', { size: 9, fill: COL.G, w: 500 }));
   o.push(ip(42, 76, 0, 7, COL.W2, '', null, { fo: .3 }));
   o.push(ip(L.tankX[0], L.tankX[1], 0, P.tankD, COL.BL, '', null, { fo: .1, dash: '5 3' }));
   o.push(ip(L.hotX[0], L.hotX[1], P.hotBack, P.hotBack + P.hotD, '#C0392B', '', null, { fo: .2, dash: '4 3' }));
