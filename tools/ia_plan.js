@@ -27,6 +27,8 @@ function obstacles(L, V) {
   Q.push({ x0: L.sinkS, x1: L.sinkE, d: P.sinkD, n: 'the sink counter' });
   const fo = V.flap || 0;
   if (fo > .02) Q.push({ x0: L.sinkE, x1: L.sinkE + .75 + (L.flapLen - .75) * Math.sin(fo * Math.PI / 2), d: P.flapD, n: 'the fold-out table' });
+  // the trash can slid out of the cab-side column on its pull-out
+  if (L.can && (V.can || 0) > .02) Q.push({ x0: L.can.x0, x1: L.can.x1, d: L.can.y1 + P.canTravel * V.can, n: 'the trash can (pulled out)' });
   if ((V.ledge || 0) > .02) Q.push({ x0: L.sinkE, x1: L.sinkE + L.ledgeTot * Math.sin((V.ledge || 0) * Math.PI / 2), d: P.sinkD, n: 'the foot ledge' });
   return { D, Q };
 }
@@ -220,6 +222,17 @@ function drawPlan(L, V) {
   Object.values(cols).forEach(c => o.push(ip(c.x0, c.x1, 0, 20, '#8A5A00', '', null, { fo: .15, dash: '3 2' })));
   o.push(T(xx(L.cabS + 14.75), yp(10), `${L.parts.filter(p => p.kind === 'drawer').length} drawers, 20 deep`, { size: 8.5, fill: '#8A5A00' }));
   o.push(GE());
+  if (L.can) {
+    // the trash can on its pull-out: the tray (13 x 20) and the can slide out of the cabinet together
+    const c = L.can, off = P.canTravel * (V.can || 0), cc = L.coll.ids.has('Can') ? '#A32D2D' : '#5F5E5A';
+    o.push(GB('Can', 'Trash can and its pull-out'));
+    o.push(ip(c.x0 - .5, c.x1 + .5, c.y0 - 1 + off, c.y0 + 19 + off, '#8A6B4D', '', null, { fo: .12, dash: '3 2' }));
+    o.push(ip(c.x0, c.x1, c.y0 + off, c.y1 + off, cc, '', null, { fo: .28 }));
+    o.push(`<circle cx="${f1(xx(c.cx))}" cy="${f1(yp((c.y0 + c.y1) / 2 + off))}" r="${f1(S * Math.min(P.canW, P.canD) / 2 - 3)}" fill="none" stroke="${cc}" stroke-width="1" stroke-dasharray="2 2"/>`);
+    o.push(T(xx(c.cx), yp((c.y0 + c.y1) / 2 + off) + 3, `${fmt(P.canGal)} gal can`, { size: 8.5, fill: cc, w: 500 }));
+    if ((V.can || 0) > .02) o.push(T(xx(c.cx), yp(c.y1 + off) - 4, `pulled out ${fmt(off)} in`, { size: 9, fill: cc, w: 500 }));
+    o.push(GE());
+  }
   o.push(GB('Nook', 'Nook'));
   o.push(ip(58, 93.25, 0, 4.5, '#7A4A1E', '', null, { fo: .3, dash: '3 2' }));
   o.push(T(xx(66), yp(1.3), 'nook 4.5 deep', { size: 8.5, fill: '#5A3510' }));
@@ -276,6 +289,7 @@ function drawPlan(L, V) {
   o.push(GE());
   // things you can drag (last, so they sit on top of everything)
   Object.values(cols).forEach(c => o.push(HIT(c.ids[0], xx(c.x0), yp(20), S * (c.x1 - c.x0), S * 20, [c.ids.map(id => 'dx' + id).join(','), 1 / S, '', 0], c.ids.some(id => L.coll.ids.has(id)), c.ids.length > 1 ? `The ${c.ids.length} drawers in this column (along the wall)` : cap(L.partById[c.ids[0]].n) + ' (along the wall)', '', 'drawers')));
+  if (L.can) o.push(HIT('Can', xx(L.can.x0), yp(L.can.y1 + P.canTravel * (V.can || 0)), S * P.canW, S * P.canD, ['dxCan', 1 / S, 'dyCan', -1 / S], L.coll.ids.has('Can'), 'The trash can (along the wall and out from it)'));
   o.push(HIT('Micro', xx(L.microX[0] + 1.75), yp(P.microIn + 12), S * (L.microX[1] - L.microX[0] - 3.5), S * 12, ['dxMicro', 1 / S, 'microIn', -1 / S], L.coll.ids.has('Micro'), 'The microwave (along the wall and out from it)'));
   o.push(HIT('fresh', xx(L.tankX[0]), yp(P.tankBack + P.tankD), S * L.tankLen, S * P.tankD, ['tankShift', -1 / S, 'tankBack', -1 / S], L.coll.ids.has('fresh'), 'Fresh water tank (along the wall and out from it)'));
   // after the tank, which is under it

@@ -61,7 +61,7 @@ const PD = [
   { k: 'ledgeLen', g: 'Fold-out table and foot ledge', l: 'Foot ledge: length of the foot platform (it ends this far from the cabinet end when the distance above is 0)', d: 13, s: .5, a: 4, b: 20 },
   { k: 'ledgeH', g: 'Fold-out table and foot ledge', l: 'Foot ledge top, up from floor', d: 8.5, s: .5, a: 3, b: 20 },
   { k: 'tankAuto', g: 'Water tanks', l: 'Fresh water tank fills the floor space to the sink end', d: false, t: 'c', f: 'tankLen' },
-  { k: 'tankLen', g: 'Water tanks', l: 'Fresh water tank length', d: 41, s: .5, a: 10, b: 70 },
+  { k: 'tankLen', g: 'Water tanks', l: 'Fresh water tank length (35 leaves the cab-side column under the counter, 73 3/4 to 86 3/4 in, free for the trash can; 41 reaches back to 81 1/4)', d: 35, s: .5, a: 10, b: 70 },
   { k: 'tankD', g: 'Water tanks', l: 'Fresh water tank depth (out from the wall)', d: 16, s: .5, a: 4, b: 20 },
   { k: 'tankH', g: 'Water tanks', l: 'Fresh water tank height', d: 10, s: .5, a: 6, b: 24 },
   { k: 'hotGap', g: 'Water tanks', l: 'Clear space each side of the hot water tank', d: 6, s: .5, a: 0, b: 20 },
@@ -79,6 +79,13 @@ const PD = [
   { k: 'jugH', g: 'Water tanks', l: 'Drain jug height (a 5 gallon water bottle is about 19 1/2 tall, with its neck)', d: 19.5, s: .25, a: 6, b: 30 },
   { k: 'jugD', g: 'Water tanks', l: 'Drain jug diameter (a 5 gallon water bottle is about 10 3/4 across)', d: 10.75, s: .25, a: 4, b: 18 },
   { k: 'jugGal', g: 'Water tanks', l: 'Drain jug: how much it holds (gallons; a 5 gallon water bottle holds 5)', d: 5, s: .5, a: 1, b: 15 },
+  { k: 'canOn', g: 'Trash can', l: 'Trash can on a pull-out in the cab-side column under the counter (replaces the two lower cab-side drawers and their shelves; turn it off to bring them back)', d: true, t: 'c' },
+  { k: 'canGal', g: 'Trash can', l: 'Trash can: size in gallons (a tall kitchen can is 13)', d: 13, s: 1, a: 4, b: 30 },
+  { k: 'canW', g: 'Trash can', l: 'Trash can: width along the wall (the column is 13 wide between the drawer slides)', d: 12, s: .25, a: 6, b: 20 },
+  { k: 'canD', g: 'Trash can', l: 'Trash can: depth, out from the wall', d: 16, s: .25, a: 6, b: 24 },
+  { k: 'canH', g: 'Trash can', l: 'Trash can: height with the lid shut', d: 24, s: .25, a: 8, b: 36 },
+  { k: 'canBase', g: 'Trash can', l: 'Trash can: how high the bottom of the can is off the floor (tray and slides are under it; 4 1/2 clears the wheel well edge, 3 1/3 in tall at the back of the column)', d: 4.5, s: .25, a: 0, b: 16 },
+  { k: 'canTravel', g: 'Trash can', l: 'Trash can pull-out: how far the slides carry it out (a 20 in slide goes about 19)', d: 19, s: .5, a: 4, b: 30 },
   { k: 'drainOn', g: 'Water tanks', l: 'Draw the relief valve drain line (over the top of the tank, down in front of the fresh tank, out through the floor)', d: true, t: 'c' },
   { k: 'drainX', g: 'Water tanks', l: 'Relief valve drain line: where it comes down (from the back)', d: 89, s: .5, a: 60, b: 125 },
   { k: 'drainDz', g: 'Water tanks', l: 'Relief valve drain line: the run over the tank moved up (+) or down (-) (you can drag it)', d: 0, s: .25, a: -12, b: 6 },
@@ -136,10 +143,11 @@ const PD = [
 // the drawers and shelves under the counter, the jar shelf and the microwave shelf: how far each is moved from its planned spot (you can drag them; double-click one to put it back)
 [['TB', 'Top drawer, back side', 1], ['TC', 'Top drawer, cab side', 1], ['C1', 'Cab-side column: upper (or only) drawer', 1], ['C2', 'Cab-side column: lower drawer', 1], ['B1', 'Back-side column: upper (or only) drawer', 1], ['B2', 'Back-side column: middle drawer', 1], ['B3', 'Back-side column: bottom drawer', 1],
   ['SC', 'Shelf under the cab-side drawers', 0], ['SB', 'Shelf under the back-side drawers', 0], ['SC2', 'Board between the two cab-side lower drawers', 0], ['SB1', 'Board between the upper and middle back-side drawers', 0], ['SB2', 'Board between the middle and bottom back-side drawers', 0],
-  ['Nook', 'Jar shelf in the nook (with its upper row of jars)', 0], ['Micro', 'Microwave and its shelf', 0], ['Jug', 'Drain jug (the 5 gallon bottle under the sink)', 0]].forEach(([k, nm, along]) => {
+  ['Nook', 'Jar shelf in the nook (with its upper row of jars)', 0], ['Micro', 'Microwave and its shelf', 0], ['Jug', 'Drain jug (the 5 gallon bottle under the sink)', 0], ['Can', 'Trash can on its pull-out', 0]].forEach(([k, nm, along]) => {
   PD.push({ k: 'dx' + k, g: 'Drawers and shelves', l: nm + ': moved along the wall (+ toward the cab, - toward the rear)', d: 0, s: .25, a: -60, b: 60 });
   PD.push({ k: 'dz' + k, g: 'Drawers and shelves', l: nm + ': moved up (+) or down (-)', d: 0, s: .25, a: -40, b: 40 });
 });
+PD.push({ k: 'dyCan', g: 'Drawers and shelves', l: 'Trash can on its pull-out: moved out from the wall (+) or toward it (-)', d: 0, s: .25, a: -12, b: 12 });
 PD.push({ k: 'dyJug', g: 'Drawers and shelves', l: 'Drain jug (the 5 gallon bottle under the sink): moved out from the wall (+) or toward it (-)', d: 0, s: .25, a: -12, b: 12 });
 const DEF = {}; PD.forEach(p => DEF[p.k] = p.d);
 let P = Object.assign({}, DEF);
@@ -200,23 +208,25 @@ function HIT(id, x, y, w, h, ax, bad, label, on, grp) {
 // x0/x1 along the wall and z0/z1 up (the planned spot plus how far it was dragged, both ways), y0/y1 out from the wall. The planned spots fill the space between the shelves, the
 // top drawers and the tanks, as before; dragging only adds to them.
 function cabinetParts(L) {
-  const P = L.P, ch = P.counterH, d0 = L.cabS + 1.25, dm = L.cabS + 14.75, z0 = ch - 6.75, z1 = ch - 2.75, tl = z0 - .25, bs = L.cabShelf + 1, tot = tl - bs, parts = [];
+  const P = L.P, ch = P.counterH, d0 = L.cabS + 1.25, dm = L.cabS + 14.75, z0 = ch - 6.75, z1 = ch - 2.75, tl = z0 - .25, can = !!P.canOn, bs = (can ? L.backShelf : L.cabShelf) + 1, tot = tl - bs, parts = [];
   const add = (kind, id, n, x0, x1, b0, b1) => {
     const dx = P['dx' + id] || 0, dz = P['dz' + id] || 0;
     parts.push({ kind, id, n, x0: x0 + dx, x1: x1 + dx, z0: b0 + dz, z1: b1 + dz, y0: 0, y1: 20, dxk: 'dx' + id, dzk: 'dz' + id });
   };
-  L.cabTot = tot; L.wellShelf = tot >= 11 ? L.backShelf : L.cabShelf;
+  L.cabTot = tot; L.wellShelf = tot >= 11 || can ? L.backShelf : L.cabShelf;
   add('drawer', 'TB', 'the top drawer on the back side', d0, dm - .5, z0, z1);
   add('drawer', 'TC', 'the top drawer on the cab side', dm + 1, dm + 14, z0, z1);
   if (tot >= 3) {
     const ws = L.wellShelf;
-    add('shelf', 'SC', 'the shelf under the cab-side drawers', dm, L.angS - .75, L.cabShelf, L.cabShelf + .75);
+    if (!can) add('shelf', 'SC', 'the shelf under the cab-side drawers', dm, L.angS - .75, L.cabShelf, L.cabShelf + .75);   // with the trash can the cab-side column has no lower drawers or shelves
     add('shelf', 'SB', 'the shelf under the back-side drawers', L.cabS, dm, ws, ws + .75);
     if (tot >= 11) {
       const bt = tl - 6, bb = ws + 1, many = bt - bb >= 14.5, rh2 = (bt - bb - 1) / 2;
-      add('shelf', 'SC2', 'the board between the two cab-side lower drawers', dm, L.angS - .75, tl - 6, tl - 5.25);
-      add('drawer', 'C1', 'the upper cab-side drawer', dm + 1, dm + 14, tl - 5, tl);
-      add('drawer', 'C2', 'the lower cab-side drawer', dm + 1, dm + 14, tl - 11, tl - 6);
+      if (!can) {
+        add('shelf', 'SC2', 'the board between the two cab-side lower drawers', dm, L.angS - .75, tl - 6, tl - 5.25);
+        add('drawer', 'C1', 'the upper cab-side drawer', dm + 1, dm + 14, tl - 5, tl);
+        add('drawer', 'C2', 'the lower cab-side drawer', dm + 1, dm + 14, tl - 11, tl - 6);
+      }
       if (many) {
         add('shelf', 'SB1', 'the board between the upper and middle back-side drawers', L.cabS, dm, bt, bt + .75);
         add('shelf', 'SB2', 'the board between the middle and bottom back-side drawers', L.cabS, dm, bb + rh2, bb + rh2 + .75);
@@ -226,7 +236,7 @@ function cabinetParts(L) {
       } else add('drawer', 'B1', 'the back-side drawer', d0, dm - .5, bb, tl);
     } else {
       add('drawer', 'B1', 'the back-side drawer', d0, dm - .5, bs, tl);
-      add('drawer', 'C1', 'the cab-side drawer', dm + 1, dm + 14, bs, tl);
+      if (!can) add('drawer', 'C1', 'the cab-side drawer', dm + 1, dm + 14, bs, tl);
     }
   }
   return parts;
@@ -244,6 +254,8 @@ function collisions(L) {
   mov.push(bx('Nook', 'the jar shelf in the nook with its upper row of jars', L.nookX[0], L.nookX[1], 0, 4.5, L.nookZ, L.nookZ + .75 + 7, { kind: 'jars' }));
   mov.push(bx('Micro', 'the microwave and its shelf', L.microX[0], L.microX[1], 0, P.microIn + 12, L.microZ[0] - .75, L.microZ[1], { kind: 'micro' }));
   // the drain jug (a bottle) is checked by its square outline; it stands on the fresh water tank
+  // the trash can with its tray and slides (a 3/4 in tray and 1/2 in slide under the can), closed in its place under the counter
+  if (L.can) mov.push(bx('Can', 'the trash can and its pull-out', L.can.x0, L.can.x1, L.can.y0, L.can.y1, L.can.z0 - 1.25, L.can.z1, { kind: 'can' }));
   if (L.jug) mov.push(bx('Jug', 'the drain jug', L.jug.x0, L.jug.x1, L.jug.y0, L.jug.y1, L.jug.z0, L.jug.z1, { kind: 'jug' }));
   // the wheel well is a trapezoid: 2 in high at 42, 7.5 from 51.25 to 66.75, 2 in high at 76
   const wellH = x => x < 42 || x > 76 ? 0 : x < 51.25 ? 2 + (x - 42) * 5.5 / 9.25 : x <= 66.75 ? 7.5 : 7.5 - (x - 66.75) * 5.5 / 9.25;
@@ -260,7 +272,9 @@ function collisions(L) {
     // the sink cabinet door (3/4 in, at the sink end depth) and the wall: the drain jug has to stay between them
     bx('', 'the sink cabinet door', L.sinkS, L.sinkE, P.sinkD - .75, P.sinkD, 0, ch, { vs: ['jug'] }), bx('', 'the van wall', L.sinkS - 20, L.sinkE + 20, -5, 0, 0, ch, { vs: ['jug'] }),
     // the divider between the two drawer columns (only drawers count: the shelves meet it by design)
-    bx('', 'the divider between the two columns', dm, dm + .5, 0, 20, L.cabTot >= 3 ? L.wellShelf + .75 : ch - 7.25, ch - 2.5, { vs: ['drawer'] })
+    bx('', 'the divider between the two columns', dm, dm + .5, 0, 20, L.cabTot >= 3 ? L.wellShelf + .75 : ch - 7.25, ch - 2.5, { vs: ['drawer'] }),
+    // the trash can has the divider (down to the floor for it) beside it and the cabinet door in front of it
+    bx('', 'the divider between the two columns', dm, dm + .5, 0, 20, 0, ch - 2.5, { vs: ['can'] }), bx('', 'the cabinet door', L.cabS, L.angS - .75, P.cabD - .75, P.cabD, 0, ch - 2.5, { vs: ['can'] })
   ];
   const ov = (a0, a1, b0, b1) => Math.min(a1, b1) - Math.max(a0, b0), seen = new Set(), cp = n => n[0].toUpperCase() + n.slice(1);
   const test = (a, b) => {
@@ -279,6 +293,7 @@ function collisions(L) {
   L.parts.forEach(p => outOf(p.id, p.n, p.x0, p.x1, p.kind === 'drawer' ? L.cabS + .75 : L.cabS, L.angS - .75, 'the flat part of the cabinet'));
   outOf('Nook', 'the jar shelf in the nook', L.nookX[0], L.nookX[1], nx0, nx1, 'the nook');
   outOf('Micro', 'the microwave and its shelf', L.microX[0], L.microX[1], L.fr[0], L.fr[1], 'the top of the fridge');
+  if (L.can) outOf('Can', 'the trash can and its pull-out', L.can.x0, L.can.x1, L.cabS, L.angS - .75, 'the flat part of the cabinet');
   if (L.jug) {
     // under the sink, and standing on the top of the fresh water tank (its footprint is the tank's: along the wall and out from it)
     outOf('Jug', 'the drain jug', L.jug.x0, L.jug.x1, L.sinkS, L.sinkE - .75, 'the sink cabinet, under the sink');
@@ -385,6 +400,12 @@ function layout(P0) {
   L.nookZ = P.counterH + 7.5 + P.dzNook; L.nookX = [58 + P.dxNook, 93.25 + P.dxNook];
   L.microX = [L.fr[0] + P.dxMicro, L.fr[1] + P.dxMicro];
   L.microZ = [8.25 + P.fridgeH + 2.75 + P.dzMicro, 8.25 + P.fridgeH + 12.75 + P.dzMicro];   // the microwave bottom and top; its shelf is the 3/4 in under it, 2 in over the fridge top
+  // the trash can on its pull-out in the cab-side column (centered between the drawer slides, 1 1/2 in off the wall), plus how far it was dragged; z0 is the bottom of the can (the tray and slides are under it)
+  L.can = null;
+  if (P.canOn) {
+    const ccx = L.cabS + 14.75 + 1 + 6.5 + P.dxCan, cy0 = 1.5 + P.dyCan, cz0 = P.canBase + P.dzCan;
+    L.can = { x0: ccx - P.canW / 2, x1: ccx + P.canW / 2, y0: cy0, y1: cy0 + P.canD, z0: cz0, z1: cz0 + P.canH, cx: ccx };
+  }
   // the drain jug stands on the top of the fresh water tank under the sink: centered on the part of the tank that is under the sink, in the middle of the tank's depth, plus how far it was dragged
   L.jug = null;
   if (P.jugOn) {
