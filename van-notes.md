@@ -16,6 +16,9 @@ User: 'add the storage under the countertop', drawers, 'the same top drawers'. R
 ## Zoomable diagrams (latest)
 User: 'Make the diagrams zoomable'. Every diagram in sides.html and the drawing in interactive.html now has + / minus / Reset buttons in its top right corner, Ctrl (Cmd on a Mac) + scroll, and pinch on a touch screen; once zoomed, drag to move (a drag does not count as a click, so it does not hide or open parts). Plain scrolling still scrolls the page. Up to 8x. The interactive page resets the zoom when you change views. Source: tools/zoom.js (shared; joined into interactive.html by build.sh and injected into sides.html by tools/zoom.py).
 
+## The hot water tank's 5 gal on the page (latest)
+User: 'add the hot water tank's 5 gal to the page'. New size in Water tanks ('how much water it holds', 5 gal; the 14 x 15 x 15 in is the outside of the heater). 'Does it fit?' now says: the hot tank holds 5 gal, about 42 lb of water; the fresh tank full holds about 229 lb and with the hot tank the water on the passenger side weighs about 271 lb plus the tanks and heater themselves; the 5 gal tank heated from cold by 80 F takes about 0.98 kWh, 91 Ah (32 percent of the 280 Ah battery) and about 41 minutes at 1,440 W.
+
 ## Hot water tank holds 5 gal (latest)
 User: 'why is the hot water tank to heavy? It only holds 5 gal of water.' Correct: the hot water tank is 14 x 15 x 15 in on the OUTSIDE (the heater with its insulation and fittings), and holds 5 gal, about 42 lb of water. My 'about 110 lb' counted the whole box as water (13.6 gal). The water on the passenger side is then about 270 lb (230 fresh + 42 hot) not 340, plus the weight of the empty tanks and the heater (not known). Fixed in the plan table and these notes. The 1,440 W heater takes about 41 minutes to heat 5 gal by 80 F (5 x 8.34 x 80 / 3412 = 0.98 kWh, 0.98 / 1.44 = 41 min), the same 8 minutes a gallon the page already says.
 

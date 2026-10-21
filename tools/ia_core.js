@@ -64,6 +64,7 @@ const PD = [
   { k: 'tankD', g: 'Water tanks', l: 'Fresh water tank depth (out from the wall)', d: 10, s: .5, a: 4, b: 20 },
   { k: 'tankH', g: 'Water tanks', l: 'Fresh water tank height', d: 15.5, s: .5, a: 6, b: 24 },
   { k: 'hotGap', g: 'Water tanks', l: 'Clear space each side of the hot water tank', d: 6, s: .5, a: 0, b: 20 },
+  { k: 'hotGal', g: 'Water tanks', l: 'Hot water tank: how much water it holds (gallons; its 14 x 15 x 15 in size is the outside of the heater)', d: 5, s: .5, a: 1, b: 20 },
   { k: 'hotShelf', g: 'Water tanks', l: 'Hot water tank height off the floor (0 = on the floor; 7.5 = on a shelf over the wheel well, right after the fridge platform)', d: 7.5, s: .5, a: 0, b: 30 },
   { k: 'hotW', g: 'Water tanks', l: 'Hot water tank length along the wall', d: 14, s: .5, a: 6, b: 18 },
   { k: 'hotD', g: 'Water tanks', l: 'Hot water tank depth (out from the wall)', d: 15, s: .5, a: 6, b: 20 },
