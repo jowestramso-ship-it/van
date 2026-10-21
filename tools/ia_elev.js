@@ -199,7 +199,7 @@ function drawPass(L, V) {
   o.push(GE());
   // wheel well (same as the driver side)
   const WW = [[42, 0], [76, 0], [76, 2], [66.75, 7.5], [51.25, 7.5], [42, 2]];
-  o.push(GB('well', 'Wheel well'));
+  o.push(GB('wellp', 'Wheel well'));
   o.push(Poly(WW.map(p => [X(p[0]), Y(p[1])]), { fill: '#D8B79A', fo: .8, stroke: '#8A6B4D', sw: 1.2 }));
   o.push(T(X(59), Y(3.2), 'wheel well (same as the driver side)', { size: 10, fill: '#5F5E5A', halo: false }));
   o.push(GE());
@@ -454,7 +454,7 @@ function drawPass(L, V) {
   }
   if (L.jug) o.push(HIT('Jug', Math.min(X(L.jug.x0), X(L.jug.x1)), Y(L.jug.z1), S * P.jugD, S * P.jugH, ['dxJug', -1 / S, 'dzJug', -1 / S], L.coll.ids.has('Jug'), 'The drain jug (along the wall and up)'));
   o.push(HIT('fresh', Math.min(X(L.tankX[0]), X(L.tankX[1])), Y(P.tankLift + P.tankH), S * L.tankLen, S * P.tankH, ['tankShift', 1 / S, 'tankLift', -1 / S], L.coll.ids.has('fresh'), 'Fresh water tank (along the wall and up)'));
-  if (P.drainOn && P.hotShelf > 10) o.push(HIT('drain', X(P.drainX) - 8, Y(P.hotShelf + P.hotH + 1.5) - 4, 16, S * (P.hotShelf + P.hotH + 1.5 + 2) + 8, ['drainX', -1 / S, 'drainDz', -1 / S], false, 'Relief valve drain line (where it comes down, and the height of its run)'));
+  if (P.drainOn && P.hotShelf > 10) o.push(HIT('drain', X(P.drainX) - 8, Y(P.hotShelf + P.hotH + 1.5 + P.drainDz) - 4, 16, S * (P.hotShelf + P.hotH + 1.5 + P.drainDz + 2) + 8, ['drainX', -1 / S, 'drainDz', -1 / S], false, 'Relief valve drain line (where it comes down, and the height of its run)'));
   o.push(HIT('hot', Math.min(X(L.hotX[0]), X(L.hotX[1])), Y(P.hotShelf + P.hotH), S * P.hotW, S * P.hotH, ['hotX0', -1 / S, 'hotShelf', -1 / S], L.coll.ids.has('hot'), 'Hot water tank (along the wall and up)', 'hotFree'));
   return { w: E.W, h: E.H, body: o.join('') };
 }
@@ -497,15 +497,19 @@ function drawCross(L, V) {
   o.push(bx(0, 6, P.seatH, P.backH, { fill: COL.P, fo: .18, stroke: COL.P, sw: 1.5, rx: 3 }));
   o.push(GE());
   // wall cabinets and the closet have open backs: the side panels run against the leaning wall, front edge vertical
-  o.push(GB('wallcab', 'Wall cabinets and closet'));
+  o.push(GB('wallcab', 'Wall cabinets'));
   {
     const bk = P.cabBackIn, yf = bk + P.cabDepth, b0 = Math.max(bk, lean(P.cabBot)), b1 = Math.max(bk, lean(L.ceilF));
     o.push(Poly([[xx(b0), yy(P.cabBot)], [xx(yf), yy(P.cabBot)], [xx(yf), yy(L.ceilF)], [xx(b1), yy(L.ceilF)]], { fill: '#534AB7', fo: .16, stroke: '#534AB7', sw: 1.6, dash: '5 3' }));
+  }
+  o.push(T(xx(P.cabBackIn + P.cabDepth / 2 + 1.5), yy((P.cabBot + L.ceilF) / 2), 'wall cabinet', { size: 11, fill: '#3C3489' })); o.push(T(xx(P.cabBackIn + P.cabDepth / 2 + 1.5), yy((P.cabBot + L.ceilF) / 2) + 13, `${fmt(P.cabDepth)} deep`, { size: 10, fill: '#3C3489' }));
+  o.push(GE());
+  o.push(GB('closet', 'Closet and its doors'));
+  {
     const cd = P.closetD, c1 = Math.max(0, lean(L.ceilF));
     o.push(Poly([[xx(0), yy(0)], [xx(cd), yy(0)], [xx(cd), yy(L.ceilF)], [xx(c1), yy(L.ceilF)], [xx(lean(Math.max(L.leanStart, 0.0001)) ), yy(Math.min(L.leanStart, L.ceilF))]], { fill: 'none', stroke: '#444441', sw: 1.2, dash: '2 3' }));
     o.push(T(xx(cd - 4), yy(L.ceilF - 26), `closet ${fmt(cd)} deep`, { size: 10, fill: '#444441' }));
   }
-  o.push(T(xx(P.cabBackIn + P.cabDepth / 2 + 1.5), yy((P.cabBot + L.ceilF) / 2), 'wall cabinet', { size: 11, fill: '#3C3489' })); o.push(T(xx(P.cabBackIn + P.cabDepth / 2 + 1.5), yy((P.cabBot + L.ceilF) / 2) + 13, `${fmt(P.cabDepth)} deep`, { size: 10, fill: '#3C3489' }));
   o.push(GE());
   o.push(GB('counter', 'Counter and cabinet'));
   o.push(bx(W - P.cabD, W, 0, P.counterH, { fill: COL.C, fo: .12, stroke: COL.C, sw: 1.5, rx: 3 })); o.push(T(xx(W - P.cabD / 2), yy(P.counterH / 2), 'counter and cabinet', { size: 11, fill: COL.C }));

@@ -40,6 +40,8 @@
   .alerts ul { margin: 3px 0 0; padding-left: 0; list-style: none; }
   .alerts li { margin: 2px 0; }
   .no { display: inline-block; min-width: 1.7em; padding: 0 5px; margin-right: 3px; border-radius: 9px; background: #E4E2D8; color: var(--ink); font-size: 11.5px; font-weight: 700; text-align: center; line-height: 1.5; }
+  .toast { position: fixed; left: 50%; bottom: 18px; transform: translateX(-50%); z-index: 30; max-width: 90vw; padding: 8px 14px; border-radius: 10px; background: #2C2C2A; color: #fff; font-size: 13.5px; line-height: 1.35; opacity: 0; pointer-events: none; transition: opacity .2s; }
+  .toast.on { opacity: 1; }
   .alerts .rd { margin-top: 3px; color: var(--ink); font-weight: 600; }
   .alerts .cau { color: var(--warn); font-size: 12.5px; margin-left: 6px; }
   .stage.bad { border-color: #E5A39B; }
@@ -97,6 +99,7 @@
   <details class="hidebar" id="hidebar"><summary>Show or hide things</summary><div class="hdbody"><div class="hdrow"><button type="button" class="chip all" id="hdshow">Show everything</button><span class="note" id="hdmsg">Right-click an item in the drawing to hide it, or untick it here. This only hides the drawing: the checks still count it.</span></div><div class="hdlist" id="hdlist"></div></div></details>
   <div class="layout">
     <div class="alerts" id="alerts" role="status" aria-live="polite"></div>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
     <div class="stage"><svg id="svg" role="img" aria-label="Interactive van diagram"></svg></div>
     <aside>
       <div class="card"><h2>Does it fit?</h2><ul class="checks" id="checks"></ul></div>

@@ -69,7 +69,7 @@ const PD = [
   { k: 'hotEmptyLb', g: 'Water tanks', l: 'Heater weight: the hot water tank empty (lb)', d: 2, s: .5, a: 0, b: 60 },
   { k: 'hotX0', g: 'Water tanks', l: 'Hot water tank: where it starts along the wall when it sits on the fresh tank or is placed by hand (from the back; you can drag it)', d: 87.25, s: .5, a: 0, b: 140 },
   { k: 'hotFree', g: 'Water tanks', l: 'Hot water tank: place it by hand at any height and spot (dragging it turns this on; turn it off to go back to the floor or shelf spots)', d: false, t: 'c' },
-  { k: 'hotShelf', g: 'Water tanks', l: 'Hot water tank bottom, up from the floor (0 = on the floor; 7.5 = on a shelf over the wheel well; 16.75 = on a shelf over the fresh tank, 11.25 rests it right on the 10 in tank)', d: 16.75, s: .5, a: 0, b: 30 },
+  { k: 'hotShelf', g: 'Water tanks', l: 'Hot water tank bottom, up from the floor (0 = on the floor; 7.5 = on a shelf over the wheel well; 16.75 = on a shelf over the fresh tank, 10.75 rests it right on the 10 in tank, since the shelf is 3/4 in thick)', d: 16.75, s: .5, a: 0, b: 30 },
   { k: 'hotW', g: 'Water tanks', l: 'Hot water tank length along the wall', d: 14, s: .5, a: 6, b: 18 },
   { k: 'hotBack', g: 'Water tanks', l: 'Hot water tank: space behind it for the hot and cold fittings and the relief valve (they are at the back)', d: 1.625, s: .125, a: 0, b: 24 },
   { k: 'tankShift', g: 'Water tanks', l: 'Fresh water tank: moved toward the rear from the sink end (negative = toward the cab; you can drag it)', d: 0, s: .5, a: -40, b: 50 },

@@ -155,7 +155,7 @@ function computeChecks(L, V) {
     else if (room < -.0625) push('bad', `The hot water tank (${fmt(P.hotD)} deep, with ${fmt(P.hotBack)} in behind it for the fittings and the relief valve, which are at its back, so its front is ${fmt(P.hotBack + P.hotD)} in from the wall) sticks out past where the cabinet door goes by ${fmt(-room)} in at its sink end (the angled front makes the cabinet shallower there, ${fmt(room + P.hotBack + P.hotD)} in clear inside the door). To fit: slide the tank back toward the drawers, use less space behind it, notch the door at that corner, or make the angled front start later.`);
     else if (P.hotShelf > 10) {
       const onT = L.hotX[0] >= L.tankX[0] - .01 && L.hotX[1] <= L.tankX[1] + .01, dr = L.hotX[0] < L.angS - .75 && L.hotX[1] > L.cabS + 1.25, sinkHit = L.hotX[1] > L.sinkS + .01;
-      push(onT && !dr && !sinkHit && P.counterH - 1.5 - hotTop >= 3 ? 'ok' : 'warn', `Hot water tank: ${fmt(P.hotW)} x ${fmt(P.hotD)} x ${fmt(P.hotH)} tall on a 3/4 in shelf over the fresh water tank (${P.hotShelf - .75 - P.tankLift - P.tankH > .05 ? fmt(P.hotShelf - .75 - P.tankLift - P.tankH) + ' in above its top' : 'resting on it'}; the shelf at ${fmt(P.hotShelf - .75)} to ${fmt(P.hotShelf)} in, carried by the cabinet sides, not by the tank), ${fmt(L.hotX[0])} to ${fmt(L.hotX[1])} in from the back, top at ${fmt(hotTop)} in, ${fmt(P.counterH - 1.5 - hotTop)} in under the counter for its fittings and relief valve; it holds ${L.hotGal.toFixed(1)} gal (${Math.round(L.hotGal * 8.34)} lb of water; the heater itself weighs ${fmt(P.hotEmptyLb)} lb, so ${Math.round(L.hotGal * 8.34 + P.hotEmptyLb)} lb full). ${room < .0625 ? 'no spare cabinet depth is left' : fmt(room) + ' in of cabinet depth is left'} in front of it at its tightest end (the front is angled from ${fmt(L.angS)} in); the hot and cold fittings and the relief valve are at its back, in the ${fmt(P.hotBack)} in between the tank and the wall (about ${fmt(P.hotBack + P.hotD)} in from the wall to its front). ${onT ? '' : 'It is not all over the fresh tank. '}${dr ? 'It is over the drawers. ' : ''}${sinkHit ? `It reaches ${fmt(L.hotX[1] - L.sinkS)} in into the sink cabinet, under the sink (its underside is at ${fmt(P.counterH - P.sinkBowlD)} in); keep it to ${fmt(L.sinkS)} in. ` : ''}The paper towel recess (91 1/2 to 102 1/2 in, 29 3/4 to 35 1/4 in up) is ${Math.abs(hotTop - 29.75) < .06 ? 'just above it: they touch' : hotTop < 29.75 ? fmt(29.75 - hotTop) + ' in above it' : 'cut into by the tank top (' + fmt(hotTop - 29.75) + ' in)'}.`);
+      push(onT && !dr && !sinkHit && P.counterH - 1.5 - hotTop >= 3 ? 'ok' : 'warn', `Hot water tank: ${fmt(P.hotW)} x ${fmt(P.hotD)} x ${fmt(P.hotH)} tall on a 3/4 in shelf over the fresh water tank (${P.hotShelf - .75 - P.tankLift - P.tankH > .05 ? fmt(P.hotShelf - .75 - P.tankLift - P.tankH) + ' in above its top' : 'resting on it'}; the shelf at ${fmt(P.hotShelf - .75)} to ${fmt(P.hotShelf)} in, carried by the cabinet sides, not by the tank), ${fmt(L.hotX[0])} to ${fmt(L.hotX[1])} in from the back, top at ${fmt(hotTop)} in, ${fmt(P.counterH - 1.5 - hotTop)} in under the counter for its fittings and relief valve; it holds ${L.hotGal.toFixed(1)} gal (${Math.round(L.hotGal * 8.34)} lb of water; the heater itself weighs ${fmt(P.hotEmptyLb)} lb, so ${Math.round(L.hotGal * 8.34 + P.hotEmptyLb)} lb full). ${room < .0625 ? 'no spare cabinet depth is left' : fmt(room) + ' in of cabinet depth is left'} in front of it at its tightest end (the front is angled from ${fmt(L.angS)} in); the hot and cold fittings and the relief valve are at its back, in the ${fmt(P.hotBack)} in between the tank and the wall (about ${fmt(P.hotBack + P.hotD)} in from the wall to its front). ${onT ? '' : 'It is not all over the fresh tank. '}${dr ? 'It is over the drawers. ' : ''}${sinkHit ? `It reaches ${fmt(L.hotX[1] - L.sinkS)} in into the sink cabinet, under the sink (its underside is at ${fmt(P.counterH - P.sinkBowlD)} in); keep it to ${fmt(L.sinkS)} in. ` : ''}The paper towel recess (${fmt(L.sinkS - 11.5)} to ${fmt(L.sinkS - .5)} in, 29 3/4 to 35 1/4 in up) is ${L.hotX[1] <= L.sinkS - 11.5 + .06 || L.hotX[0] >= L.sinkS - .5 - .06 ? 'not over the tank' : Math.abs(hotTop - 29.75) < .06 ? 'just above it: they touch' : hotTop < 29.75 ? fmt(29.75 - hotTop) + ' in above it' : 'cut into by the tank top (' + fmt(hotTop - 29.75) + ' in)'}.`);
     }
     else push(gapL < P.hotGap - .01 || gapR < P.hotGap - .01 ? 'warn' : 'ok', `Hot water tank: ${fmt(P.hotW)} x ${fmt(P.hotD)} x ${fmt(P.hotH)} tall ${P.hotShelf > .5 ? `on a shelf at ${fmt(P.hotShelf)} in` : 'on the floor'} ${P.hotShelf > .5 ? 'over the wheel well' : 'next to the wheel well'} (${fmt(L.hotX[0])} to ${fmt(L.hotX[1])} in from the back), top at ${fmt(hotTop)} in, ${fmt(P.counterH - hotTop)} in under the counter, holds ${L.hotGal.toFixed(1)} gal (${Math.round(L.hotGal * 8.34)} lb of water; the ${fmt(P.hotW)} x ${fmt(P.hotD)} x ${fmt(P.hotH)} in is the outside of the heater, the heater itself weighs ${fmt(P.hotEmptyLb)} lb, so ${Math.round(L.hotGal * 8.34 + P.hotEmptyLb)} lb full), ${fmt(gapL)} in from the ${P.hotShelf > .5 ? 'fridge platform end (58 in)' : 'wheel well end'} and ${fmt(gapR)} in from the fresh tank${gapL < P.hotGap - .01 || gapR < P.hotGap - .01 ? ` (you wanted ${fmt(P.hotGap)} in each side; the ${fmt(L.tankX[0] - wellEnd)} in between the well and the fresh tank holds the tank plus ${fmt(L.tankX[0] - wellEnd - P.hotW)} in of space)` : ''}; ${fmt(room)} in of cabinet depth is left in front of it at its tightest end.`);
     {
@@ -211,7 +211,7 @@ const VIEWS = [
   { id: 'cross', label: 'Cross-section', draw: drawCross, movers: [] },
   { id: 'bare', label: 'Bare roof (mark the ribs)', drag: 'the shower fan and the air conditioner', draw: drawBare, movers: [] },
   { id: 'ceil', label: 'Ceiling', drag: 'the shower fan and the air conditioner', draw: drawCeiling, movers: [] },
-  { id: 'plan', label: 'From above', drag: 'the drawers (a whole column along the wall), the microwave, the trash can, the hot water tank, the fresh water tank, the drain jug and the drain line (left-right and up-down, which is along the wall and out from it)', draw: drawPlan, movers: [['Couch to bed', ['bed']], ['Dinette to bed', ['dinette']], ['Shower pan', ['pan']], ['Closet doors', ['clo_hi', 'clo_lo']], ['Fridge door', ['fridge']], ['Trash can pull-out', ['can']], ['Fold-out table with the foot ledge', ['flap', 'ledge']], ['Foot ledge only', ['ledge']], ['Wall cabinet doors', ALLDC]] }
+  { id: 'plan', label: 'From above', drag: 'the drawers (a whole column along the wall), the microwave, the trash can, the hot water tank, the fresh water tank, the drain jug (left-right and up-down, which is along the wall and out from it) and the drain line (along the wall only; its height is on the Passenger side tab)', draw: drawPlan, movers: [['Couch to bed', ['bed']], ['Dinette to bed', ['dinette']], ['Shower pan', ['pan']], ['Closet doors', ['clo_hi', 'clo_lo']], ['Fridge door', ['fridge']], ['Trash can pull-out', ['can']], ['Fold-out table with the foot ledge', ['flap', 'ledge']], ['Foot ledge only', ['ledge']], ['Wall cabinet doors', ALLDC]] }
 ];
 let view = 'driver', L = layout(P), lastSig = '';
 const DEFS = '<defs><marker id="arq" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker><pattern id="hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="6" stroke="#888780" stroke-width="1"/></pattern><pattern id="hq" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="6" stroke="#888780" stroke-width="1"/></pattern></defs>';
@@ -306,13 +306,14 @@ const sayMore = (L, id) => {
   return '';
 };
 let dragging = null, blockClick = false;
+function blurSizes() { const a = document.activeElement; if (a && a !== document.body && a.closest && a.closest('#sizes') && a.blur) a.blur(); }
 function renderAlerts(L, ch) {
   const bad = ch.filter(c => c.lv === 'bad'), warn = ch.filter(c => c.lv === 'warn'), el = $('#alerts');
   if (!el) return;
   const txt = dragging && dragging.moved ? (DRAG_SAYS[dragging.id] ? DRAG_SAYS[dragging.id](L) : sayMore(L, dragging.id)) : '', say = txt ? `<div class="rd">${txt}</div>` : '';
   const head = bad.length ? `<b>&#10007; ${bad.length === 1 ? '1 thing does not fit' : bad.length + ' things do not fit'}</b>` : '<b>&#10003; Everything fits</b>';
   const cau = warn.length ? ` <span class="cau">${warn.length} caution${warn.length === 1 ? '' : 's'}: number${warn.length === 1 ? '' : 's'} ${warn.map(c => ch.indexOf(c) + 1).join(', ')} in Does it fit? below</span>` : '';
-  const html = head + cau + (bad.length ? `<ul>${bad.map(c => `<li><span class="no">${ch.indexOf(c) + 1}</span> ${headline(c.t)}</li>`).join('')}</ul>` : '') + say;
+  const html = head + cau + say + (bad.length ? `<ul>${bad.map(c => `<li><span class="no">${ch.indexOf(c) + 1}</span> ${headline(c.t)}</li>`).join('')}</ul>` : '');
   el.className = 'alerts' + (bad.length ? ' bad' : '');
   if (el.innerHTML !== html) el.innerHTML = html;
   $('.stage').classList.toggle('bad', bad.length > 0);
@@ -320,6 +321,7 @@ function renderAlerts(L, ch) {
 $('#svg').addEventListener('pointerdown', e => {
   const h = e.target.closest && e.target.closest('[data-drag]');
   if (!h || (e.button != null && e.button > 0)) return;
+  blurSizes();   // a size box still holding the cursor would show a stale number and write it back on blur
   const svg = $('#svg'), r = svg.getBoundingClientRect(), vb = svg.viewBox.baseVal;
   if (!r.width || !vb || !vb.width) return;
   // a handle can move several sizes at once (a whole column of drawers): its size names are a comma list
@@ -346,11 +348,18 @@ function endDrag() {
   // only redraw after a real move: redrawing replaces the box under the pointer, and a click or double-click needs it to still be there
   if (moved) { blockClick = true; setTimeout(() => { blockClick = false; }, 0); syncInputs(); saveHash(); render(); }
 }
+// every size that moves one of the drawn items by hand (a handle on each tab moves some of them)
+const RESET_ALL = { hot: ['hotX0', 'hotShelf', 'hotBack', 'hotFree'], fresh: ['tankShift', 'tankLift', 'tankBack'], Micro: ['dxMicro', 'dzMicro', 'microIn'], drain: ['drainX', 'drainDz'] };
 // double-click a handle to put the item back to its planned spot
 $('#svg').addEventListener('dblclick', e => {
   for (const el of document.elementsFromPoint(e.clientX, e.clientY)) {
     const h = el.closest && el.closest('[data-drag]'); if (!h) continue;
-    [h.dataset.px, h.dataset.py, h.dataset.on].forEach(list => (list || '').split(',').forEach(k => { if (k && k in DEF) P[k] = DEF[k]; }));
+    blurSizes();
+    const back = k => { if (k && k in DEF) P[k] = DEF[k]; };
+    [h.dataset.px, h.dataset.py, h.dataset.on].forEach(list => (list || '').split(',').forEach(back));
+    // the item's other sizes too (the other tab moves it along other axes): along the wall, up and out from the wall go together
+    (RESET_ALL[h.dataset.drag] || []).forEach(back);
+    [h.dataset.px, h.dataset.py].forEach(list => (list || '').split(',').forEach(k => { const m = /^dx(\w+)$/.exec(k); if (m) { back('dz' + m[1]); back('dy' + m[1]); } }));
     syncInputs(); saveHash(); render(); return;
   }
 });
@@ -361,8 +370,9 @@ window.addEventListener('touchmove', e => { if (dragging) e.preventDefault(); },
 /* ================= hiding things ================= */
 // every item in a drawing is a group (GB/GE) with an id and a name; hidden ids are kept in this browser and in the link (hide=a,b), and a style rule hides them (handles too)
 let HID = {}, hideSig = '';
-try { HID = JSON.parse(localStorage.getItem('van-hidden') || '{}') || {}; } catch (e) { HID = {}; }
-function applyHidden() { $('#hidecss').textContent = Object.keys(HID).filter(k => HID[k]).map(k => `#svg [data-grp="${k}"]{display:none}`).join('\n'); }
+const okId = k => /^[A-Za-z0-9_]+$/.test(k);
+try { HID = JSON.parse(localStorage.getItem('van-hidden') || '{}') || {}; Object.keys(HID).forEach(k => { if (!okId(k) || !HID[k]) delete HID[k]; }); } catch (e) { HID = {}; }
+function applyHidden() { $('#hidecss').textContent = Object.keys(HID).filter(k => HID[k] && okId(k)).map(k => `#svg [data-grp="${k}"]{display:none}`).join('\n'); }
 function saveHidden() { try { localStorage.setItem('van-hidden', JSON.stringify(HID)); } catch (e) { } applyHidden(); saveHash(); renderHideBar(true); }
 function renderHideBar(force) {
   const groups = [], seen = {};
@@ -372,18 +382,27 @@ function renderHideBar(force) {
   const n = groups.filter(g => HID[g[0]]).length;
   $('#hidebar summary').textContent = 'Show or hide things' + (n ? ` (${n} hidden)` : '');
   if (!groups.length) { $('#hdlist').innerHTML = '<span class="note">Nothing in this view can be hidden.</span>'; $('#hdshow').disabled = !Object.keys(HID).some(k => HID[k]); return; }
+  const ae = document.activeElement, had = ae && ae.dataset && ae.dataset.hg;
   $('#hdlist').innerHTML = groups.map(g => `<label class="${HID[g[0]] ? 'off' : ''}"><input type="checkbox" data-hg="${g[0]}"${HID[g[0]] ? '' : ' checked'}> ${g[1]}</label>`).join('');
+  if (had) { const back = [...document.querySelectorAll('#hdlist input')].find(i => i.dataset.hg === had); if (back) back.focus(); }
   $('#hdshow').disabled = !Object.keys(HID).some(k => HID[k]);
 }
 $('#hdlist').addEventListener('change', e => { const t = e.target; if (!t || !t.dataset || !t.dataset.hg) return; if (t.checked) delete HID[t.dataset.hg]; else HID[t.dataset.hg] = true; saveHidden(); });
 $('#hdshow').onclick = () => { HID = {}; $('#hdmsg').textContent = 'Everything is showing again.'; saveHidden(); };
-// right-click an item to hide it (the item on top at that spot)
+// a short message over the drawing (the hide box can be scrolled out of sight)
+let toastTimer = 0;
+function toast(t) { const el = $('#toast'); if (!el) return; el.textContent = t; el.classList.add('on'); clearTimeout(toastTimer); toastTimer = setTimeout(() => el.classList.remove('on'), 3500); }
+// right-click an item to hide it: the item drawn on top at that spot (a drag handle is only used when there is nothing else under the pointer)
 $('#svg').addEventListener('contextmenu', e => {
+  let g = null, spare = null;
   for (const el of document.elementsFromPoint(e.clientX, e.clientY)) {
-    const g = el.closest && el.closest('[data-grp]'); if (!g) continue;
-    e.preventDefault(); const id = g.dataset.grp, nm = (document.querySelector(`#svg g.hg[data-grp="${id}"]`) || g).dataset.label || id;
-    HID[id] = true; $('#hdmsg').textContent = `Hid "${nm}". Tick it again in the list below to bring it back.`; $('#hidebar').open = true; saveHidden(); return;
+    const q = el.closest && el.closest('[data-grp]'); if (!q) continue;
+    if (el.classList && el.classList.contains('drg')) { spare = spare || q; continue; }
+    g = q; break;
   }
+  g = g || spare; if (!g) return;
+  e.preventDefault(); const id = g.dataset.grp, nm = (document.querySelector(`#svg g.hg[data-grp="${id}"]`) || g).dataset.label || id;
+  HID[id] = true; $('#hdmsg').textContent = `Hid "${nm}". Tick it again in the list below to bring it back.`; toast(`Hid "${nm}". Tick it in "Show or hide things" to bring it back.`); saveHidden();
 });
 
 /* ================= sizes panel ================= */
@@ -391,12 +410,13 @@ function buildSizes() {
   const groups = []; PD.forEach(p => { if (!groups.includes(p.g)) groups.push(p.g); });
   $('#sizes').innerHTML = groups.map((g, gi) => `<details${gi < 2 ? ' open' : ''}><summary>${g}</summary>${PD.filter(p => p.g === g).map(p => {
     if (p.t === 'c') return `<label class="fld chk"><input type="checkbox" id="in_${p.k}"${P[p.k] ? ' checked' : ''}><span>${p.l}</span></label>`;
-    if (p.t === 'x') return `<label class="fld" style="grid-template-columns:1fr"><span>${p.l}</span><input type="text" id="in_${p.k}" value="${P[p.k]}" placeholder="for example 12, 26.5, 41" style="width:100%;padding:4px 6px;border:1px solid #B4B2A9;border-radius:6px;font:inherit"></label>`;
+    if (p.t === 'x') return `<label class="fld" style="grid-template-columns:1fr"><span>${p.l}</span><input type="text" id="in_${p.k}" placeholder="for example 12, 26.5, 41" style="width:100%;padding:4px 6px;border:1px solid #B4B2A9;border-radius:6px;font:inherit"></label>`;
     if (p.t === 's') return `<label class="fld"><span>${p.l}</span><select id="in_${p.k}">${p.o.map(o => `<option value="${o[0]}"${P[p.k] === o[0] ? ' selected' : ''}>${o[1]}</option>`).join('')}</select></label>`;
     return `<label class="fld"><span>${p.l}</span><input type="number" id="in_${p.k}" value="${P[p.k]}" step="${p.s}" min="${p.a}" max="${p.b}" inputmode="decimal"></label>`;
   }).join('')}</details>`).join('');
   PD.forEach(p => {
     const el = $('#in_' + p.k);
+    if (p.t === 'x') el.value = P[p.k];   // set as a value, never as html (the text can come from a link)
     if (p.t === 'c') el.onchange = () => { P[p.k] = el.checked; syncAuto(); saveHash(); render(); };
     else if (p.t === 'x') el.oninput = () => { P[p.k] = el.value; saveHash(); render(); };
     else if (p.t === 's') el.onchange = () => { P[p.k] = el.value; saveHash(); render(); };
@@ -435,12 +455,12 @@ function loadHash() {
   if (!hs) { try { hs = localStorage.getItem('van-state') || ''; restored = !!hs; } catch (e) { hs = ''; } }   // a bare file: use what this browser remembers
   const q = new URLSearchParams(hs), vals = {};
   if (VIEWS.some(v => v.id === q.get('view'))) view = q.get('view');
-  if (q.has('hide')) { HID = {}; q.get('hide').split(',').filter(k => /^[A-Za-z0-9_]+$/.test(k)).forEach(k => { HID[k] = true; }); }
+  if (hs) { HID = {}; if (q.has('hide')) q.get('hide').split(',').filter(okId).forEach(k => { HID[k] = true; }); }   // a link or the remembered design decides what is hidden; only a bare file with nothing remembered keeps the older hidden list
   PD.forEach(p => {
     if (!q.has(p.k)) return;
     const raw = q.get(p.k);
     if (p.t === 'c') vals[p.k] = raw === '1';
-    else if (p.t === 'x') vals[p.k] = raw.slice(0, 400);
+    else if (p.t === 'x') { if (/^[0-9.,;\s-]*$/.test(raw)) vals[p.k] = raw.slice(0, 400); }   // numbers only
     else if (p.t === 's') { if (p.o.some(o => o[0] === raw)) vals[p.k] = raw; }
     else { const v = parseFloat(raw); if (!isNaN(v)) vals[p.k] = clamp(v, p.a, p.b); }
   });
