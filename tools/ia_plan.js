@@ -165,7 +165,6 @@ function drawPlan(L, V) {
   L.parts.filter(p => p.kind === 'drawer').forEach(p => { const k = f1(p.x0) + '|' + f1(p.x1); (cols[k] = cols[k] || { x0: p.x0, x1: p.x1, ids: [] }).ids.push(p.id); });
   Object.values(cols).forEach(c => o.push(ip(c.x0, c.x1, 0, 20, '#8A5A00', '', null, { fo: .15, dash: '3 2' })));
   o.push(T(xx(L.cabS + 14.75), yp(10), `${L.parts.filter(p => p.kind === 'drawer').length} drawers, 20 deep`, { size: 8.5, fill: '#8A5A00' }));
-  o.push(`<circle cx="${f1(xx(L.sinkS + 8))}" cy="${f1(yp(.9))}" r="3.5" fill="#185FA5"/>`);
   o.push(ip(58, 93.25, 0, 4.5, '#7A4A1E', '', null, { fo: .3, dash: '3 2' }));
   o.push(T(xx(66), yp(1.3), 'nook 4.5 deep', { size: 8.5, fill: '#5A3510' }));
   o.push(T(xx((L.tankX[0] + L.tankX[1]) / 2), yp(P.tankBack + 6.5), `Fresh water tank ${fmt(L.tankLen)} x ${fmt(P.tankD)}`, { size: 9.5, fill: COL.BL, w: 500 }));

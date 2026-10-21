@@ -216,7 +216,7 @@ const PD = [
   { k: 'counterH', g: 'Passenger side', l: 'Counter height', d: 38, s: .5, a: 30, b: 44 },
   { k: 'cabD', g: 'Passenger side', l: 'Cabinet depth', d: 21, s: .5, a: 12, b: 30 },
   { k: 'flatLen', g: 'Passenger side', l: 'Straight part of the cabinet', d: 30, s: .5, a: 10, b: 70 },
-  { k: 'sinkD', g: 'Passenger side', l: 'Depth at the sink end (includes the 3/4 in door)', d: 17.25, s: .5, a: 10, b: 24 },
+  { k: 'sinkD', g: 'Passenger side', l: 'Depth at the sink end (includes the 3/4 in door)', d: 17, s: .5, a: 10, b: 24 },
   { k: 'angLen', g: 'Passenger side', l: 'Length of the angled part of the counter front', d: 15, s: .5, a: 3, b: 40 },
   { k: 'sinkW', g: 'Passenger side', l: 'Sink cabinet width', d: 20, s: .5, a: 12, b: 40 },
   { k: 'sinkBowlD', g: 'Passenger side', l: 'Sink depth: from the countertop down to the underside of the sink, drain included (a guess until the sink is chosen)', d: 7.5, s: .25, a: 2, b: 14 },
@@ -870,10 +870,16 @@ function drawPass(L, V) {
       } else { drw(part('B1')); drw(part('C1')); }
     }
   }
-  o.push(Ln(X(sinkS + 8), Y(0), X(sinkS + 8), Y(ch - 7), { stroke: COL.BL, sw: 3, dash: '2 2' }));
   o.push(Ln(X(sinkS), Y(ch - P.sinkBowlD), X(sinkE), Y(ch - P.sinkBowlD), { stroke: COL.BL, sw: 1.6, dash: '5 3' }));
   o.push(T(X(sinkE - 1), Y(ch - P.sinkBowlD) + 11, `sink underside ${fmt(ch - P.sinkBowlD)} up (${fmt(P.sinkBowlD)} deep)`, { size: 9, fill: COL.BL, anchor: E.flip ? 'start' : 'end' }));
-  o.push(T(X(sinkS + 10), Y(ch - 4), `sink plumbing, ${fmt(sinkE - sinkS - 8)} in from the cab-side edge`, { size: 9.5, fill: COL.BL }));
+  {
+    // no sink pipe: the sink drains into a jug standing on the fresh tank under the sink; this is the room it has
+    const jx0 = Math.max(sinkS, L.tankX[0]), jx1 = Math.min(sinkE, L.tankX[1]), jz0 = P.tankLift + P.tankH, jz1 = ch - P.sinkBowlD;
+    if (jx1 > jx0 + 1 && jz1 > jz0 + .5) {
+      o.push(box(jx0, jx1, jz0, jz1, { stroke: COL.BL, sw: 1.4, dash: '2 3', fill: COL.BL, fo: .05 }));
+      o.push(T(X((jx0 + jx1) / 2), Y((jz0 + jz1) / 2) + 4, `jug space ${fmt(jz1 - jz0)} tall`, { size: 10, fill: COL.BL }));
+    }
+  }
   // foot ledge on the cabinet end: hinged on its bottom edge, folds up into a recess in the end panel
   {
     const s = V.ledge || 0, phi = Math.PI / 2 * (1 - s), th = .75, Lg = L.ledgeTot, lz = P.ledgeH;
@@ -1195,7 +1201,6 @@ function drawPlan(L, V) {
   L.parts.filter(p => p.kind === 'drawer').forEach(p => { const k = f1(p.x0) + '|' + f1(p.x1); (cols[k] = cols[k] || { x0: p.x0, x1: p.x1, ids: [] }).ids.push(p.id); });
   Object.values(cols).forEach(c => o.push(ip(c.x0, c.x1, 0, 20, '#8A5A00', '', null, { fo: .15, dash: '3 2' })));
   o.push(T(xx(L.cabS + 14.75), yp(10), `${L.parts.filter(p => p.kind === 'drawer').length} drawers, 20 deep`, { size: 8.5, fill: '#8A5A00' }));
-  o.push(`<circle cx="${f1(xx(L.sinkS + 8))}" cy="${f1(yp(.9))}" r="3.5" fill="#185FA5"/>`);
   o.push(ip(58, 93.25, 0, 4.5, '#7A4A1E', '', null, { fo: .3, dash: '3 2' }));
   o.push(T(xx(66), yp(1.3), 'nook 4.5 deep', { size: 8.5, fill: '#5A3510' }));
   o.push(T(xx((L.tankX[0] + L.tankX[1]) / 2), yp(P.tankBack + 6.5), `Fresh water tank ${fmt(L.tankLen)} x ${fmt(P.tankD)}`, { size: 9.5, fill: COL.BL, w: 500 }));
@@ -1472,12 +1477,15 @@ function computeChecks(L, V) {
   {
     const wellEnd = P.hotShelf > .5 ? L.fr[1] : 76, gapL = L.hotX[0] - wellEnd, gapR = L.tankX[0] - L.hotX[1], hotTop = P.hotShelf + P.hotH, gal = (L.tankLen * P.tankD * P.tankH / 231).toFixed(1);
     const dAt = x => x <= L.angS ? P.cabD : Math.max(P.sinkD, P.cabD - L.slope * (x - L.angS)), room = Math.min(dAt(L.hotX[0]), dAt(L.hotX[1])) - .75 - P.hotBack - P.hotD;
+    // there is no sink pipe: the sink drains into a jug standing on top of the fresh tank under the sink
+    const under = P.counterH - P.sinkBowlD, tTop = P.tankLift + P.tankH, jug = under - tTop;
+    const jugS = L.tankX[1] > L.sinkS + .5 ? (jug > 0 ? ` The sink drains into a jug standing on the tank under the sink (${fmt(Math.max(L.sinkS, L.tankX[0]))} to ${fmt(Math.min(L.tankX[1], L.sinkE))} in from the back, ${fmt(P.tankD)} in deep): the tank top is ${fmt(tTop)} in up and the underside of the sink ${fmt(under)} in, so the jug can be at most ${fmt(jug)} in tall, and about ${fmt(Math.max(0, jug - 3))} in tall if you want to lift it out from under the drain (3 in for the hose and the lift is my guess; the ${fmt(P.sinkBowlD)} in sink depth is a guess too).` : ` There is no room for a jug on the tank under the sink: the underside of the sink (${fmt(under)} in) is not above the tank top (${fmt(tTop)} in).`) : '';
     if (L.tankX[0] < 76.5 && P.tankLift < 7.5) push('bad', `The fresh water tank starts at ${fmt(L.tankX[0])} in, over the wheel well (it runs to 76 in at the wall).`);
     else if (dAt(L.tankX[1]) - .75 - P.tankBack - P.tankD < -.0625) {
       const dEnd = dAt(L.tankX[1]) - .75, xs = L.slope > 0 ? Math.max(L.angS, L.angS + (P.cabD - .75 - P.tankBack - P.tankD) / L.slope) : L.angS;
-      push('bad', `The fresh water tank (${fmt(L.tankLen)} x ${fmt(P.tankD)} x ${fmt(P.tankH)} in, about ${gal} gal) is deeper than the cabinet it sits in: inside the door the cabinet is ${fmt(dEnd)} in clear at the sink end (${fmt(dEnd + .75)} in deep with the 3/4 in door), so the tank (${fmt(P.tankBack)} in from the wall, ${fmt(P.tankD)} deep) sticks out ${fmt(P.tankBack + P.tankD - dEnd)} in past the door line there (from about ${fmt(xs)} in on the angled front to its end at ${fmt(L.tankX[1])} in). The sink plumbing (111 in from the back) has no room in front of it. To fit: a shallower tank, a deeper cabinet at the sink end (Sink end depth), or let the tank stand under the angled front only (it is ${fmt(dAt(L.angS) - .75)} in clear at ${fmt(L.angS)} in, ${fmt(dAt(L.sinkS) - .75)} in at ${fmt(L.sinkS)} in).${L.tankX[1] > L.sinkS + .5 ? ` Under the sink (${fmt(L.sinkS)} to ${fmt(L.tankX[1])} in) the underside of the sink is at ${fmt(P.counterH - P.sinkBowlD)} in, so ${fmt(P.counterH - P.sinkBowlD - P.tankLift - P.tankH)} in is clear over the tank top there.` : ''}`);
+      push('bad', `The fresh water tank (${fmt(L.tankLen)} x ${fmt(P.tankD)} x ${fmt(P.tankH)} in, about ${gal} gal) is deeper than the cabinet it sits in: inside the door the cabinet is ${fmt(dEnd)} in clear at the sink end (${fmt(dEnd + .75)} in deep with the 3/4 in door), so the tank (${fmt(P.tankBack)} in from the wall, ${fmt(P.tankD)} deep) sticks out ${fmt(P.tankBack + P.tankD - dEnd)} in past the door line there (from about ${fmt(xs)} in on the angled front to its end at ${fmt(L.tankX[1])} in). To fit: a shallower tank, a deeper cabinet at the sink end (Sink end depth), or let the tank stand under the angled front only (it is ${fmt(dAt(L.angS) - .75)} in clear at ${fmt(L.angS)} in, ${fmt(dAt(L.sinkS) - .75)} in at ${fmt(L.sinkS)} in).${jugS}`);
     }
-    else push(dAt(L.tankX[1]) - .75 - P.tankBack - P.tankD < 2 ? 'warn' : 'ok', `Fresh water tank: ${fmt(L.tankLen)} x ${fmt(P.tankD)} x ${fmt(P.tankH)} in ${P.tankLift > .01 ? fmt(P.tankLift) + ' in off the floor' : 'on the floor'} (${fmt(L.tankX[0])} to ${fmt(L.tankX[1])} in), about ${gal} gal; it sits at the sink end against the cab-side end panel (partly in the open area beside the sink cabinet), and ${fmt(dAt(L.tankX[1]) - .75 - P.tankBack - P.tankD)} in of cabinet depth is left in front of it for the sink pipes (111 in from the back) and for reaching it${dAt(L.tankX[1]) - .75 - P.tankBack - P.tankD < 2 ? ' (tight: the pipes and your hand need about 2 in or more)' : ''}. Full, it holds about ${Math.round(L.tankLen * P.tankD * P.tankH / 231 * 8.34)} lb of water; with the ${L.hotGal.toFixed(1)} gal hot tank the water on the passenger side weighs about ${Math.round(L.tankLen * P.tankD * P.tankH / 231 * 8.34 + L.hotGal * 8.34)} lb (${Math.round(L.tankLen * P.tankD * P.tankH / 231 * 8.34 + L.hotGal * 8.34 + P.hotEmptyLb)} lb with the ${fmt(P.hotEmptyLb)} lb heater), plus the fresh tank itself.${L.tankX[1] > L.sinkS + .5 ? ` Under the sink (${fmt(L.sinkS)} to ${fmt(L.tankX[1])} in) the underside of the sink is at ${fmt(P.counterH - P.sinkBowlD)} in (${fmt(P.sinkBowlD)} in below the ${fmt(P.counterH)} in counter), so ${fmt(P.counterH - P.sinkBowlD - P.tankLift - P.tankH)} in of clear space is left over the tank top there (the sink depth is a guess until the sink is chosen).` : ''}`);
+    else push('ok', `Fresh water tank: ${fmt(L.tankLen)} x ${fmt(P.tankD)} x ${fmt(P.tankH)} in ${P.tankLift > .01 ? fmt(P.tankLift) + ' in off the floor' : 'on the floor'} (${fmt(L.tankX[0])} to ${fmt(L.tankX[1])} in), about ${gal} gal; it sits at the sink end against the cab-side end panel (partly in the open area beside the sink cabinet), and ${fmt(dAt(L.tankX[1]) - .75 - P.tankBack - P.tankD)} in of cabinet depth is left in front of it. Full, it holds about ${Math.round(L.tankLen * P.tankD * P.tankH / 231 * 8.34)} lb of water; with the ${L.hotGal.toFixed(1)} gal hot tank the water on the passenger side weighs about ${Math.round(L.tankLen * P.tankD * P.tankH / 231 * 8.34 + L.hotGal * 8.34)} lb (${Math.round(L.tankLen * P.tankD * P.tankH / 231 * 8.34 + L.hotGal * 8.34 + P.hotEmptyLb)} lb with the ${fmt(P.hotEmptyLb)} lb heater), plus the fresh tank itself.${jugS}`);
     if (hotTop > P.counterH - 2) push('bad', `The hot water tank top (${fmt(hotTop)} in) is up against the counter (${fmt(P.counterH)} in).`);
     else if (P.hotShelf < 7.5 && gapL < -.01) push('bad', `The hot water tank starts at ${fmt(L.hotX[0])} in, over the wheel well (7 1/2 in tall, to 76 in at the wall); raise it onto a shelf or move it toward the sink.`);
     else if (P.hotShelf <= 10 && gapR < -.01) push('bad', `The hot water tank (${fmt(L.hotX[0])} to ${fmt(L.hotX[1])} in) runs into the fresh water tank (from ${fmt(L.tankX[0])} in).`);

@@ -301,10 +301,16 @@ function drawPass(L, V) {
       } else { drw(part('B1')); drw(part('C1')); }
     }
   }
-  o.push(Ln(X(sinkS + 8), Y(0), X(sinkS + 8), Y(ch - 7), { stroke: COL.BL, sw: 3, dash: '2 2' }));
   o.push(Ln(X(sinkS), Y(ch - P.sinkBowlD), X(sinkE), Y(ch - P.sinkBowlD), { stroke: COL.BL, sw: 1.6, dash: '5 3' }));
   o.push(T(X(sinkE - 1), Y(ch - P.sinkBowlD) + 11, `sink underside ${fmt(ch - P.sinkBowlD)} up (${fmt(P.sinkBowlD)} deep)`, { size: 9, fill: COL.BL, anchor: E.flip ? 'start' : 'end' }));
-  o.push(T(X(sinkS + 10), Y(ch - 4), `sink plumbing, ${fmt(sinkE - sinkS - 8)} in from the cab-side edge`, { size: 9.5, fill: COL.BL }));
+  {
+    // no sink pipe: the sink drains into a jug standing on the fresh tank under the sink; this is the room it has
+    const jx0 = Math.max(sinkS, L.tankX[0]), jx1 = Math.min(sinkE, L.tankX[1]), jz0 = P.tankLift + P.tankH, jz1 = ch - P.sinkBowlD;
+    if (jx1 > jx0 + 1 && jz1 > jz0 + .5) {
+      o.push(box(jx0, jx1, jz0, jz1, { stroke: COL.BL, sw: 1.4, dash: '2 3', fill: COL.BL, fo: .05 }));
+      o.push(T(X((jx0 + jx1) / 2), Y((jz0 + jz1) / 2) + 4, `jug space ${fmt(jz1 - jz0)} tall`, { size: 10, fill: COL.BL }));
+    }
+  }
   // foot ledge on the cabinet end: hinged on its bottom edge, folds up into a recess in the end panel
   {
     const s = V.ledge || 0, phi = Math.PI / 2 * (1 - s), th = .75, Lg = L.ledgeTot, lz = P.ledgeH;

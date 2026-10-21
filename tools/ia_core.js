@@ -39,7 +39,7 @@ const PD = [
   { k: 'counterH', g: 'Passenger side', l: 'Counter height', d: 38, s: .5, a: 30, b: 44 },
   { k: 'cabD', g: 'Passenger side', l: 'Cabinet depth', d: 21, s: .5, a: 12, b: 30 },
   { k: 'flatLen', g: 'Passenger side', l: 'Straight part of the cabinet', d: 30, s: .5, a: 10, b: 70 },
-  { k: 'sinkD', g: 'Passenger side', l: 'Depth at the sink end (includes the 3/4 in door)', d: 17.25, s: .5, a: 10, b: 24 },
+  { k: 'sinkD', g: 'Passenger side', l: 'Depth at the sink end (includes the 3/4 in door)', d: 17, s: .5, a: 10, b: 24 },
   { k: 'angLen', g: 'Passenger side', l: 'Length of the angled part of the counter front', d: 15, s: .5, a: 3, b: 40 },
   { k: 'sinkW', g: 'Passenger side', l: 'Sink cabinet width', d: 20, s: .5, a: 12, b: 40 },
   { k: 'sinkBowlD', g: 'Passenger side', l: 'Sink depth: from the countertop down to the underside of the sink, drain included (a guess until the sink is chosen)', d: 7.5, s: .25, a: 2, b: 14 },
