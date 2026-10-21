@@ -259,6 +259,14 @@ function drawPass(L, V) {
   o.push(box(L.hotX[0], L.hotX[1], P.hotShelf, P.hotShelf + P.hotH, { fill: '#C0392B', fo: .18, stroke: '#C0392B', sw: 1.5, rx: 3, dash: '5 3' }));
   o.push(T(X((L.hotX[0] + L.hotX[1]) / 2), Y(P.hotShelf + P.hotH * .6), 'Hot water tank', { size: 12, fill: '#C0392B' }));
   o.push(T(X((L.hotX[0] + L.hotX[1]) / 2), Y(P.hotShelf + P.hotH * .6) + 14, `${fmt(P.hotW)} x ${fmt(P.hotD)}, ${fmt(P.hotH)} tall; fittings at the back`, { size: 10.5, fill: '#C0392B' }));
+  // relief valve drain line: from the valve on the back of the tank, up and over the top, forward, down in front of the fresh tank, out through the floor
+  if (P.drainOn && P.hotShelf > 10) {
+    const rx = L.hotX[0] + .8 * P.hotW, topz = P.hotShelf + P.hotH + 1.5, dx = P.drainX, st = { stroke: '#0F6E56', sw: 3, dash: '5 2' };
+    o.push(Ln(X(rx), Y(P.hotShelf + P.hotH - 2), X(rx), Y(topz), st)); o.push(Ln(X(rx), Y(topz), X(dx), Y(topz), st)); o.push(Ln(X(dx), Y(topz), X(dx), Y(-2), st));
+    o.push(`<circle cx="${f1(X(rx))}" cy="${f1(Y(P.hotShelf + P.hotH - 2))}" r="3.6" fill="#444441"/>`);
+    o.push(T(X(dx), Y(topz) - 6, 'relief valve drain', { size: 9.5, fill: '#0F6E56' }));
+    o.push(T(X(dx) + (E.flip ? 5 : -5), Y(3), 'through the floor to outside', { size: 8.5, fill: '#0F6E56', anchor: E.flip ? 'start' : 'end' }));
+  }
   // two 4 in drawers side by side under the counter in the flat part, 1/2 in divider between
   {
     const d0 = L.cabS + 1.25, dm = L.cabS + 14.75, z0 = ch - 6.75, z1 = ch - 2.75;

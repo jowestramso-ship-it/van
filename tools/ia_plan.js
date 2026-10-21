@@ -153,6 +153,12 @@ function drawPlan(L, V) {
   o.push(ip(L.hotX[0], L.hotX[1], P.hotBack, P.hotBack + P.hotD, '#C0392B', '', null, { fo: .2, dash: '4 3' }));
   // the hot and cold fittings and the relief valve are on the back of the tank, in the gap to the wall
   [['C', .2, '#185FA5'], ['H', .5, '#C0392B'], ['R', .8, '#444441']].forEach(([n, f, col]) => { const fx = L.hotX[0] + f * P.hotW; o.push(`<circle cx="${f1(xx(fx))}" cy="${f1(yp(P.hotBack / 2))}" r="3.4" fill="${col}"/>`); o.push(T(xx(fx), yp(P.hotBack / 2) + 12, n, { size: 8, fill: col, halo: false })); });
+  if (P.drainOn && P.hotShelf > 10) {
+    const rx = L.hotX[0] + .8 * P.hotW, dy = P.tankD + 2.5, st = { stroke: '#0F6E56', sw: 2, dash: '4 2' };
+    o.push(Ln(xx(rx), yp(P.hotBack / 2), xx(rx), yp(dy), st)); o.push(Ln(xx(rx), yp(dy), xx(P.drainX), yp(dy), st));
+    o.push(`<circle cx="${f1(xx(P.drainX))}" cy="${f1(yp(dy))}" r="4" fill="none" stroke="#0F6E56" stroke-width="2"/>`);
+    o.push(T(xx(P.drainX), yp(dy) + 11, 'drain down', { size: 8, fill: '#0F6E56' }));
+  }
   o.push(T(xx((L.hotX[0] + L.hotX[1]) / 2), yp(P.hotBack + P.hotD / 2) + 3, `hot water tank ${fmt(P.hotW)} x ${fmt(P.hotD)}`, { size: 8.5, fill: '#C0392B' }));
   o.push(ip(L.cabS + 1.25, L.cabS + 14.25, 0, 20, '#8A5A00', '', null, { fo: .15, dash: '3 2' }));
   o.push(ip(L.cabS + 15.75, L.cabS + 28.75, 0, 20, '#8A5A00', '', null, { fo: .15, dash: '3 2' }));

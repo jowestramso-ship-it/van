@@ -233,6 +233,9 @@ const PD = [
   { k: 'hotShelf', g: 'Water tanks', l: 'Hot water tank bottom, up from the floor (0 = on the floor; 7.5 = on a shelf over the wheel well; 16.75 = on a shelf on top of the fresh tank)', d: 16.75, s: .5, a: 0, b: 30 },
   { k: 'hotW', g: 'Water tanks', l: 'Hot water tank length along the wall', d: 14, s: .5, a: 6, b: 18 },
   { k: 'hotBack', g: 'Water tanks', l: 'Hot water tank: space behind it for the hot and cold fittings and the relief valve (they are at the back)', d: 1.625, s: .125, a: 0, b: 8 },
+  { k: 'drainOn', g: 'Water tanks', l: 'Draw the relief valve drain line (over the top of the tank, down in front of the fresh tank, out through the floor)', d: true, t: 'c' },
+  { k: 'drainX', g: 'Water tanks', l: 'Relief valve drain line: where it comes down (from the back)', d: 89, s: .5, a: 60, b: 125 },
+  { k: 'drainDia', g: 'Water tanks', l: 'Relief valve drain line: pipe size (at least the valve outlet, usually 3/4)', d: .75, s: .125, a: .375, b: 1.5 },
   { k: 'hotD', g: 'Water tanks', l: 'Hot water tank depth (out from the wall)', d: 14, s: .5, a: 6, b: 20 },
   { k: 'hotH', g: 'Water tanks', l: 'Hot water tank height', d: 13, s: .5, a: 8, b: 34 },
   { k: 'leanOn', g: 'Walls', l: 'The walls lean in toward the roof (checks use the measurements below)', d: true, t: 'c' },
@@ -697,6 +700,14 @@ function drawPass(L, V) {
   o.push(box(L.hotX[0], L.hotX[1], P.hotShelf, P.hotShelf + P.hotH, { fill: '#C0392B', fo: .18, stroke: '#C0392B', sw: 1.5, rx: 3, dash: '5 3' }));
   o.push(T(X((L.hotX[0] + L.hotX[1]) / 2), Y(P.hotShelf + P.hotH * .6), 'Hot water tank', { size: 12, fill: '#C0392B' }));
   o.push(T(X((L.hotX[0] + L.hotX[1]) / 2), Y(P.hotShelf + P.hotH * .6) + 14, `${fmt(P.hotW)} x ${fmt(P.hotD)}, ${fmt(P.hotH)} tall; fittings at the back`, { size: 10.5, fill: '#C0392B' }));
+  // relief valve drain line: from the valve on the back of the tank, up and over the top, forward, down in front of the fresh tank, out through the floor
+  if (P.drainOn && P.hotShelf > 10) {
+    const rx = L.hotX[0] + .8 * P.hotW, topz = P.hotShelf + P.hotH + 1.5, dx = P.drainX, st = { stroke: '#0F6E56', sw: 3, dash: '5 2' };
+    o.push(Ln(X(rx), Y(P.hotShelf + P.hotH - 2), X(rx), Y(topz), st)); o.push(Ln(X(rx), Y(topz), X(dx), Y(topz), st)); o.push(Ln(X(dx), Y(topz), X(dx), Y(-2), st));
+    o.push(`<circle cx="${f1(X(rx))}" cy="${f1(Y(P.hotShelf + P.hotH - 2))}" r="3.6" fill="#444441"/>`);
+    o.push(T(X(dx), Y(topz) - 6, 'relief valve drain', { size: 9.5, fill: '#0F6E56' }));
+    o.push(T(X(dx) + (E.flip ? 5 : -5), Y(3), 'through the floor to outside', { size: 8.5, fill: '#0F6E56', anchor: E.flip ? 'start' : 'end' }));
+  }
   // two 4 in drawers side by side under the counter in the flat part, 1/2 in divider between
   {
     const d0 = L.cabS + 1.25, dm = L.cabS + 14.75, z0 = ch - 6.75, z1 = ch - 2.75;
@@ -1037,6 +1048,12 @@ function drawPlan(L, V) {
   o.push(ip(L.hotX[0], L.hotX[1], P.hotBack, P.hotBack + P.hotD, '#C0392B', '', null, { fo: .2, dash: '4 3' }));
   // the hot and cold fittings and the relief valve are on the back of the tank, in the gap to the wall
   [['C', .2, '#185FA5'], ['H', .5, '#C0392B'], ['R', .8, '#444441']].forEach(([n, f, col]) => { const fx = L.hotX[0] + f * P.hotW; o.push(`<circle cx="${f1(xx(fx))}" cy="${f1(yp(P.hotBack / 2))}" r="3.4" fill="${col}"/>`); o.push(T(xx(fx), yp(P.hotBack / 2) + 12, n, { size: 8, fill: col, halo: false })); });
+  if (P.drainOn && P.hotShelf > 10) {
+    const rx = L.hotX[0] + .8 * P.hotW, dy = P.tankD + 2.5, st = { stroke: '#0F6E56', sw: 2, dash: '4 2' };
+    o.push(Ln(xx(rx), yp(P.hotBack / 2), xx(rx), yp(dy), st)); o.push(Ln(xx(rx), yp(dy), xx(P.drainX), yp(dy), st));
+    o.push(`<circle cx="${f1(xx(P.drainX))}" cy="${f1(yp(dy))}" r="4" fill="none" stroke="#0F6E56" stroke-width="2"/>`);
+    o.push(T(xx(P.drainX), yp(dy) + 11, 'drain down', { size: 8, fill: '#0F6E56' }));
+  }
   o.push(T(xx((L.hotX[0] + L.hotX[1]) / 2), yp(P.hotBack + P.hotD / 2) + 3, `hot water tank ${fmt(P.hotW)} x ${fmt(P.hotD)}`, { size: 8.5, fill: '#C0392B' }));
   o.push(ip(L.cabS + 1.25, L.cabS + 14.25, 0, 20, '#8A5A00', '', null, { fo: .15, dash: '3 2' }));
   o.push(ip(L.cabS + 15.75, L.cabS + 28.75, 0, 20, '#8A5A00', '', null, { fo: .15, dash: '3 2' }));
@@ -1316,6 +1333,11 @@ function computeChecks(L, V) {
       if (fitL < 29.2 || fitD < 19.95) push('bad', `The drawers under the counter need a flat part 29 1/4 in long between end panels (58 to 87 1/4 in) and a cabinet 20 3/4 in deep (20 in boxes plus a 3/4 in front); here the flat part is ${fmt(fitL)} in and the cabinet is ${fmt(P.cabD)} in deep.`);
       else if (tot < 3) push('bad', `The lower drawers under the top pair do not fit: only ${fmt(Math.max(0, tot))} in is left between the shelf over the hot water tank (${fmt(shelfZ)} in up) and the top drawers.`);
       else push(tot < 10 ? 'warn' : 'ok', `Lower drawers: ${tot >= 10 ? `two 13 x 20 x 5 in drawers one above the other on the cab side (shelf at ${fmt(shelfZ)} in up, 1/2 in over what is under it) and, toward the back, ${manyB ? `a 13 x 20 x 5 in drawer over two 13 x 20 x ${fmt((tlz - 6 - bbz - 1) / 2)} in ones` : `one 13 x 20 x ${fmt(tlz - bbz)} in drawer`} on a shelf at ${fmt(L.backShelf)} in up (1/2 in over ${L.backShelf > 8 ? 'the hot water tank' : 'the wheel well'}), all under the top pair` : `one row of two, 13 x 20 x ${fmt(tot)} in`}. All are 20 deep so they reach the wall. Nothing may come out of the top of the hot water tank (fittings, relief valve).`);
+    }
+    if (P.drainOn && P.hotShelf > 10) {
+      const rx = L.hotX[0] + .8 * P.hotW, dx = P.drainX, dyy = P.tankD + 2.5, topz = P.hotShelf + P.hotH + 1.5, above = P.counterH - 1.5 - topz - P.drainDia, strip = dAt(dx) - .75 - P.tankD;
+      const len = (P.hotShelf + P.hotH - 2 < topz ? 3.5 : 0) + Math.abs(dyy - P.hotBack / 2) + Math.abs(rx - dx) + topz + 4, bad = above < 0 || strip < P.drainDia + .5 || dx < L.angS - .75 && dx > L.cabS + 1.25 || dx < L.hotX[0] - 4;
+      push(bad ? 'warn' : 'ok', `Relief valve drain line (${fmt(P.drainDia)} in pipe, at least the valve outlet): from the valve on the back of the tank (at ${fmt(rx)} in from the back) it goes up and over the top of the tank (${fmt(topz)} in up, ${fmt(Math.max(0, above))} in under the counter), forward across the tank to ${fmt(dyy)} in from the wall, back along the front to ${fmt(dx)} in, and down in the ${fmt(strip)} in clear strip in front of the fresh tank, through the shelf and the floor to outside under the van: about ${fmt(len)} in of pipe. It must fall all the way (no sags or dips where water can sit), have no valve, cap or smaller pipe anywhere, be a material rated for hot water, and end outside or within 6 in of the ground, pointing down where the discharge scalds nobody. The line cannot go down behind the tank: the fresh tank is against the wall, and the drawers reach the wall above the shelf.`);
     }
     const ac = P.heaterW / 120, dc = P.heaterW / (12 * .9), kwhGal = 8.34 * 80 / 3412, ahGal = kwhGal / .9 * 1000 / 12;
     {
