@@ -97,10 +97,10 @@ const PD = [
   { k: 'chairTurn', g: 'Lawn chairs', l: 'Lawn chairs: turn them so the long side runs across the van instead of along it', d: false, t: 'c' },
   { k: 'canOn', g: 'Take items out', l: 'Trash can on a pull-out in the cab-side column under the counter (replaces the two lower cab-side drawers and their shelves; turn it off to bring them back)', d: true, t: 'c' },
   { k: 'canGal', g: 'Trash can', l: 'Trash can: size in gallons (a tall kitchen can is 13)', d: 13, s: 1, a: 4, b: 30 },
-  { k: 'canW', g: 'Trash can', l: 'Trash can: width along the wall (the column is 13 wide between the drawer slides)', d: 12, s: .25, a: 6, b: 20 },
+  { k: 'canW', g: 'Trash can', l: 'Trash can: width along the wall (the column is 13 wide between the drawer slides and the pull-out tray is 1 in wider than the can, so 12 leaves 1/2 in each side)', d: 12, s: .25, a: 6, b: 20 },
   { k: 'canD', g: 'Trash can', l: 'Trash can: depth, out from the wall', d: 16, s: .25, a: 6, b: 24 },
   { k: 'canH', g: 'Trash can', l: 'Trash can: height with the lid shut', d: 24, s: .25, a: 8, b: 36 },
-  { k: 'canBase', g: 'Trash can', l: 'Trash can: how high the bottom of the can is off the floor (tray and slides are under it; 4 1/2 clears the wheel well edge, 3 1/3 in tall at the back of the column)', d: 4.5, s: .25, a: 0, b: 16 },
+  { k: 'canBase', g: 'Trash can', l: 'Trash can: how high the bottom of the can is off the floor (the 3/4 in tray and 1/2 in slides are under it; 4 3/4 puts them about 1/8 in over the wheel well edge, 3 1/3 in tall at the back of the column)', d: 4.75, s: .25, a: 0, b: 16 },
   { k: 'canTravel', g: 'Trash can', l: 'Trash can pull-out: how far the slides carry it out (a 20 in slide goes about 19)', d: 19, s: .5, a: 4, b: 30 },
   { k: 'drainOn', g: 'Water tanks', l: 'Draw the relief valve drain line (over the top of the tank, down in front of the fresh tank, out through the floor)', d: true, t: 'c' },
   { k: 'drainX', g: 'Water tanks', l: 'Relief valve drain line: where it comes down (from the back)', d: 89, s: .5, a: 60, b: 125 },
@@ -291,11 +291,15 @@ function collisions(L) {
   // the trash can with its tray and slides (a 3/4 in tray and 1/2 in slide under the can), closed in its place under the counter
   if (L.hook) mov.push(bx('Hook', 'the dish towel hook with its towel', L.hook.x0, L.hook.x1, L.hook.y0, L.hook.y1, L.hook.z0, L.hook.z1, { kind: 'hook' }));
   if (L.chairs) mov.push(bx('Chairs', 'the stack of lawn chairs', L.chairs.x0, L.chairs.x1, L.chairs.y0, L.chairs.y1, L.chairs.z0, L.chairs.z1, { kind: 'chair' }));
-  if (L.can) mov.push(bx('Can', 'the trash can and its pull-out', L.can.x0, L.can.x1, L.can.y0, L.can.y1, L.can.z0 - 1.25, L.can.z1, { kind: 'can' }));
+  if (L.can) {
+    const c = L.can;
+    mov.push(bx('Can', 'the trash can', c.x0, c.x1, c.y0, c.y1, c.z0, c.z1, { kind: 'can' }));
+    mov.push(bx('Can', 'the pull-out tray under the trash can', c.tx0, c.tx1, c.ty0, c.ty1, c.z0 - 1.25, c.z0, { kind: 'can' }));
+  }
   if (L.jug) mov.push(bx('Jug', 'the drain jug', L.jug.x0, L.jug.x1, L.jug.y0, L.jug.y1, L.jug.z0, L.jug.z1, { kind: 'jug' }));
   // the wheel well is a trapezoid: 2 in high at 42, 7.5 from 51.25 to 66.75, 2 in high at 76
   const wellH = x => x < 42 || x > 76 ? 0 : x < 51.25 ? 2 + (x - 42) * 5.5 / 9.25 : x <= 66.75 ? 7.5 : 7.5 - (x - 66.75) * 5.5 / 9.25;
-  if (P.hotShelf > .5) mov.push(bx('hot', 'the hot water tank shelf', L.hotX[0] - 1, L.hotX[1] + 1, P.hotBack, P.hotBack + P.hotD, P.hotShelf - .75, P.hotShelf, { kind: 'hotboard', vs: ['drawer', 'tank'] }));
+  if (P.hotShelf > .5) mov.push(bx('hot', 'the hot water tank shelf', L.hotX[0] - 1, L.hotX[1] + 1, P.hotBack, P.hotBack + P.hotD, P.hotShelf - .75, P.hotShelf, { kind: 'hotboard', vs: ['drawer', 'tank', 'can', 'jug'] }));
   const fix = [
     bx('', 'the wheel well', 42, 76, 0, 7, 0, 7.5, { prof: wellH }), P.fridgeOn && bx('', 'the fridge', L.fr[0], L.fr[1], 2, 2 + P.fridgeD, 8.25, ft), bx('', 'the cab wall', P.cab, P.cab + 60, 0, 40, 0, 120),
     bx('', 'the floor', -10, P.cab + 10, -5, 45, -40, 0), bx('', 'the ceiling', -10, P.cab + 10, -5, 45, L.ceilF, L.ceilF + 40),
@@ -306,7 +310,7 @@ function collisions(L) {
     // the paper towel roll sits in a recess in the angled front, 6 in deep from the door face (a tank may touch its bottom, not reach into it)
     P.towelOn && bx('', 'the paper towel recess', L.sinkS - 11.5, L.sinkS - .5, Math.max(0, Math.min(L.angS < L.sinkS ? Math.max(P.sinkD, P.cabD - L.slope * (L.sinkS - L.angS)) : P.sinkD, P.cabD) - 6.75), P.cabD, 29.75, 35.25, { vs: ['tank'] }),
     // the sink cabinet door (3/4 in, at the sink end depth) and the wall: the drain jug has to stay between them
-    bx('', 'the sink cabinet door', L.sinkS, L.sinkE, P.sinkD - .75, P.sinkD, 0, ch, { vs: ['jug'] }), bx('', 'the van wall', L.sinkS - 20, L.sinkE + 20, -5, 0, 0, ch, { vs: ['jug'] }),
+    bx('', 'the sink cabinet door', L.sinkS, L.sinkE, P.sinkD - .75, P.sinkD, 0, ch, { vs: ['jug'] }), bx('', 'the van wall', -30, P.cab + 10, -5, 0, 0, ch, { vs: ['jug', 'can'] }),
     // the divider between the two drawer columns (only drawers count: the shelves meet it by design)
     bx('', 'the divider between the two columns', dm, dm + .5, 0, 20, L.cabTot >= 3 ? L.wellShelf + .75 : ch - 7.25, ch - 2.5, { vs: ['drawer'] }),
     // under the couch: the driver wheel well, the battery, the underside of the deck, the closet and the rear doors; the lawn chairs have to stay between them (y is out from the passenger wall: the driver side is at y = vanW)
@@ -314,7 +318,7 @@ function collisions(L) {
     bx('', 'the underside of the couch deck', 0, P.bedLen, P.vanW - P.bedD, P.vanW + 5, P.platform - 1.5, P.platform + 40, { vs: ['chair'] }), bx('', 'the closet', L.c0, L.c1, P.vanW - P.closetD, P.vanW + 5, 0, 80, { vs: ['chair'] }),
     bx('', 'the rear doors', -30, -6, -5, P.vanW + 5, 0, 90, { vs: ['chair'] }), bx('', 'the driver side wall', -30, P.cab, P.vanW, P.vanW + 5, 0, 90, { vs: ['chair'] }), bx('', 'the floor', -30, P.cab + 10, -5, P.vanW + 5, -40, 0, { vs: ['chair'] }),
     // the trash can has the divider (down to the floor for it) beside it and the cabinet door in front of it
-    bx('', 'the divider between the two columns', dm, dm + .5, 0, 20, 0, ch - 2.5, { vs: ['can'] }), bx('', 'the cabinet door', L.cabS, L.angS - .75, P.cabD - .75, P.cabD, 0, ch - 2.5, { vs: ['can'] })
+    P.canOn && bx('', 'the divider between the two columns', dm, dm + .5, 0, 20, 0, ch - 2.5, { vs: ['can', 'tank', 'hotboard'] }), bx('', 'the cabinet door', L.cabS, L.angS - .75, P.cabD - .75, P.cabD, 0, ch - 2.5, { vs: ['can'] })
   ].filter(Boolean);
   const ov = (a0, a1, b0, b1) => Math.min(a1, b1) - Math.max(a0, b0), seen = new Set(), cp = n => n[0].toUpperCase() + n.slice(1);
   const test = (a, b) => {
@@ -338,7 +342,7 @@ function collisions(L) {
     const c = L.chairs, over = c.d1 - P.bedD;
     if (over > .06 && c.x1 > 0 && c.x0 < P.bedLen) { ids.add('Chairs'); list.push({ ids: ['Chairs'], msg: `The stack of lawn chairs sticks out ${fmt(over)} in past the front of the couch deck (${fmt(P.bedD)} in out from the driver wall) into the aisle.` }); }
   }
-  if (L.can) outOf('Can', 'the trash can and its pull-out', L.can.x0, L.can.x1, L.cabS, L.angS - .75, 'the flat part of the cabinet');
+  if (L.can) outOf('Can', 'the pull-out tray under the trash can', L.can.tx0, L.can.tx1, L.cabS, L.angS - .75, 'the flat part of the cabinet');
   if (L.jug) {
     // under the sink, and standing on the top of the fresh water tank (its footprint is the tank's: along the wall and out from it)
     outOf('Jug', 'the drain jug', L.jug.x0, L.jug.x1, L.sinkS, L.sinkE - .75, 'the sink cabinet, under the sink');
@@ -462,6 +466,8 @@ function layout(P0) {
   if (P.canOn) {
     const ccx = L.cabS + 14.75 + 1 + 6.5 + P.dxCan, cy0 = 1.5 + P.dyCan, cz0 = P.canBase + P.dzCan;
     L.can = { x0: ccx - P.canW / 2, x1: ccx + P.canW / 2, y0: cy0, y1: cy0 + P.canD, z0: cz0, z1: cz0 + P.canH, cx: ccx };
+    // the tray under it: 1/4 in wider each side than the can, 19 1/2 deep (3/4 in behind the can's back, 1 3/4 in past its front), 3/4 in thick on 1/2 in slides
+    Object.assign(L.can, { tx0: L.can.x0 - .5, tx1: L.can.x1 + .5, ty0: cy0 - .75, ty1: cy0 + 18.75 });
   }
   // the drain jug stands on the top of the fresh water tank under the sink: centered on the part of the tank that is under the sink, in the middle of the tank's depth, plus how far it was dragged
   L.jug = null;

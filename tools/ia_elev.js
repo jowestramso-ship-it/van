@@ -388,7 +388,7 @@ function drawPass(L, V) {
     o.push(box(c.x0 - .25, c.x1 + .25, c.z1 - 1.25, c.z1, { fill: '#9A9DA3', fo: .8, stroke: col, sw: 1, rx: 2 }));
     o.push(T(X(cm), Y(mz) - 3, 'Trash can', { size: 11, fill: col }));
     o.push(T(X(cm), Y(mz) + 10, `${fmt(P.canW)} x ${fmt(P.canD)} x ${fmt(P.canH)}`, { size: 9, fill: col }));
-    o.push(T(X(cm), Y(mz) + 22, `${fmt(P.canGal)} gal, on a pull-out`, { size: 9, fill: col }));
+    o.push(T(X(cm), Y(mz) + 22, `${fmt(P.canGal)} gal pull-out`, { size: 9, fill: col }));
     o.push(GE());
   }
   o.push(GB('jug', 'Sink underside and jug space'));
@@ -402,6 +402,7 @@ function drawPass(L, V) {
       if (!L.jug) o.push(T(X((jx0 + jx1) / 2), Y((jz0 + jz1) / 2) + 4, `jug space ${fmt(jz1 - jz0)} tall`, { size: 10, fill: COL.BL }));
     }
     if (L.jug) {
+      o.push(GE()); o.push(GB('Jug', 'Drain jug (5 gallon bottle)'));
       // the drain jug: a 5 gallon water bottle by default, standing on the tank top (round body, shoulders, a narrow neck about 2 1/8 in across)
       const j = L.jug, jm = (j.x0 + j.x1) / 2, nk = Math.min(2.125, P.jugD * .4) / 2, nkH = Math.min(3, P.jugH * .15), shH = Math.min(3, P.jugH * .15), px = (x, z) => [X(x), Y(z)];
       const hw = P.jugD / 2, zb = j.z0, zs = j.z1 - nkH - shH, zn = j.z1 - nkH;
