@@ -188,6 +188,15 @@ function drawPlan(L, V) {
   o.push(GB('fresh', 'Fresh water tank'));
   o.push(ip(L.tankX[0], L.tankX[1], P.tankBack, P.tankBack + P.tankD, COL.BL, '', null, { fo: .1, dash: '5 3' }));
   o.push(GE());
+  if (L.jug) {
+    // the drain jug seen from above, standing on the fresh water tank under the sink
+    const jc = L.coll.ids.has('Jug') ? '#A32D2D' : COL.BL;
+    o.push(GB('Jug', 'Drain jug'));
+    o.push(`<circle cx="${f1(xx(L.jug.cx))}" cy="${f1(yp(L.jug.cy))}" r="${f1(S * P.jugD / 2)}" fill="#A9D4F5" fill-opacity=".3" stroke="${jc}" stroke-width="1.6"/>`);
+    o.push(`<circle cx="${f1(xx(L.jug.cx))}" cy="${f1(yp(L.jug.cy))}" r="${f1(S * 1.06)}" fill="none" stroke="${jc}" stroke-width="1"/>`);
+    o.push(T(xx(L.jug.cx), yp(L.jug.cy) + S * P.jugD / 2 + 10, `drain jug ${fmt(P.jugD)} across`, { size: 8.5, fill: jc }));
+    o.push(GE());
+  }
   o.push(GB('hot', 'Hot water tank'));
   o.push(ip(L.hotX[0], L.hotX[1], P.hotBack, P.hotBack + P.hotD, '#C0392B', '', null, { fo: .2, dash: '4 3' }));
   // the hot and cold fittings and the relief valve are on the back of the tank, in the gap to the wall
@@ -271,6 +280,8 @@ function drawPlan(L, V) {
   Object.values(cols).forEach(c => o.push(HIT(c.ids[0], xx(c.x0), yp(20), S * (c.x1 - c.x0), S * 20, [c.ids.map(id => 'dx' + id).join(','), 1 / S, '', 0], c.ids.some(id => L.coll.ids.has(id)), c.ids.length > 1 ? `The ${c.ids.length} drawers in this column (along the wall)` : cap(L.partById[c.ids[0]].n) + ' (along the wall)', '', 'drawers')));
   o.push(HIT('Micro', xx(L.microX[0] + 1.75), yp(P.microIn + 12), S * (L.microX[1] - L.microX[0] - 3.5), S * 12, ['dxMicro', 1 / S, 'microIn', -1 / S], L.coll.ids.has('Micro'), 'The microwave (along the wall and out from it)'));
   o.push(HIT('fresh', xx(L.tankX[0]), yp(P.tankBack + P.tankD), S * L.tankLen, S * P.tankD, ['tankShift', -1 / S, 'tankBack', -1 / S], L.coll.ids.has('fresh'), 'Fresh water tank (along the wall and out from it)'));
+  // after the tank, which is under it
+  if (L.jug) o.push(HIT('Jug', xx(L.jug.x0), yp(L.jug.y1), S * P.jugD, S * P.jugD, ['dxJug', 1 / S, 'dyJug', -1 / S], L.coll.ids.has('Jug'), 'The drain jug (along the wall and out from it)'));
   if (P.drainOn && P.hotShelf > 10) o.push(HIT('drain', xx(P.drainX) - 8, yp(L.drainY) - 8, 16, 16, ['drainX', 1 / S, '', 0], false, 'Relief valve drain line (where it comes down)'));
   o.push(HIT('hot', xx(L.hotX[0]), yp(P.hotBack + P.hotD), S * P.hotW, S * P.hotD, ['hotX0', 1 / S, 'hotBack', -1 / S], L.coll.ids.has('hot'), 'Hot water tank (along the wall and out from it)', 'hotFree'));
   return { w: W, h: H, body: o.join('') };

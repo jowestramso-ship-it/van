@@ -75,6 +75,10 @@ const PD = [
   { k: 'tankShift', g: 'Water tanks', l: 'Fresh water tank: moved toward the rear from the sink end (negative = toward the cab; you can drag it)', d: 0, s: .5, a: -40, b: 50 },
   { k: 'tankLift', g: 'Water tanks', l: 'Fresh water tank: lifted off the floor (you can drag it)', d: 0, s: .25, a: 0, b: 40 },
   { k: 'tankBack', g: 'Water tanks', l: 'Fresh water tank: space between it and the wall (you can drag it)', d: 0, s: .25, a: 0, b: 24 },
+  { k: 'jugOn', g: 'Water tanks', l: 'Draw the drain jug (the sink drains into it; it stands on the fresh water tank under the sink)', d: true, t: 'c' },
+  { k: 'jugH', g: 'Water tanks', l: 'Drain jug height (a 5 gallon water bottle is about 19 1/2 tall, with its neck)', d: 19.5, s: .25, a: 6, b: 30 },
+  { k: 'jugD', g: 'Water tanks', l: 'Drain jug diameter (a 5 gallon water bottle is about 10 3/4 across)', d: 10.75, s: .25, a: 4, b: 18 },
+  { k: 'jugGal', g: 'Water tanks', l: 'Drain jug: how much it holds (gallons; a 5 gallon water bottle holds 5)', d: 5, s: .5, a: 1, b: 15 },
   { k: 'drainOn', g: 'Water tanks', l: 'Draw the relief valve drain line (over the top of the tank, down in front of the fresh tank, out through the floor)', d: true, t: 'c' },
   { k: 'drainX', g: 'Water tanks', l: 'Relief valve drain line: where it comes down (from the back)', d: 89, s: .5, a: 60, b: 125 },
   { k: 'drainDz', g: 'Water tanks', l: 'Relief valve drain line: the run over the tank moved up (+) or down (-) (you can drag it)', d: 0, s: .25, a: -12, b: 6 },
@@ -132,10 +136,11 @@ const PD = [
 // the drawers and shelves under the counter, the jar shelf and the microwave shelf: how far each is moved from its planned spot (you can drag them; double-click one to put it back)
 [['TB', 'Top drawer, back side', 1], ['TC', 'Top drawer, cab side', 1], ['C1', 'Cab-side column: upper (or only) drawer', 1], ['C2', 'Cab-side column: lower drawer', 1], ['B1', 'Back-side column: upper (or only) drawer', 1], ['B2', 'Back-side column: middle drawer', 1], ['B3', 'Back-side column: bottom drawer', 1],
   ['SC', 'Shelf under the cab-side drawers', 0], ['SB', 'Shelf under the back-side drawers', 0], ['SC2', 'Board between the two cab-side lower drawers', 0], ['SB1', 'Board between the upper and middle back-side drawers', 0], ['SB2', 'Board between the middle and bottom back-side drawers', 0],
-  ['Nook', 'Jar shelf in the nook (with its upper row of jars)', 0], ['Micro', 'Microwave and its shelf', 0]].forEach(([k, nm, along]) => {
+  ['Nook', 'Jar shelf in the nook (with its upper row of jars)', 0], ['Micro', 'Microwave and its shelf', 0], ['Jug', 'Drain jug (the 5 gallon bottle under the sink)', 0]].forEach(([k, nm, along]) => {
   PD.push({ k: 'dx' + k, g: 'Drawers and shelves', l: nm + ': moved along the wall (+ toward the cab, - toward the rear)', d: 0, s: .25, a: -60, b: 60 });
   PD.push({ k: 'dz' + k, g: 'Drawers and shelves', l: nm + ': moved up (+) or down (-)', d: 0, s: .25, a: -40, b: 40 });
 });
+PD.push({ k: 'dyJug', g: 'Drawers and shelves', l: 'Drain jug (the 5 gallon bottle under the sink): moved out from the wall (+) or toward it (-)', d: 0, s: .25, a: -12, b: 12 });
 const DEF = {}; PD.forEach(p => DEF[p.k] = p.d);
 let P = Object.assign({}, DEF);
 
@@ -238,6 +243,8 @@ function collisions(L) {
   const nx0 = 58, nx1 = 93.25;
   mov.push(bx('Nook', 'the jar shelf in the nook with its upper row of jars', L.nookX[0], L.nookX[1], 0, 4.5, L.nookZ, L.nookZ + .75 + 7, { kind: 'jars' }));
   mov.push(bx('Micro', 'the microwave and its shelf', L.microX[0], L.microX[1], 0, P.microIn + 12, L.microZ[0] - .75, L.microZ[1], { kind: 'micro' }));
+  // the drain jug (a bottle) is checked by its square outline; it stands on the fresh water tank
+  if (L.jug) mov.push(bx('Jug', 'the drain jug', L.jug.x0, L.jug.x1, L.jug.y0, L.jug.y1, L.jug.z0, L.jug.z1, { kind: 'jug' }));
   // the wheel well is a trapezoid: 2 in high at 42, 7.5 from 51.25 to 66.75, 2 in high at 76
   const wellH = x => x < 42 || x > 76 ? 0 : x < 51.25 ? 2 + (x - 42) * 5.5 / 9.25 : x <= 66.75 ? 7.5 : 7.5 - (x - 66.75) * 5.5 / 9.25;
   if (P.hotShelf > .5) mov.push(bx('hot', 'the hot water tank shelf', L.hotX[0] - 1, L.hotX[1] + 1, P.hotBack, P.hotBack + P.hotD, P.hotShelf - .75, P.hotShelf, { kind: 'hotboard', vs: ['drawer', 'tank'] }));
@@ -250,6 +257,8 @@ function collisions(L) {
     bx('', 'the TV', 76.5, 103.5, 0, 4.5, ch + 16, ch + 31.4),
     // the paper towel roll sits in a recess in the angled front, 6 in deep from the door face (a tank may touch its bottom, not reach into it)
     bx('', 'the paper towel recess', L.sinkS - 11.5, L.sinkS - .5, Math.max(0, Math.min(L.angS < L.sinkS ? Math.max(P.sinkD, P.cabD - L.slope * (L.sinkS - L.angS)) : P.sinkD, P.cabD) - 6.75), P.cabD, 29.75, 35.25, { vs: ['tank'] }),
+    // the sink cabinet door (3/4 in, at the sink end depth) and the wall: the drain jug has to stay between them
+    bx('', 'the sink cabinet door', L.sinkS, L.sinkE, P.sinkD - .75, P.sinkD, 0, ch, { vs: ['jug'] }), bx('', 'the van wall', L.sinkS - 20, L.sinkE + 20, -5, 0, 0, ch, { vs: ['jug'] }),
     // the divider between the two drawer columns (only drawers count: the shelves meet it by design)
     bx('', 'the divider between the two columns', dm, dm + .5, 0, 20, L.cabTot >= 3 ? L.wellShelf + .75 : ch - 7.25, ch - 2.5, { vs: ['drawer'] })
   ];
@@ -270,6 +279,13 @@ function collisions(L) {
   L.parts.forEach(p => outOf(p.id, p.n, p.x0, p.x1, p.kind === 'drawer' ? L.cabS + .75 : L.cabS, L.angS - .75, 'the flat part of the cabinet'));
   outOf('Nook', 'the jar shelf in the nook', L.nookX[0], L.nookX[1], nx0, nx1, 'the nook');
   outOf('Micro', 'the microwave and its shelf', L.microX[0], L.microX[1], L.fr[0], L.fr[1], 'the top of the fridge');
+  if (L.jug) {
+    // under the sink, and standing on the top of the fresh water tank (its footprint is the tank's: along the wall and out from it)
+    outOf('Jug', 'the drain jug', L.jug.x0, L.jug.x1, L.sinkS, L.sinkE - .75, 'the sink cabinet, under the sink');
+    outOf('Jug', 'the drain jug', L.jug.x0, L.jug.x1, L.tankX[0], L.tankX[1], 'the top of the fresh water tank');
+    const outY = Math.max(P.tankBack - L.jug.y0, L.jug.y1 - (P.tankBack + P.tankD));
+    if (outY > .06) { ids.add('Jug'); list.push({ ids: ['Jug'], msg: `The drain jug sticks out ${fmt(outY)} in past the ${P.tankBack - L.jug.y0 > L.jug.y1 - (P.tankBack + P.tankD) ? 'back' : 'front'} of the top of the fresh water tank (${fmt(P.tankBack)} to ${fmt(P.tankBack + P.tankD)} in out from the wall).` }); }
+  }
   // the open floor beside the sink cabinet end is the entry: nothing may stand past the cabinet end panel
   [hot, fresh].forEach(a => { const past = a.x1 - (L.sinkE - .75); if (past > .06 && a.z0 < ch) { ids.add(a.id); list.push({ ids: [a.id], msg: `${cp(a.n)} sticks out ${fmt(past)} in past the end of the sink cabinet (${fmt(L.sinkE - .75)} in) into the entry by the sliding door.` }); } });
   // roof units: the fan and air conditioner bases must not overlap on the roof
@@ -369,6 +385,12 @@ function layout(P0) {
   L.nookZ = P.counterH + 7.5 + P.dzNook; L.nookX = [58 + P.dxNook, 93.25 + P.dxNook];
   L.microX = [L.fr[0] + P.dxMicro, L.fr[1] + P.dxMicro];
   L.microZ = [8.25 + P.fridgeH + 2.75 + P.dzMicro, 8.25 + P.fridgeH + 12.75 + P.dzMicro];   // the microwave bottom and top; its shelf is the 3/4 in under it, 2 in over the fridge top
+  // the drain jug stands on the top of the fresh water tank under the sink: centered on the part of the tank that is under the sink, in the middle of the tank's depth, plus how far it was dragged
+  L.jug = null;
+  if (P.jugOn) {
+    const jo0 = Math.max(L.sinkS, L.tankX[0]), jo1 = Math.min(L.sinkE - .75, L.tankX[1]), jcx = (jo1 > jo0 ? (jo0 + jo1) / 2 : (L.sinkS + L.sinkE) / 2) + P.dxJug, jcy = P.tankBack + P.tankD / 2 + P.dyJug, jz0 = P.tankLift + P.tankH + P.dzJug;
+    L.jug = { x0: jcx - P.jugD / 2, x1: jcx + P.jugD / 2, y0: jcy - P.jugD / 2, y1: jcy + P.jugD / 2, z0: jz0, z1: jz0 + P.jugH, cx: jcx, cy: jcy };
+  }
   L.coll = collisions(L);
   return L;
 }

@@ -230,8 +230,9 @@ function drawPass(L, V) {
   o.push(GB('counter', 'Sink cabinet and countertop'));
   o.push(box(cabS, sinkS, 0, ch, { fill: COL.C, fo: .08, stroke: COL.C, sw: 1.5, rx: 3 }));
   o.push(box(sinkS, sinkE, 0, ch, { fill: COL.C, fo: .08, stroke: COL.C, sw: 1.5, rx: 3 }));
-  o.push(T(X((sinkS + sinkE) / 2), Y(ch * .68), 'Sink cabinet', { size: 12, fill: COL.C }));
-  o.push(T(X((sinkS + sinkE) / 2), Y(ch * .68) + 14, `${fmt(P.sinkW)} wide, counter ${fmt(P.sinkD)} deep`, { size: 10.5, fill: COL.C }));
+  // the labels sit up under the countertop, over the sink, so the drain jug standing on the tank below does not cover them
+  o.push(T(X((sinkS + sinkE) / 2), Y(ch - 2.7), 'Sink cabinet', { size: 12, fill: COL.C }));
+  o.push(T(X((sinkS + sinkE) / 2), Y(ch - 2.7) + 13, `${fmt(P.sinkW)} wide, ${fmt(P.sinkD)} deep`, { size: 10.5, fill: COL.C }));
   o.push(box(cabS, sinkE, ch - 1.2, ch, { fill: '#5F5E5A', fo: .75 }));
   o.push(T(X(sinkS - 3), Y(ch) - 4, `countertop at ${fmt(ch)} in`, { size: 10.5, fill: '#5F5E5A', halo: false }));
   o.push(GE());
@@ -359,13 +360,22 @@ function drawPass(L, V) {
   o.push(GE());
   o.push(GB('jug', 'Sink underside and jug space'));
   o.push(Ln(X(sinkS), Y(ch - P.sinkBowlD), X(sinkE), Y(ch - P.sinkBowlD), { stroke: COL.BL, sw: 1.6, dash: '5 3' }));
-  o.push(T(X(sinkE - 1), Y(ch - P.sinkBowlD) + 11, `sink underside ${fmt(ch - P.sinkBowlD)} up`, { size: 9, fill: COL.BL, anchor: E.flip ? 'start' : 'end' }));
+  o.push(T(X(sinkE - 1), Y(ch - P.sinkBowlD) - 3, `sink underside ${fmt(ch - P.sinkBowlD)} up`, { size: 9, fill: COL.BL, anchor: E.flip ? 'start' : 'end' }));
   {
     // no sink pipe: the sink drains into a jug standing on the fresh tank under the sink; this is the room it has
     const jx0 = Math.max(sinkS, L.tankX[0]), jx1 = Math.min(sinkE, L.tankX[1]), jz0 = P.tankLift + P.tankH, jz1 = ch - P.sinkBowlD;
     if (jx1 > jx0 + 1 && jz1 > jz0 + .5) {
       o.push(box(jx0, jx1, jz0, jz1, { stroke: COL.BL, sw: 1.4, dash: '2 3', fill: COL.BL, fo: .05 }));
-      o.push(T(X((jx0 + jx1) / 2), Y((jz0 + jz1) / 2) + 4, `jug space ${fmt(jz1 - jz0)} tall`, { size: 10, fill: COL.BL }));
+      if (!L.jug) o.push(T(X((jx0 + jx1) / 2), Y((jz0 + jz1) / 2) + 4, `jug space ${fmt(jz1 - jz0)} tall`, { size: 10, fill: COL.BL }));
+    }
+    if (L.jug) {
+      // the drain jug: a 5 gallon water bottle by default, standing on the tank top (round body, shoulders, a narrow neck about 2 1/8 in across)
+      const j = L.jug, jm = (j.x0 + j.x1) / 2, nk = Math.min(2.125, P.jugD * .4) / 2, nkH = Math.min(3, P.jugH * .15), shH = Math.min(3, P.jugH * .15), px = (x, z) => [X(x), Y(z)];
+      const hw = P.jugD / 2, zb = j.z0, zs = j.z1 - nkH - shH, zn = j.z1 - nkH;
+      const bad = L.coll.ids.has('Jug'), col = bad ? '#A32D2D' : COL.BL;
+      o.push(Poly([px(jm - hw, zb + 1.5), px(jm - hw + 1.5, zb), px(jm + hw - 1.5, zb), px(jm + hw, zb + 1.5), px(jm + hw, zs), px(jm + nk, zn), px(jm + nk, j.z1), px(jm - nk, j.z1), px(jm - nk, zn), px(jm - hw, zs)], { fill: '#A9D4F5', fo: bad ? .35 : .55, stroke: col, sw: 1.6 }));
+      o.push(T(X(jm), Y(zb + (zs - zb) * .55), '5 gal bottle'.replace('5', fmt(P.jugGal)), { size: 11, fill: col }));
+      o.push(T(X(jm), Y(zb + (zs - zb) * .55) + 13, `${fmt(P.jugH)} x ${fmt(P.jugD)}`, { size: 10, fill: col }));
     }
   }
   o.push(GE());
@@ -431,6 +441,7 @@ function drawPass(L, V) {
     o.push(HIT('Nook', hx(nx0 + ndx, nx1 + ndx), Y(ch + 8.25 + nd) - 4, S * (nx1 - nx0), S * .75 + 8, ['dxNook', -1 / S, 'dzNook', -1 / S], L.coll.ids.has('Nook'), 'The jar shelf in the nook with its upper row of jars (along the wall and up)'));
     o.push(HIT('Micro', hx(q0 + mx, q1 + mx), Y(ft + 12.75 + md), S * (q1 - q0), S * 10.75, ['dxMicro', -1 / S, 'dzMicro', -1 / S], L.coll.ids.has('Micro'), 'The microwave and its shelf (along the wall and up)'));
   }
+  if (L.jug) o.push(HIT('Jug', Math.min(X(L.jug.x0), X(L.jug.x1)), Y(L.jug.z1), S * P.jugD, S * P.jugH, ['dxJug', -1 / S, 'dzJug', -1 / S], L.coll.ids.has('Jug'), 'The drain jug (along the wall and up)'));
   o.push(HIT('fresh', Math.min(X(L.tankX[0]), X(L.tankX[1])), Y(P.tankLift + P.tankH), S * L.tankLen, S * P.tankH, ['tankShift', 1 / S, 'tankLift', -1 / S], L.coll.ids.has('fresh'), 'Fresh water tank (along the wall and up)'));
   if (P.drainOn && P.hotShelf > 10) o.push(HIT('drain', X(P.drainX) - 8, Y(P.hotShelf + P.hotH + 1.5) - 4, 16, S * (P.hotShelf + P.hotH + 1.5 + 2) + 8, ['drainX', -1 / S, 'drainDz', -1 / S], false, 'Relief valve drain line (where it comes down, and the height of its run)'));
   o.push(HIT('hot', Math.min(X(L.hotX[0]), X(L.hotX[1])), Y(P.hotShelf + P.hotH), S * P.hotW, S * P.hotH, ['hotX0', -1 / S, 'hotShelf', -1 / S], L.coll.ids.has('hot'), 'Hot water tank (along the wall and up)', 'hotFree'));
