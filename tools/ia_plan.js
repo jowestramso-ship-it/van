@@ -156,7 +156,7 @@ function drawPlan(L, V) {
   // the hot and cold fittings and the relief valve are on the back of the tank, in the gap to the wall
   [['C', .2, '#185FA5'], ['H', .5, '#C0392B'], ['R', .8, '#444441']].forEach(([n, f, col]) => { const fx = L.hotX[0] + f * P.hotW; o.push(`<circle cx="${f1(xx(fx))}" cy="${f1(yp(P.hotBack / 2))}" r="3.4" fill="${col}"/>`); o.push(T(xx(fx), yp(P.hotBack / 2) + 12, n, { size: 8, fill: col, halo: false })); });
   if (P.drainOn && P.hotShelf > 10) {
-    const rx = L.hotX[0] + .8 * P.hotW, dy = P.tankBack + P.tankD + 2.5, st = { stroke: '#0F6E56', sw: 2, dash: '4 2' };
+    const rx = L.hotX[0] + .8 * P.hotW, dy = L.drainY, st = { stroke: '#0F6E56', sw: 2, dash: '4 2' };
     o.push(Ln(xx(rx), yp(P.hotBack / 2), xx(rx), yp(dy), st)); o.push(Ln(xx(rx), yp(dy), xx(P.drainX), yp(dy), st));
     o.push(`<circle cx="${f1(xx(P.drainX))}" cy="${f1(yp(dy))}" r="4" fill="none" stroke="#0F6E56" stroke-width="2"/>`);
     o.push(T(xx(P.drainX), yp(dy) + 11, 'drain down', { size: 8, fill: '#0F6E56' }));
@@ -169,8 +169,8 @@ function drawPlan(L, V) {
   o.push(T(xx(L.cabS + 14.75), yp(10), `${L.parts.filter(p => p.kind === 'drawer').length} drawers, 20 deep`, { size: 8.5, fill: '#8A5A00' }));
   o.push(ip(58, 93.25, 0, 4.5, '#7A4A1E', '', null, { fo: .3, dash: '3 2' }));
   o.push(T(xx(66), yp(1.3), 'nook 4.5 deep', { size: 8.5, fill: '#5A3510' }));
-  o.push(T(xx((L.tankX[0] + L.tankX[1]) / 2), yp(P.tankBack + 6.5), `Fresh water tank ${fmt(L.tankLen)} x ${fmt(P.tankD)}`, { size: 9.5, fill: COL.BL, w: 500 }));
-  o.push(T(xx((L.tankX[0] + L.tankX[1]) / 2), yp(P.tankBack + 3.5), 'on the floor, out of the open sink cabinet', { size: 9, fill: COL.BL }));
+  o.push(T(xx((L.tankX[0] + L.tankX[1]) / 2), yp(P.tankBack + 12), `Fresh water tank ${fmt(L.tankLen)} x ${fmt(P.tankD)}`, { size: 9.5, fill: COL.BL, w: 500 }));
+  o.push(T(xx((L.tankX[0] + L.tankX[1]) / 2), yp(P.tankBack + 9.5), 'on the floor, out of the open sink cabinet', { size: 9, fill: COL.BL }));
   o.push(T(xx(53), yp(1.8), 'wheel well 7 out', { size: 9, fill: '#3E230B' }));
   // paper towel roll on the angled front
   const nrm = [L.slope, -1], nl = Math.hypot(nrm[0], nrm[1]), nu = [nrm[0] / nl, nrm[1] / nl];
@@ -213,7 +213,7 @@ function drawPlan(L, V) {
   Object.values(cols).forEach(c => o.push(HIT(c.ids[0], xx(c.x0), yp(20), S * (c.x1 - c.x0), S * 20, [c.ids.map(id => 'dx' + id).join(','), 1 / S, '', 0], c.ids.some(id => L.coll.ids.has(id)), c.ids.length > 1 ? `The ${c.ids.length} drawers in this column (along the wall)` : cap(L.partById[c.ids[0]].n) + ' (along the wall)')));
   o.push(HIT('Micro', xx(L.microX[0] + 1.75), yp(P.microIn + 12), S * (L.microX[1] - L.microX[0] - 3.5), S * 12, ['dxMicro', 1 / S, 'microIn', -1 / S], L.coll.ids.has('Micro'), 'The microwave (along the wall and out from it)'));
   o.push(HIT('fresh', xx(L.tankX[0]), yp(P.tankBack + P.tankD), S * L.tankLen, S * P.tankD, ['tankShift', -1 / S, 'tankBack', -1 / S], L.coll.ids.has('fresh'), 'Fresh water tank (along the wall and out from it)'));
-  if (P.drainOn && P.hotShelf > 10) o.push(HIT('drain', xx(P.drainX) - 8, yp(P.tankBack + P.tankD + 2.5) - 8, 16, 16, ['drainX', 1 / S, '', 0], false, 'Relief valve drain line (where it comes down)'));
+  if (P.drainOn && P.hotShelf > 10) o.push(HIT('drain', xx(P.drainX) - 8, yp(L.drainY) - 8, 16, 16, ['drainX', 1 / S, '', 0], false, 'Relief valve drain line (where it comes down)'));
   o.push(HIT('hot', xx(L.hotX[0]), yp(P.hotBack + P.hotD), S * P.hotW, S * P.hotD, ['hotX0', 1 / S, 'hotBack', -1 / S], L.coll.ids.has('hot'), 'Hot water tank (along the wall and out from it)', 'hotFree'));
   return { w: W, h: H, body: o.join('') };
 }
@@ -223,7 +223,7 @@ function drawCeiling(L, V) {
   const P = L.P, S = 5, X0 = 70, Y0 = 90, CL = P.ceilLen, CW = P.ceilW, o = [];
   const xx = x => X0 + S * x, yy = y => Y0 + S * y, hits = [];
   o.push(T(X0, 22, 'The ceiling covering seen from above through the roof: rear doors on the left, cab wall on the right, driver side at the top.', { anchor: 'start', size: 14, fill: '#5F5E5A', halo: false }));
-  o.push(T(X0, 40, P.liningOn ? `${fmt(P.plyT)} in plywood against the roof, then ${L.nSlats - L.slatOut.size} cedar slats (${fmt(P.slatW)} wide x ${fmt(P.slatT)} thick x ${fmt(L.slatLen)} long) with ${fmt(P.slatGap)} in gaps and the lights mounted on the slats. Finished ceiling at ${fmt(L.ceilF)} in.` : 'The covering is turned off (Ceiling sizes on the right).', { anchor: 'start', size: 12, fill: '#5F5E5A', halo: false }));
+  o.push(T(X0, 40, P.liningOn ? `${fmt(P.plyT)} in plywood against the roof, then ${L.nSlats - L.slatOut.size} ${slatWood(P)} slats (${fmt(P.slatW)} wide x ${fmt(P.slatT)} thick x ${fmt(L.slatLen)} long) with ${fmt(P.slatGap)} in gaps and the lights mounted on the slats. Finished ceiling at ${fmt(L.ceilF)} in.` : 'The covering is turned off (Ceiling sizes on the right).', { anchor: 'start', size: 12, fill: '#5F5E5A', halo: false }));
   // plywood sheets (4 x 8 ft, long way along the van): pieces
   const cx = [0], cy = [0]; for (let x = 96; x < CL; x += 96) cx.push(x); cx.push(CL); for (let y = 48; y < CW; y += 48) cy.push(y); cy.push(CW);
   if (P.liningOn) {

@@ -230,11 +230,11 @@ function drawPass(L, V) {
   o.push(box(nx0 + ndx, nx1 + ndx, ch + 7.5 + nd, ch + 8.25 + nd, { fill: '#8A6B4D', stroke: '#3E230B', sw: 1 }));
   [ch, ch + 8.25 + nd].forEach(base => {
     for (let i = 0; i < 9; i++) {
-      const jx = 58.75 + ndx + 3.75 * i;
+      const jx = 58.75 + (base === ch ? 0 : ndx) + 3.75 * i;
       o.push(box(jx + .1, jx + 3.65, base, base + 6.25, { fill: '#A9D4F5', fo: .6, stroke: COL.BL, sw: .9, rx: 2.5 }));
       o.push(box(jx + .45, jx + 3.3, base + 6.25, base + 7, { fill: '#8A8A8A', stroke: COL.G, sw: .6 }));
     }
-    o.push(Ln(X(58.4 + ndx), Y(base + 3.5), X(92.85 + ndx), Y(base + 3.5), { stroke: '#7A4A1E', sw: 1.6, dash: '3 2' }));
+    o.push(Ln(X(58.4 + (base === ch ? 0 : ndx)), Y(base + 3.5), X(92.85 + (base === ch ? 0 : ndx)), Y(base + 3.5), { stroke: '#7A4A1E', sw: 1.6, dash: '3 2' }));
   });
   o.push(T(X(67), Y(ch + 16.7), 'Nook: quart jars', { size: 11, fill: '#7A4A1E' }));
   o.push(T(X(98.8), Y(ch + 8 + nd), `shelf ${fmt(ch + 7.5 + nd)} up`, { size: 10, fill: '#5A3510' }));
@@ -302,7 +302,7 @@ function drawPass(L, V) {
     }
   }
   o.push(Ln(X(sinkS), Y(ch - P.sinkBowlD), X(sinkE), Y(ch - P.sinkBowlD), { stroke: COL.BL, sw: 1.6, dash: '5 3' }));
-  o.push(T(X(sinkE - 1), Y(ch - P.sinkBowlD) + 11, `sink underside ${fmt(ch - P.sinkBowlD)} up (${fmt(P.sinkBowlD)} deep)`, { size: 9, fill: COL.BL, anchor: E.flip ? 'start' : 'end' }));
+  o.push(T(X(sinkE - 1), Y(ch - P.sinkBowlD) + 11, `sink underside ${fmt(ch - P.sinkBowlD)} up`, { size: 9, fill: COL.BL, anchor: E.flip ? 'start' : 'end' }));
   {
     // no sink pipe: the sink drains into a jug standing on the fresh tank under the sink; this is the room it has
     const jx0 = Math.max(sinkS, L.tankX[0]), jx1 = Math.min(sinkE, L.tankX[1]), jz0 = P.tankLift + P.tankH, jz1 = ch - P.sinkBowlD;

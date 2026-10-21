@@ -69,7 +69,7 @@ const PD = [
   { k: 'hotEmptyLb', g: 'Water tanks', l: 'Heater weight: the hot water tank empty (lb)', d: 2, s: .5, a: 0, b: 60 },
   { k: 'hotX0', g: 'Water tanks', l: 'Hot water tank: where it starts along the wall when it sits on the fresh tank or is placed by hand (from the back; you can drag it)', d: 87.25, s: .5, a: 0, b: 140 },
   { k: 'hotFree', g: 'Water tanks', l: 'Hot water tank: place it by hand at any height and spot (dragging it turns this on; turn it off to go back to the floor or shelf spots)', d: false, t: 'c' },
-  { k: 'hotShelf', g: 'Water tanks', l: 'Hot water tank bottom, up from the floor (0 = on the floor; 7.5 = on a shelf over the wheel well; 16.75 = on a shelf on top of the fresh tank)', d: 16.75, s: .5, a: 0, b: 30 },
+  { k: 'hotShelf', g: 'Water tanks', l: 'Hot water tank bottom, up from the floor (0 = on the floor; 7.5 = on a shelf over the wheel well; 16.75 = on a shelf over the fresh tank, 11.25 rests it right on the 10 in tank)', d: 16.75, s: .5, a: 0, b: 30 },
   { k: 'hotW', g: 'Water tanks', l: 'Hot water tank length along the wall', d: 14, s: .5, a: 6, b: 18 },
   { k: 'hotBack', g: 'Water tanks', l: 'Hot water tank: space behind it for the hot and cold fittings and the relief valve (they are at the back)', d: 1.625, s: .125, a: 0, b: 24 },
   { k: 'tankShift', g: 'Water tanks', l: 'Fresh water tank: moved toward the rear from the sink end (negative = toward the cab; you can drag it)', d: 0, s: .5, a: -40, b: 50 },
@@ -147,10 +147,12 @@ function fmt(n) {
   const neg = n < 0; n = Math.abs(n);
   let w = Math.floor(n + 1e-9), fr = Math.round((n - w) * 8);
   if (fr === 8) { w++; fr = 0; }
+  if (!w && !fr) return '0';
   const F = ['', '1/8', '1/4', '3/8', '1/2', '5/8', '3/4', '7/8'][fr];
   const s = fr ? (w ? w + ' ' + F : F) : String(w);
   return (neg ? '-' : '') + s;
 }
+const slatWood = P => P.slatDens <= 25 ? 'cedar' : P.slatDens <= 32 ? 'pine' : 'hardwood';
 const COL = { P: '#534AB7', G: '#444441', K: '#993556', T: '#0F6E56', C: '#993C1D', B: '#8A5A00', W2: '#8A6B4D', BL: '#185FA5' };
 const HALO = 'paint-order:stroke;stroke:#fff;stroke-width:3px;stroke-opacity:.85';
 function T(x, y, s, o) {
@@ -243,6 +245,8 @@ function collisions(L) {
     bx('', 'the sink under the counter', L.sinkS, L.sinkE, 0, P.sinkD, ch - P.sinkBowlD, ch - 1.2),
     bx('', 'the lower row of jars', 58.75, 92.5, 0, 4.5, ch, ch + 7), bx('', 'the top of the nook', nx0, nx1, 0, 4.5, ch + 18.5, ch + 40),
     bx('', 'the TV', 76.5, 103.5, 0, 4.5, ch + 16, ch + 31.4),
+    // the paper towel roll sits in a recess in the angled front, 6 in deep from the door face (a tank may touch its bottom, not reach into it)
+    bx('', 'the paper towel recess', L.sinkS - 11.5, L.sinkS - .5, Math.max(0, Math.min(L.angS < L.sinkS ? Math.max(P.sinkD, P.cabD - L.slope * (L.sinkS - L.angS)) : P.sinkD, P.cabD) - 6.75), P.cabD, 29.75, 35.25, { vs: ['tank'] }),
     // the divider between the two drawer columns (only drawers count: the shelves meet it by design)
     bx('', 'the divider between the two columns', dm, dm + .5, 0, 20, L.cabTot >= 3 ? L.wellShelf + .75 : ch - 7.25, ch - 2.5, { vs: ['drawer'] })
   ];
@@ -311,10 +315,17 @@ function layout(P0) {
     const dm = L.cabS + 14.75, hotTopZ = P.hotShelf + P.hotH, ov = (x0, x1, a, b) => x1 > a && x0 < b;
     const overCab = ov(L.hotX[0], L.hotX[1], dm, L.angS - .75), overBack = ov(L.hotX[0], L.hotX[1], L.cabS, dm);
     const freshCab = ov(L.tankX[0], L.tankX[1], dm, L.angS - .75), freshBack = ov(L.tankX[0], L.tankX[1], L.cabS, dm);
-    L.cabShelf = Math.max(7.5, overCab ? hotTopZ : 0, freshCab ? P.tankLift + P.tankH : 0) + .5;
-    L.backShelf = Math.max(7.5, overBack ? hotTopZ : 0, freshBack ? P.tankLift + P.tankH : 0) + .5;
+    const pick = (h, f) => { const c = [[7.5, 'the wheel well'], [h ? hotTopZ : 0, 'the hot water tank'], [f ? P.tankLift + P.tankH : 0, 'the fresh water tank']]; return c.reduce((a, b) => b[0] > a[0] ? b : a); };
+    const cb = pick(overCab, freshCab), bb = pick(overBack, freshBack);
+    L.cabShelf = cb[0] + .5; L.cabBy = cb[1]; L.backShelf = bb[0] + .5; L.backBy = bb[1];
   }
   L.hotY = [P.hotBack, P.hotBack + P.hotD];
+  {
+    // the relief valve drain run goes forward over the tank and back along its front to the down leg; it has to stay inside the cabinet door, which is shallower toward the sink
+    const rx = L.hotX[0] + .8 * P.hotW, x0 = Math.min(P.drainX, rx), x1 = Math.max(P.drainX, rx), dA = x => x <= L.angS ? P.cabD : Math.max(P.sinkD, P.cabD - L.slope * (x - L.angS));
+    L.drainInside = Math.min(dA(x0), dA(x1)) - .75;
+    L.drainY = Math.min(P.tankBack + P.tankD + 2.5, L.drainInside - P.drainDia / 2 - .1);
+  }
   // ceiling covering: plywood against the roof, slats on it; everything that reaches the ceiling stops at the finished ceiling
   // wall lean from two width measurements: each wall comes in k per inch of height above where it stops being vertical (found from the full width)
   L.leanK = Math.max(0, (P.leanW1 - P.leanW2) / 2 / Math.max(.1, P.leanZ2 - P.leanZ1));
