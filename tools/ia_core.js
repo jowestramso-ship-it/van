@@ -66,9 +66,10 @@ const PD = [
   { k: 'hotGap', g: 'Water tanks', l: 'Clear space each side of the hot water tank', d: 6, s: .5, a: 0, b: 20 },
   { k: 'hotGal', g: 'Water tanks', l: 'Hot water tank: how much water it holds (gallons; 3.96 gal is 15 liters; its 14 x 14 x 13 in size is the outside of the heater)', d: 3.96, s: .1, a: 1, b: 20 },
   { k: 'hotEmptyLb', g: 'Water tanks', l: 'Heater weight: the hot water tank empty (lb)', d: 2, s: .5, a: 0, b: 60 },
-  { k: 'hotX0', g: 'Water tanks', l: 'Hot water tank: where it starts along the wall when it sits on the fresh tank (from the back)', d: 88.5, s: .5, a: 60, b: 120 },
+  { k: 'hotX0', g: 'Water tanks', l: 'Hot water tank: where it starts along the wall when it sits on the fresh tank (from the back)', d: 87.25, s: .5, a: 60, b: 120 },
   { k: 'hotShelf', g: 'Water tanks', l: 'Hot water tank bottom, up from the floor (0 = on the floor; 7.5 = on a shelf over the wheel well; 16.75 = on a shelf on top of the fresh tank)', d: 16.75, s: .5, a: 0, b: 30 },
   { k: 'hotW', g: 'Water tanks', l: 'Hot water tank length along the wall', d: 14, s: .5, a: 6, b: 18 },
+  { k: 'hotBack', g: 'Water tanks', l: 'Hot water tank: space behind it for the hot and cold fittings and the relief valve (they are at the back)', d: 2, s: .25, a: 0, b: 8 },
   { k: 'hotD', g: 'Water tanks', l: 'Hot water tank depth (out from the wall)', d: 14, s: .5, a: 6, b: 20 },
   { k: 'hotH', g: 'Water tanks', l: 'Hot water tank height', d: 13, s: .5, a: 8, b: 34 },
   { k: 'leanOn', g: 'Walls', l: 'The walls lean in toward the roof (checks use the measurements below)', d: true, t: 'c' },
@@ -202,7 +203,7 @@ function layout(P0) {
     L.cabShelf = Math.max(7.5, overCab ? hotTopZ : 0, freshCab ? P.tankH : 0) + .5;
     L.backShelf = Math.max(7.5, overBack ? hotTopZ : 0, freshBack ? P.tankH : 0) + .5;
   }
-  L.hotY = [0, P.hotD];
+  L.hotY = [P.hotBack, P.hotBack + P.hotD];
   // ceiling covering: plywood against the roof, slats on it; everything that reaches the ceiling stops at the finished ceiling
   // wall lean from two width measurements: each wall comes in k per inch of height above where it stops being vertical (found from the full width)
   L.leanK = Math.max(0, (P.leanW1 - P.leanW2) / 2 / Math.max(.1, P.leanZ2 - P.leanZ1));

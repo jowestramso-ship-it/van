@@ -150,8 +150,10 @@ function drawPlan(L, V) {
   o.push(T(xx((L.fr[0] + L.fr[1]) / 2), yp(5.5 + P.microIn), 'Microwave 18.5 x 12', { size: 9, fill: COL.G, w: 500 }));
   o.push(ip(42, 76, 0, 7, COL.W2, '', null, { fo: .3 }));
   o.push(ip(L.tankX[0], L.tankX[1], 0, P.tankD, COL.BL, '', null, { fo: .1, dash: '5 3' }));
-  o.push(ip(L.hotX[0], L.hotX[1], 0, P.hotD, '#C0392B', '', null, { fo: .2, dash: '4 3' }));
-  o.push(T(xx((L.hotX[0] + L.hotX[1]) / 2), yp(P.hotD / 2) + 3, `hot water tank ${fmt(P.hotW)} x ${fmt(P.hotD)}`, { size: 8.5, fill: '#C0392B' }));
+  o.push(ip(L.hotX[0], L.hotX[1], P.hotBack, P.hotBack + P.hotD, '#C0392B', '', null, { fo: .2, dash: '4 3' }));
+  // the hot and cold fittings and the relief valve are on the back of the tank, in the gap to the wall
+  [['C', .2, '#185FA5'], ['H', .5, '#C0392B'], ['R', .8, '#444441']].forEach(([n, f, col]) => { const fx = L.hotX[0] + f * P.hotW; o.push(`<circle cx="${f1(xx(fx))}" cy="${f1(yp(P.hotBack / 2))}" r="3.4" fill="${col}"/>`); o.push(T(xx(fx), yp(P.hotBack / 2) + 12, n, { size: 8, fill: col, halo: false })); });
+  o.push(T(xx((L.hotX[0] + L.hotX[1]) / 2), yp(P.hotBack + P.hotD / 2) + 3, `hot water tank ${fmt(P.hotW)} x ${fmt(P.hotD)}`, { size: 8.5, fill: '#C0392B' }));
   o.push(ip(L.cabS + 1.25, L.cabS + 14.25, 0, 20, '#8A5A00', '', null, { fo: .15, dash: '3 2' }));
   o.push(ip(L.cabS + 15.75, L.cabS + 28.75, 0, 20, '#8A5A00', '', null, { fo: .15, dash: '3 2' }));
   o.push(T(xx(L.cabS + 14.75), yp(10), `${4 + (P.counterH - 13 - (L.backShelf + 1) >= 14.5 ? 3 : 1)} drawers, 20 deep`, { size: 8.5, fill: '#8A5A00' }));
