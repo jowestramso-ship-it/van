@@ -191,6 +191,7 @@ def build():
                     'Tape the paint all round the stamping on the outside, wide enough for the jigsaw shoe to ride on.',
                     '<b>Where exactly to cut is on Van Windows Direct&rsquo;s sheet, which I have not seen.</b> The listings only say the window uses the factory stamping. The usual way, and what the drawing shows, is to cut along the stamping&rsquo;s inner metal edge and trim any uprights flush with it. Confirm that first.',
                     'Drill a hole at each corner big enough for the blade. Hold the window up to the line before cutting: you cannot put metal back.',
+                    'Make a cardboard template first: see <a href="window-template.html">the window measured from your photos</a> (a draft until the orange numbers are taped).',
                 ]) + '</ul>', fig_w2()))
     S.append(st(3, 'Cut the opening',
                 '<ul>' + li([
@@ -279,7 +280,7 @@ def build():
           "var c=b.closest('.card');if(c&&c.dataset.step)c.classList.toggle('done',b.checked);});});})();</script>")
     return ('<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">'
             '<title>Side window install steps</title><style>' + I.CSS + EXTRA_CSS + '</style></head><body><div class="wrap">' + head + ''.join(S) +
-            '<p class="lead">Back to <a href="interactive.html">the interactive plan</a>, <a href="install.html">the fan and A/C steps</a> or <a href="sides.html">the static diagrams</a>.</p>'
+            '<p class="lead">Back to <a href="interactive.html">the interactive plan</a>, <a href="window-template.html">the window template</a>, <a href="install.html">the fan and A/C steps</a> or <a href="sides.html">the static diagrams</a>.</p>'
             '</div>' + js + '</body></html>')
 
 

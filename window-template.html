@@ -1,0 +1,112 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Side window template</title><style>
+:root { color-scheme: light dark; --bg:#fbfaf7; --card:#fff; --ink:#26241f; --mute:#6a665c; --line:#d9d5ca; --acc:#185FA5; --ok:#0F6E56; --warn:#8A5A00; --steel:#9aa3ad; --wood:#d9b382; --wood2:#e8cba4; }
+@media (prefers-color-scheme: dark) { :root { --bg:#1b1a17; --card:#242320; --ink:#ece9e0; --mute:#aaa598; --line:#3d3b34; --acc:#6fb1ee; --ok:#5cc9a7; --warn:#e0b25d; --steel:#7c8691; --wood:#a98258; --wood2:#bf9a6e; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.5 system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; }
+.wrap { max-width: 900px; margin: 0 auto; padding: 16px; }
+h1 { font-size: 26px; margin: 8px 0 4px; }
+h2 { font-size: 20px; margin: 0 0 8px; display: flex; align-items: center; gap: 10px; }
+h3 { font-size: 16px; margin: 14px 0 6px; }
+.lead { color: var(--mute); margin: 0 0 14px; }
+.n { display: inline-flex; align-items: center; justify-content: center; width: 30px; height: 30px; border-radius: 50%; background: var(--acc); color: var(--bg); font-weight: 700; flex: 0 0 auto; }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; margin: 0 0 16px; }
+.card.done { opacity: .6; }
+.cols { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media (max-width: 640px) { .cols { grid-template-columns: 1fr; } }
+table { border-collapse: collapse; width: 100%; font-size: 15px; }
+th, td { border-bottom: 1px solid var(--line); padding: 5px 8px; text-align: left; vertical-align: top; }
+th { color: var(--mute); font-weight: 600; }
+ul, ol { margin: 6px 0 6px 20px; padding: 0; }
+li { margin: 3px 0; }
+.chk { list-style: none; margin-left: 0; }
+.chk li { display: flex; gap: 8px; align-items: flex-start; }
+.chk input { margin-top: 5px; }
+.figwrap { overflow-x: auto; margin: 8px 0 10px; }
+.fig { width: 100%; height: auto; display: block; background: var(--card); }
+@media (max-width: 640px) { .fig { min-width: 560px; } .swipe { display: block !important; } }
+.swipe { display: none; color: var(--mute); font-size: 13px; margin: 0 0 6px; }
+@media print { .card { break-inside: avoid; } h2 { break-after: avoid; } .fig { min-width: 0; } .tick { display: none; } }
+.note { border-left: 4px solid var(--warn); background: color-mix(in srgb, var(--warn) 10%, transparent); padding: 6px 10px; margin: 8px 0; border-radius: 0 8px 8px 0; font-size: 15px; }
+.ok { border-left-color: var(--ok); background: color-mix(in srgb, var(--ok) 10%, transparent); }
+.tick { margin-left: auto; font-size: 14px; color: var(--mute); font-weight: 400; display: flex; gap: 6px; align-items: center; }
+.time { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+@media (max-width: 640px) { .time { grid-template-columns: 1fr; } }
+.time div { border: 1px solid var(--line); border-radius: 10px; padding: 8px 10px; }
+.time b { display: block; margin-bottom: 4px; color: var(--acc); }
+/* drawings */
+svg text { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; fill: var(--ink); }
+.t { font-size: 12px; } .tb { font-size: 13px; font-weight: 700; } .tsm { font-size: 11.5px; fill: var(--mute); } .tdim { font-size: 12px; fill: var(--acc); font-weight: 600; } .twh { font-size: 11px; fill: var(--ink); font-weight: 600; } .twhite { font-size: 11px; fill: #fff; font-weight: 600; }
+.roofbox { fill: none; stroke: var(--ink); stroke-width: 1.5; }
+.rib { fill: var(--steel); stroke: var(--ink); stroke-width: .8; opacity: .85; }
+.unit { fill: color-mix(in srgb, var(--acc) 12%, transparent); stroke: var(--acc); stroke-width: 1.4; stroke-dasharray: 5 3; }
+.hole { fill: var(--card); stroke: var(--ink); stroke-width: 1.6; }
+.frame { fill: var(--wood); stroke: #5a3a00; stroke-width: 1; }
+.frameline { fill: none; stroke: #8a5a00; stroke-width: 1.4; stroke-dasharray: 4 3; }
+.ring { fill: var(--wood2); stroke: #8a5a00; stroke-width: 1; opacity: .8; }
+.tmpl { fill: color-mix(in srgb, var(--warn) 10%, transparent); stroke: var(--ink); stroke-width: 1.4; }
+.diag { stroke: var(--mute); stroke-width: 1; stroke-dasharray: 3 3; }
+.ctr { stroke: var(--acc); stroke-width: 1; stroke-dasharray: 8 3 2 3; }
+.drill { fill: var(--ink); }
+.ln, .dim { stroke: var(--acc); stroke-width: 1.1; }
+.steel { fill: var(--steel); stroke: var(--ink); stroke-width: .8; }
+.steelline { fill: none; stroke: var(--steel); stroke-width: 5; stroke-linecap: round; }
+.sky { fill: var(--card); }
+.tape { fill: #e9d78a; stroke: #8a7a2a; stroke-width: .8; }
+.tool { fill: #555a60; stroke: var(--ink); stroke-width: .8; }
+.blade { fill: #c9ced4; stroke: var(--ink); stroke-width: .6; }
+.spark { stroke: #e0842a; stroke-width: 2; stroke-dasharray: 2 2; }
+.plastic { stroke: #4a90c8; stroke-width: 2.5; fill: none; }
+.swarf { fill: #8a4a2a; }
+.edge { stroke: #c0392b; stroke-width: 1.4; }
+.primer { fill: #b8423a; }
+.paint { fill: #f2efe6; stroke: var(--line); stroke-width: .6; }
+.wood { fill: var(--wood); stroke: #5a3a00; stroke-width: 1; }
+.wood2 { fill: var(--wood2); stroke: #5a3a00; stroke-width: 1; }
+.glue { fill: #e0842a; stroke: #8a4a10; stroke-width: .6; }
+.prop { fill: var(--wood2); stroke: #5a3a00; stroke-width: .8; }
+.arr, .water { stroke: var(--acc); stroke-width: 1.6; fill: none; }
+.water { stroke: #4a90c8; stroke-dasharray: 5 4; }
+.arrhead { fill: var(--acc); }
+.butyl { fill: var(--ink); opacity: .75; }
+.screw { stroke: var(--ink); stroke-width: 2; }
+.seal { fill: #2a9d6a; }
+.ply { fill: #e8d8b0; stroke: #8a6a2a; stroke-width: .8; }
+.sleeve { fill: #cfd4da; stroke: var(--ink); stroke-width: .6; }
+.trim { fill: #f4f1e8; stroke: var(--ink); stroke-width: 1; }
+.range { fill: var(--ok); opacity: .55; }
+.box { fill: var(--card); stroke: var(--ink); stroke-width: 1.2; }
+.pos { stroke: #c0392b; stroke-width: 2.5; fill: none; }
+.neg { stroke: var(--ink); stroke-width: 2.5; fill: none; }
+.propline { stroke: #5a3a00; stroke-width: 5; opacity: .8; }
+.warnbox { border: 2px solid var(--warn); }
+
+.blk { fill: #8b9097; stroke: #3a4048; stroke-width: 1.4; }
+.bead { fill: none; stroke: #e0842a; stroke-width: 7; stroke-linejoin: round; stroke-linecap: round; }
+.beadfill { fill: #e0842a; stroke: #8a4a10; stroke-width: 1.4; }
+.flange { fill: color-mix(in srgb, var(--steel) 35%, var(--card)); stroke: var(--steel); stroke-width: 1.6; }
+.dark { fill: #222; stroke: #000; stroke-width: 1.4; }
+.glass { fill: #2f4a40; opacity: .85; }
+.cutline { fill: none; stroke: #c0392b; stroke-width: 2.4; stroke-dasharray: 8 5; }
+.tape2 { fill: #5aa7e0; opacity: .85; stroke: #2d6ea3; stroke-width: .8; }
+.cup { fill: #e8e6dd; stroke: #444; stroke-width: 1.4; }
+.tdark { font-size: 12px; fill: #fff; font-weight: 700; }
+.torange { font-size: 13px; fill: #b4601a; font-weight: 700; }
+.tgrey { font-size: 13px; fill: var(--ink); font-weight: 700; }
+.trimline { fill: none; stroke: #c0392b; stroke-width: 3; stroke-linejoin: round; }
+.warnbox2 { fill: color-mix(in srgb, var(--warn) 12%, var(--card)); stroke: var(--warn); stroke-width: 1.4; }
+
+.dimm { stroke: #8cc8ff; stroke-width: 1.6; }
+.dime { stroke: #ffb35c; stroke-width: 1.6; stroke-dasharray: 5 3; }
+.tm { font-size: 12.5px; font-weight: 700; fill: #9fd0ff; }
+.te { font-size: 12.5px; font-weight: 700; fill: #ffbf7a; }
+.frame2 { fill: #131416; stroke: #d9d9d9; stroke-width: 1.4; }
+.screen { fill: #3e4339; }
+.glassp { fill: #2c4a43; }
+.panel { fill: #3b3d44; stroke: #9aa0a8; stroke-width: 1.6; }
+.fritl { stroke: #c9c9c9; stroke-width: 1.2; stroke-dasharray: 3 3; }
+.badge { fill: #fff; stroke: #222; stroke-width: 1.2; }
+.tbadge { font-size: 10.5px; font-weight: 800; fill: #111; }
+.chip { display: inline-block; border-radius: 10px; padding: 0 8px; font-size: 13px; font-weight: 700; color: #fff; }
+.c-m { background: #1f6fb2; } .c-e { background: #b8651a; } .c-n { background: #8a2f2f; }
+td.num { white-space: nowrap; font-weight: 700; }
+</style></head><body><div class="wrap"><h1>Side window: template</h1><p class="lead">Drawn from your tape photos (IMG_0045 to 0050) and the full picture (0056). Blue numbers were read off a tape in a photo, orange ones are my estimate from the full picture, and the rest still need a tape. The window is a big black glass panel with the slider frame bonded in it, and three blocks along the bottom edge. The frame is what goes through the van&rsquo;s opening, so its outline is the cut.</p><div class="card warnbox"><h3 style="margin-top:0">This is a draft</h3><p style="margin:0">The margins at the top, bottom and right are tape readings, good to about 1/8 in. The left margin, the frame&rsquo;s overall size, the block spots and the corner radii are estimates. <b>Do not cut the van from this yet.</b> Confirm the orange numbers first, and check the template against the stamping.</p><p class="swipe">On a phone, swipe a drawing sideways to see all of it.</p></div><div class="card"><div class="figwrap"><svg class="fig" viewBox="0 0 760 500" role="img" aria-label="The TL201-SE from inside, to scale: glass, frame, three blocks and the measured margins"><title>The TL201-SE from inside, to scale: glass, frame, three blocks and the measured margins</title><text x="388.5" y="20.0" class="tb" text-anchor="middle">TL201-SE seen from inside (the side you photographed), to scale</text><path d="M 80.6 70.0 L 669.4 70.0 A 31.6 31.6 0 0 1 701.0 101.6 L 701.0 373.3 A 31.6 31.6 0 0 1 669.4 404.9 L 80.6 404.9 A 4.6 4.6 0 0 1 76.0 400.3 L 76.0 74.6 A 4.6 4.6 0 0 1 80.6 70.0 Z" class="panel"/><path d="M 179.5 110.2 L 637.8 110.2 A 23.0 23.0 0 0 1 660.8 133.2 L 660.8 344.5 A 23.0 23.0 0 0 1 637.8 367.5 L 179.5 367.5 A 5.8 5.8 0 0 1 173.8 361.8 L 173.8 116.0 A 5.8 5.8 0 0 1 179.5 110.2 Z" class="frame2"/><path d="M 192.2 121.8 L 398.0 121.8 A 0.0 0.0 0 0 1 398.0 121.8 L 398.0 356.0 A 0.0 0.0 0 0 1 398.0 356.0 L 192.2 356.0 A 6.9 6.9 0 0 1 185.2 349.1 L 185.2 128.7 A 6.9 6.9 0 0 1 192.2 121.8 Z" class="glassp"/><path d="M 398.0 121.8 L 633.2 121.8 A 16.1 16.1 0 0 1 649.3 137.8 L 649.3 339.9 A 16.1 16.1 0 0 1 633.2 356.0 L 398.0 356.0 A 0.0 0.0 0 0 1 398.0 356.0 L 398.0 121.8 A 0.0 0.0 0 0 1 398.0 121.8 Z" class="screen"/><text x="285.9" y="242.9" class="tdark" text-anchor="middle">glass</text><text x="529.4" y="242.9" class="tdark" text-anchor="middle">screen</text><line x1="162.2" y1="96.5" x2="162.2" y2="381.3" class="fritl" /><text x="159.2" y="91.5" class="tm" text-anchor="end">dots end</text><rect x="261.4" y="367.5" width="20.1" height="35.4" rx="2" class="blk" /><text x="271.5" y="397.5" class="tdark" text-anchor="middle">A</text><rect x="416.7" y="367.5" width="20.1" height="35.4" rx="2" class="blk" /><text x="426.8" y="397.5" class="tdark" text-anchor="middle">B</text><rect x="577.7" y="367.5" width="20.1" height="35.4" rx="2" class="blk" /><text x="587.8" y="397.5" class="tdark" text-anchor="middle">C</text><line x1="513.0" y1="73.0" x2="513.0" y2="107.2" class="dimm" /><text x="519.0" y="94.1" class="tm" text-anchor="start">3 1/2</text><line x1="663.8" y1="243.9" x2="698.0" y2="243.9" class="dimm" /><text x="680.9" y="237.9" class="tm" text-anchor="middle">3 1/2</text><line x1="352.0" y1="370.5" x2="352.0" y2="401.9" class="dimm" /><text x="358.0" y="390.2" class="tm" text-anchor="start">3 1/4</text><line x1="599.8" y1="387.6" x2="698.0" y2="387.6" class="dimm" /><text x="649.4" y="382.6" class="tm" text-anchor="middle">8 3/4</text><line x1="79.0" y1="174.9" x2="170.8" y2="174.9" class="dime" /><text x="124.9" y="168.9" class="te" text-anchor="middle">~8 1/2</text><text x="271.5" y="421.9" class="te" text-anchor="middle">~17</text><line x1="271.5" y1="404.9" x2="271.5" y2="409.9" class="dime" /><text x="426.8" y="421.9" class="te" text-anchor="middle">~30 1/2</text><line x1="426.8" y1="404.9" x2="426.8" y2="409.9" class="dime" /><text x="587.8" y="421.9" class="te" text-anchor="middle">~44 1/2</text><line x1="587.8" y1="404.9" x2="587.8" y2="409.9" class="dime" /><text x="398.0" y="104.2" class="te" text-anchor="middle">divider ~28</text><circle cx="478.5" cy="83.8" r="11" class="badge"/><text x="478.5" y="87.3" class="tbadge" text-anchor="middle">45</text><circle cx="104.8" cy="266.9" r="11" class="badge"/><text x="104.8" y="270.4" class="tbadge" text-anchor="middle">46</text><circle cx="317.5" cy="386.5" r="11" class="badge"/><text x="317.5" y="390.0" class="tbadge" text-anchor="middle">47</text><circle cx="680.9" cy="186.4" r="11" class="badge"/><text x="680.9" y="189.9" class="tbadge" text-anchor="middle">50</text><line x1="656.8" y1="387.6" x2="656.8" y2="416.9" class="dimm" /><circle cx="656.8" cy="426.9" r="11" class="badge"/><text x="656.8" y="430.4" class="tbadge" text-anchor="middle">48</text><line x1="76.0" y1="52.0" x2="701.0" y2="52.0" class="dim" /><line x1="76.0" y1="48.0" x2="76.0" y2="56.0" class="dim" /><line x1="701.0" y1="48.0" x2="701.0" y2="56.0" class="dim" /><text x="388.5" y="47.0" class="tdim" text-anchor="middle">54 3/8 (listing, not taped yet)</text><line x1="60.0" y1="70.0" x2="60.0" y2="404.9" class="dim" /><line x1="56.0" y1="70.0" x2="64.0" y2="70.0" class="dim" /><line x1="56.0" y1="404.9" x2="64.0" y2="404.9" class="dim" /><text x="54" y="237.44" class="tdim" text-anchor="middle" transform="rotate(-90 54 237.44)">29 1/8 (listing)</text><circle cx="76.0" cy="404.9" r="4" class="drill"/><text x="76.0" y="438.9" class="tsm" text-anchor="middle">0,0</text><line x1="76.0" y1="460.9" x2="116.0" y2="460.9" class="dimm" /><text x="124.0" y="464.9" class="tsm" text-anchor="start">read from a tape in your photo</text><line x1="316.0" y1="460.9" x2="356.0" y2="460.9" class="dime" /><text x="364.0" y="464.9" class="tsm" text-anchor="start">estimated from the full photo (+-1 in)</text><circle cx="79.0" cy="482.9" r="9" class="badge"/><text x="79.0" y="486.4" class="tbadge" text-anchor="middle">45</text><text x="94.0" y="486.9" class="tsm" text-anchor="start">IMG number of the photo each tape reading came from</text></svg></div></div><div class="card"><h2>The numbers</h2><div class="figwrap"><table style="min-width:560px"><tr><th>What</th><th>Inches</th><th></th><th>From</th></tr><tr><td>Glass overall, across x up</td><td class="num">54 3/8 x 29 1/8</td><td><span class="chip c-n">needed</span></td><td>retailer listing: tape it, edge to outer edge</td></tr><tr><td>Frame top edge to glass top edge</td><td class="num">3 1/2</td><td><span class="chip c-m">tape</span></td><td>IMG_0045</td></tr><tr><td>Frame bottom edge to glass bottom edge, along a block</td><td class="num">3 1/4</td><td><span class="chip c-m">tape</span></td><td>IMG_0047 (to the face edge; 3 7/16 to the outer edge of the glass)</td></tr><tr><td>Frame right edge to glass right edge</td><td class="num">3 1/2</td><td><span class="chip c-m">tape</span></td><td>IMG_0050 (T-square held to the frame, tape to the glass)</td></tr><tr><td>Right block, its far edge to the glass right edge</td><td class="num">8 3/4</td><td><span class="chip c-m">tape</span></td><td>IMG_0048 (reading 8 3/4, hook on the block&rsquo;s edge, about 1/2 in either way)</td></tr><tr><td>Black band, glass edge to where the dots end</td><td class="num">7 1/2</td><td><span class="chip c-m">tape</span></td><td>IMG_0046 (assumed the left edge: please confirm which edge)</td></tr><tr><td>Frame left edge to glass left edge</td><td class="num">~8 1/2 (7 1/2 to 9 1/2)</td><td><span class="chip c-n">needed</span></td><td>full photo only; tape it</td></tr><tr><td>Frame outer width x height</td><td class="num">~42 3/8 x 22 3/8</td><td><span class="chip c-n">needed</span></td><td>worked out from the margins above; tape it across the frame&rsquo;s outer lips</td></tr><tr><td>Block centers from the left edge</td><td class="num">~17, 30 1/2, 44 1/2</td><td><span class="chip c-n">needed</span></td><td>full photo only</td></tr><tr><td>Block size</td><td class="num">~1 3/4 wide x 3 1/4 long</td><td><span class="chip c-n">needed</span></td><td>width from the full photo; length is the frame-to-edge gap</td></tr><tr><td>Slider divider from the left edge</td><td class="num">~28</td><td><span class="chip c-n">needed</span></td><td>full photo only</td></tr><tr><td>Corner radii: glass right / left, frame right / left</td><td class="num">~2 3/4 / 3/8, ~2 / 1/2</td><td><span class="chip c-n">needed</span></td><td>full photo only; a radius gauge or a compass will settle it</td></tr></table></div></div><div class="card"><h2>The cardboard template</h2><div class="figwrap"><svg class="fig" viewBox="0 0 700 410" role="img" aria-label="The cardboard template: glass outline with the frame opening cut out and the three blocks marked"><title>The cardboard template: glass outline with the frame opening cut out and the three blocks marked</title><path d="M 54.4 40.0 L 617.6 40.0 A 30.2 30.2 0 0 1 647.9 70.2 L 647.9 330.1 A 30.2 30.2 0 0 1 617.6 360.3 L 54.4 360.3 A 4.4 4.4 0 0 1 50.0 355.9 L 50.0 44.4 A 4.4 4.4 0 0 1 54.4 40.0 Z" class="flange"/><path d="M 149.0 78.5 L 587.4 78.5 A 22.0 22.0 0 0 1 609.4 100.5 L 609.4 302.6 A 22.0 22.0 0 0 1 587.4 324.6 L 149.0 324.6 A 5.5 5.5 0 0 1 143.5 319.1 L 143.5 84.0 A 5.5 5.5 0 0 1 149.0 78.5 Z" class="cutline"/><text x="376.4" y="199.5" class="tb" text-anchor="middle">cut this out of the cardboard</text><text x="376.4" y="217.5" class="tgrey" text-anchor="middle">42 3/8 wide x 22 3/8 tall (draft)</text><text x="348.9" y="32.0" class="tsm" text-anchor="middle">glass outline = the cardboard&#x27;s outer edge</text><rect x="227.4" y="324.6" width="19.2" height="33.8" rx="2" class="blk" /><rect x="375.9" y="324.6" width="19.2" height="33.8" rx="2" class="blk" /><rect x="529.9" y="324.6" width="19.2" height="33.8" rx="2" class="blk" /><text x="348.9" y="380.3" class="tsm" text-anchor="middle">Dashed red: the opening to cut. Grey: the three blocks,</text><text x="348.9" y="396.3" class="tsm" text-anchor="middle">marked so you can check that the stamping clears them.</text></svg></div><ol><li>Cardboard (or thin ply) a little over <b>54 3/8 x 29 1/8</b>. Mark the glass outline from one bottom corner, round the two right corners at about <b>2 3/4 in</b> and the left ones at about <b>3/8 in</b>.</li><li>Mark the opening: its left edge <b>8 1/2</b> in from the left, right edge <b>50 7/8</b> (that is 3 1/2 in from the right), bottom edge <b>3 1/4</b> up from the bottom, top edge <b>25 5/8</b> (that is 3 1/2 in down from the top). Round its right corners at about <b>2 in</b>.</li><li>Mark the three blocks on the bottom band, 1 3/4 wide and 3 1/4 long, centered about <b>17, 30 1/2, 44 1/2</b> in from the left.</li><li>Cut out the opening. Test it against the window (the frame should drop in with the cardboard sitting on the glass face) and fix any number that does not match.</li><li><b>Seen from outside the van the drawing is a mirror image:</b> flip the cardboard over, or turn the numbers around, before you trace.</li><li>Hold it on the van: the glass outline must sit inside the stamping&rsquo;s recess with margin all round, and the opening must clear the stamping&rsquo;s inner edge. Then trace and use it as the cut line, once the numbers are confirmed.</li></ol></div><div class="card"><h2>What to confirm, and what to measure</h2><ul><li><b>The glass, edge to edge:</b> across the bottom and up one side. I used the listing&rsquo;s 54 3/8 x 29 1/8.</li><li><b>The frame, outer lip to outer lip:</b> across and up. Also tape its left edge to the glass left edge: that is the one margin I could only estimate.</li><li><b>Which edge each photo was:</b> I took 0045 as the top, 0047 and 0048 as the bottom with the blocks, 0050 as the right (top right corner), and 0046 as the left. Tell me where I am wrong.</li><li><b>The blocks:</b> tape from the glass left edge to the middle of each, then each one&rsquo;s width and length.</li><li><b>How far the frame sits proud of the glass</b> (its depth toward the inside): that decides how much room the cutout has behind it.</li><li><b>The van:</b> the same opening, measured on the stamping: width, height and corner radius. The template is only useful once you can compare the two.</li></ul></div><p class="lead">Back to <a href="window.html">the side window steps</a>, <a href="interactive.html">the interactive plan</a> or <a href="sides.html">the static diagrams</a>.</p></div></body></html>
