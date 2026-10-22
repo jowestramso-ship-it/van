@@ -12,7 +12,7 @@ ROOT = os.path.dirname(HERE)
 RIBS = [21.75, 37.875, 58.375, 97.375, 126.375]     # the edge of each rib nearest the rear doors, from the rear-door edge
 RIBW = 2.75
 RIBD = 2.0
-FAN = dict(x=13.25, y=46.0, w=14.0, unit=17.75)
+FAN = dict(x=13.25, y=34.0, w=14.0, unit=17.75)
 AC = dict(x=49.5, y=34.0, w=14.25, unit=28.25)
 VAN_L, VAN_W = 160.0, 68.0
 
@@ -105,8 +105,8 @@ def fig_overview():
     o.append(T(X(0) + 4, Y(0) - 20, 'rib edge nearest the back (in)', 'tsm', 'start'))
     o.append(T(X(0) - 4, Y(VAN_W / 2), 'rear', 'tsm', 'end'))
     o.append(T(X(VAN_L) + 4, Y(VAN_W / 2), 'cab', 'tsm', 'start'))
-    o.append(T(X(78), Y(8), 'driver side wall (top)', 'tsm'))
-    o.append(T(X(78), Y(VAN_W - 5), 'passenger side wall (bottom)', 'tsm'))
+    o.append(T(X(78), Y(8), 'driver wall', 'tsm'))
+    o.append(T(X(78), Y(VAN_W - 5), 'passenger wall', 'tsm'))
     return svg(W, H, ''.join(o), 'The roof seen from above: five ribs, the fan opening near the back and the air conditioner opening 2 ribs further forward')
 
 
@@ -218,10 +218,6 @@ def fig_frames():
     o.append(R(x0, y0 + w - .75 * S, w, .75 * S, 'wood'))
     o.append(R(x0, y0 + .75 * S, .75 * S, 14 * S, 'wood2'))
     o.append(R(x0 + w - .75 * S, y0 + .75 * S, .75 * S, 14 * S, 'wood2'))
-    o.append(T(cx, y0 + .75 * S - 3, '15 1/2', 'twh'))
-    o.append(T(cx, y0 + w - 3, '15 1/2', 'twh'))
-    o.append(f'<text x="{x0 + 6:.1f}" y="{y0 + w / 2:.1f}" class="twh" text-anchor="middle" transform="rotate(-90 {x0 + 6:.1f} {y0 + w / 2:.1f})">14</text>')
-    o.append(f'<text x="{x0 + w - 5:.1f}" y="{y0 + w / 2:.1f}" class="twh" text-anchor="middle" transform="rotate(-90 {x0 + w - 5:.1f} {y0 + w / 2:.1f})">14</text>')
     o.append(T(cx, y0 + w / 2 + 4, 'opening 14 x 14', 'tsm'))
     o.append(dimh(x0, x0 + w, y0 + w + 20, 'outside 15 1/2'))
     # A/C frame, plan view (long way along the van = left-right)
@@ -229,22 +225,20 @@ def fig_frames():
     ax = 270
     ww, hh = 17.25 * S2, 15.75 * S2
     ay = 40 + (15.5 * S - hh) / 2
-    o.append(T(ax + ww / 2, 20, 'A/C frame, 2 tall (step 5)', 'tb'))
+    o.append(T(ax + ww / 2, 20, 'A/C frame, 2 tall (step 6)', 'tb'))
     o.append(R(ax, ay, 1.5 * S2, hh, 'wood'))
     o.append(R(ax + ww - 1.5 * S2, ay, 1.5 * S2, hh, 'wood'))
     o.append(R(ax + 1.5 * S2, ay, 14.25 * S2, .75 * S2, 'wood2'))
     o.append(R(ax + 1.5 * S2, ay + hh - .75 * S2, 14.25 * S2, .75 * S2, 'wood2'))
     o.append(T(ax + ww / 2, ay + hh / 2 + 4, 'opening 14 1/4 square', 'tsm'))
-    o.append(f'<text x="{ax + .75 * S2:.1f}" y="{ay + hh / 2:.1f}" class="twh" text-anchor="middle" transform="rotate(-90 {ax + .75 * S2:.1f} {ay + hh / 2:.1f})">15 3/4 x 1 1/2 thick</text>')
-    o.append(f'<text x="{ax + ww - .75 * S2:.1f}" y="{ay + hh / 2:.1f}" class="twh" text-anchor="middle" transform="rotate(-90 {ax + ww - .75 * S2:.1f} {ay + hh / 2:.1f})">15 3/4 x 1 1/2 thick</text>')
-    o.append(T(ax + ww / 2, ay + .75 * S2 - 2.5, '14 1/4', 'twh'))
-    o.append(T(ax + ww / 2, ay + hh - 3, '14 1/4', 'twh'))
     o.append(dimh(ax, ax + ww, ay + hh + 20, 'outside 17 1/4 along the van'))
     o.append(dimv(ax + ww + 12, ay, ay + hh, '15 3/4', False))
     o.append(T(ax + 1.5 * S2 / 2, ay - 6, 'rib side', 'tsm'))
     o.append(T(ax + ww - 1.5 * S2 / 2, ay - 6, 'rib side', 'tsm'))
-    o.append(T(280, 262, 'the two thick A/C pieces are two 3/4 in layers glued together; side pieces fit between them', 'tsm'))
-    return svg(560, 276, ''.join(o), 'Plan view of the two frames with every piece labelled')
+    o.append(T(20, 250, 'Fan: 2 pieces 15 1/2 long (top and bottom), 2 pieces 14 long (sides, between them).', 'tsm', 'start'))
+    o.append(T(20, 266, 'A/C: 2 pieces 15 3/4 x 1 1/2 thick (the rib sides, two 3/4 in layers glued),', 'tsm', 'start'))
+    o.append(T(20, 282, '2 pieces 14 1/4 x 3/4 thick (the sides, between them).', 'tsm', 'start'))
+    return svg(560, 292, ''.join(o), 'Plan view of the two frames with every piece labelled')
 
 
 def fig_bond():
@@ -269,7 +263,10 @@ def fig_bond():
     # dimensions
     o.append(dimv(X(3.9), Y0, Y(3.125), '3 1/8', True))
     o.append(dimv(X(26.2), Y0, Y(2.0), '2 in', False))
-    o.append(dimh(X(21.0), X(21.75), Y(2.0) + 22, '3/4'))
+    o.append(L(X(21.0), Y(2.0) + 8, X(21.75), Y(2.0) + 8, 'dim'))
+    o.append(L(X(21.0), Y(2.0) + 4, X(21.0), Y(2.0) + 12, 'dim'))
+    o.append(L(X(21.75), Y(2.0) + 4, X(21.75), Y(2.0) + 12, 'dim'))
+    o.append(T(X(21.5), Y(2.0) + 26, '3/4 in to the rib', 'tdim', 'start'))
     # bead label
     o.append(T(X(8), Y0 - 40, 'adhesive bead on the frame top (orange)', 'tsm', 'start'))
     o.append(arrow(X(8), Y0 - 36, X(6.0), Y0 - 8))
@@ -288,7 +285,7 @@ def fig_flange():
     o.append(R(cx - u / 2, cy - u / 2, u, u, 'unit'))
     rl, rr = cx - 8.75 * S, cx + 8.4 * S           # the ring is clipped short of the rib on the front side
     o.append(R(rl, cy - 8.75 * S, rr - rl, 17.5 * S, 'ring'))
-    o.append(R(cx - 7.75 * S, cy - 7.75 * S, 15.5 * S, 15.5 * S, 'frameline'))
+    o.append(R(cx - 7.75 * S, cy - 7.75 * S, 15.5 * S, 15.5 * S, 'frame'))
     o.append(R(cx - 7 * S, cy - 7 * S, 14 * S, 14 * S, 'hole'))
     rx = cx + 8.5 * S
     o.append(R(rx, cy - 11 * S, 2.75 * S, 22 * S, 'rib'))
@@ -299,42 +296,44 @@ def fig_flange():
     ly = cy - 11 * S - 10
     o.append(T(20, ly + 14, 'Seen from above, rear on the left.', 'tsm', 'start'))
     o.append(T(20, ly + 30, 'blue dashes: the fan flange (17.7 square)', 'tsm', 'start'))
-    o.append(T(20, cy + 11.4 * S + 12, 'tan: the frame under the roof and an optional backing ring (1 3/4 in wide, kept off the rib)', 'tsm', 'start'))
-    o.append(T(20, cy + 11.4 * S + 28, 'dots: flange screw holes (yours may differ): any dot outside the tan is bare thin steel', 'tsm', 'start'))
-    return svg(560, 372, ''.join(o), 'Top view of the fan flange over the opening, the frame, an optional backing ring and the nearest rib')
+    o.append(T(20, cy + 11.4 * S + 12, 'dark tan: the frame wall (3/4 in).  light tan: backing ring, 1 in wide, 1/2 in on the rib side.', 'tsm', 'start'))
+    o.append(T(20, cy + 11.4 * S + 28, 'dots: flange screw holes (yours may differ). A dot on neither tan is bare thin steel.', 'tsm', 'start'))
+    return svg(560, 372, ''.join(o), 'Top view of the fan flange over the opening, the frame, a backing ring and the nearest rib')
+
 
 def fig_fan_stack():
     SX, SY, Y0 = 11.0, 26.0, 124            # px per inch across, per inch down, the roof steel line
     X0 = 24
-    X = lambda x: X0 + SX * x               # x in across the fan, 0 at the left edge of the flange
+    X = lambda x: X0 + SX * x               # x in: 0 is the left edge of the flange (rear side)
     Y = lambda z: Y0 + SY * z
     o = []
     o.append(R(X(0), Y0 - 4, X(1.85) - X(0), 4, 'steel'))
     o.append(R(X(15.85), Y0 - 4, X(30) - X(15.85), 4, 'steel'))
-    # the fan above the roof
     o.append(R(X(0), Y0 - 18, X(17.7) - X(0), 12, 'unit'))
     o.append(R(X(0), Y0 - 6, X(17.7) - X(0), 3, 'butyl'))
     o.append(R(X(2.5), Y0 - 66, X(15.2) - X(2.5), 48, 'unit', 4))
-    o.append(T(X(8.85), Y0 - 38, 'FAN, 6.4 in tall (not to scale)', 'tb'))
-    for sx in (X(.7), X(17.0)):
-        o.append(L(sx, Y0 - 22, sx, Y0 + 3, 'screw'))
+    o.append(T(X(8.85), Y0 - 44, 'FAN 6.4 in tall', 'tb'))
+    o.append(T(X(8.85), Y0 - 30, '(not to scale)', 'tsm'))
+    for sx in (X(.65), X(17.05)):
+        o.append(L(sx, Y0 - 22, sx, Y0 + 3 + SY * .75, 'screw'))
     o.append(P([(X(-0.4), Y0 - 3), (X(.3), Y0 - 16), (X(.3), Y0 - 3)], 'seal'))
     o.append(P([(X(18.1), Y0 - 3), (X(17.4), Y0 - 16), (X(17.4), Y0 - 3)], 'seal'))
-    o.append(T(X(0), 16, 'butyl tape under the flange (dark), Dicor over the screws (green)', 'tsm', 'start'))
-    # frame walls under the roof, 3 1/8 deep
+    o.append(T(X(0), 16, 'butyl tape under the flange (dark), sealant over the screws (green)', 'tsm', 'start'))
+    # frame walls (3/4 in, 3 1/8 deep), backing ring under the screws, trim ring at the finished ceiling
     o.append(R(X(1.1), Y0, X(1.85) - X(1.1), SY * 3.125, 'wood'))
     o.append(R(X(15.85), Y0, X(16.6) - X(15.85), SY * 3.125, 'wood'))
-    # sleeve, trim ring at the finished ceiling plane
+    o.append(R(X(0.1), Y0, X(1.1) - X(0.1), SY * .75, 'ring'))
+    o.append(R(X(16.6), Y0, X(17.1) - X(16.6), SY * .75, 'ring'))
     o.append(R(X(2.0), Y0, 8, SY * 3.0, 'sleeve'))
     o.append(R(X(15.7) - 8, Y0, 8, SY * 3.0, 'sleeve'))
     o.append(R(X(0.6), Y(3.125), X(17.1) - X(0.6), 6, 'trim'))
     o.append(T(X(8.85), Y(3.125) + 22, 'trim ring on the finished ceiling (last)', 'tsm'))
-    # rib and covering at the right
-    o.append(R(X(18.3), Y0, X(21.05) - X(18.3), SY * 2, 'rib'))
-    o.append(R(X(16.6), Y(2), X(26) - X(16.6), SY * 1.125, 'ply'))
-    o.append(T(X(19.7), Y(1) + 4, 'rib 2 in', 'twh'))
-    o.append(T(X(21.3), Y(2.55) + 4, 'covering 1 1/8', 'twh'))
-    # the depth range bar
+    # the rib 3/4 in from the frame, and the covering under it
+    o.append(R(X(17.35), Y0, X(20.1) - X(17.35), SY * 2, 'rib'))
+    o.append(R(X(16.6), Y(2), X(27) - X(16.6), SY * 1.125, 'ply'))
+    o.append(T(X(18.7), Y(1) + 4, 'rib', 'twh'))
+    o.append(T(X(22), Y(2.55) + 4, 'covering 1 1/8', 'twh'))
+    o.append(T(X(0.6), Y(.75) + 12, 'ring', 'tsm', 'end'))
     bx = 400
     o.append(L(bx, Y0, bx, Y(4.5), 'dim'))
     o.append(R(bx - 4, Y(2.75), 8, SY * (4.5 - 2.75), 'range'))
@@ -342,41 +341,38 @@ def fig_fan_stack():
         o.append(L(bx - 6, Y(z), bx + 6, Y(z), 'dim'))
         o.append(f'<text x="{bx + 12}" y="{Y(z) + dy:.1f}" class="{c}" text-anchor="start">{lab}</text>')
     o.append(T(280, Y(4.5) + 38, 'your stack = steel + 2 in of rib + 1 1/8 in of covering, measured to the trim', 'tsm'))
-    return svg(580, 296, ''.join(o), 'Section through the fan: sealing at the roof, the frame and the trim depth against the fan depth range')
+    return svg(580, 296, ''.join(o), 'Section through the fan: sealing at the roof, the frame, the backing rings and the trim depth against the fan depth range')
+
 
 def fig_ac():
-    o = []
-    # roof arc (exaggerated), crown in the middle
     import math
-    cx, base = 280, 118
+    o = []
+    cx, base = 280, 100
     pts = []
     for i in range(-24, 25):
         x = cx + i * 10
-        d = i * 10 / 10.0              # px -> inches at 10 px/in
-        drop = (d * d) / (2 * 108.9) * 3.0 * 10  # exaggerated 3x
-        pts.append((x, base + drop))
+        d = i * 10 / 10.0
+        pts.append((x, base + (d * d) / (2 * 108.9) * 3.0 * 10))
     o.append(PL(pts, 'steelline'))
-    # opening gap
     o.append(R(cx - 71, base - 8, 142, 30, 'sky'))
-    # frame
-    o.append(R(cx - 86, base + 1, 15, 56, 'wood'))
-    o.append(R(cx + 71, base + 1, 15, 56, 'wood'))
-    # gasket and unit
+    # frame walls: 3/4 in thick, 2 in tall, outside 15 3/4 (10 px per inch)
+    o.append(R(cx - 78.75, base + 1, 7.5, 20, 'wood'))
+    o.append(R(cx + 71.25, base + 1, 7.5, 20, 'wood'))
     o.append(R(cx - 141, base - 10, 282, 8, 'butyl'))
     o.append(R(cx - 141, base - 72, 282, 62, 'unit', 4))
     o.append(T(cx, base - 46, 'A/C  28 1/4 x 28 1/4, 6.3 in tall', 'tb'))
     o.append(T(cx, base - 30, '33 to 45 lb: two people, pad the roof', 'tsm'))
-    # indoor panel
-    o.append(R(cx - 60, base + 56, 120, 10, 'trim'))
-    o.append(T(cx, base + 84, 'indoor panel', 'tsm'))
-    o.append(dimh(cx - 71, cx + 71, base + 108, 'opening 14 1/4'))
-    o.append(T(cx - 150, base + 16, 'roof falls away', 'tsm', 'end'))
-    o.append(T(cx - 150, base + 29, 'about 0.9 in here', 'tsm', 'end'))
-    o.append(T(cx + 150, base + 16, 'roof falls away', 'tsm', 'start'))
-    o.append(T(cx + 150, base + 29, 'about 0.9 in here', 'tsm', 'start'))
-    o.append(T(cx, 20, 'section across the van (the curve is drawn 3 times too strong)', 'tsm'))
-    return svg(560, 236, ''.join(o), 'Cross-section across the van at the air conditioner: the roof crown, the gasket and the frame')
-
+    # indoor panel at the bottom of the frame (up to 14.5 wide)
+    o.append(R(cx - 72.5, base + 21, 145, 9, 'trim'))
+    o.append(T(cx, base + 46, 'indoor panel (up to 14 1/2 x 10) on the frame bottom', 'tsm'))
+    o.append(dimh(cx - 71.25, cx + 71.25, base + 70, 'opening 14 1/4'))
+    o.append(dimh(cx - 78.75, cx + 78.75, base + 96, 'frame outside 15 3/4 across, 2 in deep'))
+    o.append(T(cx - 152, base - 14, 'roof falls away', 'tsm', 'end'))
+    o.append(T(cx - 152, base - 1, 'about 0.9 in here', 'tsm', 'end'))
+    o.append(T(cx + 152, base - 14, 'roof falls away', 'tsm', 'start'))
+    o.append(T(cx + 152, base - 1, 'about 0.9 in here', 'tsm', 'start'))
+    o.append(T(cx, 20, 'section across the van (the roof curve is drawn 3 times too strong)', 'tsm'))
+    return svg(560, 218, ''.join(o), 'Cross-section across the van at the air conditioner: the roof crown, the gasket and the frame')
 
 def fig_wiring():
     o = []
@@ -444,7 +440,7 @@ h1 { font-size: 26px; margin: 8px 0 4px; }
 h2 { font-size: 20px; margin: 0 0 8px; display: flex; align-items: center; gap: 10px; }
 h3 { font-size: 16px; margin: 14px 0 6px; }
 .lead { color: var(--mute); margin: 0 0 14px; }
-.n { display: inline-flex; align-items: center; justify-content: center; width: 30px; height: 30px; border-radius: 50%; background: var(--acc); color: #fff; font-weight: 700; flex: 0 0 auto; }
+.n { display: inline-flex; align-items: center; justify-content: center; width: 30px; height: 30px; border-radius: 50%; background: var(--acc); color: var(--bg); font-weight: 700; flex: 0 0 auto; }
 .card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; margin: 0 0 16px; }
 .card.done { opacity: .6; }
 .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
@@ -457,7 +453,11 @@ li { margin: 3px 0; }
 .chk { list-style: none; margin-left: 0; }
 .chk li { display: flex; gap: 8px; align-items: flex-start; }
 .chk input { margin-top: 5px; }
-.fig { width: 100%; height: auto; display: block; margin: 8px 0 10px; background: var(--card); }
+.figwrap { overflow-x: auto; margin: 8px 0 10px; }
+.fig { width: 100%; height: auto; display: block; background: var(--card); }
+@media (max-width: 640px) { .fig { min-width: 560px; } .swipe { display: block !important; } }
+.swipe { display: none; color: var(--mute); font-size: 13px; margin: 0 0 6px; }
+@media print { .card { break-inside: avoid; } h2 { break-after: avoid; } .fig { min-width: 0; } .tick { display: none; } }
 .note { border-left: 4px solid var(--warn); background: color-mix(in srgb, var(--warn) 10%, transparent); padding: 6px 10px; margin: 8px 0; border-radius: 0 8px 8px 0; font-size: 15px; }
 .ok { border-left-color: var(--ok); background: color-mix(in srgb, var(--ok) 10%, transparent); }
 .tick { margin-left: auto; font-size: 14px; color: var(--mute); font-weight: 400; display: flex; gap: 6px; align-items: center; }
@@ -467,7 +467,7 @@ li { margin: 3px 0; }
 .time b { display: block; margin-bottom: 4px; color: var(--acc); }
 /* drawings */
 svg text { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; fill: var(--ink); }
-.t { font-size: 12px; } .tb { font-size: 13px; font-weight: 700; } .tsm { font-size: 11.5px; fill: var(--mute); } .tdim { font-size: 12px; fill: var(--acc); font-weight: 600; } .twh { font-size: 11px; fill: #3a2a12; font-weight: 600; } .twhite { font-size: 11px; fill: #fff; font-weight: 600; }
+.t { font-size: 12px; } .tb { font-size: 13px; font-weight: 700; } .tsm { font-size: 11.5px; fill: var(--mute); } .tdim { font-size: 12px; fill: var(--acc); font-weight: 600; } .twh { font-size: 11px; fill: var(--ink); font-weight: 600; } .twhite { font-size: 11px; fill: #fff; font-weight: 600; }
 .roofbox { fill: none; stroke: var(--ink); stroke-width: 1.5; }
 .rib { fill: var(--steel); stroke: var(--ink); stroke-width: .8; opacity: .85; }
 .unit { fill: color-mix(in srgb, var(--acc) 12%, transparent); stroke: var(--acc); stroke-width: 1.4; stroke-dasharray: 5 3; }
@@ -499,7 +499,7 @@ svg text { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif
 .arr, .water { stroke: var(--acc); stroke-width: 1.6; fill: none; }
 .water { stroke: #4a90c8; stroke-dasharray: 5 4; }
 .arrhead { fill: var(--acc); }
-.butyl { fill: #333; }
+.butyl { fill: var(--ink); opacity: .75; }
 .screw { stroke: var(--ink); stroke-width: 2; }
 .seal { fill: #2a9d6a; }
 .ply { fill: #e8d8b0; stroke: #8a6a2a; stroke-width: .8; }
@@ -509,6 +509,8 @@ svg text { font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif
 .box { fill: var(--card); stroke: var(--ink); stroke-width: 1.2; }
 .pos { stroke: #c0392b; stroke-width: 2.5; fill: none; }
 .neg { stroke: var(--ink); stroke-width: 2.5; fill: none; }
+.propline { stroke: #5a3a00; stroke-width: 5; opacity: .8; }
+.warnbox { border: 2px solid var(--warn); }
 """
 
 CHECK_KEY = 'van-install-ticks'
@@ -520,7 +522,7 @@ def li(items):
 
 def step(n, title, body, fig=None):
     return (f'<section class="card" id="s{n}" data-step="{n}"><h2><span class="n">{n}</span>{title}'
-            f'<label class="tick"><input type="checkbox" data-s="{n}"> done</label></h2>{fig or ""}{body}</section>')
+            f'<label class="tick"><input type="checkbox" data-s="{n}"> done</label></h2>{("<div class=figwrap>" + fig + "</div>") if fig else ""}{body}</section>')
 
 
 def build():
@@ -528,61 +530,67 @@ def build():
     S.append(step(1, 'Find the ribs first',
                   '<ul>' + li([
                       'Measure from the <b>rear-door edge</b> (not the 6 in zero on the wall drawings). The ribs run across the van; their edge nearest the back is at 21 3/4, 37 7/8, 58 3/8, 97 3/8 and 126 3/8 in, each 2 3/4 wide.',
-                      'Find the real ones from inside with a magnet, or by knocking, or a tiny pilot hole. Use the drawing above to see how little room there is: <b>1 1/2 in</b> from the fan opening to its rib, <b>1 3/4 in</b> each side of the A/C opening.',
-                      'If the real ribs are more than about 1/2 in off these numbers, stop and tell me: the openings or frames move.',
+                      'Find the real ones from inside with a magnet, or by knocking. Measure the rib edges to <b>1/8 in</b>: the drawing above shows how little room there is, <b>1 1/2 in</b> from the fan opening to its rib and <b>1 3/4 in</b> each side of the A/C opening, and the A/C frame leaves only <b>1/4 in</b> to each rib.',
+                      'If a rib edge next to the A/C is more than 1/8 in closer than 40 5/8 or 58 3/8 in, trim the 1 1/2 in rib-side pieces in step 6 before you glue. If any rib is more than about 1/2 in away from the numbers, stop and tell me: the openings or frames move.',
                   ]) + '</ul>', fig_clearance()))
     S.append(step(2, 'Make the templates',
                   '<ul>' + li([
-                      'Cut paper templates: fan <b>14 x 14</b>, A/C <b>14 1/4 x 14 1/4</b> (the A/C manual may differ: the maker lists a minimum of 14.1 x 13.7).',
+                      'Cut paper templates: fan <b>14 x 14</b>, A/C <b>14 1/4 x 14 1/4</b> (the A/C manual may say otherwise: the maker lists a minimum of 14.1 x 13.7).',
                       'Draw both diagonals and the center lines. Both diagonals must measure the same, or the template is not square.',
-                      'Put the <b>center</b> of the fan template <b>13 1/4 in from the rear-door edge and 46 in from the driver wall</b>; the A/C center <b>49 1/2 in and 34 in</b>. Measure across horizontally (use a level or a plumb line): the roof curves.',
-                      'Tape the template to the inside of the roof, drill a hole at each corner right through, and mark the same square on the outside from those holes.',
+                      'Put the <b>center</b> of the fan template <b>13 1/4 in from the rear-door edge and 34 in from the driver wall (the middle of the van)</b>; the A/C center <b>49 1/2 in and 34 in</b>. Measure across horizontally (use a level or a plumb line): the roof curves.',
+                      'Tape the template to the inside of the roof, drill a hole at each corner right through, and mark the same square on the outside from those holes. Seal any hole you do not cut out with primer and sealant.',
                   ]) + '</ul>', fig_template()))
     S.append(step(3, 'Cut the fan opening first, then the A/C',
                   '<ul>' + li([
+                      '<b>A/C only if you have its manual&rsquo;s opening size.</b> Without it, cut the fan today and leave the A/C hole for later.',
                       'Tape the paint on both sides of each cut line with masking tape, and hang a plastic sheet under the cut to catch the steel shavings.',
                       'Jigsaw with a fresh fine-tooth metal blade, from corner hole to corner hole. Go slowly and keep the shoe flat; the fan is the smaller one, so it is good practice.',
                       'Wear glasses, gloves and hearing protection. Vacuum up every shaving: they rust and stain the roof.',
+                      '<b>Cover each hole</b> with plastic or a board taped to clean, dry paint whenever you stop, until its unit is on.',
                   ]) + '</ul>', fig_cut()))
     S.append(step(4, 'Deburr and rust-proof every cut edge',
                   '<ul>' + li([
                       'File or sand off the burr, inside and out. Wipe off the dust.',
-                      'Brush rust-inhibiting primer on the cut edge and a little onto the top and bottom faces, then paint over it. Let it dry before the frame goes on.',
+                      'Brush rust-inhibiting primer on the cut edge and a little onto the top and bottom faces, then paint over it. Keep the paint to the edge and a thin band: the frame bonds to the underside of the roof next to the cut, and that band is scuffed and cleaned bare in step 7.',
+                      'Let the primer and paint dry as the cans say before the frame goes on. Do the cutting early in the day.',
                   ]) + '</ul>', fig_edge()))
-    S.append(step(5, 'Build the two frames',
+    S.append(step(5, 'Lay the fan on the roof and mark its screw holes',
                   '<ul>' + li([
-                      '3/4 in plywood (Baltic birch is best) ripped into strips. Seal or paint all faces first, and let that dry. No pressure-treated wood: it eats steel.',
-                      '<b>Fan:</b> strips <b>3 1/8 in wide</b> (the depth to the finished ceiling). 2 pieces 15 1/2 long, 2 pieces 14 long fitted between them. Outside 15 1/2 square, opening 14 x 14.',
+                      'Set the fan on the roof unfastened, centered on the opening, and mark where each flange screw hole lands. Do this <b>before</b> you build the frame, so the frame and backing rings come out right.',
+                      'The flange reaches about 1 3/4 in past the opening, but the frame wall reaches only 3/4 in. A hole that falls outside the frame bites into thin steel.',
+                      'If so, add a <b>backing ring</b>: 3/4 in plywood strips, <b>1 in wide</b>, butted to the outside of the frame wall under the roof (outer edge 8 3/4 in from the fan&rsquo;s center), and only 1/2 in wide on the rib side so it stays off the rib. It is bonded with the frame in step 7, so it is cured before the fan screws go in. One Transit build on the Sportsmobile forum bonded wood strips for the same reason.',
+                      'The fan sits in the middle of the van, at the crown of the roof arc, so the flange falls away about 3/8 in below its highest point across its 17.7 in base. See step 8.',
+                  ]) + '</ul>', fig_flange()))
+    S.append(step(6, 'Build the two frames',
+                  '<ul>' + li([
+                      '3/4 in plywood (Baltic birch is best) ripped into strips. No pressure-treated wood: it eats steel. <b>Cut, glue and screw the frame first</b>, laminate the thick A/C pieces, then seal or paint the finished frame, leaving the top face bare or sanded for the adhesive.',
+                      '<b>Fan:</b> strips <b>3 1/8 in wide</b> (the depth to the finished ceiling). 2 pieces 15 1/2 long, 2 pieces 14 long fitted between them. Outside 15 1/2 square, opening 14 x 14. Cut the backing ring pieces from step 5 too.',
                       '<b>A/C:</b> strips <b>2 in wide</b> for now (flush with the rib bottoms). 4 pieces 15 3/4 long, glued in pairs into two <b>1 1/2 in thick</b> pieces; 2 pieces 14 1/4 long, 3/4 thick, fitted between them. Outside 17 1/4 along the van by 15 3/4 across.',
-                      'The A/C frame should be 3 1/8 deep too if its manual allows about 3 1/4 in from the roof to the trim. <b>I have not seen that manual.</b> Check it before you decide.',
-                      'Glue and screw the corners, then measure both diagonals: they must match. Dry-fit each frame in its opening.',
+                      'Make the A/C frame 3 1/8 deep too if its manual allows about 3 3/16 in from the roof to the trim. <b>I have not seen that manual.</b> Check it before you decide.',
+                      'Measure both diagonals of each frame: they must match. Hold each frame up under the roof around its opening and check that its inside faces line up with the cut and that it clears the ribs.',
                   ]) + '</ul>', fig_frames()))
-    S.append(step(6, 'Bond the frames to the roof',
+    S.append(step(7, 'Bond the frames to the roof',
                   '<ul>' + li([
                       'Adhesive: one-part polyurethane made for vehicles: Sikaflex-252, or 3M 5200 (permanent). 3M 5200 <b>Fast Cure</b> works too: 3M lists tack-free in about 1 to 2 hours and full cure in about 48 hours, so your working time is shorter than the plain kind (check the tube). Epoxy, silicone and ordinary construction adhesive are the wrong tools.',
-                      'Wipe the steel with isopropyl alcohol (scuff painted steel first), sand the wood face and wipe off the dust.',
-                      'The frame&rsquo;s inside faces line up with the cut edge. Lay a continuous bead, about 3/8 in wide, along the whole top edge of the frame. It is thick enough to fill the small gap where the roof arcs (up to about 1/4 in). No breaks in the bead: water finds them.',
-                      '<b>You have 35 minutes</b> to press the frame up and prop it. Do one frame at a time, or have a helper. Wipe off the squeeze-out right away.',
-                      'Prop each frame from the floor and leave it overnight. Do not screw through the roof.',
+                      'Wipe the steel band next to the cut with isopropyl alcohol, scuff it, and wipe again. Sand the wood face and wipe off the dust.',
+                      'The frame&rsquo;s inside faces line up with the cut edge. Lay a continuous bead, about 3/8 in wide, along the whole top edge of the frame (and the backing rings). No breaks in the bead: water finds them.',
+                      'Both openings sit in the middle of the van, at the crown of the roof, so the frames go on <b>level</b>: no tilt. The arc still leaves up to about 1/4 in of gap under a frame (the top face is straight, the roof is curved). Check with a straightedge that the top face touches the steel along its length, and let the bead fill what is left.',
+                      '<b>You have 35 minutes</b> (Sikaflex-252) to press the frame up and prop it. Do one frame at a time, or have a helper. Wipe off the squeeze-out right away.',
+                      'Prop each frame from the floor and leave it overnight. Do not screw through the roof. <b>Cover each hole</b> with plastic taped over it.',
                   ]) + '</ul><p class="note">Upper 60s with no rain is good: the adhesive works from 50 to 95 &deg;F. Keep the doors open a little (humidity cures it) and the roof out of strong sun.</p>', fig_bond()))
-    S.append(step(7, 'Dry-fit the fan and check the screw holes',
-                  '<ul>' + li([
-                      'Lay the fan on the roof, not fastened, centered on the opening. Mark where each flange screw hole lands.',
-                      'The flange reaches about 1 3/4 in past the opening, but the frame wall reaches only 3/4 in. Holes that fall outside the frame bite into thin steel only.',
-                      'If so, glue a flat <b>backing ring</b> of 3/4 in plywood, about 1 3/4 in wide, under the roof where the holes are (keep it off the rib; clip it where needed). A Transit builder bonded wood strips for exactly this reason.',
-                  ]) + '</ul>', fig_flange()))
     S.append(step(8, 'Mount the fan (the next morning)',
                   '<ul>' + li([
-                      'Butyl tape in a loop around the opening under the flange, set the fan, screw it down evenly.',
-                      'Dicor self-leveling sealant over the screw heads and along the flange edge. It sits on top; the butyl tape is the real seal.',
+                      'Butyl tape in a loop around the opening under the flange, set the fan, screw it down evenly into the frame and the backing rings.',
+                      'Use a <b>non-sag</b> lap sealant (or Eternabond tape) over the screw heads and the flange edge: it stays put on the curve. The butyl tape is the real seal.',
+                      'The roof falls away about 3/8 in below its highest point across the 17.7 in flange. Check how much curve the fan allows; if it will not seat, use a shaped or thick foam gasket or a curb.',
                       'The fan needs <b>2 3/4 to 4 1/2 in</b> from the roof to the trim. Your stack (steel + 2 in of rib + 1 1/8 in of covering) is about <b>3 3/16 in</b>, so it fits with 7/16 in to spare. This only works if the finished ceiling covering is at least about 3/4 in thick.',
                       'Leave the trim ring until the ceiling is covered. The frame bottom is the finished-ceiling plane.',
                   ]) + '</ul>', fig_fan_stack()))
-    S.append(step(9, 'Mount the A/C (24 to 48 hours after bonding)',
+    S.append(step(9, 'Mount the A/C (48 hours after bonding)',
                   '<ul>' + li([
-                      'Read its manual first for the roof thickness range and the most roof curve it allows. At the A/C the roof is <b>not tilted</b>, but it is at its crown and falls away about 0.9 in at each side of the unit. A flat gasket has to cover that.',
+                      '<b>Read its manual first</b> for the opening size, the roof thickness range and the most roof curve it allows. At the A/C the roof is <b>not tilted</b>, but it is at its crown and falls away about 0.9 in at each side of the unit. A flat gasket cannot close that: use a shaped gasket or curb, whatever the manual allows.',
                       'Two people lift it: 33 lb on the maker&rsquo;s sheet, 45 lb on the listing. Pad the roof and lay a board across the ribs for your feet.',
-                      'Gasket, set it straight down on the opening, fasten as the manual says, then sealant over the fasteners.',
+                      'Gasket, set it straight down on the opening, fasten as the manual says, then non-sag sealant over the fasteners.',
                       'The indoor panel goes on from inside after the ceiling is covered.',
                   ]) + '</ul>', fig_ac()))
     S.append(step(10, 'Wire them',
@@ -603,22 +611,22 @@ def build():
             '<tr><td>Unit on the roof</td><td>17.7 x 17.7 x 6.4 in</td><td>28.3 x 28.3 x 6.3 in</td></tr>'
             '<tr><td>Roof opening</td><td>14 x 14 in</td><td>14 1/4 square (min 14.1 x 13.7)</td></tr>'
             '<tr><td>Center, from the rear-door edge</td><td>13 1/4 in</td><td>49 1/2 in</td></tr>'
-            '<tr><td>Center, from the driver wall</td><td>46 in</td><td>34 in</td></tr>'
+            '<tr><td>Center, from the driver wall</td><td>34 in (middle)</td><td>34 in (middle)</td></tr>'
             '<tr><td>Frame outside</td><td>15 1/2 square</td><td>17 1/4 x 15 3/4</td></tr>'
             '<tr><td>Frame depth</td><td>3 1/8 in</td><td>2 in (3 1/8 if the manual allows)</td></tr>'
             '<tr><td>Roof to trim</td><td>2 3/4 to 4 1/2 in</td><td>not found: check the manual</td></tr>'
             '<tr><td>Weight</td><td>light</td><td>33 lb (maker) to 45 lb (listing)</td></tr></table>')
     mats = ['Primer for the cut edges, rust-inhibiting, plus matching paint',
-            'Butyl tape and Dicor self-leveling lap sealant (or Eternabond)',
+            'Butyl tape; non-sag lap sealant (or Eternabond tape) for the sloped fan flange; self-leveling Dicor only on the flat',
             'Vehicle polyurethane adhesive: Sikaflex-252 (or 3M 5200)',
-            '3/4 in plywood, Baltic birch, about a 2 x 4 ft piece, plus primer or paint for it',
-            'Isopropyl alcohol, rags, masking tape, paper for templates',
+            '3/4 in plywood, Baltic birch, about a 2 x 4 ft piece, wood glue, plus primer or paint for it',
+            'Isopropyl alcohol, rags, masking tape, paper for templates, plastic sheeting and painter&rsquo;s tape to cover the holes',
             'Fan: 14 AWG pair, about a 5 A fuse holder, a switch, grommets',
             'A/C: heavy cable, big fuse, lugs and heat shrink, as its manual says',
             'Screws for the frames; the units&rsquo; own screws and gaskets']
     tools = ['Drill with bits and a step bit; jigsaw with fresh fine-tooth metal blades',
-             'File or deburring tool, sandpaper, wire brush',
-             'Tape measure, square, level, pencil, magnet (to find the ribs)',
+             'File or deburring tool, sandpaper, wire brush; a saw to rip the strips; a caulk gun',
+             'Tape measure, square, level, straightedge, pencil, magnet (to find the ribs)',
              'Props or a board to hold each frame up overnight; spring clamps',
              'Plastic sheet, vacuum, a blanket to protect the paint',
              'Ladder, a board to kneel on across the ribs, a helper',
@@ -626,18 +634,23 @@ def build():
              'Multimeter; garden hose for the leak test']
     head = ('<h1>Roof fan and air conditioner: install steps</h1>'
             '<p class="lead">Drawn from the sizes in the plan. I have not seen the A/C manual, and the fan has no directions: where a manual would decide something, the step says so.</p>'
+            '<div class="card warnbox"><h3 style="margin-top:0">Before you cut</h3><ul>'
+            '<li><b>A/C:</b> I have not seen its manual. Its opening size, the roof thickness it clamps across and the most roof curve it allows decide the cut and the frame. The only figure I have is a minimum opening of 14.1 x 13.7 in. <b>If you do not have the manual in hand, cut and frame only the fan today</b> and leave the A/C for when you do.</li>'
+            '<li><b>Fan:</b> it has no directions. This page uses what you measured: a 14 x 14 opening and 2 3/4 to 4 1/2 in from the roof to the trim.</li>'
+            '<li><b>Weather:</b> cover every open hole (plastic or a board taped to clean, dry paint) whenever you stop, until its unit is on.</li></ul>'
+            '<p class="swipe">On a phone, swipe a drawing sideways to see all of it.</p></div>'
             '<div class="card"><h3 style="margin-top:0">The numbers</h3>' + nums + '</div>'
             '<div class="card"><div class="cols"><div><h3 style="margin-top:0">Materials</h3><ul class="chk">'
             + ''.join(f'<li><input type="checkbox" data-s="m{i}"><span>{m}</span></li>' for i, m in enumerate(mats)) +
             '</ul></div><div><h3 style="margin-top:0">Tools</h3><ul class="chk">'
             + ''.join(f'<li><input type="checkbox" data-s="t{i}"><span>{t}</span></li>' for i, t in enumerate(tools)) +
             '</ul></div></div></div>'
-            '<div class="card"><h3 style="margin-top:0">Where the openings and ribs are</h3>' + fig_overview() +
+            '<div class="card"><h3 style="margin-top:0">Where the openings and ribs are</h3><div class="figwrap">' + fig_overview() + '</div>' +
             '<p style="margin:0;color:var(--mute);font-size:14px">Seen from above: rear doors on the left, cab on the right, driver side wall at the top. Dashed outlines are the units on the roof.</p></div>'
             '<div class="card"><h3 style="margin-top:0">Plan for the days</h3><div class="time">'
-            '<div><b>Today</b>Steps 1 to 6: find the ribs, template, cut, deburr and prime, build and bond the frames, prop overnight. Prep the wiring.</div>'
-            '<div><b>Tomorrow morning</b>Steps 7 and 8: dry-fit and mount the fan. Wire it.</div>'
-            '<div><b>24 to 48 hours after bonding</b>Steps 9 to 11: A/C on, wire it, leak test.</div></div></div>')
+            '<div><b>Today</b>Steps 1 to 7: find the ribs, template, cut (the A/C only with its manual), deburr and prime, mark the fan&rsquo;s screw holes, build and bond the frames, prop overnight, cover the holes. Prep the wiring.</div>'
+            '<div><b>Tomorrow morning</b>Step 8: mount the fan, then wire it.</div>'
+            '<div><b>About 48 hours after bonding</b>Steps 9 to 11: A/C on, wire it, leak test.</div></div></div>')
     js = ("<script>(function(){var K='" + CHECK_KEY + "',s={};try{s=JSON.parse(localStorage.getItem(K)||'{}')||{};}catch(e){}"
           "document.querySelectorAll('input[data-s]').forEach(function(b){var k=b.dataset.s;b.checked=!!s[k];"
           "var c=b.closest('.card');if(c&&c.dataset.step&&b.checked)c.classList.add('done');"
