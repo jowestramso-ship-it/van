@@ -4,6 +4,7 @@
 site/index.html        copy of sides.html
 site/interactive.html  copy of interactive.html (its link back goes to the folder's index)
 site/install.html      copy of install.html (the illustrated fan and A/C steps)
+site/window.html       copy of window.html (the illustrated side window steps)
 site/photos/driver/    the driver side photos with all metadata (GPS location, camera, date) removed;
                        only the orientation tag is kept, so the pictures still turn the right way up
 Run from this folder:  python3 make-site.py
@@ -56,6 +57,9 @@ shutil.copy(os.path.join(HERE, 'sides.html'), os.path.join(SITE, 'index.html'))
 ipage = open(os.path.join(HERE, 'install.html')).read()
 assert 'href="sides.html"' in ipage
 open(os.path.join(SITE, 'install.html'), 'w').write(ipage.replace('href="sides.html"', 'href="./"'))   # the install steps; the link to the static diagrams goes to the folder's index
+wpage = open(os.path.join(HERE, 'window.html')).read()
+assert 'href="sides.html"' in wpage
+open(os.path.join(SITE, 'window.html'), 'w').write(wpage.replace('href="sides.html"', 'href="./"'))   # the side window steps, same link fix
 page = open(os.path.join(HERE, 'interactive.html')).read()
 assert 'href="sides.html"' in page
 open(os.path.join(SITE, 'interactive.html'), 'w').write(page.replace('href="sides.html"', 'href="./"'))

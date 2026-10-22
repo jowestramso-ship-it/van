@@ -658,7 +658,7 @@ def build():
           "var c=b.closest('.card');if(c&&c.dataset.step)c.classList.toggle('done',b.checked);});});})();</script>")
     page = ('<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">'
             '<title>Fan and A/C install steps</title><style>' + CSS + '</style></head><body><div class="wrap">' + head + ''.join(S) +
-            '<p class="lead">Back to <a href="interactive.html">the interactive plan</a> or <a href="sides.html">the static diagrams</a>.</p>'
+            '<p class="lead">Back to <a href="interactive.html">the interactive plan</a>, <a href="window.html">the side window steps</a> or <a href="sides.html">the static diagrams</a>.</p>'
             '</div>' + js + '</body></html>')
     return page
 
