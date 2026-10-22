@@ -20,7 +20,7 @@ ROOT = os.path.dirname(HERE)
 GWB, GWT = 54.125, 52.5          # glass width at the bottom / at the top                owner's tape
 GHL, GHR = 28.625, 29.0          # glass height on the left / on the right (right along its edge)   owner's tape
 TOP_L, TOP_R = 3.5, 3.125        # frame top edge to glass top edge, at the frame's left / right end   IMG_0045 / owner's tape
-BOT_C = 3.25                     # frame bottom edge to glass bottom edge, along block C   IMG_0047  (tape)
+BOT_C = 3.125                    # frame bottom edge to glass bottom edge, along block C   IMG_0047 read 3 1/4; the owner corrected it to 3 1/8
 RIGHT = 3.5                      # frame right edge to glass right edge, about 3 1/2 in below the frame top   IMG_0050  (tape)
 LEFT = 8.5                       # frame left edge to glass left edge          full photo (estimate, +-1)
 FRIT = 7.5                       # black band ends at the dotted edge, from left    IMG_0046  (tape)
@@ -119,7 +119,7 @@ MEAS = [
     (4, 'Glass height, right edge', fr(GHR), 'm', 'your tape'),
     (5, 'Top margin at the frame&rsquo;s left end', fr(TOP_L), 'm', 'IMG_0045, and your message'),
     (6, 'Top margin at the frame&rsquo;s right end', fr(TOP_R), 'm', 'your message'),
-    (7, 'Bottom margin, along block C', fr(BOT_C), 'm', 'IMG_0047 (to the face edge; 3 7/16 to the outer edge of the glass)'),
+    (7, 'Bottom margin, along block C', fr(BOT_C), 'm', 'IMG_0047 (I read 3 1/4 from the photo; you corrected it to 3 1/8)'),
     (8, 'Bottom margin at the left end', '~' + fr(BOT_L), 'e', 'worked out from 3, 4, 5, 6 and 7'),
     (9, 'Right margin, about 3 1/2 in below the frame top', fr(RIGHT), 'm', 'IMG_0050 (T-square held to the frame, tape to the glass)'),
     (10, 'The same margin, 1 in above the frame bottom', '~' + fr(RIGHT_B), 'e', 'worked out from the lean: it grows going down'),
