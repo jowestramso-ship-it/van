@@ -334,6 +334,20 @@ def fig_fan_stack():
     o.append(T(X(18.7), Y(1) + 4, 'rib', 'twh'))
     o.append(T(X(22), Y(2.55) + 4, 'covering 1 1/8', 'twh'))
     o.append(T(X(0.6), Y(.75) + 12, 'ring', 'tsm', 'end'))
+    # where the 3 1/8 comes from: the frame is as deep as the rib plus the covering
+    fx = X(3.6)
+    o.append(L(fx, Y0 + 2, fx, Y(3.125) - 2, 'dim'))
+    o.append(L(fx - 5, Y0 + 2, fx + 5, Y0 + 2, 'dim'))
+    o.append(L(fx - 5, Y(3.125) - 2, fx + 5, Y(3.125) - 2, 'dim'))
+    o.append(f'<text x="{fx + 9:.1f}" y="{Y(1.5) + 2:.1f}" class="tb" text-anchor="start">frame 3 1/8</text>')
+    o.append(f'<text x="{fx + 9:.1f}" y="{Y(1.5) + 18:.1f}" class="tsm" text-anchor="start">= rib 2</text>')
+    o.append(f'<text x="{fx + 9:.1f}" y="{Y(1.5) + 33:.1f}" class="tsm" text-anchor="start">+ covering 1 1/8</text>')
+    rx = X(28.2)
+    for z0, z1, lab in ((0, 2, 'rib 2'), (2, 3.125, '1 1/8')):
+        o.append(L(rx, Y(z0) + 2, rx, Y(z1) - 2, 'dim'))
+        o.append(L(rx - 4, Y(z0) + 2, rx + 4, Y(z0) + 2, 'dim'))
+        o.append(L(rx - 4, Y(z1) - 2, rx + 4, Y(z1) - 2, 'dim'))
+        o.append(f'<text x="{rx + 8:.1f}" y="{(Y(z0) + Y(z1)) / 2 + 4:.1f}" class="tdim" text-anchor="start">{lab}</text>')
     bx = 400
     o.append(L(bx, Y0, bx, Y(4.5), 'dim'))
     o.append(R(bx - 4, Y(2.75), 8, SY * (4.5 - 2.75), 'range'))
