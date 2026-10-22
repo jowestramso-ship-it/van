@@ -29,7 +29,7 @@ BLK_END = 8.75                   # right edge of the right block to the glass ri
 BLK_W = 1.625                    # block width, all three: owner's tape
 BLK_LE = [15.75, 29.0, 43.625]   # left edge of blocks A, B, C from the left glass edge: owner's tape
 BLK_C = [x + BLK_W / 2 for x in BLK_LE]   # block centers: the taped left edge plus half the estimated width
-DIV = 28.0                       # slider divider from the left glass edge: full photo (estimate)
+DIV = 28.625                     # slider divider from the left glass edge: owner's tape
 RG, RGL = 2.75, 0.4              # glass corner radius right side, left side: full photo (estimate)
 RF, RFL = 2.0, 0.5               # frame corner radius right side, left side: full photo (estimate)
 
@@ -131,7 +131,7 @@ MEAS = [
     (14, 'Block A, its left edge from the glass left edge', fr(BLK_LE[0]), 'm', 'your message (so its center is about ' + fr(BLK_C[0]) + ')'),
     (15, 'Block B, its left edge from the glass left edge', fr(BLK_LE[1]), 'm', 'your message (center about ' + fr(BLK_C[1]) + ')'),
     (16, 'Block C, its left edge from the glass left edge', fr(BLK_LE[2]), 'm', 'your message (center about ' + fr(BLK_C[2]) + ')'),
-    (17, 'Slider divider, from the left edge', '~' + fr(DIV), 'n', 'full photo only'),
+    (17, 'Slider divider, from the glass left edge', fr(DIV), 'm', 'your message'),
     (18, 'Block width, A, B and C', fr(BLK_W), 'm', 'your message'),
     (19, 'Block lengths, A / B / C', '~' + ' / '.join(fr(b) for b in BLK_LEN), 'e', 'frame bottom to glass edge, from the sloping bottom edge: tape them to check'),
     (20, 'Frame outer width', '~' + fr(FW), 'e', f'from 13 and 9 and the lean (right edge at ~{fr(FX1)}): tape it across the outer lips'),
@@ -219,7 +219,7 @@ def fig_window():
     o.append(T(X(LEFT_B / 2), Y(ey2) - 6, fr(LEFT_B), 'tm'))
     o.append(mk(24, LEFT_B / 2, ey2 + 2.2))
     # 17: divider
-    o.append(T(X(DIV) + 14, Y(FY1) - 6, '~' + fr(DIV) + ' from the left', 'te', 'start'))
+    o.append(T(X(DIV) + 14, Y(FY1) - 6, fr(DIV) + ' from the left', 'tm', 'start'))
     o.append(mk(17, DIV, FY1 + 0.8))
     # 20 and 21: frame size, worked out
     y20 = 2.2
@@ -335,7 +335,7 @@ def build():
             '<p class="lead">Drawn from your tape readings, your photos (IMG_0045 to 0050) and the full picture (0056). Every measurement has a number in the drawing and in the table. Blue ones were read off a tape, orange ones I worked out or estimated. '
             'The window is a big black glass panel, narrower at the top than the bottom, with the slider frame bonded in it, and three blocks along the bottom edge. The frame is what goes through the van&rsquo;s opening, so its outline is the cut.</p>'
             '<div class="card warnbox"><h3 style="margin-top:0">This is a draft</h3>'
-            '<p style="margin:0">The blue numbers are good to about 1/8 in. The orange ones (the frame&rsquo;s size, the divider, the corner radii and everything worked out from the slopes) are not. '
+            '<p style="margin:0">The blue numbers are good to about 1/8 in. The orange ones (the frame&rsquo;s size, the corner radii and everything worked out from the slopes) are not. '
             '<b>Do not cut the van from this yet.</b> Confirm the orange numbers first, and check the template against the stamping.</p>'
             '<p class="swipe">On a phone, swipe a drawing sideways to see all of it.</p></div>'
             '<div class="card"><div class="figwrap">' + fig_window() + '</div></div>'
