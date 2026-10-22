@@ -3,6 +3,7 @@
 Interior: 160 in long, 68 in wide, 76 in tall. Open `sides.html` (the scaled diagrams) or `interactive.html` (adjustable plan). Distances below are measured from the rear doors unless noted.
 
 ## Decisions (latest)
+- Side window (Van Windows Direct TL201-SE, driver side forward slider, about 54.35 x 29.12 in): it goes in first, and the wall cabinets and anything else it conflicts with get adjusted after it is installed (user's decision). Its position against the dinette-side wall cabinets (bottom at 61 in up) has not been checked yet.
 - Sink cabinet (103 to 123) overlapping the sliding door opening (starts at 104) is intentional; no change needed.
 - Fridge door not opening with the bed rolled out (about 1 in clearance) is accepted; no workaround needed.
 - Fresh water tank "back wall" means the passenger wall, where it is drawn.
