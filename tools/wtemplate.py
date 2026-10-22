@@ -160,10 +160,14 @@ def fig_window():
     o.append(rr(X(DIV), Y(FY1 - pad), X(FX1 - pad), Y(FY0 + pad), 0, 1.4 * S, 1.4 * S, 0, 'screen'))
     o.append(T(X((FX0 + DIV) / 2), Y(FY1 / 2) - 8, 'glass', 'tdark'))
     o.append(T(X((DIV + FX1) / 2), Y(FY1 / 2) - 8, 'screen', 'tdark'))
-    # 12: the dots edge
+    # 12: where the black band (the dots) ends, from the left glass edge
     o.append(L(X(FRIT), Y(FY1 + 1.2), X(FRIT), Y(FY0 - 1.2), 'fritl'))
-    o.append(T(X(FRIT) - 6, Y(FY1 + 1.6), 'black band ends', 'tm', 'end'))
-    o.append(mk(12, FRIT, FY1 + 2.9))
+    y12 = 11.0
+    o.append(L(X(0) + 3, Y(y12), X(FRIT) - 3, Y(y12), 'dimm'))
+    o.append(T(X(FRIT / 2), Y(y12) - 6, fr(FRIT), 'tm'))
+    o.append(T(X(FRIT / 2), Y(y12) + 17, 'black band', 'tm'))
+    o.append(T(X(FRIT / 2), Y(y12) + 32, '(dots) ends', 'tm'))
+    o.append(mk(12, FRIT, y12))
     # blocks, 14 to 19
     for i, c in enumerate(BLK_C):
         o.append(R(X(c - BLK_W / 2), Y(FY0), BLK_W * S, BLK_LEN[i] * S - 2, 'blk', 2))
