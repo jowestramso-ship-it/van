@@ -26,8 +26,8 @@ LEFT = 8.5                       # frame left edge to glass left edge          f
 FRIT = 7.5                       # black band ends at the dotted edge, from left    IMG_0046  (tape)
 BLK_END = 8.75                   # right edge of the right block to the glass right edge   IMG_0048 (tape, +-1/2)
 BLK_W = 1.75                     # block width (estimate)
-BLK_AL = 15.75                   # block A's left edge from the left glass edge: owner's tape
-BLK_C = [BLK_AL + BLK_W / 2, 30.5, 44.5]   # block centers from the left glass edge: A from its taped left edge and the estimated width; B and C from the full photo (estimate)
+BLK_LE = [15.75, 29.0, 43.625]   # left edge of blocks A, B, C from the left glass edge: owner's tape
+BLK_C = [x + BLK_W / 2 for x in BLK_LE]   # block centers: the taped left edge plus half the estimated width
 DIV = 28.0                       # slider divider from the left glass edge: full photo (estimate)
 RG, RGL = 2.75, 0.4              # glass corner radius right side, left side: full photo (estimate)
 RF, RFL = 2.0, 0.5               # frame corner radius right side, left side: full photo (estimate)
@@ -127,9 +127,9 @@ MEAS = [
     (11, 'Right block, its far edge to the glass right edge', fr(BLK_END), 'm', 'IMG_0048 (hook on the block&rsquo;s edge, about 1/2 in either way)'),
     (12, 'Black band, glass edge to where the dots end', fr(FRIT), 'm', 'IMG_0046, and you confirmed 7 1/2 (measured from the left edge)'),
     (13, 'Frame left edge, from the glass left edge', '~' + fr(LEFT) + ' (7 1/2 to 9 1/2)', 'n', 'full photo only; tape it'),
-    (14, 'Block A, its left edge from the glass left edge', fr(BLK_AL), 'm', 'your message (so its center is about ' + fr(BLK_C[0]) + ')'),
-    (15, 'Block B, center from the left edge', '~' + fr(BLK_C[1]), 'n', 'full photo only'),
-    (16, 'Block C, center from the left edge', '~' + fr(BLK_C[2]), 'n', 'full photo only'),
+    (14, 'Block A, its left edge from the glass left edge', fr(BLK_LE[0]), 'm', 'your message (so its center is about ' + fr(BLK_C[0]) + ')'),
+    (15, 'Block B, its left edge from the glass left edge', fr(BLK_LE[1]), 'm', 'your message (center about ' + fr(BLK_C[1]) + ')'),
+    (16, 'Block C, its left edge from the glass left edge', fr(BLK_LE[2]), 'm', 'your message (center about ' + fr(BLK_C[2]) + ')'),
     (17, 'Slider divider, from the left edge', '~' + fr(DIV), 'n', 'full photo only'),
     (18, 'Block width', '~' + fr(BLK_W), 'n', 'full photo only'),
     (19, 'Block lengths, A / B / C', '~' + ' / '.join(fr(b) for b in BLK_LEN), 'e', 'frame bottom to glass edge, from the sloping bottom edge: tape them to check'),
@@ -166,8 +166,8 @@ def fig_window():
     for i, c in enumerate(BLK_C):
         o.append(R(X(c - BLK_W / 2), Y(FY0), BLK_W * S, BLK_LEN[i] * S - 2, 'blk', 2))
         o.append(T(X(c), Y(FY0) + 17, 'ABC'[i], 'tdark'))
-        o.append(T(X(c), Y(ybot(c)) + 17, (fr(BLK_AL) + ' to its left edge') if i == 0 else '~' + fr(c), 'tm' if i == 0 else 'te'))
-        o.append(L(X(c), Y(ybot(c)), X(c), Y(ybot(c)) + 5, 'dimm' if i == 0 else 'dime'))
+        o.append(T(X(c), Y(ybot(c)) + 17, fr(BLK_LE[i]) + ' to its left edge', 'tm'))
+        o.append(L(X(c), Y(ybot(c)), X(c), Y(ybot(c)) + 5, 'dimm'))
         o.append(mk(14 + i, c, ybot(c) - 3.4))
     o.append(mk(18, BLK_C[0] - BLK_W / 2 - 1.2, FY0 - 1.3))
     o.append(mk(19, BLK_C[1] + BLK_W / 2 + 1.2, FY0 - 1.6))
@@ -308,7 +308,7 @@ def build():
         '<b>The shape of the glass:</b> your 54 1/8 across the bottom, 52 1/2 across the top, 28 5/8 high on the left, 29 on the right, and 3 1/2 and 3 1/8 for the top margin are in (numbers 1 to 6). Both diagonals (corner to corner) would settle the shape. You said the area around 50 gets wider the further down: I drew one straight lean on the right edge. If it is a step or a bend, tell me where it starts.',
         '<b>What I assumed:</b> the frame is level, the glass&rsquo;s left edge is square to it, and the top and bottom edges are straight. Check the left edge with a square against the frame&rsquo;s bottom edge.',
         f'<b>The frame, outer lip to outer lip (20 and 21):</b> across and up. Also tape its left edge to the glass left edge (13): that is the one margin I could only estimate. And the bottom margin at the frame&rsquo;s left end (8): I make it about {fr(BOT_L)}.',
-        '<b>The blocks (14 to 19):</b> I have block A&rsquo;s left edge (15 3/4). Tape the same, from the glass left edge to the left edge of B and C, then each one&rsquo;s width and length. I worked out the lengths from the sloping bottom edge: if they come out the same, the bottom edge is not as sloped as I drew it.',
+        '<b>The blocks (18 and 19):</b> I have the left edge of all three blocks (14 to 16). Tape each one&rsquo;s width and length. I worked out the lengths from the sloping bottom edge: if they come out the same, the bottom edge is not as sloped as I drew it.',
         '<b>Which edge each photo was:</b> I took 0045 as the top, at the frame&rsquo;s left end; 0047 and 0048 as the bottom, along the right-hand block; 0050 as the right (top right corner); and 0046 as the left (you confirmed its 7 1/2). Tell me where I am wrong.',
         '<b>How far the frame sits proud of the glass</b> (its depth toward the inside): that decides how much room the cutout has behind it.',
         '<b>The van:</b> the same opening, measured on the stamping: width, height and corner radius. The template is only useful once you can compare the two.',
