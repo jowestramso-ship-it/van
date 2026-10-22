@@ -126,7 +126,7 @@ MEAS = [
     (9, 'Right margin, about 3 1/2 in below the frame top', fr(RIGHT), 'm', 'IMG_0050 (T-square held to the frame, tape to the glass)'),
     (10, 'The same margin, 1 in above the frame bottom', '~' + fr(RIGHT_B), 'e', 'worked out from the lean: it grows going down'),
     (11, 'Right block, its far edge to the glass right edge', fr(BLK_END), 'm', 'IMG_0048 (hook on the block&rsquo;s edge, about 1/2 in either way)'),
-    (12, 'Black band, glass edge to where the dots end', fr(FRIT), 'm', 'IMG_0046, and you confirmed 7 1/2 (measured from the left edge)'),
+    (12, 'Black band on the glass: left edge to where it ends (the row of dots where the black fades into clear glass)', fr(FRIT), 'm', 'IMG_0046, and you confirmed 7 1/2 (measured from the left edge)'),
     (13, 'Frame left edge, top rail, from the glass left edge', fr(LEFT_T), 'm', 'your message'),
     (14, 'Block A, its left edge from the glass left edge', fr(BLK_LE[0]), 'm', 'your message (so its center is about ' + fr(BLK_C[0]) + ')'),
     (15, 'Block B, its left edge from the glass left edge', fr(BLK_LE[1]), 'm', 'your message (center about ' + fr(BLK_C[1]) + ')'),
@@ -162,7 +162,7 @@ def fig_window():
     o.append(T(X((DIV + FX1) / 2), Y(FY1 / 2) - 8, 'screen', 'tdark'))
     # 12: the dots edge
     o.append(L(X(FRIT), Y(FY1 + 1.2), X(FRIT), Y(FY0 - 1.2), 'fritl'))
-    o.append(T(X(FRIT) - 6, Y(FY1 + 1.6), 'dots end', 'tm', 'end'))
+    o.append(T(X(FRIT) - 6, Y(FY1 + 1.6), 'black band ends', 'tm', 'end'))
     o.append(mk(12, FRIT, FY1 + 2.9))
     # blocks, 14 to 19
     for i, c in enumerate(BLK_C):
