@@ -321,9 +321,9 @@ const PD = [
   { k: 'liningOn', g: 'Ceiling', l: 'Cover the ceiling (plywood, then slats)', d: true, t: 'c' },
   { k: 'ceilLen', g: 'Ceiling', l: 'Ceiling length being covered (rear doors to cab wall)', d: 160, s: 1, a: 40, b: 220 },
   { k: 'ceilW', g: 'Ceiling', l: 'Ceiling width being covered (the flat part, measured wall to wall; centered in the van)', d: 62, s: 1, a: 20, b: 90 },
-  { k: 'plyT', g: 'Ceiling', l: 'Plywood thickness', d: .125, s: .125, a: .125, b: 1 },
+  { k: 'plyT', g: 'Ceiling', l: 'Plywood thickness', d: .1875, s: .0625, a: .125, b: 1 },
   { k: 'slatW', g: 'Ceiling', l: 'Slat width', d: 3, s: .25, a: 1, b: 8 },
-  { k: 'slatT', g: 'Ceiling', l: 'Slat thickness', d: 1, s: .125, a: .25, b: 3 },
+  { k: 'slatT', g: 'Ceiling', l: 'Slat thickness', d: .75, s: .125, a: .25, b: 3 },
   { k: 'slatDens', g: 'Ceiling', l: 'Slat wood density (lb per cu ft; western red cedar about 23, pine about 28)', d: 23, s: 1, a: 15, b: 60 },
   { k: 'slatGap', g: 'Ceiling', l: 'Gap between slats', d: 1, s: .25, a: 0, b: 6 },
   { k: 'slatAuto', g: 'Ceiling', l: 'Slats as long as the whole ceiling (no joints)', d: true, t: 'c', f: 'slatLen' },
@@ -367,10 +367,10 @@ const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
 const f1 = n => String(Math.round(n * 10) / 10);
 function fmt(n) {
   const neg = n < 0; n = Math.abs(n);
-  let w = Math.floor(n + 1e-9), fr = Math.round((n - w) * 8);
-  if (fr === 8) { w++; fr = 0; }
+  let w = Math.floor(n + 1e-9), fr = Math.round((n - w) * 16);
+  if (fr === 16) { w++; fr = 0; }
   if (!w && !fr) return '0';
-  const F = ['', '1/8', '1/4', '3/8', '1/2', '5/8', '3/4', '7/8'][fr];
+  const F = ['', '1/16', '1/8', '3/16', '1/4', '5/16', '3/8', '7/16', '1/2', '9/16', '5/8', '11/16', '3/4', '13/16', '7/8', '15/16'][fr];
   const s = fr ? (w ? w + ' ' + F : F) : String(w);
   return (neg ? '-' : '') + s;
 }
@@ -1843,7 +1843,7 @@ function computeChecks(L, V) {
   }
   {
     const fit = P.lightD <= P.slatW + .01 || !P.liningOn;
-    if (P.lightN > 0) push(fit ? 'ok' : 'warn', `Ceiling lights: ${L.lights.length} round lights ${fmt(P.lightD)} in across in ${Math.max(1, Math.round(P.lightRows))} row${P.lightRows > 1 ? 's' : ''} (${L.lights.map(l => fmt(l.x)).filter((v, i, a) => a.indexOf(v) === i).join(', ')} in from the back; rows ${L.chanY.length ? L.chanY.map(fmt).join(' and ') : '--'} in from the driver wall), each mounted on a slat${P.liningOn ? `, centered on a ${fmt(P.slatW)} in slat (${fmt((P.slatW - P.lightD) / 2)} in of wood left each side), so every slat stays whole${fit ? '' : `; the lights are wider than the slat (${fmt(P.slatW)} in): use a smaller light or wider slats`}` : ''}. A small hole through the ${fmt(P.plyT)} in plywood behind each one takes the wire to a switch; surface mounted they hang about 1/2 in below the slat faces, or recessed into the 1 in slat they add nothing.`);
+    if (P.lightN > 0) push(fit ? 'ok' : 'warn', `Ceiling lights: ${L.lights.length} round lights ${fmt(P.lightD)} in across in ${Math.max(1, Math.round(P.lightRows))} row${P.lightRows > 1 ? 's' : ''} (${L.lights.map(l => fmt(l.x)).filter((v, i, a) => a.indexOf(v) === i).join(', ')} in from the back; rows ${L.chanY.length ? L.chanY.map(fmt).join(' and ') : '--'} in from the driver wall), each mounted on a slat${P.liningOn ? `, centered on a ${fmt(P.slatW)} in slat (${fmt((P.slatW - P.lightD) / 2)} in of wood left each side), so every slat stays whole${fit ? '' : `; the lights are wider than the slat (${fmt(P.slatW)} in): use a smaller light or wider slats`}` : ''}. A small hole through the ${fmt(P.plyT)} in plywood behind each one takes the wire to a switch; surface mounted they hang about 1/2 in below the slat faces, or recessed into the ${fmt(P.slatT)} in slat they add nothing.`);
     const outside = c => c.x - c.w / 2 < 0 || c.x + c.w / 2 > P.ceilLen || c.y - c.w / 2 < L.ceilOff || c.y + c.w / 2 > L.ceilOff + P.ceilW;
     const over = (a, b) => Math.abs(a.x - b.x) < (a.w + b.w) / 2 && Math.abs(a.y - b.y) < (a.w + b.w) / 2;
     const near = c => L.lights.filter(l => { const dx = Math.max(Math.abs(l.x - c.x) - c.w / 2, 0), dy = Math.max(Math.abs(l.y - c.y) - c.w / 2, 0); return Math.hypot(dx, dy) < P.lightD / 2 + 2; }).length;

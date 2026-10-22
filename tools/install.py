@@ -15,6 +15,11 @@ RIBD = 2.0
 FAN = dict(x=13.25, y=34.0, w=14.0, unit=17.75)
 AC = dict(x=49.5, y=34.0, w=14.25, unit=28.25)
 VAN_L, VAN_W = 160.0, 68.0
+COV = 3 / 16 + 3 / 4                       # the ceiling covering: 3/16 in plywood against the roof, then 3/4 in slats
+FRAME = RIBD + COV                         # frame depth = rib hang + covering = roof steel to the finished ceiling
+STEEL = 1 / 16                             # the roof skin itself, about
+STACK = FRAME + STEEL                      # steel to the trim
+FAN_MIN, FAN_MAX = 2.75, 4.5               # roof to trim range the owner measured on the fan
 
 
 def fr(v):
@@ -213,7 +218,7 @@ def fig_frames():
     cx, y0 = 140, 40
     w = 15.5 * S
     x0 = cx - w / 2
-    o.append(T(cx, 20, 'FAN frame, 3 1/8 tall', 'tb'))
+    o.append(T(cx, 20, f'FAN frame, {fr(FRAME)} tall', 'tb'))
     o.append(R(x0, y0, w, .75 * S, 'wood'))
     o.append(R(x0, y0 + w - .75 * S, w, .75 * S, 'wood'))
     o.append(R(x0, y0 + .75 * S, .75 * S, 14 * S, 'wood2'))
@@ -251,9 +256,9 @@ def fig_bond():
     o.append(R(X(0), Y0 - 4, X(6.25) - X(0), 4, 'steel'))
     o.append(R(X(20.25), Y0 - 4, X(30) - X(20.25), 4, 'steel'))
     o.append(T(X(14.5), Y0 - 14, 'opening 14 in', 'tsm'))
-    # frame walls, 3/4 in thick, 3 1/8 deep: outer faces at 5 1/2 and 21
-    o.append(R(X(5.5), Y0, X(6.25) - X(5.5), SY * 3.125, 'wood'))
-    o.append(R(X(20.25), Y0, X(21.0) - X(20.25), SY * 3.125, 'wood'))
+    # frame walls, 3/4 in thick, as deep as the covering stack: outer faces at 5 1/2 and 21
+    o.append(R(X(5.5), Y0, X(6.25) - X(5.5), SY * FRAME, 'wood'))
+    o.append(R(X(20.25), Y0, X(21.0) - X(20.25), SY * FRAME, 'wood'))
     o.append(R(X(5.5), Y0 - 6, X(6.25) - X(5.5), 6, 'glue'))
     o.append(R(X(20.25), Y0 - 6, X(21.0) - X(20.25), 6, 'glue'))
     o.append(T(X(13.25), Y0 + 26, 'frame', 'tb'))
@@ -261,7 +266,7 @@ def fig_bond():
     o.append(R(X(21.75), Y0, X(24.5) - X(21.75), SY * 2.0, 'rib'))
     o.append(T(X(23.1), Y0 + SY + 4, 'rib', 'twh'))
     # dimensions
-    o.append(dimv(X(3.9), Y0, Y(3.125), '3 1/8', True))
+    o.append(dimv(X(3.9), Y0, Y(FRAME), fr(FRAME), True))
     o.append(dimv(X(26.2), Y0, Y(2.0), '2 in', False))
     o.append(L(X(21.0), Y(2.0) + 8, X(21.75), Y(2.0) + 8, 'dim'))
     o.append(L(X(21.0), Y(2.0) + 4, X(21.0), Y(2.0) + 12, 'dim'))
@@ -319,31 +324,31 @@ def fig_fan_stack():
     o.append(P([(X(-0.4), Y0 - 3), (X(.3), Y0 - 16), (X(.3), Y0 - 3)], 'seal'))
     o.append(P([(X(18.1), Y0 - 3), (X(17.4), Y0 - 16), (X(17.4), Y0 - 3)], 'seal'))
     o.append(T(X(0), 16, 'butyl tape under the flange (dark), sealant over the screws (green)', 'tsm', 'start'))
-    # frame walls (3/4 in, 3 1/8 deep), backing ring under the screws, trim ring at the finished ceiling
-    o.append(R(X(1.1), Y0, X(1.85) - X(1.1), SY * 3.125, 'wood'))
-    o.append(R(X(15.85), Y0, X(16.6) - X(15.85), SY * 3.125, 'wood'))
+    # frame walls (3/4 in, as deep as the covering stack), backing ring under the screws, trim ring at the finished ceiling
+    o.append(R(X(1.1), Y0, X(1.85) - X(1.1), SY * FRAME, 'wood'))
+    o.append(R(X(15.85), Y0, X(16.6) - X(15.85), SY * FRAME, 'wood'))
     o.append(R(X(0.1), Y0, X(1.1) - X(0.1), SY * .75, 'ring'))
     o.append(R(X(16.6), Y0, X(17.1) - X(16.6), SY * .75, 'ring'))
-    o.append(R(X(2.0), Y0, 8, SY * 3.0, 'sleeve'))
-    o.append(R(X(15.7) - 8, Y0, 8, SY * 3.0, 'sleeve'))
-    o.append(R(X(0.6), Y(3.125), X(17.1) - X(0.6), 6, 'trim'))
-    o.append(T(X(8.85), Y(3.125) + 22, 'trim ring on the finished ceiling (last)', 'tsm'))
+    o.append(R(X(2.0), Y0, 8, SY * (FRAME - .125), 'sleeve'))
+    o.append(R(X(15.7) - 8, Y0, 8, SY * (FRAME - .125), 'sleeve'))
+    o.append(R(X(0.6), Y(FRAME), X(17.1) - X(0.6), 6, 'trim'))
+    o.append(T(X(8.85), Y(FRAME) + 22, 'trim ring on the finished ceiling (last)', 'tsm'))
     # the rib 3/4 in from the frame, and the covering under it
     o.append(R(X(17.35), Y0, X(20.1) - X(17.35), SY * 2, 'rib'))
-    o.append(R(X(16.6), Y(2), X(27) - X(16.6), SY * 1.125, 'ply'))
+    o.append(R(X(16.6), Y(RIBD), X(27) - X(16.6), SY * COV, 'ply'))
     o.append(T(X(18.7), Y(1) + 4, 'rib', 'twh'))
-    o.append(T(X(22), Y(2.55) + 4, 'covering 1 1/8', 'twh'))
+    o.append(T(X(22), Y(RIBD + COV / 2) + 4, f'covering {fr(COV)}', 'twh'))
     o.append(T(X(0.6), Y(.75) + 12, 'ring', 'tsm', 'end'))
-    # where the 3 1/8 comes from: the frame is as deep as the rib plus the covering
+    # where the frame depth comes from: the frame is as deep as the rib plus the covering
     fx = X(3.6)
-    o.append(L(fx, Y0 + 2, fx, Y(3.125) - 2, 'dim'))
+    o.append(L(fx, Y0 + 2, fx, Y(FRAME) - 2, 'dim'))
     o.append(L(fx - 5, Y0 + 2, fx + 5, Y0 + 2, 'dim'))
-    o.append(L(fx - 5, Y(3.125) - 2, fx + 5, Y(3.125) - 2, 'dim'))
-    o.append(f'<text x="{fx + 9:.1f}" y="{Y(1.5) + 2:.1f}" class="tb" text-anchor="start">frame 3 1/8</text>')
+    o.append(L(fx - 5, Y(FRAME) - 2, fx + 5, Y(FRAME) - 2, 'dim'))
+    o.append(f'<text x="{fx + 9:.1f}" y="{Y(1.5) + 2:.1f}" class="tb" text-anchor="start">frame {fr(FRAME)}</text>')
     o.append(f'<text x="{fx + 9:.1f}" y="{Y(1.5) + 18:.1f}" class="tsm" text-anchor="start">= rib 2</text>')
-    o.append(f'<text x="{fx + 9:.1f}" y="{Y(1.5) + 33:.1f}" class="tsm" text-anchor="start">+ covering 1 1/8</text>')
+    o.append(f'<text x="{fx + 9:.1f}" y="{Y(1.5) + 33:.1f}" class="tsm" text-anchor="start">+ covering {fr(COV)}</text>')
     rx = X(28.2)
-    for z0, z1, lab in ((0, 2, 'rib 2'), (2, 3.125, '1 1/8')):
+    for z0, z1, lab in ((0, RIBD, 'rib 2'), (RIBD, FRAME, fr(COV))):
         o.append(L(rx, Y(z0) + 2, rx, Y(z1) - 2, 'dim'))
         o.append(L(rx - 4, Y(z0) + 2, rx + 4, Y(z0) + 2, 'dim'))
         o.append(L(rx - 4, Y(z1) - 2, rx + 4, Y(z1) - 2, 'dim'))
@@ -351,10 +356,10 @@ def fig_fan_stack():
     bx = 400
     o.append(L(bx, Y0, bx, Y(4.5), 'dim'))
     o.append(R(bx - 4, Y(2.75), 8, SY * (4.5 - 2.75), 'range'))
-    for z, lab, c, dy in ((0, 'roof', 'tdim', 4), (2.75, 'fan minimum 2 3/4', 'tdim', -3), (3.1875, 'your stack 3 3/16', 'tb', 8), (4.5, 'fan maximum 4 1/2', 'tdim', 4)):
+    for z, lab, c, dy in ((0, 'roof', 'tdim', 4), (FAN_MIN, 'fan minimum ' + fr(FAN_MIN), 'tdim', -3), (STACK, 'your stack ' + fr(STACK), 'tb', 8), (FAN_MAX, 'fan maximum ' + fr(FAN_MAX), 'tdim', 4)):
         o.append(L(bx - 6, Y(z), bx + 6, Y(z), 'dim'))
         o.append(f'<text x="{bx + 12}" y="{Y(z) + dy:.1f}" class="{c}" text-anchor="start">{lab}</text>')
-    o.append(T(280, Y(4.5) + 38, 'your stack = steel + 2 in of rib + 1 1/8 in of covering, measured to the trim', 'tsm'))
+    o.append(T(280, Y(4.5) + 38, f'your stack = steel + 2 in of rib + {fr(COV)} in of covering, measured to the trim', 'tsm'))
     return svg(580, 296, ''.join(o), 'Section through the fan: sealing at the roof, the frame, the backing rings and the trim depth against the fan depth range')
 
 
@@ -578,9 +583,9 @@ def build():
     S.append(step(6, 'Build the two frames',
                   '<ul>' + li([
                       '3/4 in plywood (Baltic birch is best) ripped into strips. No pressure-treated wood: it eats steel. <b>Cut, glue and screw the frame first</b>, laminate the thick A/C pieces, then seal or paint the finished frame, leaving the top face bare or sanded for the adhesive.',
-                      '<b>Fan:</b> strips <b>3 1/8 in wide</b> (the depth to the finished ceiling). 2 pieces 15 1/2 long, 2 pieces 14 long fitted between them. Outside 15 1/2 square, opening 14 x 14. Cut the backing ring pieces from step 5 too.',
+                      f'<b>Fan:</b> strips <b>{fr(FRAME)} in wide</b> (the depth to the finished ceiling: the rib&rsquo;s 2 in plus the {fr(COV)} in covering). 2 pieces 15 1/2 long, 2 pieces 14 long fitted between them. Outside 15 1/2 square, opening 14 x 14. Cut the backing ring pieces from step 5 too.',
                       '<b>A/C:</b> strips <b>2 in wide</b> for now (flush with the rib bottoms). 4 pieces 15 3/4 long, glued in pairs into two <b>1 1/2 in thick</b> pieces; 2 pieces 14 1/4 long, 3/4 thick, fitted between them. Outside 17 1/4 along the van by 15 3/4 across.',
-                      'Make the A/C frame 3 1/8 deep too if its manual allows about 3 3/16 in from the roof to the trim. <b>I have not seen that manual.</b> Check it before you decide.',
+                      f'Make the A/C frame {fr(FRAME)} deep too if its manual allows about {fr(STACK)} in from the roof to the trim. <b>I have not seen that manual.</b> Check it before you decide.',
                       'Measure both diagonals of each frame: they must match. Hold each frame up under the roof around its opening and check that its inside faces line up with the cut and that it clears the ribs.',
                   ]) + '</ul>', fig_frames()))
     S.append(step(7, 'Bond the frames to the roof',
@@ -597,7 +602,7 @@ def build():
                       'Butyl tape in a loop around the opening under the flange, set the fan, screw it down evenly into the frame and the backing rings.',
                       'Use a <b>non-sag</b> lap sealant (or Eternabond tape) over the screw heads and the flange edge: it stays put on the curve. The butyl tape is the real seal.',
                       'The roof falls away about 3/8 in below its highest point across the 17.7 in flange. Check how much curve the fan allows; if it will not seat, use a shaped or thick foam gasket or a curb.',
-                      'The fan needs <b>2 3/4 to 4 1/2 in</b> from the roof to the trim. Your stack (steel + 2 in of rib + 1 1/8 in of covering) is about <b>3 3/16 in</b>, so it fits with 7/16 in to spare. This only works if the finished ceiling covering is at least about 3/4 in thick.',
+                      f'The fan needs <b>2 3/4 to 4 1/2 in</b> from the roof to the trim. Your stack (steel + 2 in of rib + {fr(COV)} in of covering: 3/16 in plywood, then 3/4 in slats) is about <b>{fr(STACK)} in</b>, so it fits with {fr(STACK - FAN_MIN)} in to spare above the minimum. This only works if the finished ceiling covering is at least about {fr(FAN_MIN - RIBD - STEEL)} in thick.',
                       'Leave the trim ring until the ceiling is covered. The frame bottom is the finished-ceiling plane.',
                   ]) + '</ul>', fig_fan_stack()))
     S.append(step(9, 'Mount the A/C (48 hours after bonding)',
@@ -627,7 +632,7 @@ def build():
             '<tr><td>Center, from the rear-door edge</td><td>13 1/4 in</td><td>49 1/2 in</td></tr>'
             '<tr><td>Center, from the driver wall</td><td>34 in (middle)</td><td>34 in (middle)</td></tr>'
             '<tr><td>Frame outside</td><td>15 1/2 square</td><td>17 1/4 x 15 3/4</td></tr>'
-            '<tr><td>Frame depth</td><td>3 1/8 in</td><td>2 in (3 1/8 if the manual allows)</td></tr>'
+            f'<tr><td>Frame depth</td><td>{fr(FRAME)} in</td><td>2 in ({fr(FRAME)} if the manual allows)</td></tr>'
             '<tr><td>Roof to trim</td><td>2 3/4 to 4 1/2 in</td><td>not found: check the manual</td></tr>'
             '<tr><td>Weight</td><td>light</td><td>33 lb (maker) to 45 lb (listing)</td></tr></table>')
     mats = ['Primer for the cut edges, rust-inhibiting, plus matching paint',

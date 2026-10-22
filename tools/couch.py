@@ -16,8 +16,8 @@ a(f'<text class="ts" x="{xx(19)}" y="{yy(0)+32}" text-anchor="middle" style="fon
 a(f'<rect x="{xx(-6)}" y="{yy(76)}" width="{SC*6}" height="{SC*76}" fill="#D3E4F2" fill-opacity="0.6"/><text class="ts" x="{xx(-3)}" y="{yy(35)}" text-anchor="middle" style="font-size:11px">outside</text>')
 # floor, ceiling
 a(f'<line x1="{xx(-6)}" y1="{yy(0)}" x2="{xx(38)}" y2="{yy(0)}" stroke="#5F5E5A" stroke-width="2"/>')
-a(f'<line x1="{xx(0)}" y1="{yy(76)}" x2="{xx(38)}" y2="{yy(76)}" stroke="#5F5E5A" stroke-width="1.5" stroke-dasharray="6 3"/><text class="ts" x="{xx(38)}" y="{yy(76)-4}" text-anchor="end" style="font-size:10px">ceiling 76 (bare), 74 7/8 with the covering</text>')
-a(f'<rect x="{xx(0):.1f}" y="{yy(76):.1f}" width="{SC*38:.1f}" height="{SC*0.25:.1f}" fill="#D9C7A5" stroke="#8A6B4D" stroke-width="0.6"/><rect x="{xx(0):.1f}" y="{yy(75.875):.1f}" width="{SC*38:.1f}" height="{SC*1:.1f}" fill="#9A6B3A" fill-opacity="0.85" stroke="#5A3A00" stroke-width="0.6"/>')
+a(f'<line x1="{xx(0)}" y1="{yy(76)}" x2="{xx(38)}" y2="{yy(76)}" stroke="#5F5E5A" stroke-width="1.5" stroke-dasharray="6 3"/><text class="ts" x="{xx(38)}" y="{yy(76)-4}" text-anchor="end" style="font-size:10px">ceiling 76 (bare), 75 1/16 with the covering</text>')
+a(f'<rect x="{xx(0):.1f}" y="{yy(76):.1f}" width="{SC*38:.1f}" height="{SC*0.1875:.1f}" fill="#D9C7A5" stroke="#8A6B4D" stroke-width="0.6"/><rect x="{xx(0):.1f}" y="{yy(75.8125):.1f}" width="{SC*38:.1f}" height="{SC*0.75:.1f}" fill="#9A6B3A" fill-opacity="0.85" stroke="#5A3A00" stroke-width="0.6"/>')
 # body
 a(f'<line x1="{xx(0)}" y1="{yy(0)}" x2="{xx(0)}" y2="{yy(76)}" stroke="#2C2C2A" stroke-width="3"/><text class="th" x="{xx(0)+3}" y="{yy(76)-8}" style="font-size:11px">body (0)</text>')
 # steel profile
@@ -54,7 +54,7 @@ a(f'<rect x="{xx(3.75):.1f}" y="{yy(7.5):.1f}" width="{SC*7:.1f}" height="{SC*7.
 a(f'<rect x="{xx(10.75):.1f}" y="{yy(9.5):.1f}" width="{SC*10:.1f}" height="{SC*9.5:.1f}" fill="#F2B84B" fill-opacity="0.5" stroke="#8A5A00" stroke-dasharray="4 3"/>')
 a(f'<text class="ts" x="{xx(10.75)+SC*5:.1f}" y="{yy(4)}" text-anchor="middle" style="font-size:9px;fill:#5A3A00">well + battery</text>')
 # overhead cabinet
-a(f'<rect x="{xx(4.5):.1f}" y="{yy(74.875):.1f}" width="{SC*14:.1f}" height="{SC*13.875:.1f}" fill="#534AB7" fill-opacity="0.06" stroke="#534AB7" stroke-dasharray="5 3"/><text class="ts" x="{xx(11.5):.1f}" y="{yy(70)}" text-anchor="middle" style="font-size:9px;fill:#534AB7">overhead cabinet, bottom 61</text>')
+a(f'<rect x="{xx(4.5):.1f}" y="{yy(75.0625):.1f}" width="{SC*14:.1f}" height="{SC*14.0625:.1f}" fill="#534AB7" fill-opacity="0.06" stroke="#534AB7" stroke-dasharray="5 3"/><text class="ts" x="{xx(11.5):.1f}" y="{yy(70)}" text-anchor="middle" style="font-size:9px;fill:#534AB7">overhead cabinet, bottom 61</text>')
 a('</svg>')
 svg='\n'.join(o)
 html=open((ROOT+'/sides.html')).read()
