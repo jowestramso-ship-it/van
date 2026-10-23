@@ -222,12 +222,12 @@ function drawPass(L, V) {
 
   o.push(GE());
   // shower nook and counter nook are recesses in the wall (fixed positions)
-  const nkx = Math.min(29.75, P.panW - 6.25);
+  const nkx = Math.min(29.75, P.panW - 6.25), nk0 = nkx - P.snookLen;
   o.push(GB('snook', 'Shower nook'));
   const snTop = P.snookTop, snBot = snTop - P.snookH;
-  o.push(box(6, nkx, snBot, snTop, { fill: '#7A4A1E', fo: .2, stroke: '#7A4A1E', sw: 1.5, rx: 3, dash: '5 3' }));
-  if (P.snookLip > 0) o.push(box(6, nkx, snBot, snBot + P.snookLip, { fill: '#5A3510', fo: .9, stroke: '#3E230B', sw: 1 }));
-  o.push(LBL(X((6 + nkx) / 2), Y(snBot + P.snookH / 2), 'Shower nook', `${fmt(nkx - 6)} wide x ${fmt(P.snookH)} tall, 4 1/2 deep`, { size: 12, fill: '#7A4A1E', keyMore: `${fmt(snBot)} to ${fmt(snTop)} up${P.snookLip > 0 ? `, ${fmt(P.snookLip)} in front lip to keep things in` : ''}` }));
+  o.push(box(nk0, nkx, snBot, snTop, { fill: '#7A4A1E', fo: .2, stroke: '#7A4A1E', sw: 1.5, rx: 3, dash: '5 3' }));
+  if (P.snookLip > 0) o.push(box(nk0, nkx, snBot, snBot + P.snookLip, { fill: '#5A3510', fo: .9, stroke: '#3E230B', sw: 1 }));
+  o.push(LBL(X((nk0 + nkx) / 2), Y(snBot + P.snookH / 2), 'Shower nook', `${fmt(nkx - nk0)} wide x ${fmt(P.snookH)} tall, 4 1/2 deep`, { size: 12, fill: '#7A4A1E', keyMore: `${fmt(snBot)} to ${fmt(snTop)} up${P.snookLip > 0 ? `, ${fmt(P.snookLip)} in front lip to keep things in` : ''}` }));
 
   o.push(GE());
   o.push(GB('pan', 'Shower pan (click to tip it)'));
@@ -278,22 +278,22 @@ function drawPass(L, V) {
 
   o.push(GE());
   // counter nook (a recess in the wall) with the jar shelf
-  const nx0 = 58, nx1 = 93.25;
+  const [nx0, nx1] = NK(P), nj = JN(P);
   o.push(GB('Nook', 'Nook and jar shelf'));
   o.push(box(nx0, nx1, ch, ch + P.nookH, { fill: '#7A4A1E', fo: .2, stroke: '#7A4A1E', sw: 1.5, rx: 3, dash: '5 3' }));
   const nd = P.dzNook, ndx = P.dxNook;
   if (P.nookOn) o.push(box(nx0 + ndx, nx1 + ndx, ch + 7.5 + nd, ch + 8.25 + nd, { fill: '#8A6B4D', stroke: '#3E230B', sw: 1 }));
   if (P.nookOn) [ch, ch + 8.25 + nd].forEach(base => {
-    for (let i = 0; i < 9; i++) {
-      const jx = 58.75 + (base === ch ? 0 : ndx) + 3.75 * i;
-      o.push(box(jx + .1, jx + 3.65, base, base + 6.25, { fill: '#A9D4F5', fo: .6, stroke: COL.BL, sw: .9, rx: 2.5 }));
-      o.push(box(jx + .45, jx + 3.3, base + 6.25, base + 7, { fill: '#8A8A8A', stroke: COL.G, sw: .6 }));
+    for (let i = 0; i < nj; i++) {
+      const jx = nx0 + .75 + (base === ch ? 0 : ndx) + P.jarW * i;
+      o.push(box(jx + .1, jx + P.jarW - .1, base, base + 6.25, { fill: '#A9D4F5', fo: .6, stroke: COL.BL, sw: .9, rx: 2.5 }));
+      o.push(box(jx + .45, jx + P.jarW - .45, base + 6.25, base + 7, { fill: '#8A8A8A', stroke: COL.G, sw: .6 }));
     }
-    o.push(Ln(X(58.4 + (base === ch ? 0 : ndx)), Y(base + 3.5), X(92.85 + (base === ch ? 0 : ndx)), Y(base + 3.5), { stroke: '#7A4A1E', sw: 1.6, dash: '3 2' }));
+    if (nj > 0) o.push(Ln(X(nx0 + .4 + (base === ch ? 0 : ndx)), Y(base + 3.5), X(nx1 - .4 + (base === ch ? 0 : ndx)), Y(base + 3.5), { stroke: '#7A4A1E', sw: 1.6, dash: '3 2' }));
   });
-  o.push(LBL(X(67), Y(ch + 16.7), P.nookOn ? 'Nook: quart jars' : 'Nook (empty: jars and shelf taken out)', '', { size: 11, fill: '#7A4A1E', keyMore: P.nookOn ? `${fmt(nx1 - nx0)} long, jar shelf ${fmt(ch + 7.5 + nd)} up, 9 jars a tier` : '' }));
+  o.push(LBL(X(P.numLbl ? (nx0 + nx1) / 2 : nx0 - 9), Y(P.numLbl ? ch + P.nookH - 1.8 : ch + P.nookH / 2), P.nookOn ? 'Nook: quart jars' : 'Nook (empty: jars and shelf taken out)', '', { size: 11, fill: '#7A4A1E', keyMore: P.nookOn ? `${fmt(nx1 - nx0)} long, jar shelf ${fmt(ch + 7.5 + nd)} up, ${nj} jars a tier` : '' }));
   if (P.nookOn) o.push(NOTE(X(110), Y(ch + 8 + nd), `shelf ${fmt(ch + 7.5 + nd)} up`, { size: 10, fill: '#5A3510' }));
-  if (P.nookOn) o.push(NOTE(X(110), Y(ch + 8 + nd) + 12, '9 jars a tier', { size: 10, fill: '#5A3510' }));
+  if (P.nookOn) o.push(NOTE(X(110), Y(ch + 8 + nd) + 12, `${nj} jars a tier`, { size: 10, fill: '#5A3510' }));
   o.push(GE());
   // TV
   o.push(GB('tv', 'TV'));

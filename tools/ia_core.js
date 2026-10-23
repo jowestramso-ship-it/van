@@ -42,8 +42,11 @@ const PD = [
   { k: 'doorH', g: 'Wall cabinets', l: 'Door height (3 doors a side, widths follow the cabinet)', d: 12, s: .5, a: 6, b: 24 },
   { k: 'panW', g: 'Passenger side', l: 'Shower pan length', d: 36, s: .5, a: 20, b: 50 },
   { k: 'panD', g: 'Passenger side', l: 'Shower pan depth', d: 24, s: .5, a: 16, b: 36 },
+  { k: 'snookLen', g: 'Passenger side', l: 'Shower nook length along the wall (it ends at 29 3/4 on the cab side; a shorter nook comes off the rear end)', d: 15.25, s: .25, a: 6, b: 23.75 },
   { k: 'snookH', g: 'Passenger side', l: 'Shower nook height (the recess in the shower wall)', d: 16, s: .5, a: 6, b: 40 },
   { k: 'snookTop', g: 'Passenger side', l: 'Shower nook top, up from the floor (54 is level with the top of the jar nook and the bottom of the TV)', d: 54, s: .5, a: 20, b: 70 },
+  { k: 'nookLen', g: 'Passenger side', l: 'Jar nook length along the wall (the nook ends at 93 1/4 on the cab side; a shorter nook comes off the rear end)', d: 15.25, s: .25, a: 6, b: 35.25 },
+  { k: 'jarW', g: 'Passenger side', l: 'Jar width, center to center along the shelf (quart jars 3 3/4)', d: 3.75, s: .25, a: 2, b: 6 },
   { k: 'nookH', g: 'Passenger side', l: 'Jar nook height above the countertop (16 puts its top level with the bottom of the TV)', d: 16, s: .5, a: 8, b: 24 },
   { k: 'snookLip', g: 'Passenger side', l: 'Shower nook front lip, to keep things in (0 for none)', d: 1.5, s: .25, a: 0, b: 4 },
   { k: 'fridgeW', g: 'Passenger side', l: 'Fridge width', d: 22, s: .5, a: 14, b: 30 },
@@ -196,6 +199,9 @@ function T(x, y, s, o) {
   const size = o.size || 12, fill = o.fill || '#2C2C2A', anchor = o.anchor || 'middle', w = o.w || 400, halo = o.halo !== false;
   return `<text x="${f1(x)}" y="${f1(y)}" text-anchor="${anchor}"${o.op != null && o.op < 1 ? ` opacity="${f1(o.op)}"` : ''} style="font-size:${size}px;font-weight:${w};fill:${fill};${halo ? HALO : ''}">${s}</text>`;
 }
+// The jar nook: it ends at 93 1/4 on the cab side and its length comes off the rear end; how many jars fit in a row
+const NK = P => [93.25 - P.nookLen, 93.25];
+const JN = P => Math.max(0, Math.floor((P.nookLen - 1) / P.jarW + 1e-9));
 // An item label: the name and its size written on the drawing, or (the Number the items box) a small numbered badge with the name and size listed under the drawing.
 // The badge carries a token that render() replaces with the final number, once it knows which labels are really in the picture and where they sit.
 const KEYS = [];
@@ -317,7 +323,7 @@ function collisions(L) {
   const fresh = bx('fresh', 'the fresh water tank', L.tankX[0], L.tankX[1], P.tankBack, P.tankBack + P.tankD, P.tankLift, P.tankLift + P.tankH, { kind: 'tank' });
   const mov = [hot, fresh];
   L.parts.forEach(p => mov.push(bx(p.id, p.n, p.x0, p.x1, p.y0, p.y1, p.z0, p.z1, { kind: p.kind })));
-  const nx0 = 58, nx1 = 93.25;
+  const [nx0, nx1] = NK(P);
   if (P.nookOn) mov.push(bx('Nook', 'the jar shelf in the nook with its upper row of jars', L.nookX[0], L.nookX[1], 0, 4.5, L.nookZ, L.nookZ + .75 + 7, { kind: 'jars' }));
   if (P.microOn) mov.push(bx('Micro', 'the microwave and its shelf', L.microX[0], L.microX[1], 0, P.microIn + 12, L.microZ[0] - .75, L.microZ[1], { kind: 'micro' }));
   // the drain jug (a bottle) is checked by its square outline; it stands on the fresh water tank
@@ -338,7 +344,7 @@ function collisions(L) {
     bx('', 'the floor', -10, P.cab + 10, -5, 45, -40, 0), bx('', 'the ceiling', -10, P.cab + 10, -5, 45, L.ceilF, L.ceilF + 40),
     bx('', 'the counter and its rail', L.cabS, L.angS - .75, 0, P.cabD, ch - 2.25, ch), bx('', 'the countertop', L.angS - .75, L.sinkE, 0, P.cabD, ch - 1.2, ch),
     bx('', 'the sink under the counter', L.sinkS, L.sinkE, 0, P.sinkD, ch - P.sinkBowlD, ch - 1.2),
-    P.nookOn && bx('', 'the lower row of jars', 58.75, 92.5, 0, 4.5, ch, ch + 7), bx('', 'the top of the nook', nx0, nx1, 0, 4.5, ch + P.nookH, ch + 40),
+    P.nookOn && JN(P) > 0 && bx('', 'the lower row of jars', nx0 + .75, nx0 + .75 + JN(P) * P.jarW, 0, 4.5, ch, ch + 7), bx('', 'the top of the nook', nx0, nx1, 0, 4.5, ch + P.nookH, ch + 40),
     P.tvOn && bx('', 'the TV', 76.5, 103.5, 0, 4.5, ch + 16, ch + 31.4),
     // the paper towel roll sits in a recess in the angled front, 6 in deep from the door face (a tank may touch its bottom, not reach into it)
     P.towelOn && bx('', 'the paper towel recess', L.sinkS - 11.5, L.sinkS - .5, Math.max(0, Math.min(L.angS < L.sinkS ? Math.max(P.sinkD, P.cabD - L.slope * (L.sinkS - L.angS)) : P.sinkD, P.cabD) - 6.75), P.cabD, 29.75, 35.25, { vs: ['tank'] }),
@@ -479,7 +485,7 @@ function layout(P0) {
   }
   // the drawers and shelves under the counter (as planned plus dragged), the jar shelf in the nook and the microwave shelf above the fridge
   L.parts = cabinetParts(L); L.partById = {}; L.parts.forEach(p => { L.partById[p.id] = p; });
-  L.nookZ = P.counterH + 7.5 + P.dzNook; L.nookX = [58 + P.dxNook, 93.25 + P.dxNook];
+  L.nookZ = P.counterH + 7.5 + P.dzNook; L.nookX = [NK(P)[0] + P.dxNook, NK(P)[1] + P.dxNook];
   L.microX = [L.fr[0] + P.dxMicro, L.fr[1] + P.dxMicro];
   L.microZ = [8.25 + P.fridgeH + 2.75 + P.dzMicro, 8.25 + P.fridgeH + 12.75 + P.dzMicro];   // the microwave bottom and top; its shelf is the 3/4 in under it, 2 in over the fridge top
   // the dish towel hook on the wall strip between the end of the nook (93 1/4) and the sliding door opening, under the TV; the folded towel (8 in wide) hangs from it

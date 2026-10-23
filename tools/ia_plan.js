@@ -155,8 +155,8 @@ function drawPlan(L, V) {
   o.push(GE());
   const nkx = Math.min(29.75, P.panW - 6.25);
   o.push(GB('snook', 'Shower nook'));
-  o.push(ip(6, nkx, 0, 4.5, '#7A4A1E', '', null, { fo: .3, dash: '3 2' }));
-  o.push(T(xx((6 + nkx) / 2), yp(1.3), 'shower nook 4.5 deep', { size: 8.5, fill: '#5A3510' }));
+  o.push(ip(nkx - P.snookLen, nkx, 0, 4.5, '#7A4A1E', '', null, { fo: .3, dash: '3 2' }));
+  o.push(T(xx(nkx - P.snookLen / 2), yp(1.3), 'shower nook 4.5 deep', { size: 8.5, fill: '#5A3510' }));
   o.push(GE());
   o.push(GB('counter', 'Cabinet and counter outline'));
   o.push(T(xx(L.cabS + 8), yp(P.cabD - 3.5), `Cabinet ${fmt(P.cabD)} deep`, { size: 10, fill: COL.C, w: 500 }));
@@ -244,8 +244,8 @@ function drawPlan(L, V) {
     o.push(GE());
   }
   o.push(GB('Nook', 'Nook'));
-  o.push(ip(58, 93.25, 0, 4.5, '#7A4A1E', '', null, { fo: .3, dash: '3 2' }));
-  o.push(T(xx(66), yp(1.3), 'nook 4.5 deep', { size: 8.5, fill: '#5A3510' }));
+  o.push(ip(NK(P)[0], NK(P)[1], 0, 4.5, '#7A4A1E', '', null, { fo: .3, dash: '3 2' }));
+  o.push(T(xx(NK(P)[0] + 8), yp(1.3), 'nook 4.5 deep', { size: 8.5, fill: '#5A3510' }));
   o.push(GE());
   o.push(GB('fresh', 'Fresh water tank'));
   o.push(T(xx((L.tankX[0] + L.tankX[1]) / 2), yp(P.tankBack + 12), `Fresh water tank ${fmt(L.tankLen)} x ${fmt(P.tankD)}`, { size: 9.5, fill: COL.BL, w: 500 }));
