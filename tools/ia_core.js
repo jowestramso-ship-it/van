@@ -43,7 +43,8 @@ const PD = [
   { k: 'panW', g: 'Passenger side', l: 'Shower pan length', d: 36, s: .5, a: 20, b: 50 },
   { k: 'panD', g: 'Passenger side', l: 'Shower pan depth', d: 24, s: .5, a: 16, b: 36 },
   { k: 'snookH', g: 'Passenger side', l: 'Shower nook height (the recess in the shower wall)', d: 16, s: .5, a: 6, b: 40 },
-  { k: 'snookTop', g: 'Passenger side', l: 'Shower nook top, up from the floor (56 1/2 lines up with the top of the counter nook)', d: 56.5, s: .5, a: 20, b: 70 },
+  { k: 'snookTop', g: 'Passenger side', l: 'Shower nook top, up from the floor (54 is level with the top of the jar nook and the bottom of the TV)', d: 54, s: .5, a: 20, b: 70 },
+  { k: 'nookH', g: 'Passenger side', l: 'Jar nook height above the countertop (16 puts its top level with the bottom of the TV)', d: 16, s: .5, a: 8, b: 24 },
   { k: 'snookLip', g: 'Passenger side', l: 'Shower nook front lip, to keep things in (0 for none)', d: 1.5, s: .25, a: 0, b: 4 },
   { k: 'fridgeW', g: 'Passenger side', l: 'Fridge width', d: 22, s: .5, a: 14, b: 30 },
   { k: 'fridgeD', g: 'Passenger side', l: 'Fridge depth', d: 19, s: .5, a: 12, b: 26 },
@@ -337,7 +338,7 @@ function collisions(L) {
     bx('', 'the floor', -10, P.cab + 10, -5, 45, -40, 0), bx('', 'the ceiling', -10, P.cab + 10, -5, 45, L.ceilF, L.ceilF + 40),
     bx('', 'the counter and its rail', L.cabS, L.angS - .75, 0, P.cabD, ch - 2.25, ch), bx('', 'the countertop', L.angS - .75, L.sinkE, 0, P.cabD, ch - 1.2, ch),
     bx('', 'the sink under the counter', L.sinkS, L.sinkE, 0, P.sinkD, ch - P.sinkBowlD, ch - 1.2),
-    P.nookOn && bx('', 'the lower row of jars', 58.75, 92.5, 0, 4.5, ch, ch + 7), bx('', 'the top of the nook', nx0, nx1, 0, 4.5, ch + 18.5, ch + 40),
+    P.nookOn && bx('', 'the lower row of jars', 58.75, 92.5, 0, 4.5, ch, ch + 7), bx('', 'the top of the nook', nx0, nx1, 0, 4.5, ch + P.nookH, ch + 40),
     P.tvOn && bx('', 'the TV', 76.5, 103.5, 0, 4.5, ch + 16, ch + 31.4),
     // the paper towel roll sits in a recess in the angled front, 6 in deep from the door face (a tank may touch its bottom, not reach into it)
     P.towelOn && bx('', 'the paper towel recess', L.sinkS - 11.5, L.sinkS - .5, Math.max(0, Math.min(L.angS < L.sinkS ? Math.max(P.sinkD, P.cabD - L.slope * (L.sinkS - L.angS)) : P.sinkD, P.cabD) - 6.75), P.cabD, 29.75, 35.25, { vs: ['tank'] }),

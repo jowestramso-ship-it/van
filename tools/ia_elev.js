@@ -280,7 +280,7 @@ function drawPass(L, V) {
   // counter nook (a recess in the wall) with the jar shelf
   const nx0 = 58, nx1 = 93.25;
   o.push(GB('Nook', 'Nook and jar shelf'));
-  o.push(box(nx0, nx1, ch, ch + 18.5, { fill: '#7A4A1E', fo: .2, stroke: '#7A4A1E', sw: 1.5, rx: 3, dash: '5 3' }));
+  o.push(box(nx0, nx1, ch, ch + P.nookH, { fill: '#7A4A1E', fo: .2, stroke: '#7A4A1E', sw: 1.5, rx: 3, dash: '5 3' }));
   const nd = P.dzNook, ndx = P.dxNook;
   if (P.nookOn) o.push(box(nx0 + ndx, nx1 + ndx, ch + 7.5 + nd, ch + 8.25 + nd, { fill: '#8A6B4D', stroke: '#3E230B', sw: 1 }));
   if (P.nookOn) [ch, ch + 8.25 + nd].forEach(base => {

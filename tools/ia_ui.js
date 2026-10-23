@@ -332,7 +332,7 @@ const DRAG_SAYS = {
 const sayMore = (L, id) => {
   const p = L.partById[id];
   if (p) return `${cap(p.n)}: ${fmt(p.x0)} to ${fmt(p.x1)} in from the back, ${fmt(p.z0)} to ${fmt(p.z1)} in up`;
-  if (id === 'Nook') return `Jar shelf in the nook: ${fmt(L.nookX[0])} to ${fmt(L.nookX[1])} in from the back, ${fmt(L.nookZ)} in up (${fmt(L.nookZ - L.P.counterH)} in over the counter); the upper row of jars reaches ${fmt(L.nookZ + .75 + 7)} in, the nook top is ${fmt(L.P.counterH + 18.5)} in`;
+  if (id === 'Nook') return `Jar shelf in the nook: ${fmt(L.nookX[0])} to ${fmt(L.nookX[1])} in from the back, ${fmt(L.nookZ)} in up (${fmt(L.nookZ - L.P.counterH)} in over the counter); the upper row of jars reaches ${fmt(L.nookZ + .75 + 7)} in, the nook top is ${fmt(L.P.counterH + L.P.nookH)} in`;
   if (id === 'Micro') return `Microwave: ${fmt(L.microX[0])} to ${fmt(L.microX[1])} in from the back, ${fmt(L.P.microIn)} in from the wall, ${fmt(L.microZ[0])} to ${fmt(L.microZ[1])} in up, its shelf at ${fmt(L.microZ[0] - .75)} in (the fridge top is ${fmt(8.25 + L.P.fridgeH)} in)`;
   return '';
 };
