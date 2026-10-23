@@ -92,7 +92,7 @@
 <body>
 <div class="wrap">
   <h1>Ford Transit van: interactive plan</h1>
-  <p class="lead">Click a door, table, the bed, the shower pan or the fridge to open or close it. Right-click an item (or use Show or hide things) to hide it, or untick it under Take items out in the sizes to remove it for good from the drawing and the checks. Drag the drawers and shelves, the jar shelf, the microwave, the trash can, the dish towel hook, the lawn chairs, the water tanks, the drain jug, the drain line, the shower fan and the air conditioner (the dotted purple boxes) to move them, and double-click one to put it back: the message above the drawing says right away what no longer fits or overlaps. Change any size below the drawing and everything redraws, including the walkway checks. Zoom the drawing with the + and − buttons in its corner, Ctrl (Cmd on a Mac) and scroll, or pinch; drag it to move when zoomed. Sizes are in inches, measured from the same zero as the static diagrams (6 in in from the rear edge). <a href="sides.html">Static diagrams, photos and the full measurement tables</a> &middot; <a href="install.html">Fan and A/C install steps</a> &middot; <a href="window.html">Side window install steps</a></p>
+  <p class="lead">Click a door, table, the bed, the shower pan or the fridge to open or close it. Right-click an item (or use Show or hide things) to hide it, or untick it under Take items out in the sizes to remove it for good from the drawing and the checks. Drag the drawers and shelves, the jar shelf, the microwave, the trash can, the dish towel hook, the lawn chairs, the water tanks, the drain jug, the drain line, the roof fan and the air conditioner (the dotted purple boxes) to move them, and double-click one to put it back: the message above the drawing says right away what no longer fits or overlaps. Change any size below the drawing and everything redraws, including the walkway checks. Zoom the drawing with the + and − buttons in its corner, Ctrl (Cmd on a Mac) and scroll, or pinch; drag it to move when zoomed. Sizes are in inches, measured from the same zero as the static diagrams (6 in in from the rear edge). <a href="sides.html">Static diagrams, photos and the full measurement tables</a> &middot; <a href="install.html">Fan and A/C install steps</a> &middot; <a href="window.html">Side window install steps</a></p>
   <noscript>This page needs JavaScript. The static diagrams are on the other page.</noscript>
   <div class="tabs" role="tablist" id="tabs"></div>
   <div class="movers" id="movers"></div>
@@ -331,10 +331,10 @@ const PD = [
   { k: 'lightN', g: 'Ceiling', l: 'Round lights in the ceiling (count)', d: 6, s: 1, a: 0, b: 24 },
   { k: 'lightRows', g: 'Ceiling', l: 'Rows of lights along the ceiling', d: 2, s: 1, a: 1, b: 4 },
   { k: 'lightD', g: 'Ceiling', l: 'Light diameter (mounted on a slat)', d: 2, s: .25, a: 1, b: 8 },
-  { k: 'fanX', g: 'Ceiling', l: 'Shower fan cutout: along the van (from the back)', d: 13.25, s: .5, a: 0, b: 220 },
+  { k: 'fanX', g: 'Ceiling', l: 'Roof fan cutout: along the van (from the back)', d: 13.25, s: .5, a: 0, b: 220 },
   { k: 'fanY', g: 'Ceiling', l: 'Fan cutout: across (from the driver wall; 34 is the middle of the van, over the aisle)', d: 34, s: .5, a: 0, b: 90 },
-  { k: 'fanUnit', g: 'Ceiling', l: 'Shower fan unit on the roof: square footprint (2012 F36AR exhaust fan: 17.7 x 17.7 x 6.4 tall)', d: 17.75, s: .25, a: 6, b: 40 },
-  { k: 'fanW', g: 'Ceiling', l: 'Shower fan cutout: square size', d: 14, s: .25, a: 4, b: 30 },
+  { k: 'fanUnit', g: 'Ceiling', l: 'Roof fan unit on the roof: square footprint (2012 F36AR exhaust fan: 17.7 x 17.7 x 6.4 tall)', d: 17.75, s: .25, a: 6, b: 40 },
+  { k: 'fanW', g: 'Ceiling', l: 'Roof fan cutout: square size', d: 14, s: .25, a: 4, b: 30 },
   { k: 'acX', g: 'Ceiling', l: 'Air conditioning cutout: along the van (from the back)', d: 49.5, s: .5, a: 0, b: 220 },
   { k: 'acY', g: 'Ceiling', l: 'Air conditioning cutout: across (from the driver wall)', d: 34, s: .5, a: 0, b: 90 },
   { k: 'acUnit', g: 'Ceiling', l: 'Air conditioner unit on the roof: square footprint (OutEquip 12 V cooling-only: 28.3 x 28.3 x 6.3 tall, 45 lb on the listing)', d: 28.25, s: .25, a: 10, b: 50 },
@@ -343,8 +343,8 @@ const PD = [
   { k: 'acTurboA', g: 'Power', l: 'Air conditioner current in turbo (A at 12 V; the listing says up to 58)', d: 58, s: 1, a: 5, b: 120 },
   { k: 'acEcoA', g: 'Power', l: 'Air conditioner current in eco or sleep (A at 12 V; the listing says 21 and up, reviews 16 to 29)', d: 21, s: 1, a: 2, b: 80 },
   { k: 'acEcoH', g: 'Power', l: 'Hours a day the air conditioner runs in eco', d: 8, s: .5, a: 0, b: 24 },
-  { k: 'fanLowW', g: 'Power', l: 'Shower fan power on low (W, 12 V DC)', d: 3, s: 1, a: 0, b: 100 },
-  { k: 'fanHighW', g: 'Power', l: 'Shower fan power on high (W, 12 V DC)', d: 32, s: 1, a: 0, b: 200 },
+  { k: 'fanLowW', g: 'Power', l: 'Roof fan power on low (W, 12 V DC)', d: 3, s: 1, a: 0, b: 100 },
+  { k: 'fanHighW', g: 'Power', l: 'Roof fan power on high (W, 12 V DC)', d: 32, s: 1, a: 0, b: 200 },
   { k: 'fanHighH', g: 'Power', l: 'Hours a day the fan runs on high (the rest of the day is low)', d: 1, s: .5, a: 0, b: 24 },
   { k: 'heaterW', g: 'Power', l: 'Hot water heater power (W, 120 V)', d: 1440, s: 40, a: 200, b: 3000 }
 ];
@@ -633,7 +633,7 @@ function layout(P0) {
       if (P.liningOn && n > 0) { let best = 0, bd = 1e9; L.slatY.forEach((sy, k) => { const d = Math.abs(sy + P.slatW / 2 - target); if (d < bd) { bd = d; best = k; } }); y = L.slatY[best] + P.slatW / 2; L.chanY.push(y); }
       for (let c = 0; c < cnt; c++) L.lights.push({ x: P.ceilLen * (c + .5) / cnt, y });
     }
-    L.fan = { x: P.fanX, y: P.fanY, w: P.fanW, nm: 'shower fan', u: P.fanUnit }; L.ac = { x: P.acX, y: P.acY, w: P.acW, nm: 'A/C', u: P.acUnit };
+    L.fan = { x: P.fanX, y: P.fanY, w: P.fanW, nm: 'roof fan', u: P.fanUnit }; L.ac = { x: P.acX, y: P.acY, w: P.acW, nm: 'A/C', u: P.acUnit };
     L.slatsCut = c => L.slatY.filter((sy, k) => !L.slatOut.has(k) && sy < c.y + c.w / 2 && sy + P.slatW > c.y - c.w / 2).length;
   }
   // the drawers and shelves under the counter (as planned plus dragged), the jar shelf in the nook and the microwave shelf above the fridge
@@ -1676,13 +1676,13 @@ function drawCeiling(L, V) {
     o.push(R(xx(L.ac.x - L.ac.u / 2), yy(L.ac.y - L.ac.u / 2), S * L.ac.u, S * L.ac.u, { stroke: '#444441', sw: 1.2, dash: '6 4' }));
     o.push(T(xx(L.ac.x), yy(L.ac.y + L.ac.u / 2) + 13, `A/C unit on the roof ${fmt(L.ac.u)} x ${fmt(L.ac.u)}`, { size: 10, fill: '#444441', halo: true }));
     o.push(GE());
-    o.push(GB('fan', 'Shower fan'));
+    o.push(GB('fan', 'Roof fan'));
     o.push(R(xx(L.fan.x - L.fan.u / 2), yy(L.fan.y - L.fan.u / 2), S * L.fan.u, S * L.fan.u, { stroke: '#444441', sw: 1.2, dash: '6 4' }));
     o.push(T(xx(L.fan.x), yy(L.fan.y - L.fan.u / 2) - 5, `fan unit ${fmt(L.fan.u)} sq`, { size: 10, fill: '#444441', halo: true }));
     o.push(GE());
-    [L.fan, L.ac].forEach(c => { o.push(GB(c === L.ac ? 'ac' : 'fan', c === L.ac ? 'Air conditioner' : 'Shower fan')); o.push(R(xx(c.x - c.w / 2), yy(c.y - c.w / 2), S * c.w, S * c.w, { fill: '#2C2C2A', fo: .88, stroke: '#000', sw: 1.4 })); o.push(T(xx(c.x), yy(c.y) - 2, c.nm, { size: 11, fill: '#fff', w: 600, halo: false })); o.push(T(xx(c.x), yy(c.y) + 11, `${fmt(c.w)} x ${fmt(c.w)} cutout`, { size: 9.5, fill: '#fff', halo: false })); o.push(GE()); });
+    [L.fan, L.ac].forEach(c => { o.push(GB(c === L.ac ? 'ac' : 'fan', c === L.ac ? 'Air conditioner' : 'Roof fan')); o.push(R(xx(c.x - c.w / 2), yy(c.y - c.w / 2), S * c.w, S * c.w, { fill: '#2C2C2A', fo: .88, stroke: '#000', sw: 1.4 })); o.push(T(xx(c.x), yy(c.y) - 2, c.nm, { size: 11, fill: '#fff', w: 600, halo: false })); o.push(T(xx(c.x), yy(c.y) + 11, `${fmt(c.w)} x ${fmt(c.w)} cutout`, { size: 9.5, fill: '#fff', halo: false })); o.push(GE()); });
     hits.push(HIT('ac', xx(L.ac.x - L.ac.u / 2), yy(L.ac.y - L.ac.u / 2), S * L.ac.u, S * L.ac.u, ['acX', 1 / S, 'acY', 1 / S], L.coll.ids.has('ac'), 'Air conditioner (along the van and across)'));
-    hits.push(HIT('fan', xx(L.fan.x - L.fan.u / 2), yy(L.fan.y - L.fan.u / 2), S * L.fan.u, S * L.fan.u, ['fanX', 1 / S, 'fanY', 1 / S], L.coll.ids.has('fan'), 'Shower fan (along the van and across)'));
+    hits.push(HIT('fan', xx(L.fan.x - L.fan.u / 2), yy(L.fan.y - L.fan.u / 2), S * L.fan.u, S * L.fan.u, ['fanX', 1 / S, 'fanY', 1 / S], L.coll.ids.has('fan'), 'Roof fan (along the van and across)'));
   } else o.push(R(xx(0), yy(L.ceilOff), S * CL, S * CW, { fill: '#F1EFE8', fo: .7, stroke: '#5F5E5A', sw: 1.2 }));
   // the roof ribs marked on the Bare roof tab (from the back edge): dashed red lines across the roof
   o.push(GB('ribs', 'Roof ribs'));
@@ -1738,7 +1738,7 @@ function drawBare(L, V) {
   o.push(Ln(xx(CL), yy(0), xx(CL), yy(W), { stroke: '#2C2C2A', sw: 3 })); o.push(T(xx(CL) - 4, yy(0) - 30, 'cab wall', { anchor: 'end', size: 11, fill: '#5F5E5A', halo: false }));
   // the roof openings (planned) and the units over them
   [L.fan, L.ac].forEach(c => {
-    o.push(GB(c === L.ac ? 'ac' : 'fan', c === L.ac ? 'Air conditioner' : 'Shower fan'));
+    o.push(GB(c === L.ac ? 'ac' : 'fan', c === L.ac ? 'Air conditioner' : 'Roof fan'));
     o.push(R(xx(c.x - c.u / 2), yy(c.y - c.u / 2), S * c.u, S * c.u, { stroke: '#444441', sw: 1.2, dash: '6 4' }));
     o.push(R(xx(c.x - c.w / 2), yy(c.y - c.w / 2), S * c.w, S * c.w, { fill: '#2C2C2A', fo: .75, stroke: '#000', sw: 1.2 }));
     o.push(T(xx(c.x), yy(c.y) + 4, c.nm === 'A/C' ? 'A/C' : 'fan', { size: 11, fill: '#fff', w: 600, halo: false }));
@@ -1746,7 +1746,7 @@ function drawBare(L, V) {
     o.push(GE());
   });
   hits.push(HIT('ac', xx(L.ac.x - L.ac.u / 2), yy(L.ac.y - L.ac.u / 2), S * L.ac.u, S * L.ac.u, ['acX', 1 / S, 'acY', 1 / S], L.coll.ids.has('ac'), 'Air conditioner (along the van and across)'));
-  hits.push(HIT('fan', xx(L.fan.x - L.fan.u / 2), yy(L.fan.y - L.fan.u / 2), S * L.fan.u, S * L.fan.u, ['fanX', 1 / S, 'fanY', 1 / S], L.coll.ids.has('fan'), 'Shower fan (along the van and across)'));
+  hits.push(HIT('fan', xx(L.fan.x - L.fan.u / 2), yy(L.fan.y - L.fan.u / 2), S * L.fan.u, S * L.fan.u, ['fanX', 1 / S, 'fanY', 1 / S], L.coll.ids.has('fan'), 'Roof fan (along the van and across)'));
   // the ribs the user has marked: full width lines with their position
   o.push(GB('ribs', 'Roof ribs'));
   L.ribBands.forEach((b, i) => { o.push(R(xx(b[0]), yy(0), S * (b[1] - b[0]), S * W, { fill: '#A32D2D', fo: .3, stroke: '#A32D2D', sw: 1.6 })); o.push(T(xx((b[0] + b[1]) / 2), yy(W) - 6 - (i % 2) * 12, `${fmt(L.ribs[i])}${P.ribRef === 'center' ? '' : P.ribRef === 'front' ? ' (front edge)' : ' (back edge)'}`, { size: 10.5, fill: '#A32D2D', w: 700 })); });
@@ -1854,7 +1854,7 @@ function computeChecks(L, V) {
     if (near(L.fan) + near(L.ac) > 0) prob.push(`${near(L.fan) + near(L.ac)} light${near(L.fan) + near(L.ac) === 1 ? ' is' : 's are'} within 2 in of a cutout`);
     [[L.ac, 'air conditioner'], [L.fan, 'fan']].forEach(([c, nm]) => { const h = c.u / 2; if (c.x - h < 0 || c.x + h > P.ceilLen || c.y - h < L.ceilOff || c.y + h > L.ceilOff + P.ceilW) prob.push(`the ${fmt(c.u)} in ${nm} unit does not fit on the flat part of the roof (${fmt(P.ceilW)} wide)`); });
     if (Math.abs(L.ac.x - L.fan.x) < (L.ac.u + L.fan.u) / 2 && Math.abs(L.ac.y - L.fan.y) < (L.ac.u + L.fan.u) / 2) prob.push('the fan unit and the air conditioner unit overlap on the roof');
-    push(prob.length ? 'warn' : 'ok', `Cutouts: shower fan ${fmt(L.fan.w)} x ${fmt(L.fan.w)} in at ${fmt(L.fan.x)} in from the back and ${fmt(L.fan.y)} across from the driver wall (${onBath ? `its center is over the wet bath${overhang > .1 ? `, with ${fmt(overhang)} in of the opening past the pan edge` : ''}` : 'in the middle of the van, not over the wet bath, as you decided'}), and air conditioning ${fmt(L.ac.w)} x ${fmt(L.ac.w)} in at ${fmt(L.ac.x)} and ${fmt(L.ac.y)}. They go through the plywood and the slats${P.liningOn ? `, so the fan cuts ${L.slatsCut(L.fan)} slats and the A/C cuts ${L.slatsCut(L.ac)} (each cut slat becomes two pieces, ending at a framed curb)` : ''}.${prob.length ? ' Problem: ' + prob.join('; ') + '.' : ''} The air conditioner is the OutEquip 12 V cooling-only rooftop unit (white, non-ducted): 28.3 x 28.3 in on the roof, 6.3 in tall, 45 lb on the listing (the maker's sheet says 33 lb), a roof opening of at least 14.1 x 13.7 in (drawn at 14 1/4) and an indoor panel up to 14.5 x 10 in; the fan is the 2012 F36AR exhaust fan (white, 12 V DC): 17.7 x 17.7 in on the roof, 6.4 in tall, cutout 356 x 356 mm, which is 14.02 in (drawn 14 x 14). Both openings need a frame between the roof bows.`);
+    push(prob.length ? 'warn' : 'ok', `Cutouts: roof fan ${fmt(L.fan.w)} x ${fmt(L.fan.w)} in at ${fmt(L.fan.x)} in from the back and ${fmt(L.fan.y)} across from the driver wall (${onBath ? `its center is over the wet bath${overhang > .1 ? `, with ${fmt(overhang)} in of the opening past the pan edge` : ''}` : 'in the middle of the van, not over the wet bath, as you decided'}), and air conditioning ${fmt(L.ac.w)} x ${fmt(L.ac.w)} in at ${fmt(L.ac.x)} and ${fmt(L.ac.y)}. They go through the plywood and the slats${P.liningOn ? `, so the fan cuts ${L.slatsCut(L.fan)} slats and the A/C cuts ${L.slatsCut(L.ac)} (each cut slat becomes two pieces, ending at a framed curb)` : ''}.${prob.length ? ' Problem: ' + prob.join('; ') + '.' : ''} The air conditioner is the OutEquip 12 V cooling-only rooftop unit (white, non-ducted): 28.3 x 28.3 in on the roof, 6.3 in tall, 45 lb on the listing (the maker's sheet says 33 lb), a roof opening of at least 14.1 x 13.7 in (drawn at 14 1/4) and an indoor panel up to 14.5 x 10 in; the fan is the 2012 F36AR exhaust fan (white, 12 V DC): 17.7 x 17.7 in on the roof, 6.4 in tall, cutout 356 x 356 mm, which is 14.02 in (drawn 14 x 14). Both openings need a frame between the roof bows.`);
   }
   // dinette bed
   const dbw = Math.min(P.benchD, P.tableD), dbl = L.bB[1] - L.bA[0], cover = Math.min(100, 2 * P.benchLen * (P.backH - P.seatH) / Math.max(1, L.tableLen * P.tableD) * 100);
@@ -1952,7 +1952,7 @@ function computeChecks(L, V) {
     }
     {
       const aLo = P.fanLowW / 12, aHi = P.fanHighW / 12, ah = aLo * (24 - P.fanHighH) + aHi * P.fanHighH, pct = ah / P.battAh * 100;
-      push('ok', `Shower fan power (12 V DC, no inverter): ${fmt(P.fanLowW)} W on low is ${aLo.toFixed(2)} A and ${fmt(P.fanHighW)} W on high is ${aHi.toFixed(1)} A. Run ${fmt(P.fanHighH)} hour${P.fanHighH === 1 ? '' : 's'} on high and the rest of the day on low it uses about ${ah.toFixed(1)} Ah a day, ${pct.toFixed(1)} percent of the ${fmt(P.battAh)} Ah battery. Small next to the water heater; wire and fuse it for ${aHi.toFixed(1)} A.`);
+      push('ok', `Roof fan power (12 V DC, no inverter): ${fmt(P.fanLowW)} W on low is ${aLo.toFixed(2)} A and ${fmt(P.fanHighW)} W on high is ${aHi.toFixed(1)} A. Run ${fmt(P.fanHighH)} hour${P.fanHighH === 1 ? '' : 's'} on high and the rest of the day on low it uses about ${ah.toFixed(1)} Ah a day, ${pct.toFixed(1)} percent of the ${fmt(P.battAh)} Ah battery. Small next to the water heater; wire and fuse it for ${aHi.toFixed(1)} A.`);
     }
     push('ok', `Hot water power: ${fmt(P.heaterW)} W at 120 V is ${ac.toFixed(0)} A AC, about ${Math.round(dc)} A from a 12 V battery through an inverter. The ${fmt(P.battAh)} Ah battery is said to handle it; what is left to size for about ${Math.round(dc)} A is an inverter of ${Math.ceil(P.heaterW * 1.25 / 500) * 500} W or more, the battery cable and its fuse. Heating a gallon by 80 F takes about ${kwhGal.toFixed(2)} kWh, ${Math.round(ahGal)} Ah of the ${fmt(P.battAh)} Ah battery, so a full battery is about ${Math.round(P.battAh / ahGal)} gal of hot water from cold if nothing else runs; each gallon takes about ${Math.round(kwhGal / (P.heaterW / 1000) * 60)} min to heat. The ${L.hotGal.toFixed(1)} gal tank heated from cold by 80 F takes about ${(kwhGal * L.hotGal).toFixed(2)} kWh, ${Math.round(ahGal * L.hotGal)} Ah (${Math.round(ahGal * L.hotGal / P.battAh * 100)} percent of the battery) and about ${Math.round(kwhGal * L.hotGal / (P.heaterW / 1000) * 60)} minutes at ${fmt(P.heaterW)} W, so a full tank is about one short shower of hot water (mixed with cold it goes further), not a day's; the ${L.hotGal.toFixed(1)} gal is refilled from the fresh tank as you use it.`);
   }
@@ -1978,8 +1978,8 @@ const VIEWS = [
   { id: 'pass', label: 'Passenger side', drag: 'the drawers and shelves under the counter, the jar shelf, the microwave, the trash can, the dish towel hook, the hot water tank, the fresh water tank, the drain jug and the drain line (all of them left-right and up-down)', draw: drawPass, movers: [['Shower pan', ['pan']], ['Fridge door', ['fridge']], ['Trash can pull-out', ['can']], ['Fold-out table with the foot ledge', ['flap', 'ledge']], ['Foot ledge only', ['ledge']]] },
   { id: 'end', label: 'Bed, from the end', draw: drawBedEnd, movers: [['Couch to bed', ['bed']]] },
   { id: 'cross', label: 'Cross-section', draw: drawCross, movers: [] },
-  { id: 'bare', label: 'Bare roof (mark the ribs)', drag: 'the shower fan and the air conditioner', draw: drawBare, movers: [] },
-  { id: 'ceil', label: 'Ceiling', drag: 'the shower fan and the air conditioner', draw: drawCeiling, movers: [] },
+  { id: 'bare', label: 'Bare roof (mark the ribs)', drag: 'the roof fan and the air conditioner', draw: drawBare, movers: [] },
+  { id: 'ceil', label: 'Ceiling', drag: 'the roof fan and the air conditioner', draw: drawCeiling, movers: [] },
   { id: 'plan', label: 'From above', drag: 'the drawers (a whole column along the wall), the microwave, the trash can, the lawn chairs under the couch, the hot water tank, the fresh water tank, the drain jug (left-right and up-down, which is along the wall and out from it) and the drain line (along the wall only; its height is on the Passenger side tab)', draw: drawPlan, movers: [['Couch to bed', ['bed']], ['Dinette to bed', ['dinette']], ['Shower pan', ['pan']], ['Closet doors', ['clo_hi', 'clo_lo']], ['Fridge door', ['fridge']], ['Trash can pull-out', ['can']], ['Fold-out table with the foot ledge', ['flap', 'ledge']], ['Foot ledge only', ['ledge']], ['Wall cabinet doors', ALLDC]] }
 ];
 let view = 'driver', L = layout(P), lastSig = '';
@@ -2064,7 +2064,7 @@ const DRAG_SAYS = {
   hot: L => `Hot water tank: ${fmt(L.hotX[0])} to ${fmt(L.hotX[1])} in from the back, bottom ${fmt(L.P.hotShelf)} in up, ${fmt(L.P.hotBack)} in behind it (${fmt(L.P.hotBack + L.P.hotD)} in from the wall to its front)`,
   fresh: L => `Fresh water tank: ${fmt(L.tankX[0])} to ${fmt(L.tankX[1])} in from the back, ${fmt(L.P.tankLift)} to ${fmt(L.P.tankLift + L.P.tankH)} in up, ${fmt(L.P.tankBack)} in from the wall`,
   drain: L => `Relief valve drain line comes down at ${fmt(L.P.drainX)} in from the back, its run is ${fmt(L.P.hotShelf + L.P.hotH + 1.5 + L.P.drainDz)} in up`,
-  fan: L => `Shower fan: ${fmt(L.fan.x)} in from the back, ${fmt(L.fan.y)} in across from the driver wall`,
+  fan: L => `Roof fan: ${fmt(L.fan.x)} in from the back, ${fmt(L.fan.y)} in across from the driver wall`,
   ac: L => `Air conditioner: ${fmt(L.ac.x)} in from the back, ${fmt(L.ac.y)} in across from the driver wall`,
   Can: L => L.can ? `Trash can: ${fmt(L.can.x0)} to ${fmt(L.can.x1)} in from the back, ${fmt(L.can.y0)} to ${fmt(L.can.y1)} in out from the wall, ${fmt(L.can.z0)} to ${fmt(L.can.z1)} in up (the tray under it is ${fmt(L.can.z0 - 1.25)} up)` : '',
   Jug: L => L.jug ? `Drain jug: ${fmt(L.jug.x0)} to ${fmt(L.jug.x1)} in from the back, ${fmt(L.jug.y0)} to ${fmt(L.jug.y1)} in out from the wall, ${fmt(L.jug.z0)} to ${fmt(L.jug.z1)} in up (the sink underside is ${fmt(L.P.counterH - L.P.sinkBowlD)} up)` : '',

@@ -140,10 +140,10 @@ const PD = [
   { k: 'lightN', g: 'Ceiling', l: 'Round lights in the ceiling (count)', d: 6, s: 1, a: 0, b: 24 },
   { k: 'lightRows', g: 'Ceiling', l: 'Rows of lights along the ceiling', d: 2, s: 1, a: 1, b: 4 },
   { k: 'lightD', g: 'Ceiling', l: 'Light diameter (mounted on a slat)', d: 2, s: .25, a: 1, b: 8 },
-  { k: 'fanX', g: 'Ceiling', l: 'Shower fan cutout: along the van (from the back)', d: 13.25, s: .5, a: 0, b: 220 },
+  { k: 'fanX', g: 'Ceiling', l: 'Roof fan cutout: along the van (from the back)', d: 13.25, s: .5, a: 0, b: 220 },
   { k: 'fanY', g: 'Ceiling', l: 'Fan cutout: across (from the driver wall; 34 is the middle of the van, over the aisle)', d: 34, s: .5, a: 0, b: 90 },
-  { k: 'fanUnit', g: 'Ceiling', l: 'Shower fan unit on the roof: square footprint (2012 F36AR exhaust fan: 17.7 x 17.7 x 6.4 tall)', d: 17.75, s: .25, a: 6, b: 40 },
-  { k: 'fanW', g: 'Ceiling', l: 'Shower fan cutout: square size', d: 14, s: .25, a: 4, b: 30 },
+  { k: 'fanUnit', g: 'Ceiling', l: 'Roof fan unit on the roof: square footprint (2012 F36AR exhaust fan: 17.7 x 17.7 x 6.4 tall)', d: 17.75, s: .25, a: 6, b: 40 },
+  { k: 'fanW', g: 'Ceiling', l: 'Roof fan cutout: square size', d: 14, s: .25, a: 4, b: 30 },
   { k: 'acX', g: 'Ceiling', l: 'Air conditioning cutout: along the van (from the back)', d: 49.5, s: .5, a: 0, b: 220 },
   { k: 'acY', g: 'Ceiling', l: 'Air conditioning cutout: across (from the driver wall)', d: 34, s: .5, a: 0, b: 90 },
   { k: 'acUnit', g: 'Ceiling', l: 'Air conditioner unit on the roof: square footprint (OutEquip 12 V cooling-only: 28.3 x 28.3 x 6.3 tall, 45 lb on the listing)', d: 28.25, s: .25, a: 10, b: 50 },
@@ -152,8 +152,8 @@ const PD = [
   { k: 'acTurboA', g: 'Power', l: 'Air conditioner current in turbo (A at 12 V; the listing says up to 58)', d: 58, s: 1, a: 5, b: 120 },
   { k: 'acEcoA', g: 'Power', l: 'Air conditioner current in eco or sleep (A at 12 V; the listing says 21 and up, reviews 16 to 29)', d: 21, s: 1, a: 2, b: 80 },
   { k: 'acEcoH', g: 'Power', l: 'Hours a day the air conditioner runs in eco', d: 8, s: .5, a: 0, b: 24 },
-  { k: 'fanLowW', g: 'Power', l: 'Shower fan power on low (W, 12 V DC)', d: 3, s: 1, a: 0, b: 100 },
-  { k: 'fanHighW', g: 'Power', l: 'Shower fan power on high (W, 12 V DC)', d: 32, s: 1, a: 0, b: 200 },
+  { k: 'fanLowW', g: 'Power', l: 'Roof fan power on low (W, 12 V DC)', d: 3, s: 1, a: 0, b: 100 },
+  { k: 'fanHighW', g: 'Power', l: 'Roof fan power on high (W, 12 V DC)', d: 32, s: 1, a: 0, b: 200 },
   { k: 'fanHighH', g: 'Power', l: 'Hours a day the fan runs on high (the rest of the day is low)', d: 1, s: .5, a: 0, b: 24 },
   { k: 'heaterW', g: 'Power', l: 'Hot water heater power (W, 120 V)', d: 1440, s: 40, a: 200, b: 3000 }
 ];
@@ -442,7 +442,7 @@ function layout(P0) {
       if (P.liningOn && n > 0) { let best = 0, bd = 1e9; L.slatY.forEach((sy, k) => { const d = Math.abs(sy + P.slatW / 2 - target); if (d < bd) { bd = d; best = k; } }); y = L.slatY[best] + P.slatW / 2; L.chanY.push(y); }
       for (let c = 0; c < cnt; c++) L.lights.push({ x: P.ceilLen * (c + .5) / cnt, y });
     }
-    L.fan = { x: P.fanX, y: P.fanY, w: P.fanW, nm: 'shower fan', u: P.fanUnit }; L.ac = { x: P.acX, y: P.acY, w: P.acW, nm: 'A/C', u: P.acUnit };
+    L.fan = { x: P.fanX, y: P.fanY, w: P.fanW, nm: 'roof fan', u: P.fanUnit }; L.ac = { x: P.acX, y: P.acY, w: P.acW, nm: 'A/C', u: P.acUnit };
     L.slatsCut = c => L.slatY.filter((sy, k) => !L.slatOut.has(k) && sy < c.y + c.w / 2 && sy + P.slatW > c.y - c.w / 2).length;
   }
   // the drawers and shelves under the counter (as planned plus dragged), the jar shelf in the nook and the microwave shelf above the fridge

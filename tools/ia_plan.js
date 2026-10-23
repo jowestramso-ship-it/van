@@ -342,13 +342,13 @@ function drawCeiling(L, V) {
     o.push(R(xx(L.ac.x - L.ac.u / 2), yy(L.ac.y - L.ac.u / 2), S * L.ac.u, S * L.ac.u, { stroke: '#444441', sw: 1.2, dash: '6 4' }));
     o.push(T(xx(L.ac.x), yy(L.ac.y + L.ac.u / 2) + 13, `A/C unit on the roof ${fmt(L.ac.u)} x ${fmt(L.ac.u)}`, { size: 10, fill: '#444441', halo: true }));
     o.push(GE());
-    o.push(GB('fan', 'Shower fan'));
+    o.push(GB('fan', 'Roof fan'));
     o.push(R(xx(L.fan.x - L.fan.u / 2), yy(L.fan.y - L.fan.u / 2), S * L.fan.u, S * L.fan.u, { stroke: '#444441', sw: 1.2, dash: '6 4' }));
     o.push(T(xx(L.fan.x), yy(L.fan.y - L.fan.u / 2) - 5, `fan unit ${fmt(L.fan.u)} sq`, { size: 10, fill: '#444441', halo: true }));
     o.push(GE());
-    [L.fan, L.ac].forEach(c => { o.push(GB(c === L.ac ? 'ac' : 'fan', c === L.ac ? 'Air conditioner' : 'Shower fan')); o.push(R(xx(c.x - c.w / 2), yy(c.y - c.w / 2), S * c.w, S * c.w, { fill: '#2C2C2A', fo: .88, stroke: '#000', sw: 1.4 })); o.push(T(xx(c.x), yy(c.y) - 2, c.nm, { size: 11, fill: '#fff', w: 600, halo: false })); o.push(T(xx(c.x), yy(c.y) + 11, `${fmt(c.w)} x ${fmt(c.w)} cutout`, { size: 9.5, fill: '#fff', halo: false })); o.push(GE()); });
+    [L.fan, L.ac].forEach(c => { o.push(GB(c === L.ac ? 'ac' : 'fan', c === L.ac ? 'Air conditioner' : 'Roof fan')); o.push(R(xx(c.x - c.w / 2), yy(c.y - c.w / 2), S * c.w, S * c.w, { fill: '#2C2C2A', fo: .88, stroke: '#000', sw: 1.4 })); o.push(T(xx(c.x), yy(c.y) - 2, c.nm, { size: 11, fill: '#fff', w: 600, halo: false })); o.push(T(xx(c.x), yy(c.y) + 11, `${fmt(c.w)} x ${fmt(c.w)} cutout`, { size: 9.5, fill: '#fff', halo: false })); o.push(GE()); });
     hits.push(HIT('ac', xx(L.ac.x - L.ac.u / 2), yy(L.ac.y - L.ac.u / 2), S * L.ac.u, S * L.ac.u, ['acX', 1 / S, 'acY', 1 / S], L.coll.ids.has('ac'), 'Air conditioner (along the van and across)'));
-    hits.push(HIT('fan', xx(L.fan.x - L.fan.u / 2), yy(L.fan.y - L.fan.u / 2), S * L.fan.u, S * L.fan.u, ['fanX', 1 / S, 'fanY', 1 / S], L.coll.ids.has('fan'), 'Shower fan (along the van and across)'));
+    hits.push(HIT('fan', xx(L.fan.x - L.fan.u / 2), yy(L.fan.y - L.fan.u / 2), S * L.fan.u, S * L.fan.u, ['fanX', 1 / S, 'fanY', 1 / S], L.coll.ids.has('fan'), 'Roof fan (along the van and across)'));
   } else o.push(R(xx(0), yy(L.ceilOff), S * CL, S * CW, { fill: '#F1EFE8', fo: .7, stroke: '#5F5E5A', sw: 1.2 }));
   // the roof ribs marked on the Bare roof tab (from the back edge): dashed red lines across the roof
   o.push(GB('ribs', 'Roof ribs'));
@@ -404,7 +404,7 @@ function drawBare(L, V) {
   o.push(Ln(xx(CL), yy(0), xx(CL), yy(W), { stroke: '#2C2C2A', sw: 3 })); o.push(T(xx(CL) - 4, yy(0) - 30, 'cab wall', { anchor: 'end', size: 11, fill: '#5F5E5A', halo: false }));
   // the roof openings (planned) and the units over them
   [L.fan, L.ac].forEach(c => {
-    o.push(GB(c === L.ac ? 'ac' : 'fan', c === L.ac ? 'Air conditioner' : 'Shower fan'));
+    o.push(GB(c === L.ac ? 'ac' : 'fan', c === L.ac ? 'Air conditioner' : 'Roof fan'));
     o.push(R(xx(c.x - c.u / 2), yy(c.y - c.u / 2), S * c.u, S * c.u, { stroke: '#444441', sw: 1.2, dash: '6 4' }));
     o.push(R(xx(c.x - c.w / 2), yy(c.y - c.w / 2), S * c.w, S * c.w, { fill: '#2C2C2A', fo: .75, stroke: '#000', sw: 1.2 }));
     o.push(T(xx(c.x), yy(c.y) + 4, c.nm === 'A/C' ? 'A/C' : 'fan', { size: 11, fill: '#fff', w: 600, halo: false }));
@@ -412,7 +412,7 @@ function drawBare(L, V) {
     o.push(GE());
   });
   hits.push(HIT('ac', xx(L.ac.x - L.ac.u / 2), yy(L.ac.y - L.ac.u / 2), S * L.ac.u, S * L.ac.u, ['acX', 1 / S, 'acY', 1 / S], L.coll.ids.has('ac'), 'Air conditioner (along the van and across)'));
-  hits.push(HIT('fan', xx(L.fan.x - L.fan.u / 2), yy(L.fan.y - L.fan.u / 2), S * L.fan.u, S * L.fan.u, ['fanX', 1 / S, 'fanY', 1 / S], L.coll.ids.has('fan'), 'Shower fan (along the van and across)'));
+  hits.push(HIT('fan', xx(L.fan.x - L.fan.u / 2), yy(L.fan.y - L.fan.u / 2), S * L.fan.u, S * L.fan.u, ['fanX', 1 / S, 'fanY', 1 / S], L.coll.ids.has('fan'), 'Roof fan (along the van and across)'));
   // the ribs the user has marked: full width lines with their position
   o.push(GB('ribs', 'Roof ribs'));
   L.ribBands.forEach((b, i) => { o.push(R(xx(b[0]), yy(0), S * (b[1] - b[0]), S * W, { fill: '#A32D2D', fo: .3, stroke: '#A32D2D', sw: 1.6 })); o.push(T(xx((b[0] + b[1]) / 2), yy(W) - 6 - (i % 2) * 12, `${fmt(L.ribs[i])}${P.ribRef === 'center' ? '' : P.ribRef === 'front' ? ' (front edge)' : ' (back edge)'}`, { size: 10.5, fill: '#A32D2D', w: 700 })); });
