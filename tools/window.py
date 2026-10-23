@@ -150,7 +150,7 @@ def fig_w5():
         o.append(R(tx - 14, ty - 4, 28, 8, 'tape2'))
     o.append(T(ox + ow / 2, oy - 10, 'painter&#39;s tape every 8 to 12 in, from the frame to the body'.replace('&#39;', "'"), 'tgrey'))
     o.append(T(ox + ow / 2, oy + oh + 24, 'Leave it taped. Keep the van still. Do not slam doors.', 'tgrey'))
-    o.append(T(ox + ow / 2, oy + oh + 44, 'Drive-away: 6 hours (original P2G) or 3 hours (P2G Premium): check your kit.', 'tsm'))
+    o.append(T(ox + ow / 2, oy + oh + 44, 'Drive-away: 3 hours for P2G Premium at 73 F; allow longer when cooler.', 'tsm'))
     return svg(560, 360, ''.join(o), 'The window taped to the body while the adhesive cures')
 
 
@@ -214,13 +214,13 @@ def build():
                 ]) + '</ul>', fig_w3()))
     S.append(st(6, 'Clean and prime',
                 '<ul>' + li([
-                    'Van Windows Direct&rsquo;s fixed-window listings say to bond with the <b>Sikaflex P2G</b> urethane and primer kit. I found that on the sister listings, not the TL201-SE&rsquo;s, so confirm it applies. Sika calls P2G primerless, but strongly recommends the primer on side windows.',
+                    'Van Windows Direct&rsquo;s fixed-window listings say to bond with the <b>Sikaflex P2G</b> urethane and primer kit. I found that on the sister listings, not the TL201-SE&rsquo;s, so confirm it applies. With P2G Premium, Sika&rsquo;s sheet says no primer is needed on the glass or its black band; for the van&rsquo;s painted body follow the kit&rsquo;s sheet (you have already primed).',
                     'Wipe both bonding surfaces (the window&rsquo;s black frame band and the van&rsquo;s flange) with the kit&rsquo;s wipe or isopropyl alcohol. Prime as the kit says and let it flash off for the time on the can. Do not touch it afterwards.',
                     'Sika lists <b>50 to 95 &deg;F</b> for application. Upper 60s is fine.',
                 ]) + '</ul>'))
     S.append(st(7, 'Lay the bead, quickly',
                 '<ul>' + li([
-                    '<b>Be ready first:</b> an older P2G data sheet lists only about <b>15 minutes of open time</b> at 73 &deg;F. Cut the nozzle, load the gun, have the helper and the suction cups ready, and the tape marks visible. Check your tube: the Premium version may differ.',
+                    '<b>Be ready first:</b> you have <b>P2G Premium</b>. Sika&rsquo;s sheet gives <b>15 minutes of open time</b> and a <b>35 minute skin time</b> at 73 &deg;F and 50% humidity, and says the open time is shorter when it is hot and humid. The window must be set within the open time: never set glass on a bead that has skinned (wipe it off and start again). Cut the nozzle, load the gun, have the helper and the suction cups ready, and the tape marks visible. Start the clock when the first bead leaves the nozzle and aim to have the window set within 10 minutes.',
                     'Lay one <b>unbroken bead</b> all the way round on the surface the instructions give. Make it a triangle, tall enough that the window squashes it down to the height of the rubber blocks.',
                     '<b>Where it meets a block, step the bead around it and carry on.</b> No gaps: water finds them. See the drawing.',
                     'Where the bead goes exactly (on the frame band or on the flange) and how thick it must be are for Van Windows Direct to say. <b>I have not seen their sheet.</b>',
@@ -235,7 +235,7 @@ def build():
                 '<ul>' + li([
                     'Painter&rsquo;s tape from the frame to the body every 8 to 12 in. Leave it taped.',
                     'Keep the van still, do not slam the doors, and leave the doors cracked: humidity speeds the cure.',
-                    'Drive-away is listed as <b>6 hours</b> for the original P2G kit and <b>3 hours</b> for P2G Premium. Check which one you have. Full cure takes longer: give it a day before the leak test.',
+                    'Drive-away for P2G Premium is <b>3 hours</b> on Sika&rsquo;s sheet, measured at 73 &deg;F and 50% humidity; it takes longer when it is cooler, so in the 60s give it longer (I would wait 6 hours or more) and keep the van still. Full cure takes longer: give it a day before the leak test.',
                 ]) + '</ul>', fig_w5()))
     S.append(st(10, 'Fit the edge trim',
                 '<ul>' + li([
@@ -263,8 +263,8 @@ def build():
             '<p class="lead">Van Windows Direct TL201-SE, a glue-in slider for the driver side forward position of a 2015+ Transit. <b>I could not find Van Windows Direct&rsquo;s own instruction sheet.</b> What I could confirm: the window&rsquo;s size and that it uses the factory stamping (retailer listings), the Sikaflex P2G kit and Trim-Lok (sister listings), and Sika&rsquo;s cure figures. The cutting, dry-fit and bead steps are general bonded-window practice, marked where a sheet would decide. Where their sheet would decide something, the step says so.</p>'
             '<div class="card warnbox"><h3 style="margin-top:0">Before you cut</h3><ul>'
             '<li><b>Get the instruction sheet</b> for the TL201-SE (check the box, or ask Van Windows Direct): the exact cut line, where the bead goes and how thick it is.</li>'
-            '<li><b>Check the kit:</b> it needs the primer and wipes, and you want to know if it is the original P2G (6 hour drive-away) or P2G Premium (3 hour).</li>'
-            '<li><b>The open time is short:</b> as little as 15 minutes on the older sheet. Cut and dry-fit first; do the bonding in one planned session with a helper.</li>'
+            '<li><b>The kit:</b> yours is P2G Premium (open time 15 minutes, drive-away 3 hours at 73 &deg;F). Sika says Premium needs no primer on the glass or its black band; the primer is for the painted body side.</li>'
+            '<li><b>The open time is short:</b> 15 minutes. Cut and dry-fit first (done); do the bonding in one planned session with a helper.</li>'
             '<li><b>Weather:</b> cover the opening whenever you stop.</li></ul>'
             '<p class="swipe">On a phone, swipe a drawing sideways to see all of it.</p></div>'
             '<div class="card"><div class="cols"><div><h3 style="margin-top:0">Materials</h3><ul class="chk">'
