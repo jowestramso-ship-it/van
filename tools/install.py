@@ -14,6 +14,9 @@ RIBW = 2.75
 RIBD = 2.0
 FAN = dict(x=13.25, y=34.0, w=14.0, unit=17.75)
 AC = dict(x=49.5, y=34.0, w=14.25, unit=28.25)
+AC_OFF = 3.125                              # the unit sits this far FORWARD of the opening's center (manual: duct 2.36 to 3.15 in toward the rear)
+AC_UX = AC['x'] + AC_OFF                    # center of the A/C unit, from the rear-door edge
+FAN_UX = FAN['x']                           # the fan sits centered on its opening
 VAN_L, VAN_W = 160.0, 68.0
 COV = 3 / 16 + 3 / 4                       # the ceiling covering: 3/16 in plywood against the roof, then 3/4 in slats
 FRAME = RIBD + COV                         # frame depth = rib hang + covering = roof steel to the finished ceiling
@@ -100,7 +103,8 @@ def fig_overview():
         o.append(T(X(r) + S * RIBW / 2, Y(0) - 5, fr(r), 'tsm'))
     for nm, d in (('FAN', FAN), ('A/C', AC)):
         u = d['unit']
-        o.append(R(X(d['x'] - u / 2), Y(d['y'] - u / 2), S * u, S * u, 'unit'))
+        ux = AC_UX if nm == 'A/C' else FAN_UX
+        o.append(R(X(ux - u / 2), Y(d['y'] - u / 2), S * u, S * u, 'unit'))
         o.append(R(X(d['x'] - d['w'] / 2), Y(d['y'] - d['w'] / 2), S * d['w'], S * d['w'], 'hole'))
         o.append(T(X(d['x']), Y(d['y']) + 4, nm, 'tb'))
     for x in range(0, 161, 20):
@@ -112,7 +116,50 @@ def fig_overview():
     o.append(T(X(VAN_L) + 4, Y(VAN_W / 2), 'cab', 'tsm', 'start'))
     o.append(T(X(78), Y(8), 'driver wall', 'tsm'))
     o.append(T(X(78), Y(VAN_W - 5), 'passenger wall', 'tsm'))
-    return svg(W, H, ''.join(o), 'The roof seen from above: five ribs, the fan opening near the back and the air conditioner opening 2 ribs further forward')
+    return svg(W, H, ''.join(o), 'The roof seen from above: five ribs, the fan opening near the back and the air conditioner opening 2 ribs further forward, with the air conditioner unit sitting 3 1/8 in forward of its opening')
+
+
+def fig_ac_offset():
+    """section along the van at the A/C: the unit sits AC_OFF forward of the opening (duct offset toward the rear)"""
+    S, SY, X0 = 13.5, 9.0, 18
+    X = lambda x: X0 + S * (x - 35)
+    ry = 140                                   # top of the roof steel
+    ub = SY * 6.3                              # unit height
+    o = []
+    u0, u1 = AC_UX - AC['unit'] / 2, AC_UX + AC['unit'] / 2
+    h0, h1 = AC['x'] - AC['w'] / 2, AC['x'] + AC['w'] / 2
+    f0 = h0 - 1.5
+    below = ry + SY * RIBD + 4                 # bottom of the ribs and frame
+    # roof steel with the opening cut in it
+    o.append(R(X(35), ry, X(h0) - X(35), 4, 'steel'))
+    o.append(R(X(h1), ry, X(69) - X(h1), 4, 'steel'))
+    # the two ribs either side, and the frame between them (rib-side walls 1 1/2 thick)
+    for r in (RIBS[1], RIBS[2]):
+        o.append(R(X(r), ry + 4, S * RIBW, SY * RIBD, 'rib'))
+    o.append(R(X(f0), ry + 4, S * 1.5, SY * RIBD, 'wood'))
+    o.append(R(X(h1), ry + 4, S * 1.5, SY * RIBD, 'wood'))
+    # the unit, 1 in up on its gasket (the gasket goes round the opening, not across it)
+    o.append(R(X(u0), ry - SY - ub, S * AC['unit'], ub, 'unit', 4))
+    o.append(R(X(h0 - 2), ry - SY, S * 2, SY, 'butyl'))
+    o.append(R(X(h1), ry - SY, S * 2, SY, 'butyl'))
+    o.append(T(X(AC_UX) + 12, ry - SY - ub / 2 + 4, 'A/C unit, 28 1/4 long', 'tb', 'start'))
+    # footprint above, the two centers and the offset between them
+    o.append(dimh(X(u0), X(u1), 16, 'unit footprint ' + fr(u0) + ' to ' + fr(u1) + ' in'))
+    o.append(T(X(AC['x']) - 6, 36, 'opening center ' + fr(AC['x']), 'tsm', 'end'))
+    o.append(T(X(AC_UX) + 6, 36, 'unit center ' + fr(AC_UX), 'tsm', 'start'))
+    o.append(dimh(X(AC['x']), X(AC_UX), 54, fr(AC_OFF) + ' forward'))
+    o.append(L(X(AC['x']), 58, X(AC['x']), below + 12, 'ctr'))
+    o.append(L(X(AC_UX), 58, X(AC_UX), below + 12, 'ctr'))
+    # labels and dimensions below
+    o.append(T(X(36), below + 14, 'rear', 'tsm', 'start'))
+    o.append(T(X(68.6), below + 14, 'cab', 'tsm', 'end'))
+    o.append(T(X(RIBS[1]) + S * RIBW / 2, below + 14, 'rib', 'tsm'))
+    o.append(T(X(RIBS[2]) + S * RIBW / 2, below + 14, 'rib', 'tsm'))
+    o.append(dimh(X(h0), X(h1), below + 38, 'opening 14 1/4'))
+    o.append(T(280, below + 66, 'Section along the van, in inches from the rear-door edge.', 'tsm'))
+    o.append(T(280, below + 82, 'The opening and frame stay between the ribs; only the unit moves forward,', 'tsm'))
+    o.append(T(280, below + 98, 'so its drain cutout stays outside the gasket.', 'tsm'))
+    return svg(560, int(below + 110), ''.join(o), 'Section along the van at the air conditioner: the unit sits 3 1/8 in forward of the opening center, with the frame between two ribs')
 
 
 def fig_clearance():
@@ -554,9 +601,10 @@ def build():
                   ]) + '</ul>', fig_clearance()))
     S.append(step(2, 'Make the templates',
                   '<ul>' + li([
-                      'Cut paper templates: fan <b>14 x 14</b>, A/C <b>14 1/4 x 14 1/4</b> (the A/C manual may say otherwise: the maker lists a minimum of 14.1 x 13.7).',
+                      'Cut paper templates: fan <b>14 x 14</b>, A/C <b>14 1/4 x 14 1/4</b> (the Summit 2 manual allows 14 x 9 up to 16 1/2 x 15 3/4 in, so this is inside the range).',
                       'Draw both diagonals and the center lines. Both diagonals must measure the same, or the template is not square.',
-                      'Put the <b>center</b> of the fan template <b>13 1/4 in from the rear-door edge and 34 in from the driver wall (the middle of the van)</b>; the A/C center <b>49 1/2 in and 34 in</b>. Measure across horizontally (use a level or a plumb line): the roof curves.',
+                      'Put the <b>center</b> of the fan template <b>13 1/4 in from the rear-door edge and 34 in from the driver wall (the middle of the van)</b>; the A/C <b>opening</b> center <b>49 1/2 in and 34 in</b>. Measure across horizontally (use a level or a plumb line): the roof curves.',
+                      f'<b>The A/C unit does not sit centered on its opening.</b> On a 14 x 14 opening the manual says to offset the duct 2.36 to 3.15 in toward the rear, so the drain cutout stays outside the gasket. We use <b>{fr(AC_OFF)} in</b>, the top of that range, because the opening is a little bigger. The unit lands <b>{fr(AC_OFF)} in forward</b>: its center is <b>{fr(AC_UX)} in</b> from the rear-door edge (step 9).',
                       'Tape the template to the inside of the roof, drill a hole at each corner right through, and mark the same square on the outside from those holes. Seal any hole you do not cut out with primer and sealant.',
                   ]) + '</ul>', fig_template()))
     S.append(step(3, 'Cut the fan opening first, then the A/C',
@@ -585,7 +633,8 @@ def build():
                       '3/4 in plywood (Baltic birch is best) ripped into strips. No pressure-treated wood: it eats steel. <b>Cut, glue and screw the frame first</b>, laminate the thick A/C pieces, then seal or paint the finished frame, leaving the top face bare or sanded for the adhesive.',
                       f'<b>Fan:</b> strips <b>{fr(FRAME)} in wide</b> (the depth to the finished ceiling: the rib&rsquo;s 2 in plus the {fr(COV)} in covering). 2 pieces 15 1/2 long, 2 pieces 14 long fitted between them. Outside 15 1/2 square, opening 14 x 14. Cut the backing ring pieces from step 5 too.',
                       '<b>A/C:</b> strips <b>2 in wide</b> for now (flush with the rib bottoms). 4 pieces 15 3/4 long, glued in pairs into two <b>1 1/2 in thick</b> pieces; 2 pieces 14 1/4 long, 3/4 thick, fitted between them. Outside 17 1/4 along the van by 15 3/4 across.',
-                      f'Make the A/C frame {fr(FRAME)} deep too if its manual allows about {fr(STACK)} in from the roof to the trim. <b>I have not seen that manual.</b> Check it before you decide.',
+                      f'Make the A/C frame {fr(FRAME)} deep too only if the rods and the indoor panel allow about {fr(STACK)} in from the roof to the trim. The Summit 2 instructions I have do not give that depth, so keep 2 in until you have measured the rods.',
+                      '<b>Bracket contact:</b> the unit&rsquo;s brackets need 30 mm (1 3/16 in) of contact on solid structure. The 1 1/2 in rib-side pieces give 1 1/2 in; the 3/4 in sides do not. If the brackets run <b>across</b> the van, double the sides too: all four walls 1 1/2 in thick, outside <b>17 1/4 x 17 1/4</b>, which is 4 pieces 17 1/4 long and 4 pieces 14 1/4 long (2 in wide), glued in pairs. Along the van it stays 17 1/4, so the rib clearance does not change.',
                       'Measure both diagonals of each frame: they must match. Hold each frame up under the roof around its opening and check that its inside faces line up with the cut and that it clears the ribs.',
                   ]) + '</ul>', fig_frames()))
     S.append(step(7, 'Bond the frames to the roof',
@@ -607,11 +656,18 @@ def build():
                   ]) + '</ul>', fig_fan_stack()))
     S.append(step(9, 'Mount the A/C (48 hours after bonding)',
                   '<ul>' + li([
-                      '<b>Read its manual first</b> for the opening size, the roof thickness range and the most roof curve it allows. At the A/C the roof is <b>not tilted</b>, but it is at its crown and falls away about 0.9 in at each side of the unit. A flat gasket cannot close that: use a shaped gasket or curb, whatever the manual allows.',
-                      'Two people lift it: 33 lb on the maker&rsquo;s sheet, 45 lb on the listing. Pad the roof and lay a board across the ribs for your feet.',
-                      'Gasket, set it straight down on the opening, fasten as the manual says, then non-sag sealant over the fasteners.',
+                      f'<b>Position:</b> the unit does <b>not</b> sit centered on its opening. Its duct is offset toward the rear, so the unit sits <b>{fr(AC_OFF)} in forward</b> of the opening center: unit center <b>{fr(AC_UX)} in</b> from the rear-door edge, footprint <b>{fr(AC_UX - AC["unit"] / 2)} to {fr(AC_UX + AC["unit"] / 2)} in</b>, and centered across the van (34 in from the driver wall). The manual gives 2.36 to 3.15 in for a 14 x 14 opening; {fr(AC_OFF)} is the top of that because yours is 1/4 in bigger. <b>Check on the real unit:</b> set it on the roof on a blanket with its duct base over the opening, and make sure the chassis drain cutout is <b>outside</b> where the gasket will be.',
+                      f'<b>Clearances:</b> the manual wants 2 to 3 in between the unit and anything else on the roof. The fan unit ends at {fr(FAN_UX + FAN["unit"] / 2)} in, so the A/C has {fr(AC_UX - AC["unit"] / 2 - FAN_UX - FAN["unit"] / 2)} in to its rear edge. Check the 2 to 3 in at the front too, against anything you add (solar, antenna, rack).',
+                      '<b>Roof curve:</b> at the A/C the roof is <b>not tilted</b>, but it is at its crown and falls away about 0.9 in at each side of the unit. The manual allows up to 15 degrees of slope, so tilt is not the issue, but the gasket has to follow the curve (and notch over any rib or stamping, as the manual says).',
+                      'Two people lift it: about 45 lb. Pad the roof and lay a board across the ribs for your feet.',
+                      '<b>Gasket:</b> clean the roof, then stretch and cut the included EPDM foam gasket to a snug, gap-free fit around the opening, press it down firmly, and put the support columns in its pre-punched holes (trim a column that lands on a rib to the rib height). The unit sits about 1 in above the roof on it.',
+                      '<b>Rear foam blocks:</b> set the hard foam blocks under both rear corners and check the unit is level with a bubble level.',
+                      '<b>Fasten from inside:</b> brackets go across the opening and their ends must rest on solid structure with at least <b>30 mm (1 3/16 in)</b> of contact, pressing on the roof structure (your frame), not on a ceiling panel. Rods go up into the unit (5 to 14 mm of thread in), washers and lock nuts, tightened to <b>4.5 to 5.6 N&middot;m (3.3 to 4.2 lb-ft)</b>, then trim the rods. <b>Not decided yet:</b> which way the brackets run and how long the rods are. They decide whether the 3/4 in frame sides need doubling (step 6) and how deep the frame can be.',
+                      '<b>Seal:</b> a continuous bead of UV-resistant RV sealant around the outer edge of the gasket where it meets the roof, smoothed with a gloved finger. Let it cure 24 to 48 hours (the manual says) before rain or washing. A thin bead along the inside edge of the opening helps too.',
+                      '<b>Power cable</b> (1 3/16 in sleeve, two wires): the manual offers a separate sealed roof hole, up through the return duct, or a small notch in the gasket. The notch route is the least work: notch one corner snugly, add a dab of sealant, and run the cable into the opening. Then plan a hole or notch of about 1 1/4 in in one frame wall <b>before you glue the frame</b>, where the cable will leave.',
+                      '<b>Roof-to-ceiling gap:</b> the manual&rsquo;s foam strips stop warm cavity air being drawn into the return duct. Your frame is bonded to the roof and ends at the ceiling covering, so it closes that gap already. Use the strips only where you find a gap between the frame and the covering.',
                       'The indoor panel goes on from inside after the ceiling is covered.',
-                  ]) + '</ul>', fig_ac()))
+                  ]) + '</ul>', fig_ac_offset() + fig_ac()))
     S.append(step(10, 'Wire them',
                   '<ul>' + li([
                       '<b>Fan</b> (12 V DC): a 14 AWG pair, a fuse of about 5 A, and a switch. These are my suggestions: the fan has no amp rating beyond the listing&rsquo;s 3 to 32 W (0.25 to 2.7 A).',
@@ -626,15 +682,16 @@ def build():
                       'Only then insulate around the frames and cover the ceiling. The trim rings go on last.',
                   ]) + '</ul>', fig_leak()))
 
-    nums = ('<table><tr><th></th><th>Fan (F36AR)</th><th>A/C (OutEquip 12 V)</th></tr>'
+    nums = ('<table><tr><th></th><th>Fan (F36AR)</th><th>A/C (OutEquip Summit 2)</th></tr>'
             '<tr><td>Unit on the roof</td><td>17.7 x 17.7 x 6.4 in</td><td>28.3 x 28.3 x 6.3 in</td></tr>'
-            '<tr><td>Roof opening</td><td>14 x 14 in</td><td>14 1/4 square (min 14.1 x 13.7)</td></tr>'
-            '<tr><td>Center, from the rear-door edge</td><td>13 1/4 in</td><td>49 1/2 in</td></tr>'
+            '<tr><td>Roof opening</td><td>14 x 14 in</td><td>14 1/4 square (manual: 14 x 9 min, 16 1/2 x 15 3/4 max)</td></tr>'
+            '<tr><td>Opening center, from the rear-door edge</td><td>13 1/4 in</td><td>49 1/2 in</td></tr>'
+            f'<tr><td>Unit center, from the rear-door edge</td><td>13 1/4 in (centered)</td><td>{fr(AC_UX)} in ({fr(AC_OFF)} in forward of the opening)</td></tr>'
             '<tr><td>Center, from the driver wall</td><td>34 in (middle)</td><td>34 in (middle)</td></tr>'
             '<tr><td>Frame outside</td><td>15 1/2 square</td><td>17 1/4 x 15 3/4</td></tr>'
             f'<tr><td>Frame depth</td><td>{fr(FRAME)} in</td><td>2 in ({fr(FRAME)} if the manual allows)</td></tr>'
             '<tr><td>Roof to trim</td><td>2 3/4 to 4 1/2 in</td><td>not found: check the manual</td></tr>'
-            '<tr><td>Weight</td><td>light</td><td>33 lb (maker) to 45 lb (listing)</td></tr></table>')
+            '<tr><td>Weight</td><td>light</td><td>about 45 lb (manual); 33 lb on the maker&rsquo;s sheet</td></tr></table>')
     mats = ['Primer for the cut edges, rust-inhibiting, plus matching paint',
             'Butyl tape; non-sag lap sealant (or Eternabond tape) for the sloped fan flange; self-leveling Dicor only on the flat',
             'Vehicle polyurethane adhesive: Sikaflex-252 (or 3M 5200)',

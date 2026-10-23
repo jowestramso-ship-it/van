@@ -505,6 +505,8 @@ Previous: two closet rods were added (one above the other, along the wall, upper
 
 - Lower wall below the pans (P2-P4 etc): first 1.5 in below the pans (31 to 29.5 in up), and likewise 1.5 in above them (56.5 to 58 in up), is 1/8 in off the body, then it steps to 2 in off the body and runs down to 7.5 in up (the oval slots and the L cutouts are in that part). Below 7.5 in not measured. That 2 in depth goes down to 1 in at the back and at the front (cab end) of the van; where the slopes start is not measured. Top holes are 3 in deep at the top edge and 3 3/4 at the bottom.
 
+- A/C (OutEquip Summit 2, OEP2500) install page updated from the maker's roof-opening and mounting text: the unit sits 3 1/8 in FORWARD of the opening center (manual: duct offset 2.36 to 3.15 in toward the rear for 14 x 14 openings, so the drain cutout stays outside the gasket; 3 1/8 chosen as the top of the range because the opening is 14 1/4). Opening stays at 49 1/2 from the rear-door edge; unit center 52 5/8, footprint 38 1/2 to 66 3/4, 16 3/8 in from the fan unit. New section drawing in step 9, the roof overview shows the shifted unit, numbers table has a unit-center row. Manual opening range 14 x 9 to 16.5 x 15.7. Step 9 now follows the manual: gasket, rear foam blocks, brackets from inside (30 mm contact, 4.5 to 5.6 N-m), sealing, cable routes, foam strips. The interactive plan and the static diagrams still draw the A/C unit centered on its opening.
+
 ## Open items / assumptions to measure
 - Sliding door: exact distance from the rear doors to its front edge, and its height (about 58 in assumed).
 - Fridge model: needs to be under-counter, 34 in tall or less, with ventilation for being boxed in.
@@ -512,3 +514,4 @@ Previous: two closet rods were added (one above the other, along the wall, upper
 - Microwave model (18 x 13 x 10.5 in assumed). Needs an inverter of about 2,000 W or more.
 - Headroom in the bath is 66.5 in. A taller roof vent dome or pop-up helps if that is too low.
 - Standard RV jackknife sofa beds open to about 59-69 in x 42 in, which would block the aisle here. The 74 x 27 fold-up bench keeps the aisle. A rock-and-roll bed was suggested as an alternative.
+- A/C Summit 2: which way the mounting brackets run, the length of the supplied rods, and the indoor panel's size and depth (the pasted text stopped before it). They decide whether the 3/4 in frame sides need doubling (outside 17 1/4 x 17 1/4) and whether the frame can be deeper than 2 in.
