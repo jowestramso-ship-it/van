@@ -1,7 +1,7 @@
 #!/bin/sh
 # Rebuild everything from the sources in this folder.
 #   interactive.html  = ia_head.html, zoom.js and the four other ia_* files joined
-#   sides.html        = index.html (the first draft) patched step by step by gen2.py, which runs
+#   sides.html        = first-draft.html (the first draft) patched step by step by gen2.py, which runs
 #                       cur, plan, couch, leaf, ceiling, letters, toggle and zoom .py in that order
 #   install.html      = the illustrated fan and A/C install steps (install.py)
 #   window.html       = the illustrated side window install steps (window.py, uses install.py's helpers)

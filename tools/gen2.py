@@ -1,7 +1,7 @@
 import os
 HERE=os.path.dirname(os.path.abspath(__file__))
 ROOT=os.path.dirname(HERE)
-src=open((ROOT+'/index.html')).read()
+src=open((ROOT+'/tools/first-draft.html')).read()   # the first draft page, the starting point the patches below are written against (index.html and layout.html are now copies of the finished sides.html)
 head=src[:src.index('<body>')].replace('Ford Transit Van Conversion Layout','Ford Transit Wall Diagrams')
 S=6.0; X0=50; FL=540
 X=lambda i:X0+S*i
