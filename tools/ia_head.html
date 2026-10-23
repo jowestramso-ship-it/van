@@ -28,6 +28,13 @@
   .layout aside { max-width: 760px; margin-top: 16px; }
   .stage { border: 1px solid var(--line); border-radius: 10px; background: #fff; padding: 4px; }
   svg#svg { width: 100%; height: auto; display: block; touch-action: manipulation; }
+  .keybox { display: none; margin-top: 8px; border: 1px solid var(--line); border-radius: 10px; padding: 8px 12px; background: var(--panel); }
+  .keybox.on { display: block; }
+  .keybox h2 { font-size: 15px; margin: 0 0 6px; }
+  .keybox ol { list-style: none; margin: 0; padding: 0; columns: 2 340px; column-gap: 28px; }
+  .keybox li { break-inside: avoid; display: flex; gap: 8px; align-items: flex-start; margin: 3px 0; font-size: 13.5px; line-height: 1.35; }
+  .keybox .kn { flex: 0 0 22px; height: 22px; box-sizing: border-box; border-radius: 50%; border: 2px solid; text-align: center; font-weight: 700; font-size: 11.5px; line-height: 18px; background: #fff; }
+  .keybox .kd { color: var(--mute); }
   svg text { font-family: -apple-system, "Segoe UI", sans-serif; }
   svg .mv { cursor: pointer; }
   svg .mv:hover { filter: drop-shadow(0 0 3px rgba(186, 117, 23, .95)); }
@@ -101,6 +108,7 @@
     <div class="alerts" id="alerts" role="status" aria-live="polite"></div>
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
     <div class="stage"><svg id="svg" role="img" aria-label="Interactive van diagram"></svg></div>
+    <div class="keybox" id="key" aria-label="Key to the numbered items"></div>
     <aside>
       <div class="card"><h2>Does it fit?</h2><ul class="checks" id="checks"></ul></div>
       <div class="card"><h2>Build order</h2><p class="note" style="margin:0 0 6px">Tick a step when it is done (kept in this browser only). The numbers follow the sizes below.</p><ol class="build" id="build"></ol></div>

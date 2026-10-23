@@ -5,6 +5,7 @@ const PD = [
   { k: 'cab', g: 'Van', l: 'Cab wall, from the back', d: 154, s: .5, a: 100, b: 200 },
   { k: 'vanW', g: 'Van', l: 'Inside width', d: 68, s: .5, a: 50, b: 90 },
   { k: 'ceil', g: 'Van', l: 'Ceiling height at the wall (bare, to the rib)', d: 75.5, s: .5, a: 60, b: 90 },
+  { k: 'numLbl', g: 'Take items out', l: 'Number the items in the side views and list their names and sizes under the drawing (untick to write them on the drawing)', d: true, t: 'c' },
   { k: 'microOn', g: 'Take items out', l: 'Microwave and its shelf (untick to take it out of the diagram and the checks)', d: true, t: 'c' },
   { k: 'tvOn', g: 'Take items out', l: 'TV over the nook', d: true, t: 'c' },
   { k: 'towelOn', g: 'Take items out', l: 'Paper towel roll in its recess in the angled front', d: true, t: 'c' },
@@ -41,6 +42,9 @@ const PD = [
   { k: 'doorH', g: 'Wall cabinets', l: 'Door height (3 doors a side, widths follow the cabinet)', d: 12, s: .5, a: 6, b: 24 },
   { k: 'panW', g: 'Passenger side', l: 'Shower pan length', d: 36, s: .5, a: 20, b: 50 },
   { k: 'panD', g: 'Passenger side', l: 'Shower pan depth', d: 24, s: .5, a: 16, b: 36 },
+  { k: 'snookH', g: 'Passenger side', l: 'Shower nook height (the recess in the shower wall)', d: 16, s: .5, a: 6, b: 40 },
+  { k: 'snookTop', g: 'Passenger side', l: 'Shower nook top, up from the floor (56 1/2 lines up with the top of the counter nook)', d: 56.5, s: .5, a: 20, b: 70 },
+  { k: 'snookLip', g: 'Passenger side', l: 'Shower nook front lip, to keep things in (0 for none)', d: 1.5, s: .25, a: 0, b: 4 },
   { k: 'fridgeW', g: 'Passenger side', l: 'Fridge width', d: 22, s: .5, a: 14, b: 30 },
   { k: 'fridgeD', g: 'Passenger side', l: 'Fridge depth', d: 19, s: .5, a: 12, b: 26 },
   { k: 'fridgeH', g: 'Passenger side', l: 'Fridge height', d: 48, s: .5, a: 20, b: 66 },
@@ -190,6 +194,33 @@ function T(x, y, s, o) {
   o = o || {};
   const size = o.size || 12, fill = o.fill || '#2C2C2A', anchor = o.anchor || 'middle', w = o.w || 400, halo = o.halo !== false;
   return `<text x="${f1(x)}" y="${f1(y)}" text-anchor="${anchor}"${o.op != null && o.op < 1 ? ` opacity="${f1(o.op)}"` : ''} style="font-size:${size}px;font-weight:${w};fill:${fill};${halo ? HALO : ''}">${s}</text>`;
+}
+// An item label: the name and its size written on the drawing, or (the Number the items box) a small numbered badge with the name and size listed under the drawing.
+// The badge carries a token that render() replaces with the final number, once it knows which labels are really in the picture and where they sit.
+const KEYS = [];
+function LBL(x, y, name, dims, o) {
+  o = o || {};
+  if (o.op != null && o.op <= .02) return '';
+  const fill = o.fill || '#2C2C2A';
+  if (!P.numLbl) {
+    const to = Object.assign({}, o); delete to.dy;
+    if (o.dimsOnly) return T(x, y, dims, to);
+    let g = T(x, y, name, to);
+    if (dims) g += T(x, y + (o.dy == null ? 14 : o.dy), dims, Object.assign({}, to, { size: o.size2 || Math.max(9, (o.size || 12) - 1.5) }));
+    return g;
+  }
+  const i = KEYS.length; KEYS.push({ x, y, name, dims: [dims, o.keyMore].filter(Boolean).join(', '), fill });
+  const op = o.op != null && o.op < 1 ? ` opacity="${f1(o.op)}"` : '';
+  return `<g class="nb"${op}><circle cx="${f1(x)}" cy="${f1(y)}" r="9.5" fill="#fff" fill-opacity=".94" stroke="${fill}" stroke-width="1.7"/><text x="${f1(x)}" y="${f1(y + 3.8)}" text-anchor="middle" style="font-size:10.5px;font-weight:700;fill:${fill}">\u0001${i}\u0001</text></g>`;
+}
+// small notes that only belong on a drawing with the names written on it
+const NOTE = (x, y, s, o) => P.numLbl ? '' : T(x, y, s, o);
+// the numbers, in the order the items sit across the drawing; returns the body with the tokens replaced and the key rows
+function numberLabels(body) {
+  const seen = [...new Set([...body.matchAll(/\u0001(\d+)\u0001/g)].map(m => +m[1]))];
+  const ord = seen.sort((a, b) => KEYS[a].x - KEYS[b].x || KEYS[a].y - KEYS[b].y);
+  const num = {}; ord.forEach((k, n) => { num[k] = n + 1; });
+  return { body: body.replace(/\u0001(\d+)\u0001/g, (m, k) => num[k]), rows: ord.map(k => Object.assign({ n: num[k] }, KEYS[k])) };
 }
 function R(x, y, w, h, o) {
   o = o || {};

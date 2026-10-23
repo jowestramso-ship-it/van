@@ -259,12 +259,25 @@ document.addEventListener('change', e => {
   try { localStorage.setItem('van-build-done', JSON.stringify(buildDone)); } catch (err) { }
   renderBuild(L);
 });
+// the list under the drawing for the numbered items (only touched when its text changes)
+let keySig = '';
+const escH = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+function renderKey(rows) {
+  const el = $('#key'); if (!el) return;
+  const sig = JSON.stringify(rows.map(r => [r.n, r.name, r.dims, r.fill])); if (sig === keySig) return; keySig = sig;
+  if (!rows.length) { el.className = 'keybox'; el.innerHTML = ''; return; }
+  el.className = 'keybox on';
+  el.innerHTML = '<h2>Items in the drawing</h2><ol>' + rows.map(r => `<li><span class="kn" style="color:${r.fill};border-color:${r.fill}">${r.n}</span><span><b>${escH(r.name)}</b>${r.dims ? ` <span class="kd">${escH(r.dims)}</span>` : ''}</span></li>`).join('') + '</ol>';
+}
 function render() {
   const now = performance.now(), V = curVals(now), vw = VIEWS.find(v => v.id === view);
   L = layout(P);
+  KEYS.length = 0;
   const r = vw.draw(L, V), svg = $('#svg');
   svg.setAttribute('viewBox', `0 0 ${Math.round(r.w)} ${Math.round(r.h)}`);
-  svg.innerHTML = DEFS + stripGroups(r.body, REMOVED());
+  const nl = numberLabels(stripGroups(r.body, REMOVED()));
+  svg.innerHTML = DEFS + nl.body;
+  renderKey(nl.rows);
   // checks (only touch the page when the text changed)
   const ch = computeChecks(L, V), sig = JSON.stringify(ch);
   if (sig !== lastSig) { lastSig = sig; $('#checks').innerHTML = ch.map((c, i) => `<li class="${c.lv}"><span class="no">${i + 1}</span> ${c.t}</li>`).join(''); }

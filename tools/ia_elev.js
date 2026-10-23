@@ -72,13 +72,13 @@ function drawDriver(L, V) {
   o.push(GB('well', 'Wheel well'));
   const WW = [[42, 0], [76, 0], [76, 2], [66.75, 7.5], [51.25, 7.5], [42, 2]];
   o.push(Poly(WW.map(p => [X(p[0]), Y(p[1])]), { fill: '#E24B4A', fo: .35, stroke: '#A32D2D', sw: 1.6, dash: '5 3', join: 'round' }));
-  o.push(T(X(59), Y(3.2), 'wheel well', { size: 12, fill: '#791F1F', halo: false }));
+  o.push(LBL(X(59), Y(3.2), 'Wheel well', '', { size: 12, fill: '#791F1F', halo: false, keyMore: '42 to 76 in from the back, 7 1/2 tall' }));
   o.push(GE());
   // wall cabinets
   o.push(GB('wallcab', 'Wall cabinets'));
   L.cabs.forEach(c => {
     o.push(box(c[0], c[1], P.cabBot, L.ceilF, { fill: COL.P, fo: .12, stroke: COL.P, sw: 1.4, rx: 3 }));
-    o.push(T(X((c[0] + c[1]) / 2), Y(P.cabBot - 2.4), `Wall cabinet, ${fmt(c[1] - c[0])} long x ${fmt(P.cabDepth)} deep x ${fmt(L.ceilF - P.cabBot)} tall (${fmt(P.cabBot)} to ${fmt(L.ceilF)} in up)`, { size: 12, fill: COL.P }));
+    o.push(LBL(X((c[0] + c[1]) / 2), Y(P.cabBot - 2.4), 'Wall cabinet', `${fmt(c[1] - c[0])} long x ${fmt(P.cabDepth)} deep x ${fmt(L.ceilF - P.cabBot)} tall (${fmt(P.cabBot)} to ${fmt(L.ceilF)} in up)`, { size: 12, fill: COL.P }));
   });
   o.push(GE());
   // bed / couch with a hinged leaf. The deck top is 3/4 in below the seat base: by day the leaf (face down) lies on the deck under the seat cushion; at night it is flipped out level with the deck, on three legs, with the back cushion on it
@@ -103,10 +103,10 @@ function drawDriver(L, V) {
     if (bs.back > .02) g += box(0, P.bedLen, bt, bt + LW * bs.back, { fill: COL.P, fo: .1, stroke: COL.P, sw: 1.4, rx: 3 });
     if (bs.flat > .02) g += box(0, P.bedLen, deck, deck + P.mattress, { fill: COL.P, fo: .2 * bs.flat, stroke: COL.P, sw: 2.2, rx: 3, so: bs.flat });
     if (s < .3) {
-      g += T(X(P.bedLen / 2), Y(plat + P.mattress / 2 - 0.4), `Seat cushion, top at ${fmt(bt)} in (click to make up the bed)`, { size: 12.5, fill: COL.P, op: 1 - s / .3 });
-      if (LW * bs.back > 9) g += T(X(P.bedLen / 2), Y(bt + LW * bs.back / 2), `Back cushion, upright, ${fmt(LW)} tall`, { size: 12.5, fill: COL.P, op: 1 - s / .3 });
+      g += LBL(X(P.bedLen / 2), Y(plat + P.mattress / 2 - 0.4), 'Seat cushion', `top at ${fmt(bt)} in (click to make up the bed)`, { size: 12.5, fill: COL.P, op: 1 - s / .3 });
+      if (LW * bs.back > 9) g += LBL(X(P.bedLen / 2), Y(bt + LW * bs.back / 2), 'Back cushion', `upright, ${fmt(LW)} tall`, { size: 12.5, fill: COL.P, op: 1 - s / .3 });
     }
-    if (s > .85) g += T(X(P.bedLen / 2), Y(deck + P.mattress / 2 - 0.4), `Bed made up: ${fmt(P.bedD + LW)} wide, top at ${fmt(deck + P.mattress)} in, leaf on 4 legs`, { size: 12.5, fill: COL.P, op: (s - .85) / .15 });
+    if (s > .85) g += LBL(X(P.bedLen / 2), Y(deck + P.mattress / 2 - 0.4), 'Bed made up', `${fmt(P.bedD + LW)} wide, top at ${fmt(deck + P.mattress)} in, leaf on 4 legs`, { size: 12.5, fill: COL.P, op: (s - .85) / .15 });
     else if (s >= .3) g += T(X(P.bedLen / 2), Y(bt + 6), 'leaf flips over (the seat cushion comes off)', { size: 11, fill: '#5A3A00', op: Math.min(1, (s - .3) * 4) * (s > .75 ? (.85 - s) * 10 : 1) });
     o.push(MV('bed', g, HITR(Math.min(X(0), X(P.bedLen)), Y(bt + LW), S * P.bedLen, S * (bt + LW))));
   }
@@ -114,14 +114,14 @@ function drawDriver(L, V) {
   // closet
   o.push(GB('closet', 'Closet and its doors'));
   o.push(box(L.c0, L.c1, 0, L.ceilF, { fill: COL.G, fo: .12, stroke: COL.G, sw: 1.4, rx: 3 }));
-  o.push(T(X((L.c0 + L.c1) / 2), Y(L.ceilF * 0.62), 'Closet', { size: 12.5, fill: COL.G }));
-  o.push(T(X((L.c0 + L.c1) / 2), Y(L.ceilF * 0.62) + 15, fmt(P.closetW) + ' in', { size: 11, fill: COL.G }));
+  o.push(LBL(X((L.c0 + L.c1) / 2), Y(L.ceilF * 0.62), 'Closet', `${fmt(P.closetW)} in wide`, { size: 12.5, fill: COL.G, dy: 15, size2: 11 }));
+
   // pockets on the inside of the closet doors
   const pw = (P.closetW - 1.75) / 2;
   const prow = [[5, 12], [12.5, 19.5], [20, 27], [27.5, 34.5]].filter(r => r[1] < P.split - 3);
   const prow2 = [[4, 11], [11.5, 18.5], [19, 26]].map(r => [P.split + r[0], P.split + r[1]]);
   prow.concat(prow2).forEach(r => { [L.c0 + 0.625, L.c0 + 0.625 + pw + 0.5].forEach(px => { if (r[0] > 0 && r[1] < P.ceil) o.push(box(px, px + pw, r[0], r[1], { fill: '#B07A2A', fo: .1, stroke: '#8A5A00', sw: 1, rx: 2, dash: '3 2' })); }); });
-  o.push(T(X((L.c0 + L.c1) / 2), Y(P.split + 28.5), 'dashed: door pockets inside', { size: 9.5, fill: '#8A5A00' }));
+  o.push(NOTE(X((L.c0 + L.c1) / 2), Y(P.split + 28.5), 'dashed: door pockets inside', { size: 9.5, fill: '#8A5A00' }));
   // closet interior when the doors are open: darker back, garments
   const hx = P.hinge === 'rear' ? L.c0 + 0.125 : L.c1 - 0.125, wC = P.closetW - 0.25;
   const cdoors = [{ id: 'clo_hi', z0: P.split + 0.1, z1: L.ceilF - 0.25, nm: 'upper door' }, { id: 'clo_lo', z0: 0.25, z1: P.split - 0.1, nm: 'lower door' }];
@@ -133,7 +133,7 @@ function drawDriver(L, V) {
     const s = V[r[1]] || 0, cols = ['#B5502F', '#185FA5', '#0F6E56', '#993556'];
     if (s > 0.05) for (let x = L.c0 + 2.2, i = 0; x + 0.9 < L.c1 - 2; x += 1.5, i++) o.push(box(x, x + 0.9, r[0] - 30, r[0] - 0.8, { fill: cols[i % 4], fo: .55 * Math.min(1, s * 1.6), stroke: cols[i % 4], sw: .6, rx: 1 }));
     o.push(Ln(X(L.c0 + 2), Y(r[0]), X(L.c1 - 2), Y(r[0]), { stroke: COL.G, sw: 3.5, cap: 'round' }));
-    o.push(T(X((L.c0 + L.c1) / 2), Y(r[0]) - 5, `rod, ${fmt(r[0])} in up`, { size: 10, fill: COL.G, w: 700 }));
+    o.push(LBL(X((L.c0 + L.c1) / 2), Y(r[0]) - 5, 'Closet rod', `${fmt(r[0])} in up`, { size: 10, fill: COL.G, w: 700 }));
   });
   // closet doors (hinge side and angle follow the sizes)
   cdoors.forEach(dc => {
@@ -142,8 +142,8 @@ function drawDriver(L, V) {
     let g = box(dx0, dx1, dc.z0, dc.z1, { fill: COL.G, fo: .12 + .14 * s, stroke: COL.G, sw: 1.6, rx: 3 });
     if (s < .35) {
       const zc = (dc.z0 + dc.z1) / 2 + (dc.nm === 'upper door' ? 9 : -9);
-      g += T(X((L.c0 + L.c1) / 2), Y(zc), dc.nm, { size: 11.5, fill: COL.G, op: 1 - s / .35 });
-      g += T(X((L.c0 + L.c1) / 2), Y(zc) + 13, `${fmt(wC)} x ${fmt(dc.z1 - dc.z0)}`, { size: 10, fill: COL.G, op: 1 - s / .35 });
+      g += LBL(X((L.c0 + L.c1) / 2), Y(zc), dc.nm.charAt(0).toUpperCase() + dc.nm.slice(1), `${fmt(wC)} x ${fmt(dc.z1 - dc.z0)}`, { size: 11.5, fill: COL.G, op: 1 - s / .35, dy: 13, size2: 10 });
+
     }
     o.push(MV(dc.id, g, HITR(Math.min(X(L.c0 + 0.125), X(L.c1 - 0.125)), Y(dc.z1), S * wC, S * (dc.z1 - dc.z0))));
   });
@@ -156,15 +156,15 @@ function drawDriver(L, V) {
     [[L.bA, L.bA[0], L.bA[0] + pt], [L.bB, L.bB[1] - pt, L.bB[1]]].forEach(b => {
       g += box(b[0][0], b[0][1], 0, P.seatH, { fill: COL.K, fo: .12, stroke: COL.K, sw: 1.4, rx: 3 });
       if (ds.back > .02) g += box(b[1], b[2], P.seatH, bh, { fill: COL.K, fo: .12, stroke: COL.K, sw: 1.4, rx: 3 });
-      g += T(X((b[0][0] + b[0][1]) / 2), Y(2.5), 'Bench', { size: 12.5, fill: COL.K });
+      g += LBL(X((b[0][0] + b[0][1]) / 2), Y(2.5), 'Bench', `${fmt(P.benchD)} deep, seat at ${fmt(P.seatH)} in`, { size: 12.5, fill: COL.K });
     });
     if (L.tableLen > 0) {
       g += box(L.tbl[0], L.tbl[1], tt - 1, tt, { fill: COL.G, fo: .35, stroke: COL.G, sw: 1.4 });
       if (ds.pil > .02) g += box(L.tbl[0], L.tbl[1], tt, tt + pt, { fill: COL.K, fo: .28 * ds.pil, stroke: COL.K, sw: 1.8, rx: 2, so: ds.pil });
-      g += T(X((L.tbl[0] + L.tbl[1]) / 2), Y(tt - 3.7), `Table, ${fmt(tt)} in high`, { size: 12.5, fill: COL.G });
+      g += LBL(X((L.tbl[0] + L.tbl[1]) / 2), Y(tt - 3.7), 'Table', `${fmt(tt)} in high`, { size: 12.5, fill: COL.G });
       if (s < .1) g += T(X((L.tbl[0] + L.tbl[1]) / 2), Y(tt - 8), 'click: dinette to bed', { size: 10, fill: COL.G, op: 1 - s * 10 });
     }
-    if (ds.pil > .5) g += T(X((L.bA[0] + L.bB[1]) / 2), Y(P.seatH + 7), `Dinette bed: ${fmt(L.bB[1] - L.bA[0])} x ${fmt(Math.min(P.benchD, P.tableD))} in, top at ${fmt(P.seatH)} in`, { size: 12.5, fill: COL.K, op: (ds.pil - .5) * 2 });
+    if (ds.pil > .5) g += LBL(X((L.bA[0] + L.bB[1]) / 2), Y(P.seatH + 7), 'Dinette bed', `${fmt(L.bB[1] - L.bA[0])} x ${fmt(Math.min(P.benchD, P.tableD))} in, top at ${fmt(P.seatH)} in`, { size: 12.5, fill: COL.K, op: (ds.pil - .5) * 2 });
     o.push(MV('dinette', g, HITR(Math.min(X(L.bA[0]), X(L.bB[1])), Y(P.backH), S * (L.bB[1] - L.bA[0]), S * P.backH)));
   }
   o.push(GE());
@@ -175,23 +175,23 @@ function drawDriver(L, V) {
     let g = '';
     if (s > 0.02) g += box(d.x0, d.x1, zb, zt, { fill: '#2C2C2A', fo: .12 + .3 * Math.min(1, s * 1.5) });
     g += box(d.x0, d.x1, zt - h, zt, { fill: COL.P, fo: .18 + .2 * s, stroke: COL.P, sw: 1.6, rx: 3 });
-    if (s < .3) g += T(X((d.x0 + d.x1) / 2), Y((zb + zt) / 2 + .3), `door ${fmt(d.w)} x ${fmt(P.doorH)}`, { size: 12, fill: COL.P, op: 1 - s / .3 });
+    if (s < .3) g += LBL(X((d.x0 + d.x1) / 2), Y((zb + zt) / 2 + .3), 'Cabinet door', `${fmt(d.w)} x ${fmt(P.doorH)}`, { size: 12, fill: COL.P, op: 1 - s / .3 });
     o.push(MV(d.id, g, HITR(Math.min(X(d.x0), X(d.x1)), Y(zt), S * d.w, S * P.doorH)));
   });
   o.push(GE());
   // battery in front of the wheel well
   o.push(GB('batt', 'Battery'));
   o.push(box(L.batt[0], L.batt[1], 0, 9.5, { fill: '#F2B84B', fo: .65, stroke: '#8A5A00', sw: 2, rx: 3 }));
-  o.push(T(X((L.batt[0] + L.batt[1]) / 2), Y(5.8), 'Battery', { size: 11, fill: '#5A3A00' }));
-  o.push(T(X((L.batt[0] + L.batt[1]) / 2), Y(5.8) + 13, `21 x 9.5 in, ${fmt(L.batt[0])} to ${fmt(L.batt[1])} in`, { size: 10, fill: '#5A3A00' }));
+  o.push(LBL(X((L.batt[0] + L.batt[1]) / 2), Y(5.8), 'Battery', `21 x 9.5 in, ${fmt(L.batt[0])} to ${fmt(L.batt[1])} in`, { size: 11, fill: '#5A3A00', dy: 13, size2: 10 }));
+
   o.push(GE());
   if (L.chairs) {
     // lawn chairs folded flat, stacked on the floor under the couch (seen from the aisle: the stack is against the wall behind the deck's dashed outline)
     const c = L.chairs, bad = L.coll.ids.has('Chairs'), col = bad ? '#A32D2D' : '#2F5E3F', th = P.chairThk;
     o.push(GB('Chairs', 'Lawn chairs under the couch'));
     for (let i = 0; i < c.n; i++) o.push(box(c.x0, c.x1, c.z0 + i * th, c.z0 + (i + 1) * th, { fill: '#7FB08F', fo: bad ? .35 : .6, stroke: col, sw: 1.3, rx: 1.5 }));
-    o.push(T(X((c.x0 + c.x1) / 2), Y(c.z1) - 18, `${c.n} lawn chair${c.n === 1 ? '' : 's'}, folded flat`, { size: 11, fill: col }));
-    o.push(T(X((c.x0 + c.x1) / 2), Y(c.z1) - 5, `${fmt(c.x1 - c.x0)} x ${fmt(c.d1 - c.d0)} x ${fmt(c.z1 - c.z0)} in`, { size: 9.5, fill: col }));
+    o.push(LBL(X((c.x0 + c.x1) / 2), Y(c.z1) - 18, `${c.n} lawn chair${c.n === 1 ? '' : 's'}`, `folded flat, ${fmt(c.x1 - c.x0)} x ${fmt(c.d1 - c.d0)} x ${fmt(c.z1 - c.z0)} in`, { size: 11, fill: col, dy: 13, size2: 9.5 }));
+
     o.push(GE());
   }
   o.push(elevTail(E, L, 'inches from where you start measuring at the back (about 6 in in from the rear edge; the rear lip is not counted)'));
@@ -212,21 +212,23 @@ function drawPass(L, V) {
   const WW = [[42, 0], [76, 0], [76, 2], [66.75, 7.5], [51.25, 7.5], [42, 2]];
   o.push(GB('wellp', 'Wheel well'));
   o.push(Poly(WW.map(p => [X(p[0]), Y(p[1])]), { fill: '#D8B79A', fo: .8, stroke: '#8A6B4D', sw: 1.2 }));
-  o.push(T(X(59), Y(3.2), 'wheel well (same as the driver side)', { size: 10, fill: '#5F5E5A', halo: false }));
+  o.push(LBL(X(59), Y(3.2), 'Wheel well', '', { size: 10, fill: '#5F5E5A', halo: false, keyMore: 'same as the driver side: 42 to 76 in from the back, 7 1/2 tall' }));
   o.push(GE());
   // wet bath: outline, curtain, pan (tips up toward the wall)
   const sp = V.pan || 0, tp = sp * Math.PI / 2, panTop = 0.8 + P.panD * Math.sin(tp) + 3 * Math.cos(tp);
   o.push(GB('bath', 'Wet bath'));
   o.push(box(0, P.panW, 0, L.ceilF, { fill: COL.T, fo: .08, stroke: COL.T, sw: 1.5, rx: 3 }));
-  o.push(T(X(P.panW / 2), Y(L.ceilF * 0.9), 'Wet bath', { size: 12, fill: COL.T }));
-  o.push(T(X(P.panW / 2), Y(L.ceilF * 0.9) + 14, `${fmt(P.panW)} x ${fmt(P.panD)} in, shower curtain`, { size: 10.5, fill: COL.T }));
+  o.push(LBL(X(P.panW / 2), Y(L.ceilF * 0.9), 'Wet bath', `${fmt(P.panW)} x ${fmt(P.panD)} in, shower curtain`, { size: 12, fill: COL.T }));
+
   o.push(GE());
   // shower nook and counter nook are recesses in the wall (fixed positions)
   const nkx = Math.min(29.75, P.panW - 6.25);
   o.push(GB('snook', 'Shower nook'));
-  o.push(box(6, nkx, 31, 56.5, { fill: '#7A4A1E', fo: .2, stroke: '#7A4A1E', sw: 1.5, rx: 3, dash: '5 3' }));
-  o.push(T(X((6 + nkx) / 2), Y(44), 'Shower nook', { size: 12, fill: '#7A4A1E' }));
-  o.push(T(X((6 + nkx) / 2), Y(44) + 14, `${fmt(nkx - 6)} x 25 1/2, 4 1/2 deep`, { size: 10.5, fill: '#7A4A1E' }));
+  const snTop = P.snookTop, snBot = snTop - P.snookH;
+  o.push(box(6, nkx, snBot, snTop, { fill: '#7A4A1E', fo: .2, stroke: '#7A4A1E', sw: 1.5, rx: 3, dash: '5 3' }));
+  if (P.snookLip > 0) o.push(box(6, nkx, snBot, snBot + P.snookLip, { fill: '#5A3510', fo: .9, stroke: '#3E230B', sw: 1 }));
+  o.push(LBL(X((6 + nkx) / 2), Y(snBot + P.snookH / 2), 'Shower nook', `${fmt(nkx - 6)} wide x ${fmt(P.snookH)} tall, 4 1/2 deep`, { size: 12, fill: '#7A4A1E', keyMore: `${fmt(snBot)} to ${fmt(snTop)} up${P.snookLip > 0 ? `, ${fmt(P.snookLip)} in front lip to keep things in` : ''}` }));
+
   o.push(GE());
   o.push(GB('pan', 'Shower pan (click to tip it)'));
   {
@@ -242,10 +244,10 @@ function drawPass(L, V) {
   o.push(box(cabS, sinkS, 0, ch, { fill: COL.C, fo: .08, stroke: COL.C, sw: 1.5, rx: 3 }));
   o.push(box(sinkS, sinkE, 0, ch, { fill: COL.C, fo: .08, stroke: COL.C, sw: 1.5, rx: 3 }));
   // the labels sit up under the countertop, over the sink, so the drain jug standing on the tank below does not cover them
-  o.push(T(X((sinkS + sinkE) / 2), Y(ch - 2.7), 'Sink cabinet', { size: 12, fill: COL.C }));
-  o.push(T(X((sinkS + sinkE) / 2), Y(ch - 2.7) + 13, `${fmt(P.sinkW)} wide, ${fmt(P.sinkD)} deep`, { size: 10.5, fill: COL.C }));
+  o.push(LBL(X((sinkS + sinkE) / 2), Y(ch - 2.7), 'Sink cabinet', `${fmt(P.sinkW)} wide, ${fmt(P.sinkD)} deep`, { size: 12, fill: COL.C, dy: 13 }));
+
   o.push(box(cabS, sinkE, ch - 1.2, ch, { fill: '#5F5E5A', fo: .75 }));
-  o.push(T(X((sinkS + sinkE) / 2), Y(ch) - 4, `countertop at ${fmt(ch)} in`, { size: 10.5, fill: '#5F5E5A', halo: false }));   // over the sink end, clear of the dish towel beside the nook
+  o.push(LBL(X((sinkS + sinkE) / 2), Y(ch) - 4, `Countertop at ${fmt(ch)} in`, '', { size: 10.5, fill: '#5F5E5A', halo: false }));   // over the sink end, clear of the dish towel beside the nook
   o.push(GE());
   // fridge on a platform over the wheel well, microwave on its shelf
   const q0 = L.fr[0], q1 = L.fr[1], fb = 8.25, ft = fb + P.fridgeH;
@@ -261,9 +263,9 @@ function drawPass(L, V) {
     }
     g += box(q0, q0 + wv, fb, ft, { fill: '#0A6A8A', fo: .3 + .1 * s, stroke: '#0A6A8A', sw: 1.8, rx: 3 });
     if (s < .4) {
-      g += T(X((q0 + q1) / 2), Y(34), 'Fridge', { size: 12, fill: '#0A6A8A', op: 1 - s / .4 });
-      g += T(X((q0 + q1) / 2), Y(34) + 14, `${fmt(P.fridgeW)} x ${fmt(P.fridgeD)} x ${fmt(P.fridgeH)}, front opening`, { size: 10.5, fill: '#0A6A8A', op: 1 - s / .4 });
-      g += T(X((q0 + q1) / 2), Y(34) + 28, 'on a platform over the well', { size: 9.5, fill: '#0A6A8A', op: 1 - s / .4 });
+      g += LBL(X((q0 + q1) / 2), Y(34), 'Fridge', `${fmt(P.fridgeW)} x ${fmt(P.fridgeD)} x ${fmt(P.fridgeH)}, front opening`, { size: 12, fill: '#0A6A8A', op: 1 - s / .4, keyMore: 'on a platform over the well' });
+
+
     }
     o.push(MV('fridge', g, HITR(Math.min(X(q0), X(q1)), Y(ft), S * P.fridgeW, S * P.fridgeH)));
   }
@@ -272,8 +274,8 @@ function drawPass(L, V) {
   o.push(GB('Micro', 'Microwave and its shelf'));
   o.push(box(q0 + mx, q1 + mx, ft + 2 + md, ft + 2.75 + md, { fill: '#8A6B4D', stroke: '#3E230B', sw: 1 }));
   o.push(box(q0 + mx + (P.fridgeW - 18.5) / 2, q1 + mx - (P.fridgeW - 18.5) / 2, ft + 2.75 + md, ft + 12.75 + md, { fill: COL.G, fo: .25, stroke: COL.G, sw: 1.5, rx: 3 }));
-  o.push(T(X((q0 + q1) / 2 + mx), Y(ft + 6.9 + md), 'Microwave', { size: 12, fill: COL.G }));
-  o.push(T(X((q0 + q1) / 2 + mx), Y(ft + 6.9 + md) + 14, '18.5 x 10 x 12 in', { size: 10.5, fill: COL.G }));
+  o.push(LBL(X((q0 + q1) / 2 + mx), Y(ft + 6.9 + md), 'Microwave', '18.5 x 10 x 12 in', { size: 12, fill: COL.G }));
+
   o.push(GE());
   // counter nook (a recess in the wall) with the jar shelf
   const nx0 = 58, nx1 = 93.25;
@@ -289,15 +291,15 @@ function drawPass(L, V) {
     }
     o.push(Ln(X(58.4 + (base === ch ? 0 : ndx)), Y(base + 3.5), X(92.85 + (base === ch ? 0 : ndx)), Y(base + 3.5), { stroke: '#7A4A1E', sw: 1.6, dash: '3 2' }));
   });
-  o.push(T(X(67), Y(ch + 16.7), P.nookOn ? 'Nook: quart jars' : 'Nook (empty: jars and shelf taken out)', { size: 11, fill: '#7A4A1E' }));
-  if (P.nookOn) o.push(T(X(110), Y(ch + 8 + nd), `shelf ${fmt(ch + 7.5 + nd)} up`, { size: 10, fill: '#5A3510' }));
-  if (P.nookOn) o.push(T(X(110), Y(ch + 8 + nd) + 12, '9 jars a tier', { size: 10, fill: '#5A3510' }));
+  o.push(LBL(X(67), Y(ch + 16.7), P.nookOn ? 'Nook: quart jars' : 'Nook (empty: jars and shelf taken out)', '', { size: 11, fill: '#7A4A1E', keyMore: P.nookOn ? `${fmt(nx1 - nx0)} long, jar shelf ${fmt(ch + 7.5 + nd)} up, 9 jars a tier` : '' }));
+  if (P.nookOn) o.push(NOTE(X(110), Y(ch + 8 + nd), `shelf ${fmt(ch + 7.5 + nd)} up`, { size: 10, fill: '#5A3510' }));
+  if (P.nookOn) o.push(NOTE(X(110), Y(ch + 8 + nd) + 12, '9 jars a tier', { size: 10, fill: '#5A3510' }));
   o.push(GE());
   // TV
   o.push(GB('tv', 'TV'));
   o.push(box(76.5, 103.5, ch + 16, ch + 31.4, { fill: COL.G, fo: .25, stroke: COL.G, sw: 1.5, rx: 3 }));
-  o.push(T(X(90), Y(ch + 25), 'TV 30 in', { size: 12, fill: COL.G }));
-  o.push(T(X(90), Y(ch + 25) + 14, '27 x 15.4, over the cabinet', { size: 10.5, fill: COL.G }));
+  o.push(LBL(X(90), Y(ch + 25), 'TV 30 in', '27 x 15.4, over the cabinet', { size: 12, fill: COL.G }));
+
   o.push(GE());
   if (L.hook) {
     // dish towel hook on the wall beside the nook, under the TV; a dish towel (8 in wide, folded over it) hangs from it
@@ -306,15 +308,15 @@ function drawPass(L, V) {
     o.push(box(h.x0, h.x1, h.z0, h.z - .5, { fill: '#F3E3B3', fo: bad ? .6 : .95, stroke: col, sw: 1.3, rx: 2 }));
     o.push(Ln(X(h.x0), Y(h.z0 + 1.6), X(h.x1), Y(h.z0 + 1.6), { stroke: '#C0392B', sw: 1.4, so: .8 }));
     o.push(`<circle cx="${f1(X(h.x))}" cy="${f1(Y(h.z))}" r="3.4" fill="#444441" stroke="#2C2C2A" stroke-width="1"/>`);
-    o.push(T(X(h.x), Y(h.z - .5) + 16, 'dish towel', { size: 9, fill: col, halo: false }));
-    o.push(T(X(h.x), Y(h.z - .5) + 27, `hook ${fmt(h.z)} up`, { size: 9, fill: col, halo: false }));
+    o.push(LBL(X(h.x), Y(h.z - .5) + 16, 'Dish towel hook', `hook ${fmt(h.z)} up`, { size: 9, fill: col, halo: false, dy: 11 }));
+
     o.push(GE());
   }
   // fresh water tank on the floor at the sink end (runs out of the open sink cabinet)
   o.push(GB('fresh', 'Fresh water tank'));
   o.push(box(L.tankX[0], L.tankX[1], P.tankLift, P.tankLift + P.tankH, { fill: COL.BL, fo: .14, stroke: COL.BL, sw: 1.5, rx: 3, dash: '5 3' }));
-  o.push(T(X((L.tankX[0] + L.tankX[1]) / 2), Y(P.tankLift + P.tankH * .62), 'Fresh water tank', { size: 12, fill: COL.BL }));
-  o.push(T(X((L.tankX[0] + L.tankX[1]) / 2), Y(P.tankLift + P.tankH * .62) + 14, `${fmt(L.tankLen)} x ${fmt(P.tankD)} x ${fmt(P.tankH)}, ${P.tankLift > .01 ? fmt(P.tankLift) + ' in off the floor' : 'on the floor'}`, { size: 10.5, fill: COL.BL }));
+  o.push(LBL(X((L.tankX[0] + L.tankX[1]) / 2), Y(P.tankLift + P.tankH * .62), 'Fresh water tank', `${fmt(L.tankLen)} x ${fmt(P.tankD)} x ${fmt(P.tankH)}, ${P.tankLift > .01 ? fmt(P.tankLift) + ' in off the floor' : 'on the floor'}`, { size: 12, fill: COL.BL }));
+
   o.push(GE());
   // angle marker
   o.push(GB('angle', 'Counter angle marker'));
@@ -324,15 +326,15 @@ function drawPass(L, V) {
   const pt0 = sinkS - 11.5, pt1 = sinkS - .5;
   o.push(GB('towels', 'Paper towels'));
   o.push(box(pt0, pt1, 29.75, 35.25, { fill: '#B07A2A', fo: .35, stroke: '#B07A2A', sw: 1.5, rx: 3 }));
-  o.push(T(X((pt0 + pt1) / 2), Y(32.5), 'Paper towels', { size: 12, fill: '#B07A2A' }));
-  o.push(T(X((pt0 + pt1) / 2), Y(32.5) + 14, '11 in roll, recessed', { size: 10.5, fill: '#B07A2A' }));
+  o.push(LBL(X((pt0 + pt1) / 2), Y(32.5), 'Paper towels', '11 in roll, recessed', { size: 12, fill: '#B07A2A' }));
+
   o.push(GE());
   // hot water tank on the floor next to the wheel well (or on a shelf if raised), and sink plumbing
   o.push(GB('hot', 'Hot water tank'));
   if (P.hotShelf > .5) o.push(box(L.hotX[0] - 1, L.hotX[1] + 1, P.hotShelf - .75, P.hotShelf, { fill: '#8A6B4D', fo: .6, stroke: '#3E230B', sw: 1 }));
   o.push(box(L.hotX[0], L.hotX[1], P.hotShelf, P.hotShelf + P.hotH, { fill: '#C0392B', fo: .18, stroke: '#C0392B', sw: 1.5, rx: 3, dash: '5 3' }));
-  o.push(T(X((L.hotX[0] + L.hotX[1]) / 2), Y(P.hotShelf + P.hotH * .6), 'Hot water tank', { size: 12, fill: '#C0392B' }));
-  o.push(T(X((L.hotX[0] + L.hotX[1]) / 2), Y(P.hotShelf + P.hotH * .6) + 14, `${fmt(P.hotW)} x ${fmt(P.hotD)}, ${fmt(P.hotH)} tall; fittings at the back`, { size: 10.5, fill: '#C0392B' }));
+  o.push(LBL(X((L.hotX[0] + L.hotX[1]) / 2), Y(P.hotShelf + P.hotH * .6), 'Hot water tank', `${fmt(P.hotW)} x ${fmt(P.hotD)}, ${fmt(P.hotH)} tall; fittings at the back`, { size: 12, fill: '#C0392B' }));
+
   o.push(GE());
   // relief valve drain line: from the valve on the back of the tank, up and over the top, forward, down in front of the fresh tank, out through the floor
   o.push(GB('drain', 'Relief valve drain line'));
@@ -340,8 +342,8 @@ function drawPass(L, V) {
     const rx = L.hotX[0] + .8 * P.hotW, topz = P.hotShelf + P.hotH + 1.5 + P.drainDz, dx = P.drainX, st = { stroke: '#0F6E56', sw: 3, dash: '5 2' };
     o.push(Ln(X(rx), Y(P.hotShelf + P.hotH - 2), X(rx), Y(topz), st)); o.push(Ln(X(rx), Y(topz), X(dx), Y(topz), st)); o.push(Ln(X(dx), Y(topz), X(dx), Y(-2), st));
     o.push(`<circle cx="${f1(X(rx))}" cy="${f1(Y(P.hotShelf + P.hotH - 2))}" r="3.6" fill="#444441"/>`);
-    o.push(T(X(dx), Y(topz) - 6, 'relief valve drain', { size: 9.5, fill: '#0F6E56' }));
-    o.push(T(X(dx) + (E.flip ? 5 : -5), Y(3), 'through the floor to outside', { size: 8.5, fill: '#0F6E56', anchor: E.flip ? 'start' : 'end' }));
+    o.push(LBL(X(dx), Y(topz) - 6, 'Relief valve drain', '', { size: 9.5, fill: '#0F6E56', keyMore: 'comes down here and goes through the floor to outside' }));
+    o.push(NOTE(X(dx) + (E.flip ? 5 : -5), Y(3), 'through the floor to outside', { size: 8.5, fill: '#0F6E56', anchor: E.flip ? 'start' : 'end' }));
   }
   o.push(GE());
   // the drawers and shelves under the counter: each one is an entry in L.parts (where it was planned plus how far it was dragged); the rail and the divider stay put
@@ -354,10 +356,10 @@ function drawPass(L, V) {
     o.push(box(dm, dm + .5, z0 - .5, z1 + .25, { fill: '#8A6B4D', fo: 1, stroke: '#3E230B', sw: .8 }));
     const tb = part('TB'), tc = part('TC');
     o.push(drawer(tb)); o.push(drawer(tc));
-    o.push(T(X(tb.x0 + 6.5), Y((tb.z0 + tb.z1) / 2) - 5, 'Drawer + tray', { size: 11, fill: '#8A5A00' }));
-    o.push(T(X(tb.x0 + 6.5), Y((tb.z0 + tb.z1) / 2) + 7, '13 x 20 x 4', { size: 9, fill: '#8A5A00' }));
-    o.push(T(X(tc.x0 + 6.5), Y((tc.z0 + tc.z1) / 2) - 5, 'Drawer', { size: 11, fill: '#8A5A00' }));
-    o.push(T(X(tc.x0 + 6.5), Y((tc.z0 + tc.z1) / 2) + 7, '13 x 20 x 4', { size: 9, fill: '#8A5A00' }));
+    o.push(LBL(X(tb.x0 + 6.5), Y((tb.z0 + tb.z1) / 2) - 5, 'Drawer + tray', '13 x 20 x 4', { size: 11, fill: '#8A5A00', dy: 12, size2: 9 }));
+
+    o.push(LBL(X(tc.x0 + 6.5), Y((tc.z0 + tc.z1) / 2) - 5, 'Drawer', '13 x 20 x 4', { size: 11, fill: '#8A5A00', dy: 12, size2: 9 }));
+
     // lower drawers under the pair: a 3/4 in shelf half an inch over the top of the hot water tank (or the wheel well, 7.5), 20 deep so they reach the wall over both;
     // with the trash can the cab-side column has no lower drawers or shelves (the divider runs down to the floor beside the can)
     if (part('SB')) {
@@ -367,9 +369,9 @@ function drawPass(L, V) {
       const drw = p => {
         const b0 = p.z0, b1 = p.z1;
         o.push(drawer(p));
-        if (b1 - b0 < 5) { o.push(T(X((p.x0 + p.x1) / 2), Y((b0 + b1) / 2) + 3, `13 x 20 x ${fmt(b1 - b0)}`, { size: 9, fill: '#8A5A00' })); return; }
-        o.push(T(X((p.x0 + p.x1) / 2), Y((b0 + b1) / 2) - 3, 'Drawer', { size: 11, fill: '#8A5A00' }));
-        o.push(T(X((p.x0 + p.x1) / 2), Y((b0 + b1) / 2) + 10, `13 x 20 x ${fmt(b1 - b0)}`, { size: 9, fill: '#8A5A00' }));
+        if (b1 - b0 < 5) { o.push(LBL(X((p.x0 + p.x1) / 2), Y((b0 + b1) / 2) + 3, 'Drawer', `13 x 20 x ${fmt(b1 - b0)}`, { size: 9, fill: '#8A5A00', dimsOnly: true })); return; }
+        o.push(LBL(X((p.x0 + p.x1) / 2), Y((b0 + b1) / 2) - 3, 'Drawer', `13 x 20 x ${fmt(b1 - b0)}`, { size: 11, fill: '#8A5A00', dy: 13, size2: 9 }));
+
       };
       // two 5 in drawers on the cab side (under the top pair), a 5 in one to the right of it (toward the back) with two equal drawers under it, on their own shelf 1/2 in over the wheel well; one row of two if there is too little height
       if (part('SB1')) { o.push(board(part('SB1'))); o.push(board(part('SB2'))); drw(part('B1')); drw(part('B2')); drw(part('B3')); } else drw(part('B1'));
@@ -386,14 +388,14 @@ function drawPass(L, V) {
     o.push(box(c.x0 - .5, c.x1 + .5, c.z0 - 1.25, c.z0 - .75, { fill: '#444441', fo: .8, stroke: '#2C2C2A', sw: .6 }));
     o.push(box(c.x0, c.x1, c.z0, c.z1, { fill: '#C9CCD1', fo: bad ? .35 : .6, stroke: col, sw: 1.6, rx: 4 }));
     o.push(box(c.x0 - .25, c.x1 + .25, c.z1 - 1.25, c.z1, { fill: '#9A9DA3', fo: .8, stroke: col, sw: 1, rx: 2 }));
-    o.push(T(X(cm), Y(mz) - 3, 'Trash can', { size: 11, fill: col }));
-    o.push(T(X(cm), Y(mz) + 10, `${fmt(P.canW)} x ${fmt(P.canD)} x ${fmt(P.canH)}`, { size: 9, fill: col }));
-    o.push(T(X(cm), Y(mz) + 22, `${fmt(P.canGal)} gal pull-out`, { size: 9, fill: col }));
+    o.push(LBL(X(cm), Y(mz) - 3, 'Trash can', `${fmt(P.canW)} x ${fmt(P.canD)} x ${fmt(P.canH)}, ${fmt(P.canGal)} gal pull-out`, { size: 11, fill: col, dy: 13, size2: 9 }));
+
+
     o.push(GE());
   }
   o.push(GB('jug', 'Sink underside and jug space'));
   o.push(Ln(X(sinkS), Y(ch - P.sinkBowlD), X(sinkE), Y(ch - P.sinkBowlD), { stroke: COL.BL, sw: 1.6, dash: '5 3' }));
-  o.push(T(X(sinkE - 1), Y(ch - P.sinkBowlD) - 3, `sink underside ${fmt(ch - P.sinkBowlD)} up`, { size: 9, fill: COL.BL, anchor: E.flip ? 'start' : 'end' }));
+  o.push(LBL(X(sinkE - 1), Y(ch - P.sinkBowlD) - 3, `Sink underside ${fmt(ch - P.sinkBowlD)} up`, '', { size: 9, fill: COL.BL, anchor: E.flip ? 'start' : 'end' }));
   {
     // no sink pipe: the sink drains into a jug standing on the fresh tank under the sink; this is the room it has
     const jx0 = Math.max(sinkS, L.tankX[0]), jx1 = Math.min(sinkE, L.tankX[1]), jz0 = P.tankLift + P.tankH, jz1 = ch - P.sinkBowlD;
@@ -408,8 +410,8 @@ function drawPass(L, V) {
       const hw = P.jugD / 2, zb = j.z0, zs = j.z1 - nkH - shH, zn = j.z1 - nkH;
       const bad = L.coll.ids.has('Jug'), col = bad ? '#A32D2D' : COL.BL;
       o.push(Poly([px(jm - hw, zb + 1.5), px(jm - hw + 1.5, zb), px(jm + hw - 1.5, zb), px(jm + hw, zb + 1.5), px(jm + hw, zs), px(jm + nk, zn), px(jm + nk, j.z1), px(jm - nk, j.z1), px(jm - nk, zn), px(jm - hw, zs)], { fill: '#A9D4F5', fo: bad ? .35 : .55, stroke: col, sw: 1.6 }));
-      o.push(T(X(jm), Y(zb + (zs - zb) * .55), '5 gal bottle'.replace('5', fmt(P.jugGal)), { size: 11, fill: col }));
-      o.push(T(X(jm), Y(zb + (zs - zb) * .55) + 13, `${fmt(P.jugH)} x ${fmt(P.jugD)}`, { size: 10, fill: col }));
+      o.push(LBL(X(jm), Y(zb + (zs - zb) * .55), `${fmt(P.jugGal)} gal bottle`, `${fmt(P.jugH)} x ${fmt(P.jugD)}`, { size: 11, fill: col, dy: 13, size2: 10 }));
+
     }
   }
   o.push(GE());
@@ -425,7 +427,7 @@ function drawPass(L, V) {
     if (s > .6) { const a1 = px([sinkE, lz - th - 6]), a2 = px([sinkE + Lg - 1.5, lz - th]); g += Ln(a1[0], a1[1], a2[0], a2[1], { stroke: '#5A3A00', sw: 2.2, so: clamp((s - .6) / .4, 0, 1) }); }
     g += Poly([px(p0), px(p1), px(q1), px(q0)], { fill: '#B07A2A', fo: .9, stroke: '#5A3A00', sw: 1.2 });
     g += `<circle cx="${f1(px(p0)[0])}" cy="${f1(px(p0)[1])}" r="2.6" fill="#5A3A00"/>`;
-    if (s > .5) g += T(X(sinkE + Lg / 2 + 3), Y(lz - 5), `Foot ledge, ${fmt(Lg)} x ${fmt(P.sinkD)}, top ${fmt(lz)} up`, { size: 10.5, fill: '#5A3A00', op: (s - .5) * 2 });
+    if (s > .5) g += LBL(X(sinkE + Lg / 2 + 3), Y(lz - 5), 'Foot ledge', `${fmt(Lg)} x ${fmt(P.sinkD)}, top ${fmt(lz)} up`, { size: 10.5, fill: '#5A3A00', op: (s - .5) * 2 });
     o.push(MV('ledge', g, HITR(Math.min(X(sinkE), X(sinkE + Lg)), Y(lz + 3), S * Lg, S * 5) + HITR(Math.min(X(sinkE - 2), X(sinkE + .5)), Y(lz - th + Lg), S * 2.5, S * Lg)));
   }
   o.push(GE());
@@ -446,10 +448,10 @@ function drawPass(L, V) {
     g += `<circle cx="${f1(px(p0)[0])}" cy="${f1(px(p0)[1])}" r="3.2" fill="#5A3A00"/>`;
     const lx = sinkE + L.flapLen / 2;
     if (s > .5) {
-      g += T(X(lx), Y(hz + 17), 'Fold-out table', { size: 11.5, fill: '#5A3A00', op: (s - .5) * 2 });
-      g += T(X(lx), Y(hz + 13.5), `${fmt(L.flapLen)} long x ${fmt(P.flapD)} deep, ${fmt(hz)} up, folding brace under it`, { size: 10, fill: '#5A3A00', op: (s - .5) * 2 });
+      g += LBL(X(lx), Y(hz + 17), 'Fold-out table', `${fmt(L.flapLen)} long x ${fmt(P.flapD)} deep, ${fmt(hz)} up, folding brace under it`, { size: 11.5, fill: '#5A3A00', op: (s - .5) * 2, dy: 18, size2: 10 });
+
     } else {
-      g += T(X(sinkE + 6), Y(hz + 4), 'click: fold-out table', { size: 10, fill: '#5A3A00', op: 1 - s * 2 });
+      g += NOTE(X(sinkE + 6), Y(hz + 4), 'click: fold-out table', { size: 10, fill: '#5A3A00', op: 1 - s * 2 });
     }
     o.push(MV('flap,ledge', g, HITR(Math.min(X(sinkE), X(sinkE + L.flapLen)), Y(hz + 3), S * L.flapLen, S * 6) + HITR(Math.min(X(sinkE), X(sinkE + 3)), Y(hz + 2), S * 3, S * (hz + 2))));
   }
@@ -458,13 +460,13 @@ function drawPass(L, V) {
   const dx1 = Math.min(P.doorX + P.slideW, P.cab + 1);
   o.push(GB('door', 'Sliding door opening and entry'));
   o.push(R(Math.min(X(P.doorX), X(dx1)), Y(P.slideH), S * (dx1 - P.doorX), S * P.slideH, { stroke: '#BA7517', sw: 2, dash: '8 4' }));
-  o.push(T(X((P.doorX + dx1) / 2), Y(52), `Sliding door opening (${fmt(P.doorX)} to ${fmt(dx1 + 0)})`, { size: 12, fill: '#854F0B' }));
-  o.push(T(X(P.cab - 8), Y(13), `Entry, ${fmt(L.entry)} in clear`, { size: 11, fill: COL.G }));
+  o.push(LBL(X((P.doorX + dx1) / 2), Y(52), 'Sliding door opening', `${fmt(P.doorX)} to ${fmt(dx1 + 0)} in from the back`, { size: 12, fill: '#854F0B' }));
+  o.push(LBL(X(P.cab - 8), Y(13), 'Entry', `${fmt(L.entry)} in clear`, { size: 11, fill: COL.G }));
   o.push(GE());
   // the cab passenger seat cushion level, in the strip past the cab wall
   o.push(GB('seat', 'Cab passenger seat'));
   o.push(Ln(X(P.cab - P.cabSeatOut), Y(P.cabSeatH), X(P.cab + 7), Y(P.cabSeatH), { stroke: '#534AB7', sw: 3 }));
-  o.push(T(X(P.cab + 3.5), Y(P.cabSeatH) - 5, `cab seat ${fmt(P.cabSeatH)} up, sticks out ${fmt(P.cabSeatOut)}`, { size: 9, fill: '#534AB7' }));
+  o.push(LBL(X(P.cab + 3.5), Y(P.cabSeatH) - 5, 'Cab seat', `${fmt(P.cabSeatH)} up, sticks out ${fmt(P.cabSeatOut)}`, { size: 9, fill: '#534AB7' }));
   o.push(GE());
   o.push(elevTail(E, L, 'inches from where you start measuring at the back'));
   // things you can drag (this view runs right to left, so a drag to the right moves toward the rear; up is up): the drawers and boards, then the shelves in the nook and over the fridge, then the tanks
