@@ -651,11 +651,11 @@ def build():
              'Ladder, a board to kneel on across the ribs, a helper',
              'Gloves, safety glasses, hearing protection, a dust mask',
              'Multimeter; garden hose for the leak test']
-    nook = ['OSI Quad Max (paintable hybrid sealant) for the plywood edges and the joint to the steel, a thin bead',
-            'Butyl deadening mat (not asphalt), a few patches on the painted steel behind the plywood, about 0.06 to 0.08 in thick',
-            '3/8 in plywood for the back of the nook (1/4 in leaves room for 4 in jars over the ribs: the nook is 4 3/8 to 4 1/2 deep, the jars 3 3/4 to 4, mat 0.08 + plywood)',
+    nook = ['OSI Quad Max (paintable hybrid sealant) for a thin bead where the plywood meets the wall covering; leave the top or bottom edge unsealed so the wool can breathe',
+            'Havelock wool for the nook: a pad cut from a batt, about 7/8 in thick when fitted (split the batt into layers if it is thicker), cut about 1/4 in oversize so it stays put',
+            '3/8 in plywood for the back of the nook (cut it about 35 1/8 x 18 3/8). With 1 1/4 in spare behind the jars, 3/8 in plywood leaves 7/8 in for the wool',
             'Water-based polyurethane for the back and every edge of that plywood, two coats, cured for a few days before it goes in',
-            'A small hand roller to press the mat on, isopropyl alcohol and rags, touch-up white paint and rust-inhibiting primer for any chips in the factory paint']
+            'Isopropyl alcohol and rags to wipe the steel, touch-up white paint and rust-inhibiting primer for any chips in the factory paint']
     head = ('<h1>Roof fan and air conditioner: install steps</h1>'
             '<p class="lead">Drawn from the sizes in the plan. I have not seen the A/C manual, and the fan has no directions: where a manual would decide something, the step says so.</p>'
             '<div class="card warnbox"><h3 style="margin-top:0">Before you cut</h3><ul>'
