@@ -5,6 +5,7 @@ site/index.html        copy of sides.html
 site/interactive.html  copy of interactive.html (its link back goes to the folder's index)
 site/install.html      copy of install.html (the illustrated fan and A/C steps)
 site/window.html       copy of window.html (the illustrated side window steps)
+site/wall-map.html     copy of wall-map.html (the wall marking map)
 site/window-template.html  copy of window-template.html (the measured window and its cardboard template)
 site/photos/driver/    the driver side photos with all metadata (GPS location, camera, date) removed;
                        only the orientation tag is kept, so the pictures still turn the right way up
@@ -61,6 +62,8 @@ open(os.path.join(SITE, 'install.html'), 'w').write(ipage.replace('href="sides.h
 wpage = open(os.path.join(HERE, 'window.html')).read()
 assert 'href="sides.html"' in wpage
 open(os.path.join(SITE, 'window.html'), 'w').write(wpage.replace('href="sides.html"', 'href="./"'))   # the side window steps, same link fix
+if os.path.exists(os.path.join(HERE, 'wall-map.html')):
+    shutil.copy(os.path.join(HERE, 'wall-map.html'), os.path.join(SITE, 'wall-map.html'))   # the wall marking map (links back to interactive.html, which sits beside it)
 tpage = open(os.path.join(HERE, 'window-template.html')).read()
 assert 'href="sides.html"' in tpage
 open(os.path.join(SITE, 'window-template.html'), 'w').write(tpage.replace('href="sides.html"', 'href="./"'))

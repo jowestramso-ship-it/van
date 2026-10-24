@@ -6,6 +6,7 @@
 #   install.html      = the illustrated fan and A/C install steps (install.py)
 #   window.html       = the illustrated side window install steps (window.py, uses install.py's helpers)
 #   window-template.html = the side window measured from the owner's photos, with the cutout numbers (wtemplate.py)
+#   wall-map.html     = the see-through wall marking map, read off interactive.html in a headless browser (wallmap.js; needs node + playwright, skipped if they are missing)
 #   site/             = the copy for posting (make-site.py)
 set -e
 cd "$(dirname "$0")"
@@ -14,5 +15,6 @@ python3 gen2.py
 python3 install.py
 python3 window.py
 python3 wtemplate.py
+node wallmap.js 2>/dev/null || echo 'wall-map.html not rebuilt (node + playwright needed)'
 cd ..
 python3 make-site.py
