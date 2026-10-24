@@ -714,9 +714,9 @@ def build():
             'Water-based polyurethane for the back and every edge of that plywood, two coats, cured for a few days before it goes in',
             'Isopropyl alcohol and rags to wipe the steel, touch-up white paint and rust-inhibiting primer for any chips in the factory paint']
     head = ('<h1>Roof fan and air conditioner: install steps</h1>'
-            '<p class="lead">Drawn from the sizes in the plan. I have not seen the A/C manual, and the fan has no directions: where a manual would decide something, the step says so.</p>'
+            '<p class="lead">Drawn from the sizes in the plan. I have only the opening and mounting part of the A/C (Summit 2) instructions, and the fan has no directions: where a manual would decide something, the step says so.</p>'
             '<div class="card warnbox"><h3 style="margin-top:0">Before you cut</h3><ul>'
-            '<li><b>A/C:</b> I have not seen its manual. Its opening size, the roof thickness it clamps across and the most roof curve it allows decide the cut and the frame. The only figure I have is a minimum opening of 14.1 x 13.7 in. <b>If you do not have the manual in hand, cut and frame only the fan today</b> and leave the A/C for when you do.</li>'
+            '<li><b>A/C (Summit 2):</b> I have the maker&rsquo;s roof-opening and mounting text: opening 14 x 9 up to 16 1/2 x 15 3/4 in, the unit sits 3 1/8 in forward of its opening, and its brackets need 30 mm of contact. I do <b>not</b> have the bracket direction, the rod length or the indoor panel depth, and they decide the frame depth and whether its 3/4 in sides need doubling. <b>If you do not have those yet, cut and frame only the fan today</b> and leave the A/C frame for when you do.</li>'
             '<li><b>Fan:</b> it has no directions. This page uses what you measured: a 14 x 14 opening and 2 3/4 to 4 1/2 in from the roof to the trim.</li>'
             '<li><b>Weather:</b> cover every open hole (plastic or a board taped to clean, dry paint) whenever you stop, until its unit is on.</li></ul>'
             '<p class="swipe">On a phone, swipe a drawing sideways to see all of it.</p></div>'
