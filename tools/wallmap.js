@@ -69,40 +69,38 @@ async function grab(page, side) {
   }, side);
 }
 
-function wallSVG(d, side) {
-  const S = 7, ML = 44, MT = 26, MB = 54, END = Math.max(d.cab, 156), TOP = 82;
-  const W = ML + S*END + 20, H = MT + S*TOP + MB;
-  const X = x => ML + S*x, Y = z => MT + S*(TOP - z);
+
+// the wall's own drawing (depth colours, pans, holes, furring strips and dots) comes from sides.html (diagrams A and D);
+// the items are drawn on top of it, almost transparent, in the same coordinates
+async function grabBase(page, idx) {
+  return page.evaluate((idx) => {
+    const svg = [...document.querySelectorAll('svg[viewBox="0 0 1070 636"]')][idx].cloneNode(true);
+    svg.querySelectorAll('text').forEach(t => { if (/^(Driver side wall:|Passenger side, seen)/.test(t.textContent.trim())) t.remove(); });
+    const legend = svg.closest ? null : null;
+    const lg = [...document.querySelectorAll('p.legend')][idx === 0 ? 0 : 1] || document.querySelector('p.legend');
+    return { inner: svg.innerHTML, legend: lg ? lg.outerHTML : '' };
+  }, idx);
+}
+
+function wallSVG(d, side, base) {
+  const flip = side === 'pass';
+  const X = x => flip ? 1020 - 6 * x : 50 + 6 * x, Y = z => 544 - 6 * z;
   const o = [];
-  // grid
-  for (let x = 0; x <= END; x += 6) { const mj = x % 12 === 0; o.push(`<line x1="${X(x).toFixed(1)}" y1="${Y(0).toFixed(1)}" x2="${X(x).toFixed(1)}" y2="${Y(TOP).toFixed(1)}" class="${mj?'gmaj':'gmin'}"/>`); if (mj) o.push(`<text x="${X(x).toFixed(1)}" y="${(Y(0)+16).toFixed(1)}" text-anchor="middle" class="ax">${x}</text>`); }
-  for (let z = 0; z <= TOP; z += 6) { const mj = z % 12 === 0; o.push(`<line x1="${X(0).toFixed(1)}" y1="${Y(z).toFixed(1)}" x2="${X(END).toFixed(1)}" y2="${Y(z).toFixed(1)}" class="${mj?'gmaj':'gmin'}"/>`); if (mj) o.push(`<text x="${(X(0)-6).toFixed(1)}" y="${(Y(z)+4).toFixed(1)}" text-anchor="end" class="ax">${z}</text>`); }
-  // furring strips (reference), with the passenger door caveat
-  const FURR = [[3,'S1'],[12,'S2'],[21.5,'S3'],[30.25,'S4'],[43.5,'S5'],[57.25,'S6'],[66,'S7'],[76.75,'S8']];
-  const stopsAtDoor = new Set(['S1','S2','S3','S4','S6']);
-  FURR.forEach(([z,nm]) => { const end = (side==='pass' && stopsAtDoor.has(nm)) ? d.doorX : END; o.push(`<line x1="${X(0).toFixed(1)}" y1="${Y(z).toFixed(1)}" x2="${X(end).toFixed(1)}" y2="${Y(z).toFixed(1)}" class="furr"/>`); o.push(`<text x="${(X(0)+3).toFixed(1)}" y="${(Y(z)-2).toFixed(1)}" class="furrlab">${nm} ${fr(z)}"</text>`); });
-  // ceiling line
-  o.push(`<line x1="${X(0).toFixed(1)}" y1="${Y(d.ceilF).toFixed(1)}" x2="${X(END).toFixed(1)}" y2="${Y(d.ceilF).toFixed(1)}" class="ceil"/>`);
-  o.push(`<text x="${(X(END)-4).toFixed(1)}" y="${(Y(d.ceilF)-4).toFixed(1)}" text-anchor="end" class="furrlab">finished ceiling ${fr(d.ceilF)}"</text>`);
-  // items, numbered left-to-right then bottom-to-top
-  const items = d.items.slice().sort((a,b) => a.x0 - b.x0 || a.z0 - b.z0), placed = [];
-  items.forEach((it, i) => { it.n = i+1; const col = colorOf(it.name);
-    o.push(`<rect x="${X(it.x0).toFixed(1)}" y="${Y(it.z1).toFixed(1)}" width="${(S*(it.x1-it.x0)).toFixed(1)}" height="${(S*(it.z1-it.z0)).toFixed(1)}" rx="2" fill="var(--${col})" fill-opacity=".12" stroke="var(--${col})" stroke-width="1.4"/>`);
-    let cx = X((it.x0+it.x1)/2), cy = Y((it.z0+it.z1)/2);
-    for (let t = 0; t < 6 && placed.some(q => Math.hypot(q[0]-cx, q[1]-cy) < 19); t++) cy += 12;
+  const items = d.items.slice().sort((a, b) => a.x0 - b.x0 || a.z0 - b.z0), placed = [];
+  items.forEach((it, i) => {
+    it.n = i + 1;
+    const xa = X(it.x0), xb = X(it.x1), x = Math.min(xa, xb), w = Math.abs(xb - xa), y = Y(it.z1), h = 6 * (it.z1 - it.z0);
+    o.push(`<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${w.toFixed(1)}" height="${Math.max(h, 1.5).toFixed(1)}" rx="2" fill="#1b1a17" fill-opacity=".05" stroke="#1b1a17" stroke-width="1.4" stroke-dasharray="${it.zv != null ? '3 2' : 'none'}"/>`);
+    let cx = (xa + xb) / 2, cy = Y((it.z0 + it.z1) / 2);
+    for (let t = 0; t < 6 && placed.some(q => Math.hypot(q[0] - cx, q[1] - cy) < 19); t++) cy += 12;
     placed.push([cx, cy]);
-    o.push(`<circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="9" fill="var(--bg)" fill-opacity=".92" stroke="var(--${col})" stroke-width="1.6"/><text x="${cx.toFixed(1)}" y="${(cy+3.6).toFixed(1)}" text-anchor="middle" class="badge" style="fill:var(--${col})">${it.n}</text>`); });
-  // frame + end labels
-  o.push(`<rect x="${X(0).toFixed(1)}" y="${Y(TOP).toFixed(1)}" width="${(S*END).toFixed(1)}" height="${(S*TOP).toFixed(1)}" fill="none" stroke="var(--line)" stroke-width="1.2"/>`);
-  o.push(`<text x="${X(0).toFixed(1)}" y="${(Y(TOP)-8).toFixed(1)}" text-anchor="start" class="end">← rear doors</text>`);
-  o.push(`<text x="${X(END).toFixed(1)}" y="${(Y(TOP)-8).toFixed(1)}" text-anchor="end" class="end">cab →</text>`);
-  o.push(`<text x="${(X(END/2)).toFixed(1)}" y="${(Y(0)+40).toFixed(1)}" text-anchor="middle" class="axt">inches from the back mark (0 = 6 in in from the rear-door edge)</text>`);
-  o.push(`<text transform="translate(${(ML-32).toFixed(1)},${(Y(TOP/2)).toFixed(1)}) rotate(-90)" text-anchor="middle" class="axt">inches up from the floor</text>`);
-  const svg = `<svg viewBox="0 0 ${W.toFixed(0)} ${H.toFixed(0)}" role="img" aria-label="${side} wall marking map">${o.join('')}</svg>`;
-  // table
-  const rows = items.map(it => `<tr><td><span class="kn" style="color:var(--${colorOf(it.name)});border-color:var(--${colorOf(it.name)})">${it.n}</span></td><td>${esc(it.name)}${it.dims?` <span class="kd">${esc(it.dims)}</span>`:''}</td><td>${fr(it.x0)} to ${fr(it.x1)}</td><td>${it.zv != null ? fr(it.zv) : fr(it.z0)+' to '+fr(it.z1)}</td></tr>`).join('');
+    o.push(`<circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="9" fill="#fff" fill-opacity=".92" stroke="#1b1a17" stroke-width="1.5"/><text x="${cx.toFixed(1)}" y="${(cy + 3.6).toFixed(1)}" text-anchor="middle" style="font-size:10px;font-weight:700;fill:#1b1a17">${it.n}</text>`);
+  });
+  const id = flip ? 'P' : 'D';
+  const svg = `<svg viewBox="0 0 1070 636" role="img" aria-label="${flip ? 'Passenger' : 'Driver'} wall: steel depth map, furring strips and the items, almost transparent, on top">${base.inner}<g id="wmItems${id}">${o.join('')}</g></svg>`;
+  const rows = items.map(it => `<tr><td><span class="kn">${it.n}</span></td><td>${esc(it.name)}${it.dims ? ` <span class="kd">${esc(it.dims)}</span>` : ''}</td><td>${fr(it.x0)} to ${fr(it.x1)}</td><td>${it.zv != null ? fr(it.zv) : fr(it.z0) + ' to ' + fr(it.z1)}</td></tr>`).join('');
   const table = `<div class="tw"><table><thead><tr><th></th><th>Item</th><th>From the back mark (in)</th><th>Up from the floor (in)</th></tr></thead><tbody>${rows}</tbody></table></div>`;
-  return {svg, table};
+  return { svg, table, id, legend: base.legend };
 }
 
 (async () => {
@@ -112,51 +110,50 @@ function wallSVG(d, side) {
   await page.waitForTimeout(700);
   const drv = await grab(page, 'driver');
   const pas = await grab(page, 'pass');
+  const page2 = await b.newPage({viewport:{width:1400,height:1000}});
+  await page2.goto('file://' + __dirname + '/../sides.html');
+  await page2.waitForTimeout(500);
+  const baseA = await grabBase(page2, 0), baseD = await grabBase(page2, 2);
+  const css = await page2.evaluate(() => [...document.querySelectorAll('style')].map(s => s.textContent).join('\n'));
   await b.close();
-  const D = wallSVG(drv, 'driver'), P = wallSVG(pas, 'pass');
+  const D = wallSVG(drv, 'driver', baseA), P = wallSVG(pas, 'pass', baseD);
 
-  const style = `:root{color-scheme:light;--bg:#faf9f5;--card:#fff;--ink:#26241f;--mute:#6a665c;--line:#cdcabf;
-  --c1:#185FA5;--c2:#8A5A00;--c3:#0F6E56;--c4:#8B4A8F;--c5:#A3522D;--c6:#5F5E5A;--door:#d9d5ca;}
-  @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1b1a17;--card:#242320;--ink:#ece9e0;--mute:#aaa598;--line:#3d3b34;--c1:#6fb1ee;--c2:#e0b25d;--c3:#5cc9a7;--c4:#d79bd3;--c5:#e0956b;--c6:#b7b2a6;--door:#33312b;color-scheme:dark;}}
-  :root[data-theme="dark"]{--bg:#1b1a17;--card:#242320;--ink:#ece9e0;--mute:#aaa598;--line:#3d3b34;--c1:#6fb1ee;--c2:#e0b25d;--c3:#5cc9a7;--c4:#d79bd3;--c5:#e0956b;--c6:#b7b2a6;--door:#33312b;color-scheme:dark;}
-  *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,'Segoe UI',Roboto,sans-serif}
-  .wrap{max-width:1180px;margin:0 auto;padding-block:16px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
-  h1{font-size:25px;margin:6px 0 2px}h2{font-size:20px;margin:22px 0 6px}.lead{color:var(--mute);margin:0 0 10px}
-  .figwrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--card);padding:8px;margin:0 0 10px}
-  svg{min-width:760px;width:100%;height:auto;display:block}
-  .gmin{stroke:var(--line);stroke-width:.5;opacity:.5}.gmaj{stroke:var(--line);stroke-width:1}
-  .ax{font-size:10px;fill:var(--mute)}.axt{font-size:12px;fill:var(--mute)}
-  .furr{stroke:var(--c2);stroke-width:1.3;stroke-dasharray:6 4;opacity:.8}.furrlab{font-size:9.5px;fill:var(--c2)}
-  .ceil{stroke:var(--mute);stroke-width:1.4;stroke-dasharray:2 3}
-  .badge{font-size:10px;font-weight:700}.end{font-size:12px;font-weight:700;fill:var(--mute)}
-  .doorlab{font-size:12px;fill:var(--mute)}
-  .tw{overflow-x:auto}
-  table{border-collapse:collapse;width:100%;font-size:14px;margin:0 0 8px}
-  th,td{border-bottom:1px solid var(--line);padding:5px 8px;text-align:left;vertical-align:top}
-  th{color:var(--mute);font-weight:600}td:nth-child(3),td:nth-child(4),th:nth-child(3),th:nth-child(4){white-space:nowrap}
-  .kn{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border:1.6px solid;border-radius:50%;font-weight:700;font-size:12px}
-  .kd{color:var(--mute)}
-  .note{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 14px;color:var(--mute);font-size:14px;margin:0 0 14px}
-  a{color:var(--c1)}`;
+  const style = css + `
+  body { max-width: none; margin: 0; padding: 0; background: #fff; color: #2C2C2A; color-scheme: light; }
+  .wrap { max-width: 1180px; margin: 0 auto; padding-block: 16px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+  h1 { font-size: 24px; margin: 6px 0 2px; } h2 { font-size: 19px; margin: 26px 0 6px; }
+  .lead { color: #5F5E5A; margin: 0 0 10px; font-size: 15px; }
+  .figwrap { overflow-x: auto; border: 1px solid #D3D1C7; border-radius: 10px; padding: 6px; margin: 6px 0; background: #fff; }
+  .figwrap svg { min-width: 820px; }
+  .tog { display: flex; flex-wrap: wrap; gap: 8px 22px; font-size: 14px; margin: 6px 0; }
+  .tw { overflow-x: auto; }
+  table { border-collapse: collapse; width: 100%; font-size: 14px; margin: 6px 0 8px; }
+  th, td { border-bottom: 1px solid #D3D1C7; padding: 5px 8px; text-align: left; vertical-align: top; }
+  th { color: #5F5E5A; font-weight: 600; } td:nth-child(3), td:nth-child(4), th:nth-child(3), th:nth-child(4) { white-space: nowrap; }
+  .kn { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border: 1.6px solid #1b1a17; border-radius: 50%; font-weight: 700; font-size: 12px; }
+  .kd { color: #5F5E5A; }
+  .note { background: #FAF9F5; border: 1px solid #D3D1C7; border-radius: 10px; padding: 10px 14px; color: #5F5E5A; font-size: 14px; margin: 0 0 14px; }
+  a { color: #185FA5; }`;
 
+  const sec = (title, W, itemsId, furrId, furrLabel) => `<h2>${title}</h2>
+  <div class="tog"><label><input type="checkbox" id="t_${furrId}" checked onchange="document.getElementById('${furrId}').style.display=this.checked?'':'none'"> ${furrLabel}</label>
+  <label><input type="checkbox" id="t_${itemsId}" checked onchange="document.getElementById('${itemsId}').style.display=this.checked?'':'none'"> Show the items (numbered, almost transparent)</label></div>
+  <div class="figwrap">${W.svg}</div>
+  ${W.legend}
+  ${W.table}`;
   const body = `<div class="wrap">
-  <h1>Wall marking map</h1>
-  <p class="lead">Every built item laid out see-through on each wall, to scale, with a 12 in grid. Measure along the bottom from the <b>back mark</b> (0 is <b>6 in in from the rear-door edge</b>, the same zero as the plan and the wall diagrams, so add 6 in to measure from the doors) and <b>up from the floor</b> on the side, then mark the numbered boxes on the real wall. Dashed brown lines are the furring strips (S1 to S8); the dashed grey line is the finished ceiling. Positions come from the plan and change if you change the sizes there.</p>
-  <div class="note">Both walls are drawn with the <b>back of the van on the left</b>, so you measure the same way on either side. (In the interactive plan the passenger wall is drawn the other way round, with the cab on the left.) Out-from-the-wall depths are not shown here; they are in the plan's item list.</div>
-  <h2>Driver side wall</h2>
-  <div class="figwrap">${D.svg}</div>
-  ${D.table}
-  <h2>Passenger side wall</h2>
-  <div class="figwrap">${P.svg}</div>
-  ${P.table}
+  <h1>Wall marking map: steel, furring strips and items</h1>
+  <p class="lead">Diagrams A and D from the static page (the colors are how far the steel stands off the body, the white dots are the furring strips' attachment points) with every built item drawn almost transparent on top, numbered. Each table says where an item sits: measure along the wall from the <b>back mark</b> (0 is <b>6 in in from the rear-door edge</b>, the same zero as the plan and the wall diagrams, so add 6 in to measure from the doors) and <b>up from the floor</b>. Positions come from the plan and change with its sizes; the steel and the strips are the measured drawing.</p>
+  <div class="note">The driver wall is drawn with the back of the van on the left. The passenger wall is drawn as diagram D is, with the cab on the left and the back on the right. Dashed item boxes are things that only exist at one height (rods, table tops, the foot ledge): the table gives that one height. Out-from-the-wall depths are not in the tables.</div>
+  ${sec('Driver side wall', D, 'wmItemsD', 'furr', 'Show the furring strips (S1 to S8) and their attachment dots')}
+  ${sec('Passenger side wall', P, 'wmItemsP', 'furrP', 'Show the furring strips (S1 to S8) and the nook frames (V1 to V4)')}
   <p class="lead" style="margin-top:14px"><a href="interactive.html">Back to the interactive plan</a></p>
   </div>`;
 
   const doc = `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Wall marking map</title><style>${style}</style></head><body>${body}</body></html>`;
   fs.writeFileSync(__dirname + '/../wall-map.html', doc);
-  // fragment for the artifact
-  const frag = `<meta name="claude:viewport-fit-sides" content="cover">\n<title>Wall Marking Map</title>\n<style>${style}</style>\n${body.replace('<a href="interactive.html">','<a href="https://claude.ai/artifact/PoTZ5J5BkcwXAr5J2RBTjs" target="_blank" rel="noopener">')}\n`;
   if (!process.env.SC) return console.log('wall-map.html', doc.length);
+  const frag = `<meta name="claude:viewport-fit-sides" content="cover">\n<title>Wall Marking Map</title>\n<style>${style}</style>\n${body.replace('<a href="interactive.html">','<a href="https://claude.ai/artifact/PoTZ5J5BkcwXAr5J2RBTjs" target="_blank" rel="noopener">')}\n`;
   fs.writeFileSync(process.env.SC + '/wmap/index.html', frag);
   fs.writeFileSync(process.env.SC + '/wmap/preview.html', '<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head><body>'+frag+'</body></html>');
   console.log('wall-map.html', doc.length, 'driver items', drv.items.length, 'pass items', pas.items.length);
