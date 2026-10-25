@@ -42,11 +42,20 @@ const E_PASS = pl => { const sl = pl.lights.filter(l => l.x > 6 && l.x < 6 + pl.
 ]; };
 
 // plumbing shown for reference, drawn in teal with PL numbers so it cannot be mistaken for the electrics
-const PLUMB = pl => [
-  {k:'phead', n:'Shower head', x:pl.headX, z:pl.headZ, lab:'H', note:fr(pl.headZ) + ' in up on a ' + fr(pl.headOut) + ' in arm pointing into the stall; hot and cold arrive from the hot water tank and the fresh tank along the wall behind the planks'},
-  {k:'pvalve', n:'Shower valve (mixer handle)', x:pl.valveX, z:pl.valveZ, lab:'V', note:'at the cab end, where the hot and cold lines arrive; above the tipped-up pan (it reaches about 25 in)'},
-  {k:'ppump', n:'Water pump, under the sink', x0:119, x1:122, z0:12, z1:20, note:'on the sink cabinet’s cab-side end panel, above the fresh tank (top at 10 in), with a service hatch. Its 12 V feed (14 AWG, 10 A, from the fuse block) is the pump circuit on the one-line diagram'},
-];
+const PLUMB = pl => {
+  const rz = 27.5, bz = 62;                          // rz: the band between furring strips S3 (21 1/2) and S4 (30 1/4), inside the 2 in zone (23 1/4 to 29 1/2 up) and above the five oval slots at 25 1/3; bz: the band between S6 (57 1/4) and S7 (66)
+  const rx = pl.snookEnd + 2.25, vz = pl.valveZ, sx = pl.toilet ? pl.toilet.x0 / 2 : pl.panW / 2;
+  const out = [
+    {k:'phead', n:'Shower head', x:pl.headX, z:pl.headZ, lab:'H', note:fr(pl.headZ) + ' in up on a ' + fr(pl.headOut) + ' in arm pointing into the stall, above the shower nook (its top is at ' + fr(pl.sn ? pl.sn.z1 : 54) + ' in); the feed comes down to it from the run at ' + fr(bz) + ' in up'},
+    {k:'pvalve', n:'Shower valve (mixer handle)', x:pl.valveX, z:pl.valveZ, lab:'V', note:'at the cab end, above the back of the toilet, just past the end of the shower nook; the hot and cold lines come up beside it at ' + fr(rx) + ' in. The pan is fixed (3 in curb), so nothing moves under it'},
+    {k:'ppump', n:'Water pump, under the sink', x0:119, x1:122, z0:12, z1:20, note:'on the sink cabinet’s cab-side end panel, above the fresh tank (top at 10 in), with a service hatch. Its 12 V feed (14 AWG, 10 A, from the fuse block) is the pump circuit on the one-line diagram'},
+    {k:'ppath', n:'Hot and cold supply to the shower valve (two 1/2 in PEX lines)', pts:[[120.5, 20.5], [120.5, rz], [rx, rz], [rx, vz - 1.5]], at:[70, rz], note:'cold leaves the pump and runs along the back panel of the sink cabinet (from 123 to 104 that wall is the sliding door, so there is no cavity there: clip it inside the cabinet, behind the hatch), then at 104 goes into the wall cavity behind the covering at ' + fr(rz) + ' in up: between furring strips S3 and S4, in the 2 in zone (23 1/4 to 29 1/2 up) where the steel is only 2 in off the body so there is about 2 1/2 in of room behind the covering, and above the five oval slots at 25 1/3 up. It crosses the pillar at about 98 and goes through a drilled hole in the 3/4 in wall between the shower and the fridge, then up past strips S4 and S5 (drill each, do not notch) beside the end of the shower nook to the valve. The hot line branches off the hot water tank (87 1/4 to 101 1/4, fittings at its back) at about 94 and runs beside the cold one, 1 in apart; foam sleeve on the hot one, and insulation between both lines and the steel'},
+    {k:'ppath', n:'Feed from the valve to the shower head', pts:[[rx, vz + 1.5], [rx, bz], [pl.headX, bz], [pl.headX, pl.headZ - 1.2]], at:[(rx + pl.headX) / 2, bz], note:'up beside the nook past furring strip S5 (drill a 3/4 in hole through it, do not notch it), along the band at ' + fr(bz) + ' in up over the nook (between S6 and S7) and down to the head; one mixed-water line'},
+    {k:'pdrain', n:'Shower drain, through the floor to the grey water tank under the van', x:sx, z:.8, note:'a 1 1/2 in drain in the middle of the standing part of the pan (' + fr(sx) + ' in along, about ' + fr(pl.panD / 2) + ' in out from the wall), the pan floor sloping to it; straight down through the floor, a shallow trap under it, then to the grey tank (30 x 17 x 8 space, position not set) with its vent. The tank has to be lower than the pan'},
+  ];
+  if (pl.toilet) out.push({k:'pvent', n:'Toilet vent hose (composting toilet)', x:pl.toilet.x1 - 3, z:12, note:'a 1 1/2 in hose from the fan on the back of the toilet through the passenger wall with a vent cap outside, or down through the floor; I have not checked what is behind the wall at this spot (holes and pans on diagram D), it has to be flat steel clear of them. No water line goes to a composting toilet'});
+  return out;
+};
 
 // ------------------------------------------------------------------ reading the plan
 async function readPlan(page) {
@@ -60,7 +69,7 @@ async function readPlan(page) {
       fan: { x: L.fan.x, y: L.fan.y, w: L.fan.w, u: L.fan.u },
       ac: { x: L.ac.x, y: L.ac.y, w: L.ac.w, u: L.ac.u },
       ribBands: L.ribBands,
-      batt: L.batt, bA: L.bA, bB: L.bB, headX: P.headX, headZ: P.headZ, headOut: P.headOut, valveX: P.valveX, valveZ: P.valveZ, cab: P.cab, ceilF: L.ceilF, panW: P.panW, panD: P.panD, slatY: L.slatY, slatW: P.slatW, tbl: L.tbl, bedLen: P.bedLen, tableH: P.tableH, cabBot: P.cabBot,
+      batt: L.batt, bA: L.bA, bB: L.bB, headX: P.headX, headZ: P.headZ, headOut: P.headOut, valveX: P.valveX, valveZ: P.valveZ, cab: P.cab, ceilF: L.ceilF, panW: P.panW, panD: P.panD, toilet: L.toilet, sn: L.sn, wallsOn: P.wallsOn, fwT: P.fwT, hotX: L.hotX, snookEnd: Math.min(29.75, P.panW - 6.25), slatY: L.slatY, slatW: P.slatW, tbl: L.tbl, bedLen: P.bedLen, tableH: P.tableH, cabBot: P.cabBot,
     };
   });
 }
@@ -74,6 +83,7 @@ async function grabItems(page) {            // the furniture outlines (same posi
     const PS = [a(0, P.panW, 0, L.ceilF), a(nk0, nkx, P.snookTop - P.snookH, P.snookTop), a(L.fr[0], L.fr[1], 8.25, 8.25 + P.fridgeH), a(L.microX[0], L.microX[1], L.microZ[0], L.microZ[1]),
       a(L.cabS, L.sinkE, 0, ch), a(76.5, 103.5, ch + 16, ch + 31.4), a(NK(P)[0], NK(P)[1], ch, ch + P.nookH), a(L.tankX[0], L.tankX[1], P.tankLift, P.tankLift + P.tankH),
       a(L.hotX[0], L.hotX[1], P.hotShelf, P.hotShelf + P.hotH), a(42, 76, 0, 7.5), a(P.doorX, P.doorX + P.slideW, 0, P.slideH)];
+    if (L.toilet) PS.push(a(L.toilet.x0, L.toilet.x1, 3.8, 3.8 + L.toilet.z1));
     return { D, P: PS };
   });
 }
@@ -97,6 +107,9 @@ function symbol(e, X, Y) {
   if (e.k === 'plate') { const x = X(e.x), y = Y(e.z); o.push(`<rect x="${x-17}" y="${y-9}" width="34" height="18" rx="3" fill="#fff" stroke="${INK}" stroke-width="1.8"/><rect x="${x-14}" y="${y-5.5}" width="11" height="11" rx="1.5" fill="#fff" stroke="${INK}" stroke-width="1.5"/><text x="${x-8.5}" y="${y+3}" text-anchor="middle" style="font-size:8.5px;font-weight:700;fill:${INK}">S</text><circle cx="${x+9}" cy="${y}" r="6" fill="#fff" stroke="${C120}" stroke-width="1.6"/><line x1="${x+6.6}" y1="${y-2.6}" x2="${x+6.6}" y2="${y+.8}" stroke="${C120}" stroke-width="1.4"/><line x1="${x+11.4}" y1="${y-2.6}" x2="${x+11.4}" y2="${y+.8}" stroke="${C120}" stroke-width="1.4"/>`); return [o.join(''), x, y]; }
   if (e.k === 'phead' || e.k === 'pvalve') { const x = X(e.x), y = Y(e.z); o.push(`<circle cx="${x}" cy="${y}" r="8" fill="#D7F0F2" stroke="${CPL}" stroke-width="2.2"/><text x="${x}" y="${y+3.6}" text-anchor="middle" style="font-size:10px;font-weight:700;fill:${CPL}">${e.lab}</text>`); return [o.join(''), x, y]; }
   if (e.k === 'ppump') { const xa = X(e.x0), xb = X(e.x1), x = Math.min(xa, xb), w = Math.max(12, Math.abs(xb - xa)), y0 = Y(e.z1), h = 6 * (e.z1 - e.z0); o.push(`<rect x="${x}" y="${y0}" width="${w}" height="${h}" rx="4" fill="#D7F0F2" fill-opacity=".8" stroke="${CPL}" stroke-width="2.2"/><text x="${x + w / 2}" y="${y0 + h / 2 + 3.4}" text-anchor="middle" style="font-size:9.5px;font-weight:700;fill:${CPL}">pump</text>`); return [o.join(''), x + w / 2, y0 + h / 2]; }
+  if (e.k === 'ppath') { const pts = e.pts.map(p => X(p[0]) + ',' + Y(p[1])).join(' '); o.push(`<polyline points="${pts}" fill="none" stroke="${CPL}" stroke-width="3.2" stroke-dasharray="9 5" stroke-linejoin="round" opacity=".9"/><polyline points="${e.pts.map(p => (X(p[0]) + 4) + ',' + (Y(p[1]) + 4)).join(' ')}" fill="none" stroke="#B3261E" stroke-width="2" stroke-dasharray="9 5" stroke-linejoin="round" opacity=".55"/>`); return [o.join(''), X(e.at[0]), Y(e.at[1])]; }
+  if (e.k === 'pdrain') { const x = X(e.x), y = Y(e.z); o.push(`<circle cx="${x}" cy="${y}" r="8" fill="#D7F0F2" stroke="${CPL}" stroke-width="2.2"/><line x1="${x}" y1="${y-4}" x2="${x}" y2="${y+14}" stroke="${CPL}" stroke-width="2.4"/><path d="M${x-5} ${y+9} L${x} ${y+16} L${x+5} ${y+9}" fill="none" stroke="${CPL}" stroke-width="2.4"/><text x="${x}" y="${y+3.4}" text-anchor="middle" style="font-size:9px;font-weight:700;fill:${CPL}">D</text>`); return [o.join(''), x, y]; }
+  if (e.k === 'pvent') { const x = X(e.x), y = Y(e.z); o.push(`<rect x="${x-8}" y="${y-8}" width="16" height="16" rx="8" fill="#D7F0F2" stroke="${CPL}" stroke-width="2.2"/><text x="${x}" y="${y+3.4}" text-anchor="middle" style="font-size:8.5px;font-weight:700;fill:${CPL}">VT</text>`); return [o.join(''), x, y]; }
   if (e.k === 'wet') { const x = X(e.x), y = Y(e.z); o.push(`<circle cx="${x}" cy="${y}" r="7" fill="#DCEAF6" stroke="${C12}" stroke-width="1.8" stroke-dasharray="3 2"/><text x="${x}" y="${y+3.4}" text-anchor="middle" style="font-size:9px;font-weight:700;fill:${C12}">${e.lab}</text>`); return [o.join(''), x, y]; }
   if (e.k === 'sel') { const x = X(e.x), y = Y(e.z); o.push(`<rect x="${x-10}" y="${y-8}" width="20" height="16" rx="3" fill="#fff" stroke="${C120}" stroke-width="2"/><text x="${x}" y="${y+3.4}" text-anchor="middle" style="font-size:8.5px;font-weight:700;fill:${C120}">M/H</text>`); return [o.join(''), x, y]; }
   if (e.k === 'inlet') { const x = X(e.x), y = Y(e.z); o.push(`<rect x="${x-8}" y="${y-8}" width="16" height="16" rx="3" fill="#FFF1D6" stroke="${CAC}" stroke-width="2"/><text x="${x}" y="${y+3.6}" text-anchor="middle" style="font-size:9px;font-weight:700;fill:${CAC}">IN</text>`); return [o.join(''), x, y]; }
@@ -129,7 +142,7 @@ function wallSVG(list, side, base, furn, plumb) {
     for (let t = 0; t < 6 && placed.some(q => Math.hypot(q[0] - bx, q[1] - by) < 24); t++) by += 14;
     placed.push([bx, by]);
     pg.push(`<rect x="${bx-15}" y="${by-8}" width="30" height="16" rx="3" fill="#fff" fill-opacity=".95" stroke="${CPL}" stroke-width="1.5"/><text x="${bx}" y="${by+3.8}" text-anchor="middle" style="font-size:9.5px;font-weight:700;fill:${CPL}">${e.id}</text>`);
-    const where = e.x0 != null ? `${fr(e.x0)} to ${fr(e.x1)}, ${fr(e.z0)} to ${fr(e.z1)} up` : `${fr(e.x)} in, ${fr(e.z)} up`;
+    const where = e.pts ? `from ${fr(e.pts[0][0])} in, ${fr(e.pts[0][1])} up, to ${fr(e.pts[e.pts.length - 1][0])} in, ${fr(e.pts[e.pts.length - 1][1])} up` : e.x0 != null ? `${fr(e.x0)} to ${fr(e.x1)}, ${fr(e.z0)} to ${fr(e.z1)} up` : `${fr(e.x)} in, ${fr(e.z)} up`;
     return `<tr><td><b class="pid">${e.id}</b></td><td>${esc(e.n)}</td><td>${where}</td><td class="kd">${esc(e.note)}</td></tr>`;
   });
   const svg = `<svg viewBox="0 0 1070 636" role="img" aria-label="${flip ? 'Passenger' : 'Driver'} wall: steel, furring strips, furniture outlines, the electrical items${plumb && plumb.length ? ' and the plumbing in teal' : ''}">${base.inner}<g id="elec${side}">${o.join('')}</g>${pg.length ? `<g id="plumb${side}">${pg.join('')}</g>` : ''}</svg>`;

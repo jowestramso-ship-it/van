@@ -22,7 +22,7 @@ for _a,_b in [('<h3>Driver side wall: depth color map and furring layout</h3>','
     if _a not in _h: print('WARN heading missing',_a)
     _h=_h.replace(_a,_b,1)
 # index of the diagrams, before section 1
-_idx='<p><b>Diagrams:</b> A driver side depth map and furring layout, B driver side built items, C driver side bed and couch (side section), C2 driver side bed with a hinged leaf (day and night), C3 building the leaf, slots and legs, D passenger side depth map, E passenger side built items, E3 shower curtain on three sides with the pan tipping up, F looking down at both sides, G the ceiling covering (plywood, slats, lights, fan and air conditioning cutouts).</p>\n'
+_idx='<p><b>Diagrams:</b> A driver side depth map and furring layout, B driver side built items, C driver side bed and couch (side section), C2 driver side bed with a hinged leaf (day and night), C3 building the leaf, slots and legs, D passenger side depth map, E passenger side built items, E3 shower curtain on three sides (the old tipping-pan version; the pan is fixed now), F looking down at both sides, G the ceiling covering (plywood, slats, lights, fan and air conditioning cutouts).</p>\n'
 _h=_h.replace('<h2>1. Driver side</h2>',_idx+'<h2>1. Driver side</h2>',1)
 # legend: the red dashed line
 _sw='<span><i class="sw" style="background:none;border:0;border-top:2px dashed #993C1D;height:0;vertical-align:4px"></i>red dashed line: the seam / pillar at about 98 in</span>'

@@ -120,12 +120,12 @@ function computeChecks(L, V) {
   else push('ok', `Closet doors open to ${P.openAng} degrees stick out ${fmt(sw)} in${r1.dm > 0 && r1.qm > 0 ? `, leaving ${fmt(r1.v)} in of walkway beside them` : ''}${r1.v < 10 ? '; you said the open closet door is fine' : ''}.`);
   }
   // bed out and the shower
-  const Ob = obstacles(L, { bed: 1 }), Obp = obstacles(L, { bed: 1, pan: 1 });
-  const xs = Math.min(14, P.panW - 2), rb = aisleAt(L, Ob, xs), rbp = aisleAt(L, Obp, xs);
-  if (rb.v < 0) push('ok', `With the bed made up (${fmt(P.bedD + P.bedBack)} in) it floats above the shower pan, so with the pan down they overlap by ${fmt(-rb.v)} in in the drawing; you said that does not matter (tipped up the pan leaves ${fmt(rbp.v)} in).`);
+  const Ob = obstacles(L, { bed: 1 });
+  const xs = Math.min(14, P.panW - 2), rb = aisleAt(L, Ob, xs);
+  if (rb.v < 0) push('ok', `With the bed made up (${fmt(P.bedD + P.bedBack)} in) it floats above the shower pan, so they overlap by ${fmt(-rb.v)} in in the drawing; you said that does not matter (the shower is fixed and does not tip).`);
   else push('ok', `Bed made up (${fmt(P.bedD + P.bedBack)} in) leaves ${fmt(rb.v)} in in front of the shower pan.`);
   { const legY = P.bedD + P.bedBack - P.legIn, panEdge = P.vanW - P.panD, legX = 1; // the end leg at 1 in from the rear is across from the pan (the pan is panW long)
-    push('ok', panEdge - legY >= 0 ? `The leg at the rear end of the leaf lands ${fmt(legY)} in out from the wall, ${fmt(panEdge - legY)} in short of the shower pan's front edge (${fmt(panEdge)} in) when the pan is down; the leaf edge hangs ${fmt(Math.max(0, P.bedD + P.bedBack - panEdge))} in over the pan.` : `The leg at the rear end of the leaf lands ${fmt(legY)} in out from the wall, ${fmt(-(panEdge - legY))} in over the shower pan (its front edge is at ${fmt(panEdge)} in), so with the pan down the leaf overlaps it there; you said the bed floats above the shower pan and the leg sits in front of it, so that does not matter.`); }
+    push('ok', panEdge - legY >= 0 ? `The leg at the rear end of the leaf lands ${fmt(legY)} in out from the wall, ${fmt(panEdge - legY)} in short of the shower pan's front edge (${fmt(panEdge)} in) ; the leaf edge hangs ${fmt(Math.max(0, P.bedD + P.bedBack - panEdge))} in over the pan.` : `The leg at the rear end of the leaf lands ${fmt(legY)} in out from the wall, ${fmt(-(panEdge - legY))} in over the shower pan (its front edge is at ${fmt(panEdge)} in), so the leaf overlaps it there; you said the bed floats above the shower pan and the leg sits in front of it, so that does not matter.`); }
   // fold-out table
   const reach = L.sinkE + L.flapLen, left = P.cab - reach;
   if (left < -0.01) push('bad', `The fold-out table (${fmt(L.flapLen)} long) runs ${fmt(-left)} in past the cab wall.`);
@@ -208,8 +208,17 @@ function computeChecks(L, V) {
   const ov = Math.min(L.sinkE, P.doorX + P.slideW) - Math.max(L.sinkS, P.doorX);
   if (ov > .5) push('ok', `The sink cabinet (${fmt(L.sinkS)} to ${fmt(L.sinkE)}) sits ${fmt(ov)} in inside the sliding door opening (${fmt(P.doorX)} to ${fmt(P.doorX + P.slideW)} in, ${fmt(P.slideH)} tall); you said that overlap is intended.`);
   if (P.showerOn) {
-    const tipTop = .8 + P.panD, vOk = P.valveZ > tipTop + 1;
-    push(P.headZ > L.ceilF - 1 ? 'bad' : 'ok', `Shower head: ${fmt(P.headX)} in from the back (the stall runs 0 to ${fmt(P.panW)}), ${fmt(P.headZ)} in up on a ${fmt(P.headOut)} in arm, ${fmt(L.ceilF - P.headZ)} in under the finished ceiling at the wall. A 6 ft person (72 in) is taller than the head, so they stand ${fmt(P.headOut + 2)} in or more out from the wall under the spray, or you use a hand-held wand on a slide bar. The valve is ${fmt(P.valveX)} in from the back and ${fmt(P.valveZ)} in up${vOk ? ', above the tipped-up pan' : ', inside the tipped-up pan (it reaches about ' + fmt(tipTop) + ' in): raise it'}.`);
+    push(P.headZ > L.ceilF - 1 ? 'bad' : 'ok', `Shower head: ${fmt(P.headX)} in from the back (the stall runs 0 to ${fmt(P.panW)}), ${fmt(P.headZ)} in up on a ${fmt(P.headOut)} in arm, ${fmt(L.ceilF - P.headZ)} in under the finished ceiling at the wall. A 6 ft person (72 in) is taller than the head, so they stand ${fmt(P.headOut + 2)} in or more out from the wall under the spray, or you use a hand-held wand on a slide bar. The valve is ${fmt(P.valveX)} in from the back and ${fmt(P.valveZ)} in up (the pan is fixed, with a 3 in curb).`);
+  }
+  if (L.toilet) {
+    const t = L.toilet, front = t.x0, side = t.y0, reachH = Math.hypot(P.valveX - (t.x0 - 6), P.panD / 2), reach = Math.hypot(reachH, P.valveZ - 55);
+    push(front < 12 ? 'bad' : front < 16 ? 'warn' : 'ok', `Toilet: ${fmt(P.toiletD)} deep x ${fmt(P.toiletW)} wide x ${fmt(P.toiletH)} high, sideways at the cab end of the wet bath with its back against the wall to the fridge (${fmt(t.x0)} to ${fmt(t.x1)} in from the back), centered across the ${fmt(P.panD)} in stall: ${fmt(side)} in each side. That leaves ${fmt(front)} in of floor in front of it, where you stand to shower and where a seated person's feet and knees go (about 12 in is the least for the knees; the shower pan and its 3 in curb run under the toilet too). The size is a composting toilet like the Nature's Head Weekender (18 x 18 x 16 3/4); a cassette toilet is about 15 1/2 wide and 22 3/4 deep, which would leave only about ${fmt(Math.max(0, t.x1 - 22.75))} in in front and is emptied through a hatch in the outside wall.`);
+    if (P.showerOn && P.valveX > t.x0 - .01) push(reach > 26 ? 'warn' : 'ok', `The shower valve (${fmt(P.valveX)} in from the back, ${fmt(P.valveZ)} up) is above the back of the toilet: easy to reach from the seat; from the standing space (6 in in front of the toilet, 55 in up at the shoulder) it is a reach of about ${fmt(reach)} in over the toilet${reach > 26 ? ', long for a short arm: moving the valve toward the head (a smaller number in Shower valve: along the wall) shortens it' : ''}.`);
+  }
+  if (L.sn) {
+    const n = L.sn, dHead = P.showerOn ? Math.abs(P.headX - (n.rolls[0].x0 + n.rolls[0].x1) / 2) : 0;
+    push(n.rollClear < -.01 || n.bottleClear < 6 ? 'bad' : 'ok', `Shower nook contents (the nook is ${fmt(n.x1 - n.x0)} wide x ${fmt(P.snookH)} tall, ${fmt(n.z0)} to ${fmt(n.z1)} up, 4 1/2 deep): a ${fmt(n.bar.x1 - n.bar.x0)} in towel bar ${fmt(n.bar.z)} up in the rear ${fmt(P.tbarBay)} in of it (a hand towel hangs inside the nook, from the bar down to ${fmt(Math.max(n.z0, n.bar.z - 9))} up); in the rest a shelf board (top ${fmt(n.shelfTop)} up) with ${fmt(n.shelfTop - .75 - n.z0)} in under it for the toilet paper, a roll in use and a spare (a 4 1/2 in roll leaves ${fmt(n.rollClear)} in), and ${fmt(n.bottleClear)} in above it for three bottles up to ${fmt(n.bottleClear - .5)} in tall. A standard roll is about 4 1/2 in across and the nook is 4 1/2 deep (4 3/8 over the 1/8 in ribs), so it is a snug fit; an RV-size roll (about 4 in) goes in easier.`);
+    if (P.showerOn) push('warn', `The toilet paper is about ${fmt(dHead)} in along the wall from the shower head and faces into the stall, so it will be splashed: put a small hinged acrylic door on the paper's part of the nook, or keep the rolls in a lidded holder, and keep a spare roll dry in the closet.`);
   }
   // headroom, battery, doors
   const head = Math.max(P.platform + P.mattress, P.seatH) + 37, hg = P.cabBot - head;

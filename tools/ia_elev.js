@@ -219,7 +219,7 @@ function drawPass(L, V) {
   const P = L.P, E = mkElev(true, L), { S, FL, xx, yy, box } = E, o = [];
   const X = x => xx(x), Y = z => yy(z);
   const ch = P.counterH, cabS = L.cabS, angS = L.angS, sinkS = L.sinkS, sinkE = L.sinkE;
-  o.push(elevFrame(E, L, 'Passenger side wall seen from inside the van: cab on the left, rear on the right. Click the fold-out table, the fridge or the shower pan.'));
+  o.push(elevFrame(E, L, 'Passenger side wall seen from inside the van: cab on the left, rear on the right. Click the fold-out table or the fridge.'));
   o.push(GB('seams', 'Wall covering joints'));
   o.push(wallSeams(E, L, true));
   o.push(GE());
@@ -229,8 +229,8 @@ function drawPass(L, V) {
   o.push(Poly(WW.map(p => [X(p[0]), Y(p[1])]), { fill: '#D8B79A', fo: .8, stroke: '#8A6B4D', sw: 1.2 }));
   o.push(LBL(X(59), Y(3.2), 'Wheel well', '', { size: 10, fill: '#5F5E5A', halo: false, keyMore: 'same as the driver side: 42 to 76 in from the back, 7 1/2 tall' }));
   o.push(GE());
-  // wet bath: outline, curtain, pan (tips up toward the wall)
-  const sp = V.pan || 0, tp = sp * Math.PI / 2, panTop = 0.8 + P.panD * Math.sin(tp) + 3 * Math.cos(tp);
+  // wet bath: outline, curtain, fixed pan with a 3 in curb
+  const panTop = 3.8;
   o.push(GB('bath', 'Wet bath'));
   o.push(box(0, P.panW, 0, L.ceilF, { fill: COL.T, fo: .08, stroke: COL.T, sw: 1.5, rx: 3 }));
   o.push(LBL(X(P.panW / 2), Y(L.ceilF * 0.9), 'Wet bath', `${fmt(P.panW)} x ${fmt(P.panD)} in, shower curtain`, { size: 12, fill: COL.T }));
@@ -254,18 +254,33 @@ function drawPass(L, V) {
   const snTop = P.snookTop, snBot = snTop - P.snookH;
   o.push(box(nk0, nkx, snBot, snTop, { fill: '#7A4A1E', fo: .2, stroke: '#7A4A1E', sw: 1.5, rx: 3, dash: '5 3' }));
   if (P.snookLip > 0) o.push(box(nk0, nkx, snBot, snBot + P.snookLip, { fill: '#5A3510', fo: .9, stroke: '#3E230B', sw: 1 }));
-  o.push(LBL(X((nk0 + nkx) / 2), Y(snBot + P.snookH / 2), 'Shower nook', `${fmt(nkx - nk0)} wide x ${fmt(P.snookH)} tall, 4 1/2 deep`, { size: 12, fill: '#7A4A1E', keyMore: `${fmt(snBot)} to ${fmt(snTop)} up${P.snookLip > 0 ? `, ${fmt(P.snookLip)} in front lip to keep things in` : ''}` }));
+  o.push(LBL(X((nk0 + nkx) / 2), Y(snTop + 3.6), 'Shower nook', `${fmt(nkx - nk0)} wide x ${fmt(P.snookH)} tall, 4 1/2 deep`, { size: 12, fill: '#7A4A1E', keyMore: `${fmt(snBot)} to ${fmt(snTop)} up${P.snookLip > 0 ? `, ${fmt(P.snookLip)} in front lip to keep things in` : ''}` }));
 
   o.push(GE());
-  o.push(GB('pan', 'Shower pan (click to tip it)'));
-  {
-    let g = box(0, P.panW, 1, 75, { fill: '#7B3FA0', fo: .12 * (1 - sp) });
-    g += box(0, P.panW, 0, panTop, { fill: '#D9ECF7', fo: .95, stroke: COL.BL, sw: 1.8 });
-    if (sp > .55) g += T(X(P.panW / 2), Y(panTop / 2) + 4, 'pan tipped up', { size: 11, fill: COL.BL });
-    else if (sp < .1) g += T(X(P.panW / 2), Y(2), 'pan down', { size: 10, fill: COL.BL });
-    o.push(MV('pan', g, HITR(Math.min(X(0), X(P.panW)), Y(P.panD + 2), S * P.panW, S * (P.panD + 2))));
-  }
+  o.push(GB('pan', 'Shower pan (fixed)'));
+  o.push(box(0, P.panW, 0, panTop, { fill: '#D9ECF7', fo: .95, stroke: COL.BL, sw: 1.8 }));
+  o.push(T(X(P.panW / 2), Y(1.2), 'fixed pan, 3 in curb', { size: 10, fill: COL.BL }));
   o.push(GE());
+  if (L.toilet) {
+    const t = L.toilet;
+    o.push(GB('toilet', 'Toilet'));
+    o.push(box(t.x0, t.x1, panTop, panTop + t.z1, { fill: '#993556', fo: .16, stroke: '#993556', sw: 1.6, rx: 4 }));
+    o.push(LBL(X((t.x0 + t.x1) / 2), Y(panTop + t.z1 / 2), 'Toilet', `${fmt(P.toiletD)} x ${fmt(P.toiletW)} x ${fmt(P.toiletH)}, sideways, back against the wall to the fridge, ${fmt(t.x0)} in of standing room in front`, { size: 11, fill: '#993556' }));
+    o.push(GE());
+  }
+  if (L.sn) {
+    const n = L.sn, bot = n.z0;
+    o.push(GB('snitems', 'Towel bar, toilet paper and bottles'));
+    o.push(box(n.bay - .1, n.bay + .1, bot, n.z1, { fill: '#7A4A1E', fo: .5, stroke: '#7A4A1E', sw: 1, dash: '3 3' }));
+    o.push(Ln(X(n.bar.x0), Y(n.bar.z), X(n.bar.x1), Y(n.bar.z), { stroke: '#444441', sw: 3.2, cap: 'round' }));
+    o.push(LBL(X((n.bar.x0 + n.bar.x1) / 2), Y(n.bar.z - 3.2), 'Towel bar', `${fmt(n.bar.x1 - n.bar.x0)} long, ${fmt(n.bar.z)} up, inside the nook`, { size: 10, fill: '#444441' }));
+    o.push(box(n.bay, n.x1, n.shelfTop - .75, n.shelfTop, { fill: '#8A6B4D', fo: .8, stroke: '#3E230B', sw: 1 }));
+    n.rolls.forEach(r => o.push(box(r.x0, r.x1, r.z0, r.z1, { fill: '#F3E3B3', fo: .95, stroke: '#8A5A00', sw: 1.2, rx: 2 })));
+    o.push(LBL(X((n.rolls[1].x0 + n.rolls[0].x1) / 2), Y(n.rolls[0].z0 + 2.25), 'Toilet paper', `a roll in use and a spare, 4 1/2 in across; ${fmt(n.rollClear)} in clear under the shelf`, { size: 10, fill: '#8A5A00' }));
+    n.bottles.forEach((b, i) => o.push(box(b.x0, b.x1, b.z0, b.z1, { fill: ['#9EC9E8', '#C7B3E0', '#A9D3B4'][i], fo: .75, stroke: '#444441', sw: 1, rx: 2 })));
+    o.push(LBL(X((n.bottles[0].x0 + n.bottles[2].x1) / 2), Y(n.shelfTop + 4.5), 'Shelf and bottles', `shelf top ${fmt(n.shelfTop)} up, ${fmt(n.bottleClear)} in clear above it`, { size: 10, fill: '#444441' }));
+    o.push(GE());
+  }
   // cabinets, counter
   o.push(GB('counter', 'Sink cabinet and countertop'));
   o.push(box(cabS, sinkS, 0, ch, { fill: COL.C, fo: .08, stroke: COL.C, sw: 1.5, rx: 3 }));

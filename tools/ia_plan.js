@@ -15,8 +15,7 @@ function obstacles(L, V) {
     const th = s * P.openAng * rad;
     for (let k = 0; k <= 24; k++) { const r = wC * k / 24; D.push({ x0: hx + sg * r * Math.cos(th) - .4, x1: hx + sg * r * Math.cos(th) + .4, d: P.closetD + r * Math.sin(th), n: 'the closet door', door: true, px: hx + sg * r * Math.cos(th) }); }
   });
-  const sp = V.pan || 0;
-  Q.push({ x0: 0, x1: P.panW, d: 3.5 + (P.panD - 3.5) * (1 - sp), n: sp > .5 ? 'the shower pan (tipped up)' : 'the shower pan' });
+  Q.push({ x0: 0, x1: P.panW, d: P.panD, n: 'the shower pan' });
   if (P.fridgeOn) Q.push({ x0: L.fr[0], x1: L.fr[1], d: P.cabD, n: 'the fridge' });
   const sf = V.fridge || 0;
   if (P.fridgeOn && sf > .02) {
@@ -146,13 +145,15 @@ function drawPlan(L, V) {
   else o.push(T(xx((L.c0 + L.c1) / 2), yy(P.closetD + 4), 'click to open', { size: 9, fill: '#5F5E5A' }));
   o.push(GE());
   // ---------- passenger side ----------
-  const sp = V.pan || 0, panDepth = 3.5 + (P.panD - 3.5) * (1 - sp);
-  o.push(GB('pan', 'Fold-up shower'));
-  {
-    let g = ip(0, P.panW, 0, panDepth, COL.T, 'Fold-up shower', sp > .5 ? 'tipped up against the wall' : `${fmt(P.panW)} x ${fmt(P.panD)} open, folds into the side wall`, { fo: .08, dash: '6 4' });
-    o.push(MV('pan', g, HITR(xx(0), yp(P.panD), S * P.panW, S * P.panD)));
-  }
+  o.push(GB('pan', 'Shower'));
+  o.push(ip(0, P.panW, 0, P.panD, COL.T, '', null, { fo: .08, dash: '6 4' }));
+  { const cx = xx((L.toilet ? L.toilet.x0 : P.panW) / 2), cy = yp(P.panD / 2); o.push(T(cx, cy - 14, 'Shower', { size: 11, fill: COL.T, w: 500 })); o.push(T(cx, cy, `${fmt(P.panW)} x ${fmt(P.panD)}, fixed pan`, { size: 9.5, fill: COL.T })); o.push(T(cx, cy + 12, 'curtain on the aisle side', { size: 9, fill: COL.T })); }
   o.push(GE());
+  if (L.toilet) {
+    o.push(GB('toilet', 'Toilet'));
+    o.push(ip(L.toilet.x0, L.toilet.x1, L.toilet.y0, L.toilet.y1, '#993556', 'Toilet', `${fmt(P.toiletD)} x ${fmt(P.toiletW)}, ${fmt(P.toiletH)} high`, { fo: .2, fs: 10 }));
+    o.push(GE());
+  }
   o.push(GB('shower', 'Shower head and valve'));
   if (P.showerOn) o.push(ip(P.headX - 2, P.headX + 2, P.headOut - 2, P.headOut + 2, '#185FA5', 'Shower head', `${fmt(P.headZ)} up`, { fo: .3 }));
   o.push(GE());

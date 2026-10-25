@@ -48,6 +48,11 @@ async function grab(page, side) {
       if (P.fridgeOn) add('Fridge', L.fr[0], L.fr[1], 8.25, 8.25 + P.fridgeH, `${F(P.fridgeW)} x ${F(P.fridgeD)} x ${F(P.fridgeH)}, on a platform`);
       if (P.microOn) add('Microwave', L.microX[0], L.microX[1], L.microZ[0], L.microZ[1], 'on its shelf');
       L.walls.filter(w => w.side === 'p').forEach(w => add('Floor-to-ceiling wall', w.x0, w.x1, 0, L.ceilF, `${w.id}: ${F(P.fwT)} thick, ${F(w.d)} out from the wall, ${w.id === 'W3' ? 'between the shower and the fridge' : 'between the fridge and the counter cabinet'}`));
+      if (L.toilet) add('Toilet', L.toilet.x0, L.toilet.x1, 3.8, 3.8 + L.toilet.z1, `${F(P.toiletD)} along the wall x ${F(P.toiletW)} out, ${F(L.toilet.z1)} high, back against the wall to the fridge`);
+      if (L.sn) {
+        add('Towel bar (in the shower nook)', L.sn.bar.x0, L.sn.bar.x1, L.sn.bar.z - .5, L.sn.bar.z + .5, `${F(L.sn.bar.z)} up, inside the nook`, L.sn.bar.z);
+        add('Shelf board (in the shower nook)', L.sn.bay, L.sn.x1, L.sn.shelfTop - .75, L.sn.shelfTop, `top at ${F(L.sn.shelfTop)} up, toilet paper under it, bottles on it`, L.sn.shelfTop);
+      }
       add('Counter cabinet', L.cabS, L.sinkS, 0, ch, `top at ${F(ch)}, ${F(P.cabD)} deep`);
       add('Sink cabinet', L.sinkS, L.sinkE, 0, ch, `${F(P.sinkW)} wide, ${F(P.sinkD)} deep`);
       if (P.drawersOn) L.parts.forEach(p => add(cap(p.n.replace(/^the /i, '')), p.x0, p.x1, p.z0, p.z1, `${F(p.x1 - p.x0)} wide x ${F(p.z1 - p.z0)} tall`));

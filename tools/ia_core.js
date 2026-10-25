@@ -15,6 +15,8 @@ const PD = [
   { k: 'drawersOn', g: 'Take items out', l: 'Drawers and shelves under the counter (all of them, with the rail)', d: true, t: 'c' },
   { k: 'battOn', g: 'Take items out', l: 'Battery under the couch', d: true, t: 'c' },
   { k: 'closetOn', g: 'Take items out', l: 'Closet and its doors (the space it leaves stays empty; the dinette still starts where the closet ends)', d: true, t: 'c' },
+  { k: 'toiletOn', g: 'Take items out', l: 'Toilet in the wet bath (at the cab end, sideways, its back against the wall to the fridge)', d: true, t: 'c' },
+  { k: 'snItemsOn', g: 'Take items out', l: 'Towel bar, toilet paper and bottles in the shower nook', d: true, t: 'c' },
   { k: 'wallsOn', g: 'Take items out', l: 'Floor-to-ceiling walls: behind the dinette backs (at the closet end and behind the driver seat) and one on each side of the fridge', d: true, t: 'c' },
   { k: 'bedLen', g: 'Bed / couch', l: 'Length', d: 74, s: .5, a: 40, b: 120 },
   { k: 'bedD', g: 'Bed / couch', l: 'Depth, closed (the couch on its base)', d: 26, s: .5, a: 15, b: 40 },
@@ -55,7 +57,13 @@ const PD = [
   { k: 'headZ', g: 'Passenger side', l: 'Shower head: height up from the floor (the finished ceiling at the wall is about 74 1/2)', d: 70, s: .5, a: 50, b: 74 },
   { k: 'headOut', g: 'Passenger side', l: 'Shower head: how far it sticks out from the wall on its arm', d: 6, s: .5, a: 2, b: 14 },
   { k: 'valveX', g: 'Passenger side', l: 'Shower valve (mixer handle): along the wall, from the back', d: 33, s: .5, a: 1, b: 35 },
-  { k: 'valveZ', g: 'Passenger side', l: 'Shower valve: height up from the floor (above the tipped-up pan, which reaches about 25)', d: 44, s: .5, a: 26, b: 60 },
+  { k: 'valveZ', g: 'Passenger side', l: 'Shower valve: height up from the floor (the pan is fixed, with a 3 in curb)', d: 44, s: .5, a: 26, b: 60 },
+  { k: 'toiletW', g: 'Toilet', l: 'Toilet: width, side to side (a composting one the size of the Nature\'s Head Weekender, 18; a Porta Potti 335 is 13 1/2)', d: 18, s: .5, a: 10, b: 24 },
+  { k: 'toiletD', g: 'Toilet', l: 'Toilet: depth, front to back (it sits sideways, so this runs along the wall; Weekender 18, Porta Potti 15, a cassette toilet about 22 3/4)', d: 18, s: .5, a: 10, b: 26 },
+  { k: 'toiletH', g: 'Toilet', l: 'Toilet: height of the top of the seat (Weekender 16 3/4, Porta Potti about 12)', d: 16.75, s: .25, a: 10, b: 24 },
+  { k: 'tbarBay', g: 'Shower nook contents', l: 'Towel bar bay: width from the rear end of the nook (the rest of the nook holds the toilet paper and the bottles)', d: 6, s: .25, a: 3, b: 12 },
+  { k: 'tbarDrop', g: 'Shower nook contents', l: 'Towel bar: how far below the top of the nook', d: 3.5, s: .25, a: 1, b: 8 },
+  { k: 'snShelf', g: 'Shower nook contents', l: 'Shelf board: its top, up from the floor (toilet paper under it, bottles on it)', d: 43.75, s: .25, a: 38, b: 54 },
   { k: 'snookLip', g: 'Passenger side', l: 'Shower nook front lip, to keep things in (0 for none)', d: 1.5, s: .25, a: 0, b: 4 },
   { k: 'fridgeW', g: 'Passenger side', l: 'Fridge width', d: 22, s: .5, a: 14, b: 30 },
   { k: 'fridgeD', g: 'Passenger side', l: 'Fridge depth', d: 19, s: .5, a: 12, b: 26 },
@@ -263,7 +271,7 @@ const HITR = (x, y, w, h) => `<rect x="${f1(x)}" y="${f1(y)}" width="${f1(Math.m
 const GB = (id, label) => `<g class="hg" data-grp="${id}" data-label="${label}">`;
 const GE = () => '</g>';
 // items that were taken out (their tick box in Sizes is off): cut their groups and drag handles out of a finished drawing
-const REMOVED = () => [['showerOn', 'shower'], ['microOn', 'Micro'], ['tvOn', 'tv'], ['towelOn', 'towels'], ['fridgeOn', 'fridge'], ['drawersOn', 'drawers'], ['battOn', 'batt'], ['closetOn', 'closet'], ['wallsOn', 'fwalls']].filter(r => !P[r[0]]).map(r => r[1]);
+const REMOVED = () => [['showerOn', 'shower'], ['microOn', 'Micro'], ['tvOn', 'tv'], ['towelOn', 'towels'], ['fridgeOn', 'fridge'], ['drawersOn', 'drawers'], ['battOn', 'batt'], ['closetOn', 'closet'], ['wallsOn', 'fwalls'], ['toiletOn', 'toilet'], ['snItemsOn', 'snitems']].filter(r => !P[r[0]]).map(r => r[1]);
 function stripGroups(html, ids) {
   ids.forEach(id => {
     const open = `<g class="hg" data-grp="${id}"`;
@@ -413,6 +421,18 @@ function layout(P0) {
   const L = { P };
   L.c0 = P.bedLen; L.c1 = P.bedLen + P.closetW;
   L.bA = [L.c1, L.c1 + P.benchLen]; L.bB = [P.cab - P.benchLen, P.cab];
+  // the toilet: sideways at the cab end of the wet bath, back against the wall to the fridge, centered across the stall (y = out from the passenger wall)
+  { const x1 = P.panW - (P.wallsOn ? P.fwT : 0), y0 = (P.panD - P.toiletW) / 2; L.toilet = P.toiletOn ? { x0: x1 - P.toiletD, x1, y0, y1: y0 + P.toiletW, z1: P.toiletH } : null; }
+  // the shower nook contents: a towel bar bay at the rear end, then a shelf board with the bottles on it and the toilet paper rolls under it
+  {
+    const nkx = Math.min(29.75, P.panW - 6.25), nk0 = nkx - P.snookLen, bot = P.snookTop - P.snookH, top = P.snookTop, lip = P.snookLip;
+    const sn = { x0: nk0, x1: nkx, z0: bot, z1: top, bay: nk0 + P.tbarBay, shelfTop: Math.min(top - 1, P.snShelf) };
+    sn.bar = { x0: nk0 + .5, x1: sn.bay - .5, z: top - P.tbarDrop };
+    sn.rolls = [[nkx - 4.75, nkx - .25], [nkx - 9.5, nkx - 5]].map(r => ({ x0: r[0], x1: r[1], z0: bot, z1: bot + 4.5 }));
+    let bx0 = sn.bay + .5; sn.bottles = [[2.6, 8.5], [3, 9], [2.6, 7.5]].map(b => { const o = { x0: bx0, x1: bx0 + b[0], z0: sn.shelfTop, z1: sn.shelfTop + b[1] }; bx0 += b[0] + .5; return o; });
+    sn.bottlesEnd = bx0 - .5; sn.rollClear = sn.shelfTop - .75 - bot - 4.5; sn.bottleClear = top - sn.shelfTop;
+    L.sn = P.snItemsOn ? sn : null;
+  }
   // floor-to-ceiling walls. Driver side (y = out from the driver wall): the closet's cab-side panel carried out to the bench depth, which the back of the rear bench leans on,
   // and the wall behind the driver seat (face at the cab wall mark, body behind it), which the back of the cab-end bench leans on. Passenger side (y = out from the passenger wall):
   // one each side of the fridge, taken out of the shower and out of the counter cabinet so that no other position moves; the shower one is as deep as the pan, the counter one as deep as the cabinet
@@ -578,5 +598,5 @@ function bedState(s) {
 }
 // the dinette makes up into a bed: the table lowers, the backrest cushions come off and lie on it
 function dinState(s) { return { tbl: ease(clamp(s / .5, 0, 1)), back: 1 - ease(clamp((s - .15) / .4, 0, 1)), pil: clamp((s - .55) / .45, 0, 1) }; }
-const MOVER_IDS = ['dc0', 'dc1', 'dc2', 'dc3', 'dc4', 'dc5', 'clo_lo', 'clo_hi', 'bed', 'dinette', 'pan', 'flap', 'ledge', 'fridge'];
+const MOVER_IDS = ['dc0', 'dc1', 'dc2', 'dc3', 'dc4', 'dc5', 'clo_lo', 'clo_hi', 'bed', 'dinette', 'flap', 'ledge', 'fridge'];
 MOVER_IDS.forEach(ensure);
