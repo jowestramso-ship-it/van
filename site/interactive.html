@@ -350,8 +350,8 @@ const PD = [
   { k: 'slatGap', g: 'Ceiling', l: 'Gap between slats', d: 1, s: .25, a: 0, b: 6 },
   { k: 'slatAuto', g: 'Ceiling', l: 'Slats as long as the whole ceiling (no joints)', d: true, t: 'c', f: 'slatLen' },
   { k: 'slatLen', g: 'Ceiling', l: 'Slat length', d: 160, s: 1, a: 12, b: 220 },
-  { k: 'lightSpots', g: 'Ceiling', l: 'Ceiling lights only over the shower, the countertop and the sink (untick for evenly spaced rows instead)', d: true, t: 'c' },
-  { k: 'lightN', g: 'Ceiling', l: 'Round lights in the ceiling (count; with the box above ticked at most 3: shower, countertop, sink)', d: 3, s: 1, a: 0, b: 24 },
+  { k: 'lightSpots', g: 'Ceiling', l: 'Ceiling lights only over the shower and over the countertop and sink together (untick for evenly spaced rows instead)', d: true, t: 'c' },
+  { k: 'lightN', g: 'Ceiling', l: 'Round lights in the ceiling (count; with the box above ticked at most 2: the shower, then the countertop and sink)', d: 2, s: 1, a: 0, b: 24 },
   { k: 'lightRows', g: 'Ceiling', l: 'Rows of lights along the ceiling', d: 2, s: 1, a: 1, b: 4 },
   { k: 'lightD', g: 'Ceiling', l: 'Light diameter (mounted on a slat)', d: 2, s: .25, a: 1, b: 8 },
   { k: 'fanX', g: 'Ceiling', l: 'Roof fan cutout: along the van (from the back)', d: 13.25, s: .5, a: 0, b: 220 },
@@ -681,13 +681,13 @@ function layout(P0) {
     L.slatOut = new Set(); L.lights = []; L.chanY = [];
     const rows = Math.max(1, Math.round(P.lightRows)), N = Math.max(0, Math.round(P.lightN));
     if (P.lightSpots) {
-      // lights only over the shower stall, the countertop and the sink: x is from the rear-door edge (the wall numbers + 6), y across from the driver wall;
-      // each sits on the slat nearest the middle of what it lights (ties go toward the passenger wall) and 2 in clear of a rib, so the wire hole misses it
-      const cs = L.cabS + 6, ss = L.sinkS + 6, se = L.sinkE + 6;
-      const want = [[6 + P.panW / 2, P.vanW - P.panD / 2], [(cs + ss) / 2, P.vanW - P.cabD / 2], [(ss + se) / 2, P.vanW - P.sinkD / 2]].slice(0, N);
+      // lights only over the shower stall and one over the countertop and sink together: x is from the rear-door edge (the wall numbers + 6), y across from the driver wall;
+      // each sits on the slat nearest the middle of what it lights (ties go toward the passenger wall) and 2 in clear of a rib (on the nearer side), so the wire hole misses it
+      const cs = L.cabS + 6, se = L.sinkE + 6;
+      const want = [[6 + P.panW / 2, P.vanW - P.panD / 2], [(cs + se) / 2, P.vanW - P.cabD / 2]].slice(0, N);
       want.forEach(w => {
         let x = w[0], y = w[1];
-        L.ribBands.forEach(b => { if (x > b[0] - 2 && x < b[1] + 2) x = b[1] + 2; });
+        L.ribBands.forEach(b => { if (x > b[0] - 2 && x < b[1] + 2) x = (x - (b[0] - 2)) < ((b[1] + 2) - x) ? b[0] - 2 : b[1] + 2; });
         if (P.liningOn && n > 0) { let best = 0, bd = 1e9; L.slatY.forEach((sy, k) => { const d = Math.abs(sy + P.slatW / 2 - y); if (d < bd - 1e-9 || (Math.abs(d - bd) < 1e-9 && sy > L.slatY[best])) { bd = d; best = k; } }); y = L.slatY[best] + P.slatW / 2; if (L.chanY.indexOf(y) < 0) L.chanY.push(y); }
         L.lights.push({ x, y });
       });
@@ -1925,7 +1925,7 @@ function computeChecks(L, V) {
   }
   {
     const fit = P.lightD <= P.slatW + .01 || !P.liningOn;
-    if (P.lightN > 0 && P.lightSpots && L.lights.length) push(fit ? 'ok' : 'warn', `Ceiling lights: ${L.lights.length} round light${L.lights.length > 1 ? 's' : ''}, ${fmt(P.lightD)} in across, only over the shower, the countertop and the sink (${L.lights.map(l => fmt(l.x) + ' in from the rear-door edge, ' + fmt(l.y) + ' across from the driver wall').join('; ')}). Each sits on a slat, centered, and is kept 2 in clear of a rib so the wire hole through the plywood misses it. The one over the shower must be wet rated (IP65).`);
+    if (P.lightN > 0 && P.lightSpots && L.lights.length) push(fit ? 'ok' : 'warn', `Ceiling lights: ${L.lights.length} round light${L.lights.length > 1 ? 's' : ''}, ${fmt(P.lightD)} in across, only over the shower and over the countertop and sink together (${L.lights.map(l => fmt(l.x) + ' in from the rear-door edge, ' + fmt(l.y) + ' across from the driver wall').join('; ')}). Each sits on a slat, centered, and is kept 2 in clear of a rib so the wire hole through the plywood misses it. The one over the shower must be wet rated (IP65).`);
     if (P.lightN > 0 && !P.lightSpots) push(fit ? 'ok' : 'warn', `Ceiling lights: ${L.lights.length} round lights ${fmt(P.lightD)} in across in ${Math.max(1, Math.round(P.lightRows))} row${P.lightRows > 1 ? 's' : ''} (${L.lights.map(l => fmt(l.x)).filter((v, i, a) => a.indexOf(v) === i).join(', ')} in from the back; rows ${L.chanY.length ? L.chanY.map(fmt).join(' and ') : '--'} in from the driver wall), each mounted on a slat${P.liningOn ? `, centered on a ${fmt(P.slatW)} in slat (${fmt((P.slatW - P.lightD) / 2)} in of wood left each side), so every slat stays whole${fit ? '' : `; the lights are wider than the slat (${fmt(P.slatW)} in): use a smaller light or wider slats`}` : ''}. A small hole through the ${fmt(P.plyT)} in plywood behind each one takes the wire to a switch; surface mounted they hang about 1/2 in below the slat faces, or recessed into the ${fmt(P.slatT)} in slat they add nothing.`);
     const outside = c => c.x - c.w / 2 < 0 || c.x + c.w / 2 > P.ceilLen || c.y - c.w / 2 < L.ceilOff || c.y + c.w / 2 > L.ceilOff + P.ceilW;
     const over = (a, b) => Math.abs(a.x - b.x) < (a.w + b.w) / 2 && Math.abs(a.y - b.y) < (a.w + b.w) / 2;
