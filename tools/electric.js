@@ -20,7 +20,7 @@ const E_DRIVER = pl => { const tc = (pl.tbl[0] + pl.tbl[1]) / 2, q1 = pl.bedLen 
   {k:'lt',    n:'Light over the dinette table',                x:tc, z:lz, note:'12 V LED under the dinette wall cabinet, centered over the table (108 1/2 to 134 1/2); on the lights circuit and the dinette switch'},
   {k:'plate', n:'Couch plate: light switch and 120 V outlet (two plugs)', x:62, z:44, note:'one 2 gang plate above the back cushion (40 in up): a switch for the ceiling lights (one of two points, with the dinette) and the two lights under the cabinet over the couch, and a duplex outlet (two plugs) on circuit A (GFCI), 12 AWG. The switch wire is 12 V, the outlet is 120 V: use a divided box or two separate boxes, never one cable for both'},
   {k:'sw',    n:'Switch plate at the rear doors (fan, wet bath light)', x:3,  z:48, note:'2 gang: roof fan and the wet bath light. You did not list this one, but those two need a switch; the ceiling lights are not on it'},
-  {k:'sw',    n:'Light switch by the dinette',                  x:pl.cab - 1, z:48, note:'on the wall behind the driver seat (the cab wall, at the cab end of the dinette; drawn here at its corner with the driver wall), above the bench back (38 in): ceiling lights (second point), the light over the table and the entry light over the sliding door. The wire comes down the corner behind the planks. It also switches the jar nook strip, since there is no switch by the sink now'},
+  {k:'sw',    n:'Light switch by the dinette',                  x:pl.cab - 1, z:48, note:'on the wall behind the driver seat (the cab wall, at the cab end of the dinette; drawn here at its corner with the driver wall), above the bench back (38 in): ceiling lights (second point) and the light over the table. The wire comes down the corner behind the planks. It also switches the jar nook strip, since there is no switch by the sink now'},
   {k:'out120',n:'Outlet over the dinette table (120 V duplex)', x:tc, z:36, note:'on the wall just over the table (its top is at 29 in), in the middle of it, clear of the backrests (38 in); circuit A (GFCI)'},
   {k:'run',   n:'Riser A: A/C, 12 V and lights feed',          x:73, z0:11, z1:75, note:'up inside the wall behind the planks (4 1/2 in space) to the ceiling: A/C 6 AWG pair in its own loom, plus the 12 V ceiling feed (12 AWG). Grommet where it crosses the top steel'},
   {k:'run',   n:'Cab charge cable (DC-DC input)',              x:70, z0:0, z1:1,  note:'4 AWG from the starter battery fuse (60 A) under the van along the driver side frame to a sealed floor grommet next to the battery'},
@@ -32,14 +32,17 @@ const E_PASS = pl => { const wbx = pl.panW / 2, wby = pl.P.vanW - pl.panD / 2; r
   {k:'panel', n:'Control panel (battery monitor, pump switch, tank levels)', x:66, z:50, note:'12 V, small 18 AWG, 3 A'},
   {k:'out120',n:'Outlet under the TV (120 V)',                  x:96, z:52.5, note:'on the wall strip under the TV (its bottom is at 54), above the dish towel hook (98 1/2, 50 up): check the plug clears the towel. Near the sink, so circuit A (GFCI)'},
   {k:'box',   n:'Hot water heater feed (120 V, 20 A, circuit D)', x0:85, x1:87, z0:18, z1:24, note:'junction box beside the hot water tank (87 to 101); 12 AWG, its own breaker; heater is 1440 W'},
-  {k:'box',   n:'Water pump (12 V, under the sink)',           x0:119, x1:122, z0:12, z1:20, note:'on the sink cabinet’s cab-side end panel, above the fresh tank (top at 10 in), 14 AWG, 10 A; service hatch'},
   {k:'strip', n:'Jar nook LED strip',                          x0:77, x1:92, z:52.5, note:'inside the top of the jar nook'},
-  {k:'strip', n:'Entry light over the sliding door',           x0:106, x1:152, z:69, note:'on the dinette switch'},
   {k:'sel',   n:'Heater or microwave selector (2 pole, 3 position)', x:71, z:50, note:'yes, a 2 pole switch does this: a double pole, on-off-on (center off) switch or rotary selector rated at least 25 A at 120 V AC (AC rated, not a 12 V switch). Each circuit keeps its own breaker (B 15 A on 14 AWG for the microwave, D 20 A on 12 AWG for the heater); breaker B\u2019s hot feeds the common of one pole, breaker D\u2019s the common of the other; the microwave\u2019s hot leaves pole 1 on the microwave side, the heater\u2019s leaves pole 2 on the heater side, the other terminals stay empty. Microwave position: only the microwave is live; heater position: only the heater; middle: neither. Label it. It sits beside the control panel so you choose before you cook or heat water; the heater only warms the tank while the switch is on its side'},
-  {k:'wet',   n:'Shower head (plumbing, for reference)',        x:pl.headX, z:pl.headZ, lab:'H', note:fr(pl.headZ) + ' in up on a ' + fr(pl.headOut) + ' in arm pointing into the stall; the plumbing page is the plan, this is only here to show where the wet bath light sits in relation to the spray'},
-  {k:'wet',   n:'Shower valve (plumbing, for reference)',       x:pl.valveX, z:pl.valveZ, lab:'V', note:'the mixer handle at the cab end, where the hot and cold lines arrive; above the tipped-up pan (it reaches about 25 in)'},
   {k:'run',   n:'Riser B: 120 V circuits and 12 V branches',   x:73, z0:8, z1:75, note:'down inside the wall behind the planks from the ceiling: 120 V in flexible conduit (12 AWG), 12 V branches (pump, control panel) in a separate loom; branches go sideways behind the planks through notches in the furring'},
 ]; };
+
+// plumbing shown for reference, drawn in teal with PL numbers so it cannot be mistaken for the electrics
+const PLUMB = pl => [
+  {k:'phead', n:'Shower head', x:pl.headX, z:pl.headZ, lab:'H', note:fr(pl.headZ) + ' in up on a ' + fr(pl.headOut) + ' in arm pointing into the stall; hot and cold arrive from the hot water tank and the fresh tank along the wall behind the planks'},
+  {k:'pvalve', n:'Shower valve (mixer handle)', x:pl.valveX, z:pl.valveZ, lab:'V', note:'at the cab end, where the hot and cold lines arrive; above the tipped-up pan (it reaches about 25 in)'},
+  {k:'ppump', n:'Water pump, under the sink', x0:119, x1:122, z0:12, z1:20, note:'on the sink cabinet’s cab-side end panel, above the fresh tank (top at 10 in), with a service hatch. Its 12 V feed (14 AWG, 10 A, from the fuse block) is the pump circuit on the one-line diagram'},
+];
 
 // ------------------------------------------------------------------ reading the plan
 async function readPlan(page) {
@@ -80,7 +83,7 @@ async function grabBase(page2, idx) {
 }
 
 // ------------------------------------------------------------------ drawing
-const INK = '#1b1a17', C120 = '#B3261E', C12 = '#185FA5', CAC = '#B45309', CLT = '#B8860B';
+const CPL = '#0E7C86', INK = '#1b1a17', C120 = '#B3261E', C12 = '#185FA5', CAC = '#B45309', CLT = '#B8860B';
 function symbol(e, X, Y) {
   const o = [], r = 7;
   if (e.k === 'out120') { const x = X(e.x), y = Y(e.z); o.push(`<circle cx="${x}" cy="${y}" r="${r}" fill="#fff" stroke="${C120}" stroke-width="1.8"/><line x1="${x-3}" y1="${y-3}" x2="${x-3}" y2="${y+1}" stroke="${C120}" stroke-width="1.6"/><line x1="${x+3}" y1="${y-3}" x2="${x+3}" y2="${y+1}" stroke="${C120}" stroke-width="1.6"/>`); return [o.join(''), x, y]; }
@@ -88,6 +91,8 @@ function symbol(e, X, Y) {
   if (e.k === 'sw') { const x = X(e.x), y = Y(e.z); o.push(`<rect x="${x-6.5}" y="${y-6.5}" width="13" height="13" rx="2" fill="#fff" stroke="${INK}" stroke-width="1.8"/><text x="${x}" y="${y+3.6}" text-anchor="middle" style="font-size:10px;font-weight:700;fill:${INK}">S</text>`); return [o.join(''), x, y]; }
   if (e.k === 'lt') { const x = X(e.x), y = Y(e.z); o.push(`<circle cx="${x}" cy="${y}" r="${r}" fill="#FFD84A" stroke="${CLT}" stroke-width="1.8"/>`); return [o.join(''), x, y]; }
   if (e.k === 'plate') { const x = X(e.x), y = Y(e.z); o.push(`<rect x="${x-17}" y="${y-9}" width="34" height="18" rx="3" fill="#fff" stroke="${INK}" stroke-width="1.8"/><rect x="${x-14}" y="${y-5.5}" width="11" height="11" rx="1.5" fill="#fff" stroke="${INK}" stroke-width="1.5"/><text x="${x-8.5}" y="${y+3}" text-anchor="middle" style="font-size:8.5px;font-weight:700;fill:${INK}">S</text><circle cx="${x+9}" cy="${y}" r="6" fill="#fff" stroke="${C120}" stroke-width="1.6"/><line x1="${x+6.6}" y1="${y-2.6}" x2="${x+6.6}" y2="${y+.8}" stroke="${C120}" stroke-width="1.4"/><line x1="${x+11.4}" y1="${y-2.6}" x2="${x+11.4}" y2="${y+.8}" stroke="${C120}" stroke-width="1.4"/>`); return [o.join(''), x, y]; }
+  if (e.k === 'phead' || e.k === 'pvalve') { const x = X(e.x), y = Y(e.z); o.push(`<circle cx="${x}" cy="${y}" r="8" fill="#D7F0F2" stroke="${CPL}" stroke-width="2.2"/><text x="${x}" y="${y+3.6}" text-anchor="middle" style="font-size:10px;font-weight:700;fill:${CPL}">${e.lab}</text>`); return [o.join(''), x, y]; }
+  if (e.k === 'ppump') { const xa = X(e.x0), xb = X(e.x1), x = Math.min(xa, xb), w = Math.max(12, Math.abs(xb - xa)), y0 = Y(e.z1), h = 6 * (e.z1 - e.z0); o.push(`<rect x="${x}" y="${y0}" width="${w}" height="${h}" rx="4" fill="#D7F0F2" fill-opacity=".8" stroke="${CPL}" stroke-width="2.2"/><text x="${x + w / 2}" y="${y0 + h / 2 + 3.4}" text-anchor="middle" style="font-size:9.5px;font-weight:700;fill:${CPL}">pump</text>`); return [o.join(''), x + w / 2, y0 + h / 2]; }
   if (e.k === 'wet') { const x = X(e.x), y = Y(e.z); o.push(`<circle cx="${x}" cy="${y}" r="7" fill="#DCEAF6" stroke="${C12}" stroke-width="1.8" stroke-dasharray="3 2"/><text x="${x}" y="${y+3.4}" text-anchor="middle" style="font-size:9px;font-weight:700;fill:${C12}">${e.lab}</text>`); return [o.join(''), x, y]; }
   if (e.k === 'sel') { const x = X(e.x), y = Y(e.z); o.push(`<rect x="${x-10}" y="${y-8}" width="20" height="16" rx="3" fill="#fff" stroke="${C120}" stroke-width="2"/><text x="${x}" y="${y+3.4}" text-anchor="middle" style="font-size:8.5px;font-weight:700;fill:${C120}">M/H</text>`); return [o.join(''), x, y]; }
   if (e.k === 'inlet') { const x = X(e.x), y = Y(e.z); o.push(`<rect x="${x-8}" y="${y-8}" width="16" height="16" rx="3" fill="#FFF1D6" stroke="${CAC}" stroke-width="2"/><text x="${x}" y="${y+3.6}" text-anchor="middle" style="font-size:9px;font-weight:700;fill:${CAC}">IN</text>`); return [o.join(''), x, y]; }
@@ -97,7 +102,7 @@ function symbol(e, X, Y) {
   if (e.k === 'run') { const x = X(e.x); o.push(`<line x1="${x}" y1="${Y(e.z0)}" x2="${x}" y2="${Y(e.z1)}" stroke="${C12}" stroke-width="3" stroke-dasharray="7 4" opacity=".85"/><line x1="${x+4}" y1="${Y(e.z0)}" x2="${x+4}" y2="${Y(e.z1)}" stroke="${C120}" stroke-width="3" stroke-dasharray="7 4" opacity=".85"/>`); return [o.join(''), x + 2, Y((e.z0 + e.z1) / 2)]; }
   return ['', 0, 0];
 }
-function wallSVG(list, side, base, furn) {
+function wallSVG(list, side, base, furn, plumb) {
   const flip = side === 'P', X = x => +(flip ? 1020 - 6 * x : 50 + 6 * x).toFixed(1), Y = z => +(544 - 6 * z).toFixed(1);
   const o = [], placed = [];
   furn.forEach(it => { const xa = X(it.x0), xb = X(it.x1); o.push(`<rect x="${Math.min(xa, xb)}" y="${Y(it.z1)}" width="${Math.abs(xb - xa)}" height="${6 * (it.z1 - it.z0)}" rx="2" fill="none" stroke="${INK}" stroke-opacity=".28" stroke-width="1.2" stroke-dasharray="4 3"/>`); });
@@ -112,8 +117,20 @@ function wallSVG(list, side, base, furn) {
     const where = e.k === 'strip' ? `${fr(e.x0)} to ${fr(e.x1)}, at ${fr(e.z)} up` : e.k === 'box' ? `${fr(e.x0)} to ${fr(e.x1)}, ${fr(e.z0)} to ${fr(e.z1)} up` : e.k === 'run' ? `at ${fr(e.x)}, ${fr(e.z0)} to ${fr(e.z1)} up` : `${fr(e.x)} in, ${fr(e.z)} up`;
     return `<tr><td><b class="id">${e.id}</b></td><td>${esc(e.n)}</td><td>${where}</td><td class="kd">${esc(e.note)}</td></tr>`;
   });
-  const svg = `<svg viewBox="0 0 1070 636" role="img" aria-label="${flip ? 'Passenger' : 'Driver'} wall: steel, furring strips, furniture outlines and the electrical items">${base.inner}<g id="elec${side}">${o.join('')}</g></svg>`;
-  return { svg, table: `<div class="tw"><table><thead><tr><th>#</th><th>Item</th><th>Where (in from the back mark, up from the floor)</th><th>Notes</th></tr></thead><tbody>${rows.join('')}</tbody></table></div>`, legend: base.legend };
+  const pg = [];
+  const prow = (plumb || []).map((e, i) => {
+    e.id = 'PL' + (i + 1);
+    const [g, cx, cy] = symbol(e, X, Y); pg.push(g);
+    let bx = cx + 14, by = cy + 16;
+    for (let t = 0; t < 6 && placed.some(q => Math.hypot(q[0] - bx, q[1] - by) < 24); t++) by += 14;
+    placed.push([bx, by]);
+    pg.push(`<rect x="${bx-15}" y="${by-8}" width="30" height="16" rx="3" fill="#fff" fill-opacity=".95" stroke="${CPL}" stroke-width="1.5"/><text x="${bx}" y="${by+3.8}" text-anchor="middle" style="font-size:9.5px;font-weight:700;fill:${CPL}">${e.id}</text>`);
+    const where = e.x0 != null ? `${fr(e.x0)} to ${fr(e.x1)}, ${fr(e.z0)} to ${fr(e.z1)} up` : `${fr(e.x)} in, ${fr(e.z)} up`;
+    return `<tr><td><b class="pid">${e.id}</b></td><td>${esc(e.n)}</td><td>${where}</td><td class="kd">${esc(e.note)}</td></tr>`;
+  });
+  const svg = `<svg viewBox="0 0 1070 636" role="img" aria-label="${flip ? 'Passenger' : 'Driver'} wall: steel, furring strips, furniture outlines, the electrical items${plumb && plumb.length ? ' and the plumbing in teal' : ''}">${base.inner}<g id="elec${side}">${o.join('')}</g>${pg.length ? `<g id="plumb${side}">${pg.join('')}</g>` : ''}</svg>`;
+  const ptable = prow.length ? `<h3 style="color:${CPL}">Plumbing on this wall (teal, for reference: not electrical)</h3><div class="tw"><table><thead><tr><th>#</th><th>Item</th><th>Where (in from the back mark, up from the floor)</th><th>Notes</th></tr></thead><tbody>${prow.join('')}</tbody></table></div>` : '';
+  return { svg, table: `<div class="tw"><table><thead><tr><th>#</th><th>Item</th><th>Where (in from the back mark, up from the floor)</th><th>Notes</th></tr></thead><tbody>${rows.join('')}</tbody></table></div>`, ptable, legend: base.legend };
 }
 
 function ceilingSVG(d) {
@@ -219,7 +236,7 @@ function loadTable(d) {
   const baseA = await grabBase(page2, 0), baseD = await grabBase(page2, 2);
   const css = await page2.evaluate(() => [...document.querySelectorAll('style')].map(s => s.textContent).join('\n'));
   await b.close();
-  const Dlist = E_DRIVER(plan), Plist = E_PASS(plan), Dw = wallSVG(Dlist, 'D', baseA, furn.D), Pw = wallSVG(Plist, 'P', baseD, furn.P);
+  const Dlist = E_DRIVER(plan), Plist = E_PASS(plan), Dw = wallSVG(Dlist, 'D', baseA, furn.D), Pw = wallSVG(Plist, 'P', baseD, furn.P, PLUMB(plan));
   const selId = (Plist.find(e => e.k === 'sel') || {}).id;
 
   const style = css + `
@@ -234,12 +251,12 @@ function loadTable(d) {
   table { border-collapse: collapse; width: 100%; font-size: 14px; margin: 6px 0 8px; }
   th, td { border-bottom: 1px solid #D3D1C7; padding: 5px 8px; text-align: left; vertical-align: top; }
   th { color: #5F5E5A; font-weight: 600; } td.num { white-space: nowrap; text-align: right; } tr.tot td { border-top: 2px solid #5F5E5A; }
-  b.id { color: ${C120}; white-space: nowrap; } .kd { color: #5F5E5A; }
+  b.id { color: ${C120}; white-space: nowrap; } b.pid { color: #0E7C86; white-space: nowrap; } .kd { color: #5F5E5A; }
   .note { background: #FAF9F5; border: 1px solid #D3D1C7; border-radius: 10px; padding: 10px 14px; color: #3d3b34; font-size: 14px; margin: 0 0 14px; }
   .note ul { margin: 4px 0 0 18px; padding: 0; } .note li { font-size: 14px; line-height: 1.5; }
   a { color: #185FA5; }`;
   const tog = (id, furr, label) => `<div class="tog"><label><input type="checkbox" checked onchange="document.getElementById('${furr}').style.display=this.checked?'':'none'"> Show the furring strips and dots</label><label><input type="checkbox" checked onchange="document.getElementById('${id}').style.display=this.checked?'':'none'"> ${label}</label></div>`;
-  const key = `<p class="legend"><span><svg width="16" height="16" viewBox="0 0 16 16" style="display:inline;vertical-align:-3px;width:16px;min-width:0"><circle cx="8" cy="8" r="6.5" fill="#fff" stroke="${C120}" stroke-width="1.8"/></svg> 120 V outlet</span><span>S = switch plate (the couch plate has the switch and two plugs)</span><span>H, V = shower head and valve (plumbing, for reference)</span><span>M = control panel</span><span>M/H = heater or microwave selector</span><span>IN = shore inlet</span><span style="color:#B8860B">yellow = lights and LED strips</span><span>orange boxes = mounted units</span><span>dashed boxes = furniture (for reference)</span><span style="color:${C12}">blue dashed</span> / <span style="color:${C120}">red dashed</span> = 12 V / 120 V runs</p>`;
+  const key = `<p class="legend"><span><svg width="16" height="16" viewBox="0 0 16 16" style="display:inline;vertical-align:-3px;width:16px;min-width:0"><circle cx="8" cy="8" r="6.5" fill="#fff" stroke="${C120}" stroke-width="1.8"/></svg> 120 V outlet</span><span>S = switch plate (the couch plate has the switch and two plugs)</span><span style="color:#0E7C86;font-weight:600">teal = plumbing, shown for reference (H = shower head, V = valve, pump)</span><span>M = control panel</span><span>M/H = heater or microwave selector</span><span>IN = shore inlet</span><span style="color:#B8860B">yellow = lights and LED strips</span><span>orange boxes = mounted units</span><span>dashed boxes = furniture (for reference)</span><span style="color:${C12}">blue dashed</span> / <span style="color:${C120}">red dashed</span> = 12 V / 120 V runs</p>`;
   const body = `<div class="wrap">
   <h1>Electrical and lighting layout</h1>
   <p class="lead">A proposal for where the electrics go, drawn on the same steel and furring strips as the wall marking map, with the furniture outlined for reference. Positions are inches from the back mark (0 is 6 in in from the rear-door edge) and up from the floor; the ceiling plan uses inches from the rear-door edge. The steel and strips are the measured drawing; the electrical items are my proposal, so check each one against the real wall and tell me what to move.</p>
@@ -262,7 +279,8 @@ function loadTable(d) {
   <h2>3. Passenger side wall</h2>
   ${tog('elecP', 'furrP', 'Show the electrical items')}
   <div class="figwrap">${Pw.svg}</div>
-  ${key}${Pw.table}
+  <div class="tog"><label><input type="checkbox" checked onchange="document.getElementById('plumbP').style.display=this.checked?'':'none'"> Show the plumbing (teal)</label></div>
+  ${key}${Pw.table}${Pw.ptable}
   <h2>4. Ceiling: lights, fan, A/C and the wire runs</h2>
   <p class="lead">Six lights in two rows (positions from the plan), each row on its own slat. Risers A and B stand at 79 in from the rear-door edge (73 on the wall maps), in the bay between the ribs at 61 and 97. Every rib the cables cross needs a grommeted hole: use any factory holes first, and keep to the web of the rib, not the flange.</p>
   <div class="figwrap">${ceilingSVG(plan)}</div>
