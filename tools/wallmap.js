@@ -41,7 +41,6 @@ async function grab(page, side) {
       add('Dinette bench', L.bB[0], L.bB[1], 0, P.seatH, `seat at ${F(P.seatH)}, ${F(P.benchD)} deep`);
       if (L.tableLen > 0) add('Dinette table', L.tbl[0], L.tbl[1], P.tableH - 1.5, P.tableH, `top at ${F(P.tableH)}`, P.tableH);
       L.walls.filter(w => w.side === 'd').forEach(w => add('Floor-to-ceiling wall', w.x0, w.x1, 0, L.ceilF, `${w.id}: ${F(P.fwT)} thick, ${F(w.d)} out from the wall, ${w.id === 'W1' ? 'the back of the rear bench leans on it' : 'behind the driver seat, the back of the cab-end bench leans on it'}`));
-      if (L.cn) add('Couch back nook (recess)', L.cn.x0, L.cn.x1, L.cn.z0, L.cn.z1, `${F(L.cn.d)} deep into the wall, the back cushion leans into it`);
       L.cabs.forEach((c, i) => add('Wall cabinet', c[0], c[1], P.cabBot, L.ceilF, `${F(c[1] - c[0])} long x ${F(P.cabDepth)} deep, 3 doors ${F(L.doors[i * 3].w)} wide`));
     } else {
       add('Wet bath (shower)', 0, P.panW, 0, L.ceilF, `${F(P.panW)} x ${F(P.panD)}`);

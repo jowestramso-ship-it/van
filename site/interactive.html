@@ -215,16 +215,12 @@ const PD = [
   { k: 'battOn', g: 'Take items out', l: 'Battery under the couch', d: true, t: 'c' },
   { k: 'closetOn', g: 'Take items out', l: 'Closet and its doors (the space it leaves stays empty; the dinette still starts where the closet ends)', d: true, t: 'c' },
   { k: 'wallsOn', g: 'Take items out', l: 'Floor-to-ceiling walls: behind the dinette backs (at the closet end and behind the driver seat) and one on each side of the fridge', d: true, t: 'c' },
-  { k: 'cnOn', g: 'Take items out', l: 'Couch back nook (the wall behind the back cushion is recessed and the cushion leans back into it)', d: true, t: 'c' },
   { k: 'bedLen', g: 'Bed / couch', l: 'Length', d: 74, s: .5, a: 40, b: 120 },
   { k: 'bedD', g: 'Bed / couch', l: 'Depth, closed (the couch on its base)', d: 26, s: .5, a: 15, b: 40 },
   { k: 'bedBack', g: 'Bed / couch', l: 'Leaf width (flips out in front; = back cushion length)', d: 20, s: .5, a: 0, b: 40 },
   { k: 'platform', g: 'Bed / couch', l: 'Seat base (deck 3/4 in lower; the leaf folds onto it)', d: 14, s: .5, a: 6, b: 30 },
   { k: 'mattress', g: 'Bed / couch', l: 'Seat and back cushion thickness', d: 6, s: .5, a: 2, b: 12 },
   { k: 'legIn', g: 'Bed / couch', l: 'Legs set in from the leaf free edge', d: 3, s: .5, a: 0, b: 10 },
-  { k: 'cnD', g: 'Bed / couch', l: 'Back nook: depth into the wall (the back cushion leans back into it; the passenger nooks are 4 1/2)', d: 4.5, s: .5, a: 1, b: 6 },
-  { k: 'cnTop', g: 'Bed / couch', l: 'Back nook: top, up from the floor (its bottom is the top of the seat cushion)', d: 46, s: .5, a: 30, b: 58 },
-  { k: 'cnIn', g: 'Bed / couch', l: 'Back nook: plain wall left at each end of the couch', d: 2, s: .5, a: 0, b: 20 },
   { k: 'closetW', g: 'Closet', l: 'Width', d: 15, s: .25, a: 8, b: 40 },
   { k: 'closetD', g: 'Closet', l: 'Depth', d: 25, s: .5, a: 10, b: 40 },
   { k: 'rodHi', g: 'Closet', l: 'Upper rod, up from floor', d: 71, s: .5, a: 40, b: 85 },
@@ -466,7 +462,7 @@ const HITR = (x, y, w, h) => `<rect x="${f1(x)}" y="${f1(y)}" width="${f1(Math.m
 const GB = (id, label) => `<g class="hg" data-grp="${id}" data-label="${label}">`;
 const GE = () => '</g>';
 // items that were taken out (their tick box in Sizes is off): cut their groups and drag handles out of a finished drawing
-const REMOVED = () => [['showerOn', 'shower'], ['microOn', 'Micro'], ['tvOn', 'tv'], ['towelOn', 'towels'], ['fridgeOn', 'fridge'], ['drawersOn', 'drawers'], ['battOn', 'batt'], ['closetOn', 'closet'], ['wallsOn', 'fwalls'], ['cnOn', 'cnook']].filter(r => !P[r[0]]).map(r => r[1]);
+const REMOVED = () => [['showerOn', 'shower'], ['microOn', 'Micro'], ['tvOn', 'tv'], ['towelOn', 'towels'], ['fridgeOn', 'fridge'], ['drawersOn', 'drawers'], ['battOn', 'batt'], ['closetOn', 'closet'], ['wallsOn', 'fwalls']].filter(r => !P[r[0]]).map(r => r[1]);
 function stripGroups(html, ids) {
   ids.forEach(id => {
     const open = `<g class="hg" data-grp="${id}"`;
@@ -625,9 +621,6 @@ function layout(P0) {
     { id: 'W3', side: 'p', x0: P.panW - P.fwT, x1: P.panW, d: Math.max(P.panD, 2 + P.fridgeD), n: 'wall between the shower and the fridge' },
     { id: 'W4', side: 'p', x0: P.panW + P.fridgeW, x1: P.panW + P.fridgeW + P.fwT, d: Math.max(P.cabD, 2 + P.fridgeD), n: 'wall between the fridge and the counter cabinet' },
   ];
-  // the couch back nook: the back cushion stands on the seat cushion with its rear face at the wall and leans back until its top edge is cnD - 1/4 into the recess
-  L.cnA = P.cnOn ? Math.asin(Math.min(.7, Math.max(0, P.cnD - .25) / Math.max(1, P.bedBack))) : 0;
-  L.cn = P.cnOn ? { x0: P.cnIn, x1: P.bedLen - P.cnIn, z0: P.platform + P.mattress, z1: P.cnTop, d: P.cnD } : null;
   L.gap = L.bB[0] - L.bA[1];
   L.tableLen = P.tableAuto ? Math.max(0, L.gap) : P.tableLen;
   L.spare = L.gap - L.tableLen;
@@ -911,12 +904,6 @@ function drawDriver(L, V) {
     if (s > .85) g += LBL(X(P.bedLen / 2), Y(deck + P.mattress / 2 - 0.4), 'Bed made up', `${fmt(P.bedD + LW)} wide, top at ${fmt(deck + P.mattress)} in, leaf on 4 legs`, { size: 12.5, fill: COL.P, op: (s - .85) / .15 });
     else if (s >= .3) g += T(X(P.bedLen / 2), Y(bt + 6), 'leaf flips over (the seat cushion comes off)', { size: 11, fill: '#5A3A00', op: Math.min(1, (s - .3) * 4) * (s > .75 ? (.85 - s) * 10 : 1) });
     o.push(MV('bed', g, HITR(Math.min(X(0), X(P.bedLen)), Y(bt + LW), S * P.bedLen, S * (bt + LW))));
-  }
-  if (L.cn) {
-    o.push(GB('cnook', 'Couch back nook'));
-    o.push(box(L.cn.x0, L.cn.x1, L.cn.z0, L.cn.z1, { fill: '#2C2C2A', fo: .1, stroke: '#2C2C2A', sw: 1.4, dash: '6 3' }));
-    o.push(LBL(X((L.cn.x0 + L.cn.x1) / 2), Y(L.cn.z1 - 3.5), 'Couch back nook', `${fmt(L.cn.x1 - L.cn.x0)} long, ${fmt(L.cn.z1 - L.cn.z0)} tall (${fmt(L.cn.z0)} to ${fmt(L.cn.z1)} up), ${fmt(L.cn.d)} deep into the wall; the back cushion leans back into it`, { size: 11, fill: '#2C2C2A' }));
-    o.push(GE());
   }
   o.push(GE());
   // closet
@@ -1396,13 +1383,7 @@ function drawBedEnd(L, V) {
   o.push(T(xx(yMax / 2), FL + 38, 'inches out from the wall', { size: 12, fill: '#5F5E5A', halo: false }));
   o.push(GE());
   o.push(Ln(xx(0), yy(0), xx(yMax), yy(0), { stroke: '#5F5E5A', sw: 2 }));
-  if (L.cn) {
-    o.push(Ln(xx(0), yy(zMax), xx(0), yy(L.cn.z1), { stroke: '#2C2C2A', sw: 3 })); o.push(Ln(xx(0), yy(L.cn.z0), xx(0), yy(0), { stroke: '#2C2C2A', sw: 3 }));
-    o.push(GB('cnook', 'Couch back nook'));
-    o.push(bx(-L.cn.d, 0, L.cn.z0, L.cn.z1, { fill: '#2C2C2A', fo: .12, stroke: '#2C2C2A', sw: 2 }));
-    o.push(T(xx(-L.cn.d / 2) - 4, yy(L.cn.z1) - 6, `nook ${fmt(L.cn.d)} deep, ${fmt(L.cn.z0)} to ${fmt(L.cn.z1)} up`, { anchor: 'start', size: 10.5, fill: '#2C2C2A', halo: false }));
-    o.push(GE());
-  } else o.push(Ln(xx(0), yy(zMax), xx(0), yy(0), { stroke: '#2C2C2A', sw: 3 }));
+  o.push(Ln(xx(0), yy(zMax), xx(0), yy(0), { stroke: '#2C2C2A', sw: 3 }));
   // wheel well, battery, and the shower pan's front edge (all are at other places along the wall; dashed)
   o.push(GB('wellbatt', 'Wheel well and battery'));
   o.push(bx(0, 6.25, 0, 7.5, { fill: '#E24B4A', fo: .2, stroke: '#A32D2D', sw: 1.4, dash: '5 3' }));
@@ -1445,12 +1426,7 @@ function drawBedEnd(L, V) {
   const sb0 = deck + lt * Math.max(0, Math.cos(th)), fade = 1 - .75 * Math.sin(clamp((s - .2) / .6, 0, 1) * Math.PI);
   o.push(GB('cushions', 'Cushions'));
   o.push(bx(0, P.bedD, sb0, sb0 + P.mattress, { fill: COL.P, fo: .12 * fade, stroke: COL.P, sw: 1.4, rx: 3, so: fade }));
-  if (bs.back > .02 && L.cn && L.cnA > .005) {
-    // standing back cushion leaning back into the nook: pivots on the rear edge of its bottom (at the wall); bs.back shortens it as it folds
-    const a = L.cnA, hh = LW * bs.back, q = (r, t) => [xx(-r * Math.sin(a) + t * Math.cos(a)), yy(bt + r * Math.cos(a) + t * Math.sin(a))];
-    o.push(Poly([q(0, 0), q(hh, 0), q(hh, P.mattress), q(0, P.mattress)], { fill: COL.P, fo: .1, stroke: COL.P, sw: 1.4, join: 'round' }));
-    if (bs.back > .9) o.push(T(xx(P.mattress + 2), yy(bt + LW * .75), `leans back ${Math.round(a * 180 / Math.PI)}\u00B0 into the nook`, { anchor: 'start', size: 10.5, fill: COL.P, halo: false }));
-  } else if (bs.back > .02) o.push(bx(0, P.mattress, bt, bt + LW * bs.back, { fill: COL.P, fo: .1, stroke: COL.P, sw: 1.4, rx: 3 }));
+  if (bs.back > .02) o.push(bx(0, P.mattress, bt, bt + LW * bs.back, { fill: COL.P, fo: .1, stroke: COL.P, sw: 1.4, rx: 3 }));
   if (bs.flat > .02) {
     o.push(bx(0, P.bedD, deck, deck + P.mattress, { fill: COL.P, fo: .2 * bs.flat, stroke: COL.P, sw: 2, rx: 3, so: bs.flat }));
     o.push(bx(P.bedD, P.bedD + LW, deck, deck + P.mattress, { fill: COL.P, fo: .2 * bs.flat, stroke: COL.P, sw: 2, rx: 3, so: bs.flat }));
@@ -1664,12 +1640,6 @@ function drawPlan(L, V) {
       o.push(w.side === 'd' ? it(w.x0, w.x1, 0, w.d, '#5A3A00', '', null, { fo: .85 }) : ip(w.x0, w.x1, 0, w.d, '#5A3A00', '', null, { fo: .85 }));
       o.push(T(xx((w.x0 + w.x1) / 2), w.side === 'd' ? yy(w.d) + 12 : yy(Wd - w.d) - 5, w.id, { size: 9, fill: '#5A3A00', w: 700, halo: false }));
     });
-    o.push(GE());
-  }
-  if (L.cn) {
-    o.push(GB('cnook', 'Couch back nook'));
-    o.push(R(xx(L.cn.x0), yy(-L.cn.d), S * (L.cn.x1 - L.cn.x0), S * L.cn.d, { fill: '#2C2C2A', fo: .1, stroke: '#2C2C2A', sw: 1.4, dash: '5 3' }));
-    o.push(T(xx((L.cn.x0 + L.cn.x1) / 2), yy(-L.cn.d) - 3, `couch back nook ${fmt(L.cn.d)} deep (in the wall)`, { size: 9, fill: '#2C2C2A', halo: false }));
     o.push(GE());
   }
   o.push(GB('Micro', 'Microwave'));
@@ -2014,7 +1984,6 @@ function computeChecks(L, V) {
     const w = id => L.walls.find(a => a.id === id);
     push('ok', `Floor-to-ceiling walls (${fmt(P.fwT)} in thick, their tops follow the arched ceiling): two behind the dinette backs, ${fmt(P.benchD)} in out from the driver wall, one at the closet's cab-side end (${fmt(w('W1').x0)} to ${fmt(w('W1').x1)} in, inside the closet's width) and one behind the driver seat (${fmt(w('W2').x0)} to ${fmt(w('W2').x1)} in, its face at the cab wall mark); and one each side of the fridge (${fmt(w('W3').x0)} to ${fmt(w('W3').x1)} in, ${fmt(w('W3').d)} out, inside the shower pan length; and ${fmt(w('W4').x0)} to ${fmt(w('W4').x1)} in, ${fmt(w('W4').d)} out, which is the end panel of the counter cabinet). Nothing else moves: the 22 in fridge sits between their faces, and the shelves under the back-side drawers start 3/4 in later to meet the cabinet end panel. The one behind the driver seat is the only one drawn past a measured mark (the cab wall, which you said could be off by 2 to 4 in).`);
   }
-  if (L.cn) push(P.cnD > 4.5 ? 'warn' : 'ok', `Couch back nook: a recess in the driver wall behind the back cushion, ${fmt(L.cn.x1 - L.cn.x0)} in long (${fmt(P.cnIn)} in of plain wall at each end) and ${fmt(L.cn.z1 - L.cn.z0)} tall (${fmt(L.cn.z0)} to ${fmt(L.cn.z1)} in up, from the top of the seat cushion), ${fmt(L.cn.d)} in deep. The ${fmt(P.bedBack)} in back cushion stands on the seat cushion and leans back ${Math.round(L.cnA * 180 / Math.PI)} degrees, so its top edge is ${fmt(Math.max(0, L.cn.d - .25))} in into the recess (1/4 in to spare). When the bed is made up the cushion lies on the leaf and the recess is empty.${P.cnD > 4.5 ? ' This is deeper than the two passenger nooks (4 1/2 in), the only depth measured so far.' : ' ' + fmt(L.cn.d) + ' in is the depth of the two passenger nooks; the driver wall at this height has not been measured, and the nook cannot be deeper than the body allows behind the wall covering.'}`);
   push(P.cabBot - P.seatH < 24 ? 'warn' : 'ok', `${fmt(P.cabBot - P.seatH)} in between the dinette bed and the wall cabinets.`);
   // closet doors fully open
   if (P.closetOn) {

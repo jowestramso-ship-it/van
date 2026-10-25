@@ -24,7 +24,7 @@ const fs = require('fs');
         lights: L.lights.map(l => ({x: f(l.x), y: f(l.y)})), ceilF: f(L.ceilF), lining: f(L.lining), slatY: L.slatY.map(f),
         fan: {x: L.fan.x, y: L.fan.y, w: L.fan.w}, ac: {x: L.ac.x, y: L.ac.y, w: L.ac.w},
         hook: L.hook ? {x: f(L.hook.x), z: f(L.hook.z), z0: f(L.hook.z0)} : null,
-        walls: L.walls.map(w => ({id: w.id, side: w.side, x0: f(w.x0), x1: f(w.x1), d: f(w.d)})), cn: L.cn ? {x0: f(L.cn.x0), x1: f(L.cn.x1), z0: f(L.cn.z0), z1: f(L.cn.z1), d: f(L.cn.d)} : null, cnA: L.cnA,
+        walls: L.walls.map(w => ({id: w.id, side: w.side, x0: f(w.x0), x1: f(w.x1), d: f(w.d)})),
       },
     };
   });

@@ -201,12 +201,6 @@ function drawPlan(L, V) {
     });
     o.push(GE());
   }
-  if (L.cn) {
-    o.push(GB('cnook', 'Couch back nook'));
-    o.push(R(xx(L.cn.x0), yy(-L.cn.d), S * (L.cn.x1 - L.cn.x0), S * L.cn.d, { fill: '#2C2C2A', fo: .1, stroke: '#2C2C2A', sw: 1.4, dash: '5 3' }));
-    o.push(T(xx((L.cn.x0 + L.cn.x1) / 2), yy(-L.cn.d) - 3, `couch back nook ${fmt(L.cn.d)} deep (in the wall)`, { size: 9, fill: '#2C2C2A', halo: false }));
-    o.push(GE());
-  }
   o.push(GB('Micro', 'Microwave'));
   o.push(ip(L.microX[0] + 1.75, L.microX[1] - 1.75, P.microIn, P.microIn + 12, COL.G, '', null, { fo: .2, dash: '4 3' }));
   o.push(T(xx((L.microX[0] + L.microX[1]) / 2), yp(5.5 + P.microIn), 'Microwave 18.5 x 12', { size: 9, fill: COL.G, w: 500 }));
