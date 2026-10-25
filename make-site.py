@@ -9,6 +9,7 @@ site/window.html       the illustrated side window steps
 site/window-template.html  the measured window and its cardboard template
 site/wall-map.html     the wall marking map
 site/electric.html     the electrical and lighting layout
+site/interior.html     the 3D view of the inside of the van
 Every page gets the same navigation bar across the top and a noindex tag (search engines are asked to leave the site alone).
 site/photos/driver/    the driver side photos with all metadata (GPS location, camera, date) removed;
                        only the orientation tag is kept, so the pictures still turn the right way up
@@ -62,6 +63,7 @@ import re
 PAGES = [('index.html', 'Home', 'Start here: every page in one place.'),
          ('interactive.html', 'Plan', 'The adjustable plan: drag things around, open the doors, and see right away what does not fit.'),
          ('diagrams.html', 'Diagrams', 'The static diagrams of both walls, the bed, the ceiling and the roof, the photos and every measurement.'),
+         ('interior.html', '3D view', 'Walk around the inside of the van in 3D: light wood stain walls and cabinets, a medium grey countertop, and a light grey plywood ceiling under light wood planks.'),
          ('wall-map.html', 'Wall map', 'The steel and the furring strips on each wall with every item almost transparent on top, to mark the walls from.'),
          ('electric.html', 'Electrical', 'The electrical and lighting layout: one-line diagram, outlets, switches and lights on each wall, the ceiling plan and the load table.'),
          ('install.html', 'Fan and A/C', 'Step by step with drawings: cutting, framing and mounting the roof fan and the air conditioner.'),
@@ -92,7 +94,7 @@ def put(name, html, cur=None):
 
 
 for name, src in (('diagrams.html', 'sides.html'), ('interactive.html', 'interactive.html'), ('install.html', 'install.html'), ('window.html', 'window.html'),
-                  ('window-template.html', 'window-template.html'), ('wall-map.html', 'wall-map.html'), ('electric.html', 'electric.html')):
+                  ('window-template.html', 'window-template.html'), ('wall-map.html', 'wall-map.html'), ('electric.html', 'electric.html'), ('interior.html', 'interior.html')):
     if os.path.exists(os.path.join(HERE, src)):
         put(name, open(os.path.join(HERE, src)).read())
 

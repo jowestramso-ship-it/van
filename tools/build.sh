@@ -8,6 +8,7 @@
 #   window-template.html = the side window measured from the owner's photos, with the cutout numbers (wtemplate.py)
 #   wall-map.html     = the see-through wall marking map, read off interactive.html in a headless browser (wallmap.js; needs node + playwright, skipped if they are missing)
 #   electric.html     = the electrical and lighting layout (electric.js, same method as wall-map.html)
+#   interior.html     = the 3D view of the inside of the van, drawn from the plan's sizes (interior.js + interior_scene.js; needs node + playwright, skipped if missing)
 #   site/             = the copy for posting (make-site.py)
 set -e
 cd "$(dirname "$0")"
@@ -18,5 +19,6 @@ python3 window.py
 python3 wtemplate.py
 node wallmap.js 2>/dev/null || echo 'wall-map.html not rebuilt (node + playwright needed)'
 node electric.js 2>/dev/null || echo 'electric.html not rebuilt (node + playwright needed)'
+node interior.js 2>/dev/null || echo 'interior.html not rebuilt (node + playwright needed)'
 cd ..
 python3 make-site.py
