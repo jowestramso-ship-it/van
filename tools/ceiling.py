@@ -39,11 +39,10 @@ def _g():
         a(f'<rect x="{xx(_rx):.1f}" y="{yy(0):.1f}" width="{SC*2.75:.1f}" height="{SC*CW:.1f}" fill="#A32D2D" fill-opacity="0.14" stroke="#A32D2D" stroke-width="1.2" stroke-dasharray="6 3"/>')
         a(f'<text x="{xx(_rx+1.375):.1f}" y="{yy(0)-6:.1f}" text-anchor="middle" style="font-size:10px;font-weight:600;fill:#A32D2D">rib {_i+1}</text>')
         a(f'<text x="{xx(_rx+1.375):.1f}" y="{yy(CW)+11:.1f}" text-anchor="middle" style="font-size:9px;fill:#A32D2D">{_rx:g}</text>')
-    # round lights, mounted on the slats nearest the rows at 22 and 46 across
-    for ly in (22,46):
-        for lx in (26.67,80,133.33):
-            a(f'<circle cx="{xx(lx):.1f}" cy="{yy(ly):.1f}" r="{SC*1:.1f}" fill="#FFE9A0" stroke="#B8860B" stroke-width="1.4"/>')
-    a(f'<text x="{xx(112):.1f}" y="{yy(22)-9:.1f}" text-anchor="middle" style="font-size:11px;font-weight:600;fill:#fff;paint-order:stroke;stroke:#5A3A00;stroke-width:3px">round lights, 2 in, on the slats</text>')
+    # round lights, only over the shower, the countertop and the sink, on the slat at 58 across (2 in clear of the ribs)
+    for lx in (26.5,86.5,119):
+        a(f'<circle cx="{xx(lx):.1f}" cy="{yy(58):.1f}" r="{SC*1:.1f}" fill="#FFE9A0" stroke="#B8860B" stroke-width="1.4"/>')
+    a(f'<text x="{xx(86.5):.1f}" y="{yy(58)-9:.1f}" text-anchor="middle" style="font-size:11px;font-weight:600;fill:#fff;paint-order:stroke;stroke:#5A3A00;stroke-width:3px">round lights, 2 in: shower, countertop, sink</text>')
     # cutouts
     # the units on the roof: fan 17 3/4 square, A/C 28 1/4 square, dashed around their cutouts
     for _c,_u in ((fan,17.75),(ac,28.25)):
@@ -66,7 +65,7 @@ def _g():
 _svg,_cutn=_g()
 _rows=[('Plywood','3/16 in','3 sheets of 4 x 8 ft at least (69 sq ft of ceiling: 160 x 62), cut into pieces 96 x 48, 64 x 48, 96 x 14 and 64 x 14','against the roof bows; about 37 lb'),
  ('Slats','3 wide x 3/4 thick x 160 long','15, with 1 in gaps (1 1/2 in left at each side of the 62 in flat part); each one is cut where the fan or the A/C opening crosses it: the fan cuts %d, the A/C cuts %d'%(_cutn[0],_cutn[1]),'14 ft stock (8 in waste each); about 72 lb in western red cedar (about 23 lb per cubic foot, pine would be about 90); a board sold as 1 x 4 is 3/4 x 3 1/2, so rip it to 3 in wide'),
- ('Round lights','2 in across, 6','two rows of three, at 26 2/3, 80 and 133 1/3 in from the rear doors, on the slats nearest 22 and 46 in across from the driver wall','centered on a 3 in slat (1/2 in of wood each side); a small hole through the plywood behind each for the wire'),
+ ('Round lights','2 in across, 3','over the shower (26 1/2 in from the rear doors), the countertop (86 1/2) and the sink (119), all on the slat at 58 in across from the driver wall; no other ceiling lights','centered on a 3 in slat (1/2 in of wood each side) and 2 in clear of the ribs; a small hole through the plywood behind each for the wire; the shower one is wet rated'),
  ('Roof fan cutout','14 x 14','centered 13 1/4 in from the rear doors (7 1/4 on the datum of the other diagrams: it spans 6 1/4 to 20 1/4 from the rear doors, 1 1/2 in clear of the roof rib that starts at 21 3/4) and 34 in across from the driver wall, the middle of the van (not over the wet bath, as you decided); the fan unit is 17 3/4 square, so it sits on the roof from 4 3/8 to 22 1/8 from the rear doors','the F36AR fan cutout, 356 x 356 mm (14.02 in, drawn 14 x 14); framed between the roof bows'),
  ('Air conditioning cutout','14 1/4 x 14 1/4','centered 49 1/2 in from the rear doors (43 1/2 on the datum of the other diagrams: it spans 42 3/8 to 56 5/8 from the rear doors, inside the 40 to 70 asked for, between the roof ribs at 37 7/8 and 58 3/8) and 34 in across','the usual air conditioner opening; model not chosen; framed between the roof bows; its weight is not modeled')]
 _tbl='<table><tr><th>Part</th><th>Size</th><th>How many and where</th><th>Notes</th></tr>'+''.join('<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>'%r for r in _rows)+'</table>'
