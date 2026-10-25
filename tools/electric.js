@@ -11,26 +11,25 @@ const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>
 
 // ------------------------------------------------------------------ the proposal (x = inches from the back mark, z = inches up from the floor)
 // kinds: out120 = 120 V outlet, usb = 12 V / USB-C socket, sw = switch, lt = light, strip = LED strip (x0..x1 at z), box = a mounted unit, inlet, panel, run = a wire run (vertical x from z0 to z1)
-const E_DRIVER = [
+const E_DRIVER = pl => { const tc = (pl.tbl[0] + pl.tbl[1]) / 2, q1 = pl.bedLen / 4, q3 = 3 * pl.bedLen / 4, lz = pl.cabBot - .5; return [
   {k:'box',   n:'Battery, 280 Ah (assumed lithium)',          x0:52, x1:73, z0:0, z1:9.5, note:'where the plan has it, in front of the wheel well; main fuse (Class T, 250 A) within 7 in of its + post'},
   {k:'box',   n:'Power hub board',                             x0:72, x1:74, z0:1, z1:11, note:'a plywood board on the closet’s rear panel, facing the battery: inverter-charger, DC bus bars, shunt, 12 V fuse block, DC-DC charger, AC panel. Needs an access hatch in the couch front, 52 to 74 in'},
   {k:'inlet', n:'Shore power inlet (30 A)',                    x:80, z:21,  note:'through the solid steel band at 19 1/2 to 23 in up (S3), inside the closet’s lower part; 30 A breaker on the hub board'},
-  {k:'lt',    n:'Reading light, rear end of the couch',       x:14, z:52, note:'12 V LED, on the lights circuit, its own switch on the plate at 70 in'},
-  {k:'lt',    n:'Reading light, cab end of the couch',        x:60, z:52, note:'12 V LED, on the lights circuit'},
+  {k:'lt',    n:'Light under the cabinet over the couch, rear', x:q1, z:lz, note:'12 V LED, on the underside of the wall cabinet (bottom at 61 in), a quarter of the way along the couch (74 in); on the lights circuit and the couch switch. Replaces the wall reading lights I had suggested'},
+  {k:'lt',    n:'Light under the cabinet over the couch, cab end', x:q3, z:lz, note:'same, three quarters of the way along; wire comes down from inside the cabinet'},
+  {k:'lt',    n:'Light over the dinette table',                x:tc, z:lz, note:'12 V LED under the dinette wall cabinet, centered over the table (108 1/2 to 134 1/2); on the lights circuit and the dinette switch'},
   {k:'usb',   n:'USB-C and 12 V socket, couch rear',           x:6,  z:44, note:'above the back cushion (40 in up); 12 V sockets circuit, 14 AWG, 15 A'},
   {k:'out120',n:'Couch outlet (120 V duplex)',                  x:62, z:44, note:'above the back cushion (40 in up); circuit A (GFCI), 12 AWG'},
   {k:'usb',   n:'USB-C and 12 V socket, couch cab end',        x:70, z:44, note:'12 V sockets circuit'},
   {k:'sw',    n:'Switch plate at the rear doors (fan, wet bath light)', x:3,  z:48, note:'2 gang: roof fan and the wet bath light. You did not list this one, but those two need a switch; the ceiling lights are not on it'},
   {k:'sw',    n:'Light switch by the couch',                   x:70, z:50, note:'ceiling lights (one of three points, with the dinette and the sink) and the two reading lights'},
   {k:'sw',    n:'Light switch by the dinette',                  x:106, z:48, note:'ceiling lights (second point) and the entry light over the sliding door'},
-  {k:'out120',n:'Dinette outlet (120 V duplex)',                x:98, z:42, note:'above the bench back (38 in), at the rear end of the dinette; circuit A (GFCI)'},
+  {k:'out120',n:'Outlet over the dinette table (120 V duplex)', x:tc, z:36, note:'on the wall just over the table (its top is at 29 in), in the middle of it, clear of the backrests (38 in); circuit A (GFCI)'},
   {k:'usb',   n:'USB-C and 12 V socket, dinette (cab end)',    x:144,z:42, note:'12 V sockets circuit'},
-  {k:'strip', n:'Under-cabinet LED strip, couch side',         x0:2, x1:72, z:60, note:'under the wall cabinet (bottom at 61 in); lights circuit'},
-  {k:'strip', n:'Under-cabinet LED strip, dinette side',       x0:91,x1:152,z:60, note:'same circuit'},
   {k:'strip', n:'Closet light',                                x0:76,x1:87, z:73, note:'inside the closet, on a door switch'},
   {k:'run',   n:'Riser A: A/C, 12 V and lights feed',          x:73, z0:11, z1:75, note:'up inside the wall behind the planks (4 1/2 in space) to the ceiling: A/C 6 AWG pair in its own loom, plus the 12 V ceiling feed (12 AWG). Grommet where it crosses the top steel'},
   {k:'run',   n:'Cab charge cable (DC-DC input)',              x:70, z0:0, z1:1,  note:'4 AWG from the starter battery fuse (60 A) under the van along the driver side frame to a sealed floor grommet next to the battery'},
-];
+]; };
 const E_PASS = [
   {k:'out120',n:'Fridge outlet, behind the fridge (120 V)',    x:47, z:6,  note:'on the wall behind the fridge platform (the fridge stands on a platform 8 1/4 up); circuit C, the fridge alone'},
   {k:'out120',n:'Microwave outlet (120 V, its own breaker)',    x:60, z:64, note:'a fifth outlet you did not list: the microwave (1500 W) needs its own, on the wall just cab-side of it (36 to 58); circuit B. Drop it if the microwave plugs in elsewhere'},
@@ -58,7 +57,7 @@ async function readPlan(page) {
       fan: { x: L.fan.x, y: L.fan.y, w: L.fan.w, u: L.fan.u },
       ac: { x: L.ac.x, y: L.ac.y, w: L.ac.w, u: L.ac.u },
       ribBands: L.ribBands,
-      batt: L.batt,
+      batt: L.batt, tbl: L.tbl, bedLen: P.bedLen, tableH: P.tableH, cabBot: P.cabBot,
     };
   });
 }
@@ -213,7 +212,7 @@ function loadTable(d) {
   const baseA = await grabBase(page2, 0), baseD = await grabBase(page2, 2);
   const css = await page2.evaluate(() => [...document.querySelectorAll('style')].map(s => s.textContent).join('\n'));
   await b.close();
-  const Dw = wallSVG(E_DRIVER, 'D', baseA, furn.D), Pw = wallSVG(E_PASS, 'P', baseD, furn.P);
+  const Dw = wallSVG(E_DRIVER(plan), 'D', baseA, furn.D), Pw = wallSVG(E_PASS, 'P', baseD, furn.P);
 
   const style = css + `
   body { max-width: none; margin: 0; padding: 0; background: #fff; color: #2C2C2A; color-scheme: light; }
@@ -241,7 +240,8 @@ function loadTable(d) {
   <li>A combined inverter-charger with at least a 30 A pass-through, so shore power both runs the 120 V loads and charges the battery.</li>
   <li>A 40 to 60 A DC-DC charger from the alternator, 4 AWG from the starter battery.</li>
   <li><b>Light switches:</b> by the couch, the dinette and the sink, as you asked. They all control the ceiling lights from three places, which needs momentary push-buttons into a 12 V dimming controller (a lighting module with several button inputs), not ordinary 3 way switches. I kept a small 2 gang plate at the rear doors only for the roof fan and the wet bath light.</li>
-  <li><b>Outlets:</b> the four 120 V outlets you asked for (couch, dinette, under the TV, behind the fridge), plus one for the microwave, which cannot share a circuit with them. Everything else is 12 V or USB-C.</li>
+  <li><b>Under-cabinet lights:</b> two over the couch (a quarter and three quarters along it) and one centered over the dinette table, all on the underside of the wall cabinets. They replace the under-cabinet LED strips and the wall reading lights I had first suggested.</li>
+  <li><b>Outlets:</b> the four 120 V outlets you asked for (couch, over the middle of the dinette table, under the TV, behind the fridge), plus one for the microwave, which cannot share a circuit with them. Everything else is 12 V or USB-C.</li>
   <li>The hot water heater (1440 W) and the microwave (about 1500 W) must not run together: that is more than a 2000 W inverter can supply.</li>
   <li>All 120 V work is for an electrician to check; I give layout and sizes, not a code review.</li></ul></div>
   <h2>1. One-line diagram</h2>
@@ -273,5 +273,5 @@ function loadTable(d) {
   fs.mkdirSync(process.env.SC + '/elec', {recursive: true});
   const frag = `<meta name="claude:viewport-fit-sides" content="cover">\n<title>Electrical Layout</title>\n<style>${style}</style>\n${body.replace('<a href="interactive.html">', '<a href="https://claude.ai/artifact/PoTZ5J5BkcwXAr5J2RBTjs" target="_blank" rel="noopener">').replace('<a href="wall-map.html">', '<a href="https://claude.ai/artifact/1quE178yLUJmgmSuhm626H" target="_blank" rel="noopener">')}\n`;
   fs.writeFileSync(process.env.SC + '/elec/index.html', frag);
-  console.log('electric.html', doc.length, 'driver', E_DRIVER.length, 'pass', E_PASS.length);
+  console.log('electric.html', doc.length, 'driver', E_DRIVER(plan).length, 'pass', E_PASS.length);
 })();
