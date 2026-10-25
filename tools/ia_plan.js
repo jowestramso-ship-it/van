@@ -10,11 +10,12 @@ function obstacles(L, V) {
   if (L.tableLen > 0) D.push({ x0: L.tbl[0], x1: L.tbl[1], d: P.tableD, n: 'the dinette table' });
   D.push({ x0: L.bB[0], x1: L.bB[1], d: P.benchD, n: 'the bench' });
   const hx = P.hinge === 'rear' ? L.c0 + 0.125 : L.c1 - 0.125, wC = P.closetW - 0.25, sg = P.hinge === 'rear' ? 1 : -1;
-  ['clo_lo', 'clo_hi'].forEach(id => {
+  ['clo_hi'].forEach(id => {
     const s = V[id] || 0; if (s < .02 || !P.closetOn) return;
     const th = s * P.openAng * rad;
     for (let k = 0; k <= 24; k++) { const r = wC * k / 24; D.push({ x0: hx + sg * r * Math.cos(th) - .4, x1: hx + sg * r * Math.cos(th) + .4, d: P.closetD + r * Math.sin(th), n: 'the closet door', door: true, px: hx + sg * r * Math.cos(th) }); }
   });
+  { const s = V.clo_dr || 0; if (s > .02 && P.closetOn) D.push({ x0: L.c0, x1: L.c1, d: P.closetD + L.cloPull * s, n: 'the closet drawers (pulled out)' }); }
   Q.push({ x0: 0, x1: P.panW, d: P.panD, n: 'the shower pan' });
   if (P.fridgeOn) Q.push({ x0: L.fr[0], x1: L.fr[1], d: P.cabD, n: 'the fridge' });
   const sf = V.fridge || 0;
@@ -92,7 +93,7 @@ function drawPlan(L, V) {
   o.push(GE());
   o.push(GB('closet', 'Closet'));
   o.push(Ln(xx(L.c0 + 2), yy(P.closetD / 2), xx(L.c1 - 2), yy(P.closetD / 2), { stroke: COL.G, sw: 3.5, cap: 'round' }));
-  o.push(it(L.c0, L.c1, 0, P.closetD, COL.G, 'Closet', `${fmt(P.closetW)} x ${fmt(P.closetD)}, 2 rods`, { fo: .14 }));
+  o.push(it(L.c0, L.c1, 0, P.closetD, COL.G, 'Closet', `${fmt(P.closetW)} x ${fmt(P.closetD)}, 1 rod, drawers below`, { fo: .14 }));
   o.push(GE());
   o.push(GB('dinette', 'Benches and table'));
   {
@@ -130,7 +131,7 @@ function drawPlan(L, V) {
   // closet doors in plan: a line swinging out from the hinge, with the dashed sweep
   const hx = P.hinge === 'rear' ? L.c0 + 0.125 : L.c1 - 0.125, wC = P.closetW - 0.25, sg = P.hinge === 'rear' ? 1 : -1;
   o.push(GB('closet', 'Closet'));
-  [['clo_lo', COL.G, 1], ['clo_hi', '#7A7A72', .8]].forEach(dd => {
+  [['clo_hi', COL.G, 1]].forEach(dd => {
     const s = V[dd[0]] || 0, th = s * P.openAng * Math.PI / 180;
     const tip = [hx + sg * wC * Math.cos(th), P.closetD + wC * Math.sin(th)];
     let g = '';
@@ -141,8 +142,9 @@ function drawPlan(L, V) {
     g += Ln(xx(hx), yy(P.closetD), xx(tip[0]), yy(tip[1]), { stroke: dd[1], sw: 4, cap: 'round' });
     o.push(MV(dd[0], g, ''));
   });
-  if ((V.clo_lo || 0) + (V.clo_hi || 0) > .05) o.push(T(xx((L.c0 + L.c1) / 2), yy(P.closetD + wC + 6), 'closet door open', { size: 9.5, fill: COL.G }));
-  else o.push(T(xx((L.c0 + L.c1) / 2), yy(P.closetD + 4), 'click to open', { size: 9, fill: '#5F5E5A' }));
+  { const s = V.clo_dr || 0; o.push(MV('clo_dr', s > .01 ? it(L.c0 + .5, L.c1 - .5, P.closetD, P.closetD + L.cloPull * s, '#7A5A2E', '', null, { fo: .22 }) + T(xx((L.c0 + L.c1) / 2), yy(P.closetD + L.cloPull * s / 2), 'drawers out', { size: 9.5, fill: '#5A3A00' }) : '', HITR(xx(L.c0), yy(P.closetD + 3.5), S * P.closetW, S * 3.5))); }
+  if ((V.clo_dr || 0) + (V.clo_hi || 0) > .05) o.push(T(xx((L.c0 + L.c1) / 2), yy(P.closetD + wC + 6), 'closet open', { size: 9.5, fill: COL.G }));
+  else o.push(T(xx((L.c0 + L.c1) / 2), yy(P.closetD + 4), 'click to open (door above, drawers below)', { size: 9, fill: '#5F5E5A' }));
   o.push(GE());
   // ---------- passenger side ----------
   o.push(GB('pan', 'Shower'));

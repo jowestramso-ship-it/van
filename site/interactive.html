@@ -225,9 +225,12 @@ const PD = [
   { k: 'legIn', g: 'Bed / couch', l: 'Legs set in from the leaf free edge', d: 3, s: .5, a: 0, b: 10 },
   { k: 'closetW', g: 'Closet', l: 'Width', d: 15, s: .25, a: 8, b: 40 },
   { k: 'closetD', g: 'Closet', l: 'Depth', d: 25, s: .5, a: 10, b: 40 },
-  { k: 'rodHi', g: 'Closet', l: 'Upper rod, up from floor', d: 71, s: .5, a: 40, b: 85 },
-  { k: 'rodLo', g: 'Closet', l: 'Lower rod, up from floor', d: 36, s: .5, a: 10, b: 70 },
-  { k: 'split', g: 'Closet', l: 'Two doors split at', d: 38, s: .5, a: 20, b: 60 },
+  { k: 'rodHi', g: 'Closet', l: 'Rod for the hanging clothes, up from floor', d: 71, s: .5, a: 40, b: 85 },
+  { k: 'cloLen', g: 'Closet', l: 'Hanging clothes: length of the longest garment (the drawers are under them)', d: 36, s: .5, a: 20, b: 60 },
+  { k: 'hangDrop', g: 'Closet', l: 'Hanger: from the rod down to the shoulder of the garment', d: 3.5, s: .25, a: 1, b: 6 },
+  { k: 'cloClear', g: 'Closet', l: 'Clear space between the bottom of the longest garment and the top of the drawers', d: 1, s: .25, a: 0, b: 6 },
+  { k: 'cloDrawN', g: 'Closet', l: 'Drawers under the hanging clothes: how many', d: 4, s: 1, a: 1, b: 8 },
+  { k: 'cloDrawD', g: 'Closet', l: 'Drawers: depth (the slide length; they pull out about 1 in less than this)', d: 22, s: 2, a: 10, b: 24 },
   { k: 'hinge', g: 'Closet', l: 'Door hinges on the', d: 'rear', t: 's', o: [['rear', 'bed side'], ['cab', 'dinette side']] },
   { k: 'openAng', g: 'Closet', l: 'Doors open to (degrees)', d: 90, s: 5, a: 30, b: 180 },
   { k: 'fwT', g: 'Floor-to-ceiling walls', l: 'Wall thickness (the walls are inside the closet, the shower and the counter cabinet, so nothing else moves)', d: .75, s: .125, a: .25, b: 3 },
@@ -620,6 +623,9 @@ function layout(P0) {
   const L = { P };
   L.c0 = P.bedLen; L.c1 = P.bedLen + P.closetW;
   L.bA = [L.c1, L.c1 + P.benchLen]; L.bB = [P.cab - P.benchLen, P.cab];
+  // the closet: the clothes hang from the rod (the garment's shoulder is hangDrop below it), the longest one ends cloClear above the drawers, and the drawers fill the space under it
+  L.hangBot = P.rodHi - P.hangDrop - P.cloLen; L.drawTop = Math.max(3, L.hangBot - P.cloClear); L.split = L.drawTop + .15;
+  { const n = Math.max(1, Math.round(P.cloDrawN)), gap = .125, h = (L.drawTop - 1 - (n - 1) * gap) / n; L.cloDr = []; for (let i = 0; i < n; i++) L.cloDr.push({ z0: 1 + i * (h + gap), z1: 1 + i * (h + gap) + h }); L.cloDrH = h; L.cloDrW = P.closetW - 1.5 - 1; L.cloPull = Math.max(0, P.cloDrawD - 1); }
   // the toilet: sideways at the cab end of the wet bath, back against the wall to the fridge, centered across the stall (y = out from the passenger wall)
   { const x1 = P.panW - (P.wallsOn ? P.fwT : 0), y0 = (P.panD - P.toiletW) / 2; L.toilet = P.toiletOn ? { x0: x1 - P.toiletD, x1, y0, y1: y0 + P.toiletW, z1: P.toiletH } : null; }
   // the shower nook contents: a towel bar bay at the rear end, then a shelf board with the bottles on it and the toilet paper rolls under it
@@ -797,7 +803,7 @@ function bedState(s) {
 }
 // the dinette makes up into a bed: the table lowers, the backrest cushions come off and lie on it
 function dinState(s) { return { tbl: ease(clamp(s / .5, 0, 1)), back: 1 - ease(clamp((s - .15) / .4, 0, 1)), pil: clamp((s - .55) / .45, 0, 1) }; }
-const MOVER_IDS = ['dc0', 'dc1', 'dc2', 'dc3', 'dc4', 'dc5', 'clo_lo', 'clo_hi', 'bed', 'dinette', 'flap', 'ledge', 'fridge'];
+const MOVER_IDS = ['dc0', 'dc1', 'dc2', 'dc3', 'dc4', 'dc5', 'clo_dr', 'clo_hi', 'bed', 'dinette', 'flap', 'ledge', 'fridge'];
 MOVER_IDS.forEach(ensure);
 /* ================= elevation views (driver side and passenger side) ================= */
 function mkElev(flip, L) {
@@ -933,20 +939,19 @@ function drawDriver(L, V) {
 
   // pockets on the inside of the closet doors
   const pw = (P.closetW - 1.75) / 2;
-  const prow = [[5, 12], [12.5, 19.5], [20, 27], [27.5, 34.5]].filter(r => r[1] < P.split - 3);
-  const prow2 = [[4, 11], [11.5, 18.5], [19, 26]].map(r => [P.split + r[0], P.split + r[1]]);
-  prow.concat(prow2).forEach(r => { [L.c0 + 0.625, L.c0 + 0.625 + pw + 0.5].forEach(px => { if (r[0] > 0 && r[1] < P.ceil) o.push(box(px, px + pw, r[0], r[1], { fill: '#B07A2A', fo: .1, stroke: '#8A5A00', sw: 1, rx: 2, dash: '3 2' })); }); });
-  o.push(NOTE(X((L.c0 + L.c1) / 2), Y(P.split + 28.5), 'dashed: door pockets inside', { size: 9.5, fill: '#8A5A00' }));
+  const prow2 = [[4, 11], [11.5, 18.5], [19, 26]].map(r => [L.split + r[0], L.split + r[1]]);
+  prow2.forEach(r => { [L.c0 + 0.625, L.c0 + 0.625 + pw + 0.5].forEach(px => { if (r[0] > 0 && r[1] < P.ceil) o.push(box(px, px + pw, r[0], r[1], { fill: '#B07A2A', fo: .1, stroke: '#8A5A00', sw: 1, rx: 2, dash: '3 2' })); }); });
+  o.push(NOTE(X((L.c0 + L.c1) / 2), Y(L.split + 28.5), 'dashed: door pockets inside', { size: 9.5, fill: '#8A5A00' }));
   // closet interior when the doors are open: darker back, garments
   const hx = P.hinge === 'rear' ? L.c0 + 0.125 : L.c1 - 0.125, wC = P.closetW - 0.25;
-  const cdoors = [{ id: 'clo_hi', z0: P.split + 0.1, z1: L.ceilF - 0.25, nm: 'upper door' }, { id: 'clo_lo', z0: 0.25, z1: P.split - 0.1, nm: 'lower door' }];
+  const cdoors = [{ id: 'clo_hi', z0: L.split, z1: L.ceilF - 0.25, nm: 'upper door' }];
   cdoors.forEach(dc => {
     const s = V[dc.id] || 0;
     if (s > 0.02) o.push(box(L.c0 + 0.125, L.c1 - 0.125, dc.z0, dc.z1, { fill: '#2C2C2A', fo: .3 * Math.min(1, s * 1.5) }));
   });
-  [[P.rodHi, 'clo_hi'], [P.rodLo, 'clo_lo']].forEach(r => {
+  [[P.rodHi, 'clo_hi']].forEach(r => {
     const s = V[r[1]] || 0, cols = ['#B5502F', '#185FA5', '#0F6E56', '#993556'];
-    if (s > 0.05) for (let x = L.c0 + 2.2, i = 0; x + 0.9 < L.c1 - 2; x += 1.5, i++) o.push(box(x, x + 0.9, r[0] - 30, r[0] - 0.8, { fill: cols[i % 4], fo: .55 * Math.min(1, s * 1.6), stroke: cols[i % 4], sw: .6, rx: 1 }));
+    if (s > 0.05) for (let x = L.c0 + 2.2, i = 0; x + 0.9 < L.c1 - 2; x += 1.5, i++) o.push(box(x, x + 0.9, L.hangBot, r[0] - 0.8, { fill: cols[i % 4], fo: .55 * Math.min(1, s * 1.6), stroke: cols[i % 4], sw: .6, rx: 1 }));
     o.push(Ln(X(L.c0 + 2), Y(r[0]), X(L.c1 - 2), Y(r[0]), { stroke: COL.G, sw: 3.5, cap: 'round' }));
     o.push(LBL(X((L.c0 + L.c1) / 2), Y(r[0]) - 5, 'Closet rod', `${fmt(r[0])} in up`, { size: 10, fill: COL.G, w: 700 }));
   });
@@ -962,6 +967,12 @@ function drawDriver(L, V) {
     }
     o.push(MV(dc.id, g, HITR(Math.min(X(L.c0 + 0.125), X(L.c1 - 0.125)), Y(dc.z1), S * wC, S * (dc.z1 - dc.z0))));
   });
+  { // the drawers under the hanging clothes: fronts the width of the closet; click to pull them out (the side view cannot show the pull, so it only shades them)
+    const s = V.clo_dr || 0, xm = (L.c0 + L.c1) / 2; let g = '';
+    L.cloDr.forEach(d => { g += box(L.c0 + .125, L.c1 - .125, d.z0, d.z1, { fill: '#7A5A2E', fo: .1 + .25 * s, stroke: COL.G, sw: 1.4, rx: 2 }); g += Ln(X(xm - 1.5), Y((d.z0 + d.z1) / 2), X(xm + 1.5), Y((d.z0 + d.z1) / 2), { stroke: '#2C2C2A', sw: 2.4, cap: 'round' }); });
+    g += LBL(X(xm), Y(L.drawTop * .5), 'Closet drawers', `${L.cloDr.length} drawers up to ${fmt(L.drawTop)} in, each ${fmt(L.cloDrH)} tall x ${fmt(L.cloDrW)} wide inside x ${fmt(P.cloDrawD)} deep${s > .5 ? ', pulled out ' + fmt(L.cloPull) + ' in' : ' (click to pull them out)'}`, { size: 10, fill: COL.G });
+    o.push(MV('clo_dr', g, HITR(Math.min(X(L.c0), X(L.c1)), Y(L.drawTop), S * P.closetW, S * L.drawTop)));
+  }
   o.push(GE());
   // benches and table. The dinette makes up into a bed: the table lowers, the backrest cushions come off and lie on it, so the three sections are level
   o.push(GB('dinette', 'Benches and table'));
@@ -1486,11 +1497,12 @@ function obstacles(L, V) {
   if (L.tableLen > 0) D.push({ x0: L.tbl[0], x1: L.tbl[1], d: P.tableD, n: 'the dinette table' });
   D.push({ x0: L.bB[0], x1: L.bB[1], d: P.benchD, n: 'the bench' });
   const hx = P.hinge === 'rear' ? L.c0 + 0.125 : L.c1 - 0.125, wC = P.closetW - 0.25, sg = P.hinge === 'rear' ? 1 : -1;
-  ['clo_lo', 'clo_hi'].forEach(id => {
+  ['clo_hi'].forEach(id => {
     const s = V[id] || 0; if (s < .02 || !P.closetOn) return;
     const th = s * P.openAng * rad;
     for (let k = 0; k <= 24; k++) { const r = wC * k / 24; D.push({ x0: hx + sg * r * Math.cos(th) - .4, x1: hx + sg * r * Math.cos(th) + .4, d: P.closetD + r * Math.sin(th), n: 'the closet door', door: true, px: hx + sg * r * Math.cos(th) }); }
   });
+  { const s = V.clo_dr || 0; if (s > .02 && P.closetOn) D.push({ x0: L.c0, x1: L.c1, d: P.closetD + L.cloPull * s, n: 'the closet drawers (pulled out)' }); }
   Q.push({ x0: 0, x1: P.panW, d: P.panD, n: 'the shower pan' });
   if (P.fridgeOn) Q.push({ x0: L.fr[0], x1: L.fr[1], d: P.cabD, n: 'the fridge' });
   const sf = V.fridge || 0;
@@ -1568,7 +1580,7 @@ function drawPlan(L, V) {
   o.push(GE());
   o.push(GB('closet', 'Closet'));
   o.push(Ln(xx(L.c0 + 2), yy(P.closetD / 2), xx(L.c1 - 2), yy(P.closetD / 2), { stroke: COL.G, sw: 3.5, cap: 'round' }));
-  o.push(it(L.c0, L.c1, 0, P.closetD, COL.G, 'Closet', `${fmt(P.closetW)} x ${fmt(P.closetD)}, 2 rods`, { fo: .14 }));
+  o.push(it(L.c0, L.c1, 0, P.closetD, COL.G, 'Closet', `${fmt(P.closetW)} x ${fmt(P.closetD)}, 1 rod, drawers below`, { fo: .14 }));
   o.push(GE());
   o.push(GB('dinette', 'Benches and table'));
   {
@@ -1606,7 +1618,7 @@ function drawPlan(L, V) {
   // closet doors in plan: a line swinging out from the hinge, with the dashed sweep
   const hx = P.hinge === 'rear' ? L.c0 + 0.125 : L.c1 - 0.125, wC = P.closetW - 0.25, sg = P.hinge === 'rear' ? 1 : -1;
   o.push(GB('closet', 'Closet'));
-  [['clo_lo', COL.G, 1], ['clo_hi', '#7A7A72', .8]].forEach(dd => {
+  [['clo_hi', COL.G, 1]].forEach(dd => {
     const s = V[dd[0]] || 0, th = s * P.openAng * Math.PI / 180;
     const tip = [hx + sg * wC * Math.cos(th), P.closetD + wC * Math.sin(th)];
     let g = '';
@@ -1617,8 +1629,9 @@ function drawPlan(L, V) {
     g += Ln(xx(hx), yy(P.closetD), xx(tip[0]), yy(tip[1]), { stroke: dd[1], sw: 4, cap: 'round' });
     o.push(MV(dd[0], g, ''));
   });
-  if ((V.clo_lo || 0) + (V.clo_hi || 0) > .05) o.push(T(xx((L.c0 + L.c1) / 2), yy(P.closetD + wC + 6), 'closet door open', { size: 9.5, fill: COL.G }));
-  else o.push(T(xx((L.c0 + L.c1) / 2), yy(P.closetD + 4), 'click to open', { size: 9, fill: '#5F5E5A' }));
+  { const s = V.clo_dr || 0; o.push(MV('clo_dr', s > .01 ? it(L.c0 + .5, L.c1 - .5, P.closetD, P.closetD + L.cloPull * s, '#7A5A2E', '', null, { fo: .22 }) + T(xx((L.c0 + L.c1) / 2), yy(P.closetD + L.cloPull * s / 2), 'drawers out', { size: 9.5, fill: '#5A3A00' }) : '', HITR(xx(L.c0), yy(P.closetD + 3.5), S * P.closetW, S * 3.5))); }
+  if ((V.clo_dr || 0) + (V.clo_hi || 0) > .05) o.push(T(xx((L.c0 + L.c1) / 2), yy(P.closetD + wC + 6), 'closet open', { size: 9.5, fill: COL.G }));
+  else o.push(T(xx((L.c0 + L.c1) / 2), yy(P.closetD + 4), 'click to open (door above, drawers below)', { size: 9, fill: '#5F5E5A' }));
   o.push(GE());
   // ---------- passenger side ----------
   o.push(GB('pan', 'Shower'));
@@ -1933,7 +1946,7 @@ function computeChecks(L, V) {
   if (anyOpen) {
     const a1 = aisleMin(L, O);
     // with the bed made up the space beside it is the bed, not a walkway (and it floats above the shower pan), so that is information, not a problem
-    const bedUp = a1.dn === 'the bed (made up)', clo = a1.dn === 'the closet door', canOut = a1.qn === 'the trash can (pulled out)';
+    const bedUp = a1.dn === 'the bed (made up)', clo = a1.dn === 'the closet door' || a1.dn === 'the closet drawers (pulled out)', canOut = a1.qn === 'the trash can (pulled out)';
     if (a1.v < 1e8) push(bedUp || clo || canOut ? 'ok' : a1.v < 0 ? 'bad' : lvA(a1.v), a1.v < 0 && !canOut ? `Right now ${a1.dn} and ${a1.qn} overlap by ${fmt(-a1.v)} in at ${fmt(a1.x)} in from the back.` : `Narrowest walkway right now: ${a1.v < 0 ? 'none' : fmt(a1.v) + ' in'} at ${fmt(a1.x)} in from the back (${a1.dn} against ${a1.qn})${bedUp ? ': with the bed made up that is where you step onto it, not a walkway' : ''}${clo ? '; you said the open closet door is fine' : ''}${canOut ? ': you stand beside the pulled-out can to change the bag; nobody walks past while it is out' : ''}.`);
   }
   // bed leaf
@@ -2024,10 +2037,14 @@ function computeChecks(L, V) {
   // closet doors fully open
   if (P.closetOn) {
   const hx = P.hinge === 'rear' ? L.c0 + 0.125 : L.c1 - 0.125, wC = P.closetW - 0.25;
-  const O1 = obstacles(L, { clo_lo: 1, clo_hi: 1 }), hits = doorHits(L, O1), r1 = aisleAt(L, O1, hx);
+  const O1 = obstacles(L, { clo_hi: 1 }), hits = doorHits(L, O1), r1 = aisleAt(L, O1, hx);
   const sw = wC * Math.sin(P.openAng * Math.PI / 180);
   if (hits.length) push('bad', `Closet doors opened to ${P.openAng} degrees run into ${[...new Set(hits)].join(' and ')}. Open them less, or use a bi-fold or flip-up door.`);
   else push('ok', `Closet doors open to ${P.openAng} degrees stick out ${fmt(sw)} in${r1.dm > 0 && r1.qm > 0 ? `, leaving ${fmt(r1.v)} in of walkway beside them` : ''}${r1.v < 10 ? '; you said the open closet door is fine' : ''}.`);
+  if (P.closetOn) {
+    const Od = obstacles(L, { clo_dr: 1 }), rd = aisleAt(L, Od, (L.c0 + L.c1) / 2), tall = L.ceilF - .25 - L.split;
+    push(L.hangBot < 6 || L.drawTop < 8 ? 'bad' : rd.v < 0 ? 'bad' : rd.v < 6 ? 'warn' : 'ok', `Closet: the clothes hang from the rod at ${fmt(P.rodHi)} in up (a garment's shoulder is ${fmt(P.hangDrop)} in below it), so a ${fmt(P.cloLen)} in garment reaches down to ${fmt(L.hangBot)} in; the ${L.cloDr.length} drawers fill the space under it, from 1 to ${fmt(L.drawTop)} in up (${fmt(P.cloClear)} in under the longest garment): each ${fmt(L.cloDrH)} tall x ${fmt(L.cloDrW)} wide x ${fmt(P.cloDrawD)} deep inside (the closet is about ${fmt(P.closetW - 1.5)} clear across after its two side panels, less 1 in for the slides). The one door above them is ${fmt(P.closetW - .25)} x ${fmt(tall)}, and the rod has about ${fmt(L.ceilF - P.rodHi)} in over it to the ceiling. Pulled out all the way (${fmt(L.cloPull)} in) a drawer leaves ${fmt(Math.max(0, rd.v))} in of the aisle across from the closet${rd.v < 10 ? ': you open a drawer while you stand at it, so it may be fine, but nobody can pass' : ''}.`);
+  }
   }
   // bed out and the shower
   const Ob = obstacles(L, { bed: 1 });
@@ -2146,13 +2163,13 @@ const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
 /* ================= views, movers, drawing loop ================= */
 const ALLDC = ['dc0', 'dc1', 'dc2', 'dc3', 'dc4', 'dc5'];
 const VIEWS = [
-  { id: 'driver', label: 'Driver side', drag: 'the lawn chairs under the couch (left-right and up-down)', draw: drawDriver, movers: [['Couch to bed', ['bed']], ['Dinette to bed', ['dinette']], ['Wall cabinet doors, bed side', ['dc0', 'dc1', 'dc2']], ['Wall cabinet doors, dinette side', ['dc3', 'dc4', 'dc5']], ['Closet doors', ['clo_hi', 'clo_lo']]] },
+  { id: 'driver', label: 'Driver side', drag: 'the lawn chairs under the couch (left-right and up-down)', draw: drawDriver, movers: [['Couch to bed', ['bed']], ['Dinette to bed', ['dinette']], ['Wall cabinet doors, bed side', ['dc0', 'dc1', 'dc2']], ['Wall cabinet doors, dinette side', ['dc3', 'dc4', 'dc5']], ['Closet door', ['clo_hi']], ['Closet drawers', ['clo_dr']]] },
   { id: 'pass', label: 'Passenger side', drag: 'the drawers and shelves under the counter, the jar shelf, the microwave, the trash can, the dish towel hook, the hot water tank, the fresh water tank, the drain jug and the drain line (all of them left-right and up-down)', draw: drawPass, movers: [['Shower pan', ['pan']], ['Fridge door', ['fridge']], ['Trash can pull-out', ['can']], ['Fold-out table with the foot ledge', ['flap', 'ledge']], ['Foot ledge only', ['ledge']]] },
   { id: 'end', label: 'Bed, from the end', draw: drawBedEnd, movers: [['Couch to bed', ['bed']]] },
   { id: 'cross', label: 'Cross-section', draw: drawCross, movers: [] },
   { id: 'bare', label: 'Bare roof (mark the ribs)', drag: 'the roof fan and the air conditioner', draw: drawBare, movers: [] },
   { id: 'ceil', label: 'Ceiling', drag: 'the roof fan and the air conditioner', draw: drawCeiling, movers: [] },
-  { id: 'plan', label: 'From above', drag: 'the drawers (a whole column along the wall), the microwave, the trash can, the lawn chairs under the couch, the hot water tank, the fresh water tank, the drain jug (left-right and up-down, which is along the wall and out from it) and the drain line (along the wall only; its height is on the Passenger side tab)', draw: drawPlan, movers: [['Couch to bed', ['bed']], ['Dinette to bed', ['dinette']], ['Shower pan', ['pan']], ['Closet doors', ['clo_hi', 'clo_lo']], ['Fridge door', ['fridge']], ['Trash can pull-out', ['can']], ['Fold-out table with the foot ledge', ['flap', 'ledge']], ['Foot ledge only', ['ledge']], ['Wall cabinet doors', ALLDC]] }
+  { id: 'plan', label: 'From above', drag: 'the drawers (a whole column along the wall), the microwave, the trash can, the lawn chairs under the couch, the hot water tank, the fresh water tank, the drain jug (left-right and up-down, which is along the wall and out from it) and the drain line (along the wall only; its height is on the Passenger side tab)', draw: drawPlan, movers: [['Couch to bed', ['bed']], ['Dinette to bed', ['dinette']], ['Shower pan', ['pan']], ['Closet door', ['clo_hi']], ['Closet drawers', ['clo_dr']], ['Fridge door', ['fridge']], ['Trash can pull-out', ['can']], ['Fold-out table with the foot ledge', ['flap', 'ledge']], ['Foot ledge only', ['ledge']], ['Wall cabinet doors', ALLDC]] }
 ];
 let view = 'driver', L = layout(P), lastSig = '';
 const DEFS = '<defs><marker id="arq" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker><pattern id="hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="6" stroke="#888780" stroke-width="1"/></pattern><pattern id="hq" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="6" stroke="#888780" stroke-width="1"/></pattern></defs>';
@@ -2224,7 +2241,7 @@ function buildTabs() {
 }
 function buildMovers() {
   const vw0 = VIEWS.find(v => v.id === view), m = $('#movers');
-  const vw = Object.assign({}, vw0, { movers: vw0.movers.filter(x => !(x[1].includes('fridge') && !P.fridgeOn) && !(x[1].includes('can') && !P.canOn) && !(x[1].includes('clo_hi') && !P.closetOn)) });   // nothing to open for an item that was taken out
+  const vw = Object.assign({}, vw0, { movers: vw0.movers.filter(x => !(x[1].includes('fridge') && !P.fridgeOn) && !(x[1].includes('can') && !P.canOn) && !((x[1].includes('clo_hi') || x[1].includes('clo_dr')) && !P.closetOn)) });   // nothing to open for an item that was taken out
   m.innerHTML = (vw.drag ? `<span class="lab drghint">Drag the dotted purple boxes to move ${vw.drag}; double-click one to put it back.</span>` : '') + '<span class="lab">Open or close:</span>' + vw.movers.map(x => `<button type="button" class="chip" data-ids="${x[1].join(',')}" aria-pressed="false">${x[0]}</button>`).join('') + '<button type="button" class="chip all" id="openall">Open everything</button><button type="button" class="chip all" id="closeall">Close everything</button>';
   m.querySelectorAll('.chip[data-ids]').forEach(b => b.onclick = () => toggleIds(b.dataset.ids.split(',')));
   const all = [].concat(...vw.movers.map(x => x[1]));

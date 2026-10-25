@@ -23,7 +23,7 @@ function computeChecks(L, V) {
   if (anyOpen) {
     const a1 = aisleMin(L, O);
     // with the bed made up the space beside it is the bed, not a walkway (and it floats above the shower pan), so that is information, not a problem
-    const bedUp = a1.dn === 'the bed (made up)', clo = a1.dn === 'the closet door', canOut = a1.qn === 'the trash can (pulled out)';
+    const bedUp = a1.dn === 'the bed (made up)', clo = a1.dn === 'the closet door' || a1.dn === 'the closet drawers (pulled out)', canOut = a1.qn === 'the trash can (pulled out)';
     if (a1.v < 1e8) push(bedUp || clo || canOut ? 'ok' : a1.v < 0 ? 'bad' : lvA(a1.v), a1.v < 0 && !canOut ? `Right now ${a1.dn} and ${a1.qn} overlap by ${fmt(-a1.v)} in at ${fmt(a1.x)} in from the back.` : `Narrowest walkway right now: ${a1.v < 0 ? 'none' : fmt(a1.v) + ' in'} at ${fmt(a1.x)} in from the back (${a1.dn} against ${a1.qn})${bedUp ? ': with the bed made up that is where you step onto it, not a walkway' : ''}${clo ? '; you said the open closet door is fine' : ''}${canOut ? ': you stand beside the pulled-out can to change the bag; nobody walks past while it is out' : ''}.`);
   }
   // bed leaf
@@ -114,10 +114,14 @@ function computeChecks(L, V) {
   // closet doors fully open
   if (P.closetOn) {
   const hx = P.hinge === 'rear' ? L.c0 + 0.125 : L.c1 - 0.125, wC = P.closetW - 0.25;
-  const O1 = obstacles(L, { clo_lo: 1, clo_hi: 1 }), hits = doorHits(L, O1), r1 = aisleAt(L, O1, hx);
+  const O1 = obstacles(L, { clo_hi: 1 }), hits = doorHits(L, O1), r1 = aisleAt(L, O1, hx);
   const sw = wC * Math.sin(P.openAng * Math.PI / 180);
   if (hits.length) push('bad', `Closet doors opened to ${P.openAng} degrees run into ${[...new Set(hits)].join(' and ')}. Open them less, or use a bi-fold or flip-up door.`);
   else push('ok', `Closet doors open to ${P.openAng} degrees stick out ${fmt(sw)} in${r1.dm > 0 && r1.qm > 0 ? `, leaving ${fmt(r1.v)} in of walkway beside them` : ''}${r1.v < 10 ? '; you said the open closet door is fine' : ''}.`);
+  if (P.closetOn) {
+    const Od = obstacles(L, { clo_dr: 1 }), rd = aisleAt(L, Od, (L.c0 + L.c1) / 2), tall = L.ceilF - .25 - L.split;
+    push(L.hangBot < 6 || L.drawTop < 8 ? 'bad' : rd.v < 0 ? 'bad' : rd.v < 6 ? 'warn' : 'ok', `Closet: the clothes hang from the rod at ${fmt(P.rodHi)} in up (a garment's shoulder is ${fmt(P.hangDrop)} in below it), so a ${fmt(P.cloLen)} in garment reaches down to ${fmt(L.hangBot)} in; the ${L.cloDr.length} drawers fill the space under it, from 1 to ${fmt(L.drawTop)} in up (${fmt(P.cloClear)} in under the longest garment): each ${fmt(L.cloDrH)} tall x ${fmt(L.cloDrW)} wide x ${fmt(P.cloDrawD)} deep inside (the closet is about ${fmt(P.closetW - 1.5)} clear across after its two side panels, less 1 in for the slides). The one door above them is ${fmt(P.closetW - .25)} x ${fmt(tall)}, and the rod has about ${fmt(L.ceilF - P.rodHi)} in over it to the ceiling. Pulled out all the way (${fmt(L.cloPull)} in) a drawer leaves ${fmt(Math.max(0, rd.v))} in of the aisle across from the closet${rd.v < 10 ? ': you open a drawer while you stand at it, so it may be fine, but nobody can pass' : ''}.`);
+  }
   }
   // bed out and the shower
   const Ob = obstacles(L, { bed: 1 });
@@ -236,13 +240,13 @@ const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
 /* ================= views, movers, drawing loop ================= */
 const ALLDC = ['dc0', 'dc1', 'dc2', 'dc3', 'dc4', 'dc5'];
 const VIEWS = [
-  { id: 'driver', label: 'Driver side', drag: 'the lawn chairs under the couch (left-right and up-down)', draw: drawDriver, movers: [['Couch to bed', ['bed']], ['Dinette to bed', ['dinette']], ['Wall cabinet doors, bed side', ['dc0', 'dc1', 'dc2']], ['Wall cabinet doors, dinette side', ['dc3', 'dc4', 'dc5']], ['Closet doors', ['clo_hi', 'clo_lo']]] },
+  { id: 'driver', label: 'Driver side', drag: 'the lawn chairs under the couch (left-right and up-down)', draw: drawDriver, movers: [['Couch to bed', ['bed']], ['Dinette to bed', ['dinette']], ['Wall cabinet doors, bed side', ['dc0', 'dc1', 'dc2']], ['Wall cabinet doors, dinette side', ['dc3', 'dc4', 'dc5']], ['Closet door', ['clo_hi']], ['Closet drawers', ['clo_dr']]] },
   { id: 'pass', label: 'Passenger side', drag: 'the drawers and shelves under the counter, the jar shelf, the microwave, the trash can, the dish towel hook, the hot water tank, the fresh water tank, the drain jug and the drain line (all of them left-right and up-down)', draw: drawPass, movers: [['Shower pan', ['pan']], ['Fridge door', ['fridge']], ['Trash can pull-out', ['can']], ['Fold-out table with the foot ledge', ['flap', 'ledge']], ['Foot ledge only', ['ledge']]] },
   { id: 'end', label: 'Bed, from the end', draw: drawBedEnd, movers: [['Couch to bed', ['bed']]] },
   { id: 'cross', label: 'Cross-section', draw: drawCross, movers: [] },
   { id: 'bare', label: 'Bare roof (mark the ribs)', drag: 'the roof fan and the air conditioner', draw: drawBare, movers: [] },
   { id: 'ceil', label: 'Ceiling', drag: 'the roof fan and the air conditioner', draw: drawCeiling, movers: [] },
-  { id: 'plan', label: 'From above', drag: 'the drawers (a whole column along the wall), the microwave, the trash can, the lawn chairs under the couch, the hot water tank, the fresh water tank, the drain jug (left-right and up-down, which is along the wall and out from it) and the drain line (along the wall only; its height is on the Passenger side tab)', draw: drawPlan, movers: [['Couch to bed', ['bed']], ['Dinette to bed', ['dinette']], ['Shower pan', ['pan']], ['Closet doors', ['clo_hi', 'clo_lo']], ['Fridge door', ['fridge']], ['Trash can pull-out', ['can']], ['Fold-out table with the foot ledge', ['flap', 'ledge']], ['Foot ledge only', ['ledge']], ['Wall cabinet doors', ALLDC]] }
+  { id: 'plan', label: 'From above', drag: 'the drawers (a whole column along the wall), the microwave, the trash can, the lawn chairs under the couch, the hot water tank, the fresh water tank, the drain jug (left-right and up-down, which is along the wall and out from it) and the drain line (along the wall only; its height is on the Passenger side tab)', draw: drawPlan, movers: [['Couch to bed', ['bed']], ['Dinette to bed', ['dinette']], ['Shower pan', ['pan']], ['Closet door', ['clo_hi']], ['Closet drawers', ['clo_dr']], ['Fridge door', ['fridge']], ['Trash can pull-out', ['can']], ['Fold-out table with the foot ledge', ['flap', 'ledge']], ['Foot ledge only', ['ledge']], ['Wall cabinet doors', ALLDC]] }
 ];
 let view = 'driver', L = layout(P), lastSig = '';
 const DEFS = '<defs><marker id="arq" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker><pattern id="hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="6" stroke="#888780" stroke-width="1"/></pattern><pattern id="hq" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="6" stroke="#888780" stroke-width="1"/></pattern></defs>';
@@ -314,7 +318,7 @@ function buildTabs() {
 }
 function buildMovers() {
   const vw0 = VIEWS.find(v => v.id === view), m = $('#movers');
-  const vw = Object.assign({}, vw0, { movers: vw0.movers.filter(x => !(x[1].includes('fridge') && !P.fridgeOn) && !(x[1].includes('can') && !P.canOn) && !(x[1].includes('clo_hi') && !P.closetOn)) });   // nothing to open for an item that was taken out
+  const vw = Object.assign({}, vw0, { movers: vw0.movers.filter(x => !(x[1].includes('fridge') && !P.fridgeOn) && !(x[1].includes('can') && !P.canOn) && !((x[1].includes('clo_hi') || x[1].includes('clo_dr')) && !P.closetOn)) });   // nothing to open for an item that was taken out
   m.innerHTML = (vw.drag ? `<span class="lab drghint">Drag the dotted purple boxes to move ${vw.drag}; double-click one to put it back.</span>` : '') + '<span class="lab">Open or close:</span>' + vw.movers.map(x => `<button type="button" class="chip" data-ids="${x[1].join(',')}" aria-pressed="false">${x[0]}</button>`).join('') + '<button type="button" class="chip all" id="openall">Open everything</button><button type="button" class="chip all" id="closeall">Close everything</button>';
   m.querySelectorAll('.chip[data-ids]').forEach(b => b.onclick = () => toggleIds(b.dataset.ids.split(',')));
   const all = [].concat(...vw.movers.map(x => x[1]));

@@ -24,6 +24,7 @@ const fs = require('fs');
         lights: L.lights.map(l => ({x: f(l.x), y: f(l.y)})), ceilF: f(L.ceilF), lining: f(L.lining), slatY: L.slatY.map(f),
         fan: {x: L.fan.x, y: L.fan.y, w: L.fan.w}, ac: {x: L.ac.x, y: L.ac.y, w: L.ac.w},
         hook: L.hook ? {x: f(L.hook.x), z: f(L.hook.z), z0: f(L.hook.z0)} : null,
+        split: f(L.split), cloDr: L.cloDr.map(d => ({z0: f(d.z0), z1: f(d.z1)})), hangBot: f(L.hangBot),
         toilet: L.toilet, sn: L.sn,
         walls: L.walls.map(w => ({id: w.id, side: w.side, x0: f(w.x0), x1: f(w.x1), d: f(w.d)})),
       },

@@ -148,7 +148,10 @@
   // closet
   const cEnd = L.c1 - (L.walls.some(w => w.id === 'W1') ? P.fwT : 0);   // the closet's cab-side panel is the wall the rear bench leans on
   bx(L.c0, cEnd, 0, L.ceilF, 0, P.closetD, MT.wood, 36);
-  [[.25, P.split - .1], [P.split + .1, L.ceilF - .25]].forEach((r, i) => { bx(L.c0 + .1, L.c1 - .1, r[0] - .15, r[1] + .15, P.closetD - .05, P.closetD + .1, MT.gap, 8, { cast: false }); bx(L.c0 + .3, L.c1 - .3, r[0], r[1], P.closetD + .08, P.closetD + .75, MT.wood, 36); handle(L.c1 - 2.2, i ? r[0] + 8 : r[1] - 8, P.closetD + .75, 5, true, 1); });
+  { // one door above, drawers under the hanging clothes (fronts the width of the closet, a horizontal pull each)
+    const dr = [[L.split, L.ceilF - .25]]; L.cloDr.forEach(d => dr.push([d.z0, d.z1]));
+    dr.forEach((r, i) => { bx(L.c0 + .1, L.c1 - .1, r[0] - .15, r[1] + .15, P.closetD - .05, P.closetD + .1, MT.gap, 8, { cast: false }); bx(L.c0 + .3, L.c1 - .3, r[0], r[1], P.closetD + .08, P.closetD + .75, MT.wood, 36); if (i) handle((L.c0 + L.c1) / 2 - .15, (r[0] + r[1]) / 2 + 1.4, P.closetD + .75, 5, false, 1); else handle(L.c1 - 2.2, r[0] + 8, P.closetD + .75, 5, true, 1); });
+  }
   // dinette benches, table
   [L.bA, L.bB].forEach((b, i) => { bx(b[0], b[1], 0, P.seatH - 3.2, 0, P.benchD, MT.wood, 36); bx(b[0] + .2, b[1] - .2, P.seatH - 3.2, P.seatH, .4, P.benchD - .2, MT.fabric, 24); if (i) bx(b[1] - P.pillowT, b[1] - .2, P.seatH, P.backH, .2, P.benchD - .2, MT.fabric, 24); else bx(b[0] + .2, b[0] + P.pillowT, P.seatH, P.backH, .2, P.benchD - .2, MT.fabric, 24); });   // the backrests stand at the ends, against the walls
   // floor-to-ceiling walls: their tops follow the arched ceiling, so they are built of 2 in strips; the passenger ones stand .05 proud of the cabinet fronts so the faces do not flicker
@@ -253,11 +256,12 @@
     dinette: { n: 'Dinette', p: [114, 60, 44], t: [122, 38, 6] },
     couch: { n: 'Couch', p: [34, 60, 43], t: [38, 40, 4] },
     shower: { n: 'Shower and fridge', p: [90, 63, 33], t: [38, 36, 60] },
+    closet: { n: 'Closet', p: [83, 34, 45], t: [82, 30, 0], fov: 95 },
     bath: { n: 'Wet bath', p: [8, 56, 30], t: [24, 36, 68] },
     fridge: { n: 'Fridge and microwave', p: [47, 50, 20], t: [47, 46, 68] },
   };
   let yaw = 0, pitch = 0, fov = 72, cur = 'rear';
-  function setView(k) { cur = k; const v = VIEWS[k], p = V(...v.p), t = V(...v.t), d = t.clone().sub(p); camera.position.copy(p); yaw = Math.atan2(d.z, d.x); pitch = Math.atan2(d.y, Math.hypot(d.x, d.z)); fov = 72; draw(); document.querySelectorAll('[data-v]').forEach(b => b.setAttribute('aria-pressed', b.dataset.v === k)); }
+  function setView(k) { cur = k; const v = VIEWS[k], p = V(...v.p), t = V(...v.t), d = t.clone().sub(p); camera.position.copy(p); yaw = Math.atan2(d.z, d.x); pitch = Math.atan2(d.y, Math.hypot(d.x, d.z)); fov = v.fov || 72; draw(); document.querySelectorAll('[data-v]').forEach(b => b.setAttribute('aria-pressed', b.dataset.v === k)); }
   function draw() { camera.fov = fov; camera.rotation.order = 'YXZ'; camera.rotation.set(pitch, -yaw - Math.PI / 2, 0); camera.updateProjectionMatrix(); renderer.render(scene, camera); }
   function size() { const w = canvas.parentElement.clientWidth, h = Math.round(w * 9 / 16); renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2)); renderer.setSize(w, h, false); canvas.style.width = w + 'px'; canvas.style.height = h + 'px'; camera.aspect = 16 / 9; draw(); }
   let drag = null; canvas.addEventListener('pointerdown', e => { drag = [e.clientX, e.clientY]; canvas.setPointerCapture(e.pointerId); });

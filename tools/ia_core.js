@@ -26,9 +26,12 @@ const PD = [
   { k: 'legIn', g: 'Bed / couch', l: 'Legs set in from the leaf free edge', d: 3, s: .5, a: 0, b: 10 },
   { k: 'closetW', g: 'Closet', l: 'Width', d: 15, s: .25, a: 8, b: 40 },
   { k: 'closetD', g: 'Closet', l: 'Depth', d: 25, s: .5, a: 10, b: 40 },
-  { k: 'rodHi', g: 'Closet', l: 'Upper rod, up from floor', d: 71, s: .5, a: 40, b: 85 },
-  { k: 'rodLo', g: 'Closet', l: 'Lower rod, up from floor', d: 36, s: .5, a: 10, b: 70 },
-  { k: 'split', g: 'Closet', l: 'Two doors split at', d: 38, s: .5, a: 20, b: 60 },
+  { k: 'rodHi', g: 'Closet', l: 'Rod for the hanging clothes, up from floor', d: 71, s: .5, a: 40, b: 85 },
+  { k: 'cloLen', g: 'Closet', l: 'Hanging clothes: length of the longest garment (the drawers are under them)', d: 36, s: .5, a: 20, b: 60 },
+  { k: 'hangDrop', g: 'Closet', l: 'Hanger: from the rod down to the shoulder of the garment', d: 3.5, s: .25, a: 1, b: 6 },
+  { k: 'cloClear', g: 'Closet', l: 'Clear space between the bottom of the longest garment and the top of the drawers', d: 1, s: .25, a: 0, b: 6 },
+  { k: 'cloDrawN', g: 'Closet', l: 'Drawers under the hanging clothes: how many', d: 4, s: 1, a: 1, b: 8 },
+  { k: 'cloDrawD', g: 'Closet', l: 'Drawers: depth (the slide length; they pull out about 1 in less than this)', d: 22, s: 2, a: 10, b: 24 },
   { k: 'hinge', g: 'Closet', l: 'Door hinges on the', d: 'rear', t: 's', o: [['rear', 'bed side'], ['cab', 'dinette side']] },
   { k: 'openAng', g: 'Closet', l: 'Doors open to (degrees)', d: 90, s: 5, a: 30, b: 180 },
   { k: 'fwT', g: 'Floor-to-ceiling walls', l: 'Wall thickness (the walls are inside the closet, the shower and the counter cabinet, so nothing else moves)', d: .75, s: .125, a: .25, b: 3 },
@@ -421,6 +424,9 @@ function layout(P0) {
   const L = { P };
   L.c0 = P.bedLen; L.c1 = P.bedLen + P.closetW;
   L.bA = [L.c1, L.c1 + P.benchLen]; L.bB = [P.cab - P.benchLen, P.cab];
+  // the closet: the clothes hang from the rod (the garment's shoulder is hangDrop below it), the longest one ends cloClear above the drawers, and the drawers fill the space under it
+  L.hangBot = P.rodHi - P.hangDrop - P.cloLen; L.drawTop = Math.max(3, L.hangBot - P.cloClear); L.split = L.drawTop + .15;
+  { const n = Math.max(1, Math.round(P.cloDrawN)), gap = .125, h = (L.drawTop - 1 - (n - 1) * gap) / n; L.cloDr = []; for (let i = 0; i < n; i++) L.cloDr.push({ z0: 1 + i * (h + gap), z1: 1 + i * (h + gap) + h }); L.cloDrH = h; L.cloDrW = P.closetW - 1.5 - 1; L.cloPull = Math.max(0, P.cloDrawD - 1); }
   // the toilet: sideways at the cab end of the wet bath, back against the wall to the fridge, centered across the stall (y = out from the passenger wall)
   { const x1 = P.panW - (P.wallsOn ? P.fwT : 0), y0 = (P.panD - P.toiletW) / 2; L.toilet = P.toiletOn ? { x0: x1 - P.toiletD, x1, y0, y1: y0 + P.toiletW, z1: P.toiletH } : null; }
   // the shower nook contents: a towel bar bay at the rear end, then a shelf board with the bottles on it and the toilet paper rolls under it
@@ -598,5 +604,5 @@ function bedState(s) {
 }
 // the dinette makes up into a bed: the table lowers, the backrest cushions come off and lie on it
 function dinState(s) { return { tbl: ease(clamp(s / .5, 0, 1)), back: 1 - ease(clamp((s - .15) / .4, 0, 1)), pil: clamp((s - .55) / .45, 0, 1) }; }
-const MOVER_IDS = ['dc0', 'dc1', 'dc2', 'dc3', 'dc4', 'dc5', 'clo_lo', 'clo_hi', 'bed', 'dinette', 'flap', 'ledge', 'fridge'];
+const MOVER_IDS = ['dc0', 'dc1', 'dc2', 'dc3', 'dc4', 'dc5', 'clo_dr', 'clo_hi', 'bed', 'dinette', 'flap', 'ledge', 'fridge'];
 MOVER_IDS.forEach(ensure);

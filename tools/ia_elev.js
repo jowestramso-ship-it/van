@@ -132,20 +132,19 @@ function drawDriver(L, V) {
 
   // pockets on the inside of the closet doors
   const pw = (P.closetW - 1.75) / 2;
-  const prow = [[5, 12], [12.5, 19.5], [20, 27], [27.5, 34.5]].filter(r => r[1] < P.split - 3);
-  const prow2 = [[4, 11], [11.5, 18.5], [19, 26]].map(r => [P.split + r[0], P.split + r[1]]);
-  prow.concat(prow2).forEach(r => { [L.c0 + 0.625, L.c0 + 0.625 + pw + 0.5].forEach(px => { if (r[0] > 0 && r[1] < P.ceil) o.push(box(px, px + pw, r[0], r[1], { fill: '#B07A2A', fo: .1, stroke: '#8A5A00', sw: 1, rx: 2, dash: '3 2' })); }); });
-  o.push(NOTE(X((L.c0 + L.c1) / 2), Y(P.split + 28.5), 'dashed: door pockets inside', { size: 9.5, fill: '#8A5A00' }));
+  const prow2 = [[4, 11], [11.5, 18.5], [19, 26]].map(r => [L.split + r[0], L.split + r[1]]);
+  prow2.forEach(r => { [L.c0 + 0.625, L.c0 + 0.625 + pw + 0.5].forEach(px => { if (r[0] > 0 && r[1] < P.ceil) o.push(box(px, px + pw, r[0], r[1], { fill: '#B07A2A', fo: .1, stroke: '#8A5A00', sw: 1, rx: 2, dash: '3 2' })); }); });
+  o.push(NOTE(X((L.c0 + L.c1) / 2), Y(L.split + 28.5), 'dashed: door pockets inside', { size: 9.5, fill: '#8A5A00' }));
   // closet interior when the doors are open: darker back, garments
   const hx = P.hinge === 'rear' ? L.c0 + 0.125 : L.c1 - 0.125, wC = P.closetW - 0.25;
-  const cdoors = [{ id: 'clo_hi', z0: P.split + 0.1, z1: L.ceilF - 0.25, nm: 'upper door' }, { id: 'clo_lo', z0: 0.25, z1: P.split - 0.1, nm: 'lower door' }];
+  const cdoors = [{ id: 'clo_hi', z0: L.split, z1: L.ceilF - 0.25, nm: 'upper door' }];
   cdoors.forEach(dc => {
     const s = V[dc.id] || 0;
     if (s > 0.02) o.push(box(L.c0 + 0.125, L.c1 - 0.125, dc.z0, dc.z1, { fill: '#2C2C2A', fo: .3 * Math.min(1, s * 1.5) }));
   });
-  [[P.rodHi, 'clo_hi'], [P.rodLo, 'clo_lo']].forEach(r => {
+  [[P.rodHi, 'clo_hi']].forEach(r => {
     const s = V[r[1]] || 0, cols = ['#B5502F', '#185FA5', '#0F6E56', '#993556'];
-    if (s > 0.05) for (let x = L.c0 + 2.2, i = 0; x + 0.9 < L.c1 - 2; x += 1.5, i++) o.push(box(x, x + 0.9, r[0] - 30, r[0] - 0.8, { fill: cols[i % 4], fo: .55 * Math.min(1, s * 1.6), stroke: cols[i % 4], sw: .6, rx: 1 }));
+    if (s > 0.05) for (let x = L.c0 + 2.2, i = 0; x + 0.9 < L.c1 - 2; x += 1.5, i++) o.push(box(x, x + 0.9, L.hangBot, r[0] - 0.8, { fill: cols[i % 4], fo: .55 * Math.min(1, s * 1.6), stroke: cols[i % 4], sw: .6, rx: 1 }));
     o.push(Ln(X(L.c0 + 2), Y(r[0]), X(L.c1 - 2), Y(r[0]), { stroke: COL.G, sw: 3.5, cap: 'round' }));
     o.push(LBL(X((L.c0 + L.c1) / 2), Y(r[0]) - 5, 'Closet rod', `${fmt(r[0])} in up`, { size: 10, fill: COL.G, w: 700 }));
   });
@@ -161,6 +160,12 @@ function drawDriver(L, V) {
     }
     o.push(MV(dc.id, g, HITR(Math.min(X(L.c0 + 0.125), X(L.c1 - 0.125)), Y(dc.z1), S * wC, S * (dc.z1 - dc.z0))));
   });
+  { // the drawers under the hanging clothes: fronts the width of the closet; click to pull them out (the side view cannot show the pull, so it only shades them)
+    const s = V.clo_dr || 0, xm = (L.c0 + L.c1) / 2; let g = '';
+    L.cloDr.forEach(d => { g += box(L.c0 + .125, L.c1 - .125, d.z0, d.z1, { fill: '#7A5A2E', fo: .1 + .25 * s, stroke: COL.G, sw: 1.4, rx: 2 }); g += Ln(X(xm - 1.5), Y((d.z0 + d.z1) / 2), X(xm + 1.5), Y((d.z0 + d.z1) / 2), { stroke: '#2C2C2A', sw: 2.4, cap: 'round' }); });
+    g += LBL(X(xm), Y(L.drawTop * .5), 'Closet drawers', `${L.cloDr.length} drawers up to ${fmt(L.drawTop)} in, each ${fmt(L.cloDrH)} tall x ${fmt(L.cloDrW)} wide inside x ${fmt(P.cloDrawD)} deep${s > .5 ? ', pulled out ' + fmt(L.cloPull) + ' in' : ' (click to pull them out)'}`, { size: 10, fill: COL.G });
+    o.push(MV('clo_dr', g, HITR(Math.min(X(L.c0), X(L.c1)), Y(L.drawTop), S * P.closetW, S * L.drawTop)));
+  }
   o.push(GE());
   // benches and table. The dinette makes up into a bed: the table lowers, the backrest cushions come off and lie on it, so the three sections are level
   o.push(GB('dinette', 'Benches and table'));

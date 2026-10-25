@@ -33,9 +33,9 @@ async function grab(page, side) {
       if (P.battOn) add('Battery', L.batt[0], L.batt[1], 0, 9.5, `${F(L.batt[1] - L.batt[0])} wide, 9 1/2 tall`);
       if (L.chairs) add('Lawn chairs, folded flat', L.chairs.x0, L.chairs.x1, L.chairs.z0, L.chairs.z1, `${P.chairN} stacked`);
       if (P.closetOn) {
-        add('Closet', L.c0, L.c1, 0, L.ceilF, `${F(P.closetW)} wide x ${F(P.closetD)} deep, doors split at ${F(P.split)} up`);
-        add('Closet rod, upper', L.c0, L.c1, P.rodHi - .75, P.rodHi + .75, `${F(P.rodHi)} up`, P.rodHi);
-        add('Closet rod, lower', L.c0, L.c1, P.rodLo - .75, P.rodLo + .75, `${F(P.rodLo)} up`, P.rodLo);
+        add('Closet', L.c0, L.c1, 0, L.ceilF, `${F(P.closetW)} wide x ${F(P.closetD)} deep, one door above ${F(L.split)} up, drawers below`);
+        add('Closet rod', L.c0, L.c1, P.rodHi - .75, P.rodHi + .75, `${F(P.rodHi)} up, ${F(P.cloLen)} in clothes hang to ${F(L.hangBot)}`, P.rodHi);
+        add('Closet drawers', L.c0, L.c1, 1, L.drawTop, `${L.cloDr.length} drawers, each ${F(L.cloDrH)} tall x ${F(L.cloDrW)} wide x ${F(P.cloDrawD)} deep inside`);
       }
       add('Dinette bench', L.bA[0], L.bA[1], 0, P.seatH, `seat at ${F(P.seatH)}, ${F(P.benchD)} deep`);
       add('Dinette bench', L.bB[0], L.bB[1], 0, P.seatH, `seat at ${F(P.seatH)}, ${F(P.benchD)} deep`);
