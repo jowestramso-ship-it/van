@@ -178,7 +178,7 @@ item(0,74,14,20,P,'Seat cushion, top at 20 in (deck at 13 1/4, leaf folded on it
 item(0,74,20,40,P,'Back cushion, upright (20 tall)',None,Y(30))
 BA(f'<line x1="{X(0)}" y1="{Y(14)}" x2="{X(74)}" y2="{Y(14)}" stroke="{P}" stroke-opacity="0.9" stroke-width="1.6"/>')
 BG('gear','Charging gear under the couch')
-for _x0,_x1,_h in ((36,50.8,3.9),(36,47.65,3.35),(53,63,4)):
+for _x0,_x1,_h in ((36,50.8,3.9),(36,47.65,3.35),(53,62.5,4)):
     BA(box(_x0,_x1,0,_h,'rx="2" fill="#B45309" fill-opacity="0.16" stroke="#B45309" stroke-width="1.4" stroke-dasharray="4 3"'))
 BA(f'<text class="ts" x="{X(43)}" y="{Y(7.2)}" text-anchor="middle" style="fill:#7A3B07;font-size:9.5px;paint-order:stroke;stroke:#fff;stroke-width:3px">inverter and DC-DC charger</text><text class="ts" x="{X(58)}" y="{Y(11.5)}" text-anchor="middle" style="fill:#7A3B07;font-size:9.5px;paint-order:stroke;stroke:#fff;stroke-width:3px">shore charger</text>')
 BG('closet','Closet')

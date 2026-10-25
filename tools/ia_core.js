@@ -41,7 +41,7 @@ const PD = [
   { k: 'dcL', g: 'Charging gear', l: 'DC-DC charger (LiTime 60 A): length, along the wall (11.65 x 8.46 x 3.35 is LiTime\'s 40 A model, not measured for the 60 A: measure yours)', d: 11.65, s: .1, a: 6, b: 20 },
   { k: 'dcW', g: 'Charging gear', l: 'DC-DC charger: width, out from the wall', d: 8.46, s: .1, a: 4, b: 14 },
   { k: 'dcH', g: 'Charging gear', l: 'DC-DC charger: height off the floor', d: 3.35, s: .1, a: 2, b: 10 },
-  { k: 'chL', g: 'Charging gear', l: 'Shore charger (VEVOR 80 A): length, along the wall (A GUESS: no size found, measure yours)', d: 10, s: .1, a: 4, b: 20 },
+  { k: 'chL', g: 'Charging gear', l: 'Shore charger (VEVOR 80 A): length, along the wall (you measured 9.5 x 4 x 7: 9.5 long, 7 wide, 4 thick)', d: 9.5, s: .1, a: 4, b: 20 },
   { k: 'chW', g: 'Charging gear', l: 'Shore charger: width, out from the wall', d: 7, s: .1, a: 3, b: 14 },
   { k: 'chH', g: 'Charging gear', l: 'Shore charger: height off the floor', d: 4, s: .1, a: 2, b: 10 },
   { k: 'fwT', g: 'Floor-to-ceiling walls', l: 'Wall thickness (the walls are inside the closet, the shower and the counter cabinet, so nothing else moves)', d: .75, s: .125, a: .25, b: 3 },
