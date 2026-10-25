@@ -22,7 +22,6 @@ const E_DRIVER = pl => { const tc = (pl.tbl[0] + pl.tbl[1]) / 2, q1 = pl.bedLen 
   {k:'sw',    n:'Switch plate at the rear doors (fan, wet bath light)', x:3,  z:48, note:'2 gang: roof fan and the wet bath light. You did not list this one, but those two need a switch; the ceiling lights are not on it'},
   {k:'sw',    n:'Light switch by the dinette',                  x:pl.cab - 1, z:48, note:'on the wall behind the driver seat (the cab wall, at the cab end of the dinette; drawn here at its corner with the driver wall), above the bench back (38 in): ceiling lights (second point), the light over the table and the entry light over the sliding door. The wire comes down the corner behind the planks'},
   {k:'out120',n:'Outlet over the dinette table (120 V duplex)', x:tc, z:36, note:'on the wall just over the table (its top is at 29 in), in the middle of it, clear of the backrests (38 in); circuit A (GFCI)'},
-  {k:'strip', n:'Closet light',                                x0:76,x1:87, z:73, note:'inside the closet, on a door switch'},
   {k:'run',   n:'Riser A: A/C, 12 V and lights feed',          x:73, z0:11, z1:75, note:'up inside the wall behind the planks (4 1/2 in space) to the ceiling: A/C 6 AWG pair in its own loom, plus the 12 V ceiling feed (12 AWG). Grommet where it crosses the top steel'},
   {k:'run',   n:'Cab charge cable (DC-DC input)',              x:70, z0:0, z1:1,  note:'4 AWG from the starter battery fuse (60 A) under the van along the driver side frame to a sealed floor grommet next to the battery'},
 ]; };
