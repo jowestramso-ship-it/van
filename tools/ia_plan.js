@@ -16,6 +16,7 @@ function obstacles(L, V) {
     for (let k = 0; k <= 24; k++) { const r = wC * k / 24; D.push({ x0: hx + sg * r * Math.cos(th) - .4, x1: hx + sg * r * Math.cos(th) + .4, d: P.closetD + r * Math.sin(th), n: 'the closet door', door: true, px: hx + sg * r * Math.cos(th) }); }
   });
   { const s = V.clo_dr || 0; if (s > .02 && P.closetOn) D.push({ x0: L.c0, x1: L.c1, d: P.closetD + L.cloPull * s, n: 'the closet drawers (pulled out)' }); }
+  { const s = V.gear_sh || 0; if (s > .02 && L.gear) D.push({ x0: L.gear.sh.x0, x1: L.gear.sh.x1, d: L.gear.sh.y1 + .75 + P.shPull * s, n: 'the gear shelf (pulled out)' }); }
   Q.push({ x0: 0, x1: P.panW, d: P.panD, n: 'the shower pan' });
   if (P.fridgeOn) Q.push({ x0: L.fr[0], x1: L.fr[1], d: P.cabD, n: 'the fridge' });
   const sf = V.fridge || 0;
@@ -120,8 +121,13 @@ function drawPlan(L, V) {
   o.push(Ln(xx(50), yy(0), xx(50), yy(17), { stroke: '#A32D2D', sw: 1.5, mk: 1 }) + T(xx(48.6), yy(10), '17', { anchor: 'end', size: 10, fill: '#A32D2D', w: 700, halo: false }));
   o.push(GE());
   if (L.gear) {
-    o.push(GB('gear', 'Charging gear under the couch'));
-    [[L.gear.inv, 'Inverter', 'BELTTT 2000 W'], [L.gear.dc, 'DC-DC', 'LiTime 60 A'], [L.gear.ch, 'Charger', 'VEVOR 80 A']].forEach(r => o.push(it(r[0].x0, r[0].x1, r[0].y0, r[0].y1, '#B45309', r[1], `${fmt(r[0].x1 - r[0].x0)} x ${fmt(r[0].y1 - r[0].y0)}`, { fo: .22, fs: 9, dash: '3 2' })));
+    const g = L.gear, sh = g.sh, s = V.gear_sh || 0, off = P.shPull * s, ink = '#B45309';
+    o.push(GB('gear', 'Charging gear on the shelf over the battery'));
+    let gg = it(sh.x0, sh.x1, sh.y0 + off, sh.y1 + off, '#8A6B4D', '', null, { fo: .1 + s * .12, dash: s > .01 ? null : '5 3' });
+    gg += [[g.inv, 'Inverter', 'BELTTT 2000 W'], [g.dc, 'DC-DC', 'LiTime 60 A'], [g.ch, 'Charger', 'VEVOR 80 A']].map(r => it(r[0].x0, r[0].x1, r[0].y0 + off, r[0].y1 + off, ink, r[1], `${fmt(r[0].x1 - r[0].x0)} x ${fmt(r[0].y1 - r[0].y0)}`, { fo: .22 + s * .1, fs: 9, dash: s > .01 ? null : '3 2' })).join('');
+    gg += it(sh.x0, sh.x1, sh.y1 + off, sh.y1 + off + .75, '#5A3A00', '', null, { fo: .5 });
+    gg += T(xx((sh.x0 + sh.x1) / 2), yy(sh.y1 + off + 2), s > .01 ? `gear shelf out ${fmt(off)} in` : 'gear shelf over the battery: click to pull out', { size: 9.5, fill: '#5A3A00' });
+    o.push(MV('gear_sh', gg, HITR(xx(sh.x0), yy(sh.y1 + off + .75), S * (sh.x1 - sh.x0), S * (sh.y1 - sh.y0 + .75))));
     o.push(GE());
   }
   if (L.chairs) {

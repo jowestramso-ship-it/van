@@ -31,7 +31,11 @@ async function grab(page, side) {
       add('Back cushion, upright', 0, P.bedLen, P.platform + P.mattress, P.platform + P.mattress + P.bedBack, `${F(P.bedBack)} tall`);
       add('Wheel well', 42, 76, 0, 7.5, 'sticks out 7 in');
       if (P.battOn) add('Battery', L.batt[0], L.batt[1], 0, 9.5, `${F(L.batt[1] - L.batt[0])} wide, 9 1/2 tall`);
-      if (L.gear) [['Inverter, BELTTT 2000 W', L.gear.inv], ['DC-DC charger, LiTime 60 A', L.gear.dc], ['Shore charger, VEVOR 80 A', L.gear.ch]].forEach(r => add(r[0], r[1].x0, r[1].x1, 0, r[1].z1, `${F(r[1].x1 - r[1].x0)} x ${F(r[1].y1 - r[1].y0)} x ${F(r[1].z1)}, flat on the floor under the couch, ${F(r[1].y0)} to ${F(r[1].y1)} out from the wall`));
+      if (L.gear) {
+        const sh = L.gear.sh;
+        add('Gear shelf (pull-out, over the battery)', sh.x0, sh.x1, sh.z0, sh.z1, `${F(sh.x1 - sh.x0)} x ${F(sh.y1 - sh.y0)} in with its rails, ${F(sh.z0)} up (1 in over the battery top), ${F(sh.y0)} to ${F(sh.y1)} out from the wall, on two ${F(P.shPull)} in slides: one on the closet end panel, one on a divider at ${F(sh.div)} to ${F(sh.div + .75)}`);
+        [['Inverter, BELTTT 2000 W', L.gear.inv], ['DC-DC charger, LiTime 60 A', L.gear.dc], ['Shore charger, VEVOR 80 A', L.gear.ch]].forEach(r => add(r[0], r[1].x0, r[1].x1, r[1].z0, r[1].z1, `${F(r[1].x1 - r[1].x0)} x ${F(r[1].y1 - r[1].y0)} x ${F(r[1].z1 - r[1].z0)}, on the gear shelf (${F(r[1].z0)} up), ${F(r[1].y0)} to ${F(r[1].y1)} out from the wall`));
+      }
       if (L.chairs) add('Lawn chairs, folded flat', L.chairs.x0, L.chairs.x1, L.chairs.z0, L.chairs.z1, `${P.chairN} stacked`);
       if (P.closetOn) {
         add('Closet', L.c0, L.c1, 0, L.ceilF, `${F(P.closetW)} wide x ${F(P.closetD)} deep, one door above ${F(L.split)} up, drawers below`);

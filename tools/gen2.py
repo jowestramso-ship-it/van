@@ -1,6 +1,7 @@
 import os
 HERE=os.path.dirname(os.path.abspath(__file__))
 ROOT=os.path.dirname(HERE)
+exec(open(HERE+'/shelfdata.py').read())   # the raised couch and the pull-out gear shelf, shared by the static drawings
 src=open((ROOT+'/tools/first-draft.html')).read()   # the first draft page, the starting point the patches below are written against (index.html and layout.html are now copies of the finished sides.html)
 head=src[:src.index('<body>')].replace('Ford Transit Van Conversion Layout','Ford Transit Wall Diagrams')
 S=6.0; X0=50; FL=540
@@ -174,13 +175,16 @@ for _d0,_w,_t in ((0.125,24.5,'door 24 1/2 x 12'),(24.75,24.5,'door 24 1/2 x 12'
     BA(box(_d0,_d0+_w,61.5,73.5,f'rx="3" fill="{P}" fill-opacity="0.18" stroke="{P}" stroke-width="1.6"'))
     BA(f'<text class="th" x="{X(_d0+_w/2)}" y="{Y(67.8)}" text-anchor="middle" style="fill:{P};font-size:12px;paint-order:stroke;stroke:#fff;stroke-width:3px">{_t}</text>')
 BG('bed','Bed / couch')
-item(0,74,14,20,P,'Seat cushion, top at 20 in (deck at 13 1/4, leaf folded on it)',None,Y(16.2))
-item(0,74,20,40,P,'Back cushion, upright (20 tall)',None,Y(30))
-BA(f'<line x1="{X(0)}" y1="{Y(14)}" x2="{X(74)}" y2="{Y(14)}" stroke="{P}" stroke-opacity="0.9" stroke-width="1.6"/>')
-BG('gear','Charging gear under the couch')
-for _x0,_x1,_h in ((52.5,67.3,3.9),(35.5,51.5,4.5),(36,45.5,4)):
-    BA(box(_x0,_x1,0,_h,'rx="2" fill="#B45309" fill-opacity="0.16" stroke="#B45309" stroke-width="1.4" stroke-dasharray="4 3"'))
-BA(f'<text class="ts" x="{X(43.5)}" y="{Y(8)}" text-anchor="middle" style="fill:#7A3B07;font-size:9.5px;paint-order:stroke;stroke:#fff;stroke-width:3px">DC-DC and shore charger</text><text class="ts" x="{X(60)}" y="{Y(11.5)}" text-anchor="middle" style="fill:#7A3B07;font-size:9.5px;paint-order:stroke;stroke:#fff;stroke-width:3px">inverter</text>')
+item(0,74,PLAT,SEAT_T,P,f'Seat cushion, top at {fr8(SEAT_T)} in (deck at {fr8(DECK_T)}, leaf folded on it)',None,Y((PLAT+SEAT_T)/2-.8))
+item(0,74,SEAT_T,BACK_T,P,'Back cushion, upright (20 tall)',None,Y((SEAT_T+BACK_T)/2))
+BA(f'<line x1="{X(0)}" y1="{Y(PLAT)}" x2="{X(74)}" y2="{Y(PLAT)}" stroke="{P}" stroke-opacity="0.9" stroke-width="1.6"/>')
+BA(f'<line x1="{X(0)}" y1="{Y(DECK_U)}" x2="{X(74)}" y2="{Y(DECK_U)}" stroke="{P}" stroke-opacity="0.5" stroke-width="1" stroke-dasharray="5 3"/><text class="ts" x="{X(1)}" y="{Y(DECK_U)+11}" style="fill:{P};font-size:9.5px;paint-order:stroke;stroke:#fff;stroke-width:3px">deck underside {fr8(DECK_U)} up (couch raised 3 1/2 in)</text>')
+BG('gear','Charging gear on the shelf over the battery')
+BA(box(SH_DIV,SH_DIV+.75,0,DECK_U,'fill="#8A6B4D" fill-opacity="0.35" stroke="#5A3A00" stroke-width="1" stroke-dasharray="3 2"'))
+BA(box(SH_X0,SH_X1,SH_Z0,SH_Z1,'rx="1" fill="#8A6B4D" fill-opacity="0.6" stroke="#5A3A00" stroke-width="1.2"'))
+for _u in (DC,CHG,INV):
+    BA(box(_u['x0'],_u['x1'],SH_Z1,SH_Z1+_u['h'],'rx="2" fill="#B45309" fill-opacity="0.16" stroke="#B45309" stroke-width="1.4" stroke-dasharray="4 3"'))
+BA(f'<text class="ts" x="{X(SH_DIV-1)}" y="{Y(11.4)}" text-anchor="end" style="fill:#7A3B07;font-size:9.5px;paint-order:stroke;stroke:#fff;stroke-width:3px">gear shelf (pulls out toward you):</text><text class="ts" x="{X(SH_DIV-1)}" y="{Y(11.4)+11}" text-anchor="end" style="fill:#7A3B07;font-size:9.5px;paint-order:stroke;stroke:#fff;stroke-width:3px">DC-DC, charger, inverter</text><text class="ts" x="{X(65.5)}" y="{Y(SH_Z1+4.5)-2}" text-anchor="middle" style="fill:#7A3B07;font-size:9.5px;paint-order:stroke;stroke:#fff;stroke-width:3px">inverter</text>')
 BG('closet','Closet')
 item(74,89,0,74.5625,G,'Closet','15 in',Y(47))
 BG('ceil','Ceiling covering')
@@ -516,7 +520,7 @@ open((ROOT+'/sides.html'),'w').write(html)
 html=open((ROOT+'/sides.html')).read()
 blk='''<h3>Driver side: built items</h3>
 <div class="wide">'''+svg2+'''</div>
-<p><b>Battery.</b> The 21 x 10 x 9.5 in battery (280 Ah, taken as 12 V) sits on the floor next to the wheel well, on its aisle side, 1 in from the closet (52 to 73 in from the back). The well sticks out 7 in and the battery adds 10 in, so the two together reach 17 in into the van, which leaves 10 in of the bed's 27 in depth for storage. The battery is 9.5 in tall, so it clears the underside of the bed deck (12 1/2 in up) by 3 in. The looking-down view below shows the depths.</p>
+<p><b>Battery.</b> The 21 x 10 x 9.5 in battery (280 Ah, taken as 12 V) sits on the floor next to the wheel well, on its aisle side, 1 in from the closet (52 to 73 in from the back). The well sticks out 7 in and the battery adds 10 in, so the two together reach 17 in into the van, which leaves 10 in of the bed's 27 in depth for storage. The battery is 9.5 in tall, so it clears the underside of the bed deck (16 in up, after the couch was raised 3 1/2 in for the gear shelf) by 6 1/2 in: that room holds the pull-out gear shelf (diagram C4) with the inverter, the DC-DC charger and the shore charger on it, 1 in over the battery. The looking-down view below shows the depths.</p>
 <p><b>Closet.</b> One rod runs along the wall inside the closet (74 to 89 in from the back, 15 wide by 25 deep) at 71 in up, about 11 in long (76 to 87). The hangers sit across the 25 in depth, 1 1/2 in apart. Clothes up to 36 in long hang from it (the shoulder is 3 1/2 in below the rod), down to 31 1/2 in up; under them, starting 1 in lower, are four drawers (1 to 30 1/2 in up, each 7 5/16 tall by 12 1/2 wide by 22 deep inside). One door above the drawers, 14 3/4 by 43 11/16, opens on the bed-side hinge; the drawers pull out 21 in, which leaves about 1 in of the aisle, so open them while standing there.</p>
 <p>The bed, closet, dinette and wall cabinets, drawn on their own so they do not cover the wall details above. They were measured from the rear doors earlier; check whether they use the same zero as the wall numbers (about 6 in in from the rear edge).</p>
 '''
@@ -1170,6 +1174,7 @@ open((ROOT+'/sides.html'),'w').write(html)
 exec(open((HERE+'/plan.py')).read())
 exec(open((HERE+'/couch.py')).read())
 exec(open((HERE+'/leaf.py')).read())
+exec(open((HERE+'/shelf.py')).read())
 exec(open((HERE+'/ceiling.py')).read())
 exec(open((HERE+'/letters.py')).read())
 exec(open((HERE+'/toggle.py')).read())

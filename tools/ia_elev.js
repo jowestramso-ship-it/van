@@ -104,7 +104,7 @@ function drawDriver(L, V) {
     let g = box(0, P.bedLen, 0, deck - lt, { stroke: COL.P, sw: 1, dash: '5 3', so: .45 });
     g += box(0, P.bedLen, deck - lt, deck, { fill: COL.G, fo: .25, stroke: COL.G, sw: 1 });
     if (bs.legs > .01) {
-      const psi = bs.legs * Math.PI / 2, tp = lt / 2, LG = deck - tp - .25, pr = LW - P.legIn;
+      const psi = bs.legs * Math.PI / 2, tp = lt / 2, LG = Math.min(deck - tp - .25, 12.625) + Math.max(0, deck - tp - .25 - 12.625) * bs.legs, pr = LW - P.legIn;
       legXs(P).forEach(lx => {
         const a = deck + pr * sn + tp * cs, b = deck + (pr - LG * Math.cos(psi)) * sn + (tp + LG * Math.sin(psi)) * cs;
         g += box(lx, lx + 1.25, Math.min(a, b), Math.max(a, b), { fill: COL.G, fo: .8, stroke: COL.G, sw: 1 });
@@ -126,11 +126,14 @@ function drawDriver(L, V) {
   }
   o.push(GE());
   if (L.gear) {
-    const g = L.gear;
-    o.push(GB('gear', 'Charging gear under the couch'));
-    [[g.inv, 3, 'Inverter', 'BELTTT 2000 W'], [g.dc, 7, 'DC-DC charger', 'LiTime 60 A'], [g.ch, 3, 'Shore charger', 'VEVOR 80 A']].forEach(r => { const u = r[0];
-      o.push(box(u.x0, u.x1, 0, u.z1, { fill: '#B45309', fo: .16, stroke: '#B45309', sw: 1.4, rx: 2, dash: '4 3' }));
-      o.push(LBL(X(u.x0 + r[1]), Y(u.z1 / 2), r[2], `${r[3]}: ${fmt(u.x1 - u.x0)} x ${fmt(u.y1 - u.y0)} x ${fmt(u.z1)} in, flat on the floor under the couch, ${fmt(u.y0)} to ${fmt(u.y1)} in out from the wall`, { size: 10, fill: '#B45309' })); });
+    const g = L.gear, sh = g.sh, s = V.gear_sh || 0;
+    o.push(GB('gear', 'Charging gear on the shelf over the battery'));
+    let gg = box(sh.x0, sh.x1, sh.z0, sh.z1, { fill: '#8A6B4D', fo: .5, stroke: '#5A3A00', sw: 1.2 });
+    gg += [[g.inv, 1, 'Inverter', 'BELTTT 2000 W'], [g.dc, 7.5, 'DC-DC charger', 'LiTime 60 A'], [g.ch, .8, 'Charger', 'VEVOR 80 A']].map(r => { const u = r[0];
+      return box(u.x0, u.x1, u.z0, u.z1, { fill: '#B45309', fo: .16 + s * .1, stroke: '#B45309', sw: 1.4, rx: 2, dash: s > .01 ? null : '4 3' }) +
+        LBL(X(u.x0 + r[1]), Y((u.z0 + u.z1) / 2), r[2], `${r[3]}: ${fmt(u.x1 - u.x0)} x ${fmt(u.y1 - u.y0)} x ${fmt(u.z1 - u.z0)} in, on the gear shelf (${fmt(sh.z1)} up), ${fmt(u.y0)} to ${fmt(u.y1)} in out from the wall`, { size: 9.5, fill: '#B45309' }); }).join('');
+    gg += NOTE(X((sh.x0 + sh.x1) / 2), Y(sh.z1 + 7.6), s > .01 ? `gear shelf pulled out ${fmt(P.shPull * s)} in toward you` : 'gear shelf over the battery (click to pull out)', { size: 9.5, fill: '#5A3A00' });
+    o.push(MV('gear_sh', gg, HITR(Math.min(X(sh.x0), X(sh.x1)), Y(sh.z1 + 8), S * (sh.x1 - sh.x0), S * (sh.z1 - sh.z0 + 8))));
     o.push(GE());
   }
   // closet
@@ -662,7 +665,7 @@ function drawBedEnd(L, V) {
   o.push(GB('leaf', 'Leaf, leg and hinge'));
   o.push(Poly(leaf, { fill: '#B07A2A', fo: .75, stroke: '#5A3A00', sw: 1.2 }));
   // the leg slot is shown as the leg: lying in the leaf (dark line) or swung down
-  const tp = lt / 2, LG = deck - tp - .25, rp = LW - P.legIn, psi = bs.legs * Math.PI / 2;
+  const tp = lt / 2, LG = Math.min(deck - tp - .25, 12.625) + Math.max(0, deck - tp - .25 - 12.625) * bs.legs, rp = LW - P.legIn, psi = bs.legs * Math.PI / 2;
   const p0 = pt(rp, tp);
   if (bs.legs < .01) { const p1 = pt(rp - LG, tp); o.push(Ln(p0[0], p0[1], p1[0], p1[1], { stroke: '#2C2C2A', sw: 3.75, cap: 'round' })); }
   else { const tipY = hy + rp - LG * Math.cos(psi), tipZ = deck - tp - LG * Math.sin(psi); o.push(Ln(p0[0], p0[1], xx(tipY), yy(tipZ), { stroke: COL.G, sw: 3.75, cap: 'round' })); if (bs.legs > .9) { o.push(bx(tipY - .7, tipY + .7, 0, .25, { fill: COL.G })); o.push(T(xx(tipY - 1.4), yy(5.5), `legs land ${fmt(hy + rp)} in out`, { anchor: 'end', size: 10, fill: COL.G, halo: false, op: (bs.legs - .9) * 10 })); } }

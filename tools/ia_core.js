@@ -17,12 +17,12 @@ const PD = [
   { k: 'closetOn', g: 'Take items out', l: 'Closet and its doors (the space it leaves stays empty; the dinette still starts where the closet ends)', d: true, t: 'c' },
   { k: 'toiletOn', g: 'Take items out', l: 'Toilet in the wet bath: the Reliance Fold-To-Go, left set up in the stall (at the cab end, sideways, its back against the wall to the fridge)', d: true, t: 'c' },
   { k: 'snItemsOn', g: 'Take items out', l: 'Towel bar, toilet paper and bottles in the shower nook', d: true, t: 'c' },
-  { k: 'gearOn', g: 'Take items out', l: 'Charging gear under the couch: the BELTTT inverter, the LiTime DC-DC charger and the VEVOR shore charger, lying flat on the floor beside the battery', d: true, t: 'c' },
+  { k: 'gearOn', g: 'Take items out', l: 'Charging gear on a pull-out shelf over the battery under the couch: the BELTTT inverter, the LiTime DC-DC charger and the VEVOR shore charger', d: true, t: 'c' },
   { k: 'wallsOn', g: 'Take items out', l: 'Floor-to-ceiling walls: behind the dinette backs (at the closet end and behind the driver seat) and one on each side of the fridge', d: true, t: 'c' },
   { k: 'bedLen', g: 'Bed / couch', l: 'Length', d: 74, s: .5, a: 40, b: 120 },
   { k: 'bedD', g: 'Bed / couch', l: 'Depth, closed (the couch on its base)', d: 26, s: .5, a: 15, b: 40 },
   { k: 'bedBack', g: 'Bed / couch', l: 'Leaf width (flips out in front; = back cushion length)', d: 20, s: .5, a: 0, b: 40 },
-  { k: 'platform', g: 'Bed / couch', l: 'Seat base (deck 3/4 in lower; the leaf folds onto it)', d: 14, s: .5, a: 6, b: 30 },
+  { k: 'platform', g: 'Bed / couch', l: 'Seat base (deck 3/4 in lower; the leaf folds onto it). Raised from 14 to 17 1/2 for the gear shelf', d: 17.5, s: .5, a: 6, b: 30 },
   { k: 'mattress', g: 'Bed / couch', l: 'Seat and back cushion thickness', d: 6, s: .5, a: 2, b: 12 },
   { k: 'legIn', g: 'Bed / couch', l: 'Legs set in from the leaf free edge', d: 3, s: .5, a: 0, b: 10 },
   { k: 'closetW', g: 'Closet', l: 'Width', d: 15, s: .25, a: 8, b: 40 },
@@ -43,7 +43,10 @@ const PD = [
   { k: 'dcH', g: 'Charging gear', l: 'DC-DC charger: height off the floor', d: 4.5, s: .1, a: 2, b: 10 },
   { k: 'chL', g: 'Charging gear', l: 'Shore charger (VEVOR 80 A): length, along the wall (you measured 9.5 x 4 x 7: 9.5 long, 7 wide, 4 thick)', d: 9.5, s: .1, a: 4, b: 20 },
   { k: 'chW', g: 'Charging gear', l: 'Shore charger: width, out from the wall', d: 7, s: .1, a: 3, b: 14 },
-  { k: 'chH', g: 'Charging gear', l: 'Shore charger: height off the floor', d: 4, s: .1, a: 2, b: 10 },
+  { k: 'chH', g: 'Charging gear', l: 'Shore charger: height off the floor (its thickness)', d: 4, s: .1, a: 2, b: 10 },
+  { k: 'shG', g: 'Charging gear', l: 'Gear shelf: gap from the battery top (9 1/2 up) to the underside of the shelf, for the terminals, lugs and cable bends', d: 1, s: .25, a: .5, b: 4 },
+  { k: 'shT', g: 'Charging gear', l: 'Gear shelf: thickness of the plywood tray', d: .5, s: .125, a: .25, b: 1 },
+  { k: 'shPull', g: 'Charging gear', l: 'Gear shelf: how far it pulls out (18 in full-extension slides; the shelf is 17 1/2 deep)', d: 18, s: 1, a: 10, b: 40 },
   { k: 'fwT', g: 'Floor-to-ceiling walls', l: 'Wall thickness (the walls are inside the closet, the shower and the counter cabinet, so nothing else moves)', d: .75, s: .125, a: .25, b: 3 },
   { k: 'benchLen', g: 'Dinette', l: 'Bench length', d: 19.5, s: .5, a: 10, b: 40 },
   { k: 'benchD', g: 'Dinette', l: 'Bench depth', d: 28, s: .5, a: 15, b: 45 },
@@ -472,14 +475,16 @@ function layout(P0) {
   });
   L.doorZ = [P.cabBot + 0.5, P.cabBot + 0.5 + P.doorH];
   L.batt = [L.c0 - 1 - 21, L.c0 - 1];
-  // the charging gear under the couch, lying flat on the free floor next to the battery (y = out from the driver wall; the removable panel in the couch front is 3/4 in thick, at bedD - 3/4):
-  // the DC-DC charger on the floor behind (west of) the battery, in front of the wheel well (which is only 7 in out); the inverter in the strip in front of the battery, so its battery cables are about 1 ft;
-  // the shore charger beside the DC-DC charger, in the same strip as the inverter's row west of the battery (y from the DC-DC charger's front edge + 1/2 in)
-  { const hy = P.bedD - .75;
-    const dc = { x0: L.batt[0] - .5 - P.dcL, x1: L.batt[0] - .5, y0: 8, y1: 8 + P.dcW, z1: P.dcH, n: 'the DC-DC charger', id: 'G2' };
-    const inv = { x0: L.batt[0] + .5, x1: L.batt[0] + .5 + P.invL, y0: 17.3, y1: 17.3 + P.invW, z1: P.invH, n: 'the inverter', id: 'G1' };
-    const ch = { x0: dc.x0 + .5, x1: dc.x0 + .5 + P.chL, y0: dc.y1 + .5, y1: dc.y1 + .5 + P.chW, z1: P.chH, n: 'the shore charger', id: 'G3' };
-    L.gear = P.gearOn ? { inv, dc, ch, hatchY: hy } : null; }
+  // the charging gear on ONE pull-out shelf over the battery (y = out from the driver wall; the couch front over the gear is the shelf's own face, 3/4 in thick, at bedD - 3/4):
+  // a 1/2 in plywood tray between two 3/4 in end rails on two 18 in full-extension slides, one on the closet's end panel and one on a plywood divider west of the wheel well, 1 in over the battery top for the terminals and lugs;
+  // the tray runs from the front of the couch back over the battery (7 3/4 to 25 1/4 out) so an 18 in pull puts all of it in the aisle.
+  // Row 1 (rear): the DC-DC charger, then the inverter; row 2 (front): the shore charger. The battery stays on the floor under it.
+  { const hy = P.bedD - .75, sz0 = 9.5 + P.shG, sz1 = sz0 + P.shT, sx1 = L.c0 - .65, sx0 = sx1 - (P.dcL + P.invL + 2.5), dd = Math.max(P.dcW, P.invW), ty0 = hy - (.75 + dd + .5 + P.chW + .25);
+    const dc = { x0: sx0 + 1, x1: sx0 + 1 + P.dcL, y0: ty0 + .75, y1: ty0 + .75 + P.dcW, z0: sz1, z1: sz1 + P.dcH, n: 'the DC-DC charger', id: 'G2' };
+    const inv = { x0: dc.x1 + .5, x1: dc.x1 + .5 + P.invL, y0: ty0 + .75, y1: ty0 + .75 + P.invW, z0: sz1, z1: sz1 + P.invH, n: 'the inverter', id: 'G1' };
+    const ch = { x0: dc.x0, x1: dc.x0 + P.chL, y0: ty0 + .75 + dd + .5, y1: ty0 + .75 + dd + .5 + P.chW, z0: sz1, z1: sz1 + P.chH, n: 'the shore charger', id: 'G3' };
+    const sh = { x0: sx0, x1: sx1, y0: ty0, y1: hy, z0: sz0, z1: sz1, div: sx0 - .65 - .75 };
+    L.gear = P.gearOn ? { inv, dc, ch, sh, hatchY: hy } : null; }
   L.pan = P.panW; L.fr = [P.panW, P.panW + P.fridgeW]; L.cabS = L.fr[1];
   L.angS = L.cabS + P.flatLen; L.angLen = P.cabD > P.sinkD ? P.angLen : 0;
   L.slope = L.angLen > 0 ? (P.cabD - P.sinkD) / L.angLen : 0.4;
@@ -622,5 +627,5 @@ function bedState(s) {
 }
 // the dinette makes up into a bed: the table lowers, the backrest cushions come off and lie on it
 function dinState(s) { return { tbl: ease(clamp(s / .5, 0, 1)), back: 1 - ease(clamp((s - .15) / .4, 0, 1)), pil: clamp((s - .55) / .45, 0, 1) }; }
-const MOVER_IDS = ['dc0', 'dc1', 'dc2', 'dc3', 'dc4', 'dc5', 'clo_dr', 'clo_hi', 'bed', 'dinette', 'flap', 'ledge', 'fridge'];
+const MOVER_IDS = ['dc0', 'dc1', 'dc2', 'dc3', 'dc4', 'dc5', 'clo_dr', 'clo_hi', 'gear_sh', 'bed', 'dinette', 'flap', 'ledge', 'fridge'];
 MOVER_IDS.forEach(ensure);

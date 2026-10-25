@@ -216,12 +216,12 @@ const PD = [
   { k: 'closetOn', g: 'Take items out', l: 'Closet and its doors (the space it leaves stays empty; the dinette still starts where the closet ends)', d: true, t: 'c' },
   { k: 'toiletOn', g: 'Take items out', l: 'Toilet in the wet bath: the Reliance Fold-To-Go, left set up in the stall (at the cab end, sideways, its back against the wall to the fridge)', d: true, t: 'c' },
   { k: 'snItemsOn', g: 'Take items out', l: 'Towel bar, toilet paper and bottles in the shower nook', d: true, t: 'c' },
-  { k: 'gearOn', g: 'Take items out', l: 'Charging gear under the couch: the BELTTT inverter, the LiTime DC-DC charger and the VEVOR shore charger, lying flat on the floor beside the battery', d: true, t: 'c' },
+  { k: 'gearOn', g: 'Take items out', l: 'Charging gear on a pull-out shelf over the battery under the couch: the BELTTT inverter, the LiTime DC-DC charger and the VEVOR shore charger', d: true, t: 'c' },
   { k: 'wallsOn', g: 'Take items out', l: 'Floor-to-ceiling walls: behind the dinette backs (at the closet end and behind the driver seat) and one on each side of the fridge', d: true, t: 'c' },
   { k: 'bedLen', g: 'Bed / couch', l: 'Length', d: 74, s: .5, a: 40, b: 120 },
   { k: 'bedD', g: 'Bed / couch', l: 'Depth, closed (the couch on its base)', d: 26, s: .5, a: 15, b: 40 },
   { k: 'bedBack', g: 'Bed / couch', l: 'Leaf width (flips out in front; = back cushion length)', d: 20, s: .5, a: 0, b: 40 },
-  { k: 'platform', g: 'Bed / couch', l: 'Seat base (deck 3/4 in lower; the leaf folds onto it)', d: 14, s: .5, a: 6, b: 30 },
+  { k: 'platform', g: 'Bed / couch', l: 'Seat base (deck 3/4 in lower; the leaf folds onto it). Raised from 14 to 17 1/2 for the gear shelf', d: 17.5, s: .5, a: 6, b: 30 },
   { k: 'mattress', g: 'Bed / couch', l: 'Seat and back cushion thickness', d: 6, s: .5, a: 2, b: 12 },
   { k: 'legIn', g: 'Bed / couch', l: 'Legs set in from the leaf free edge', d: 3, s: .5, a: 0, b: 10 },
   { k: 'closetW', g: 'Closet', l: 'Width', d: 15, s: .25, a: 8, b: 40 },
@@ -242,7 +242,10 @@ const PD = [
   { k: 'dcH', g: 'Charging gear', l: 'DC-DC charger: height off the floor', d: 4.5, s: .1, a: 2, b: 10 },
   { k: 'chL', g: 'Charging gear', l: 'Shore charger (VEVOR 80 A): length, along the wall (you measured 9.5 x 4 x 7: 9.5 long, 7 wide, 4 thick)', d: 9.5, s: .1, a: 4, b: 20 },
   { k: 'chW', g: 'Charging gear', l: 'Shore charger: width, out from the wall', d: 7, s: .1, a: 3, b: 14 },
-  { k: 'chH', g: 'Charging gear', l: 'Shore charger: height off the floor', d: 4, s: .1, a: 2, b: 10 },
+  { k: 'chH', g: 'Charging gear', l: 'Shore charger: height off the floor (its thickness)', d: 4, s: .1, a: 2, b: 10 },
+  { k: 'shG', g: 'Charging gear', l: 'Gear shelf: gap from the battery top (9 1/2 up) to the underside of the shelf, for the terminals, lugs and cable bends', d: 1, s: .25, a: .5, b: 4 },
+  { k: 'shT', g: 'Charging gear', l: 'Gear shelf: thickness of the plywood tray', d: .5, s: .125, a: .25, b: 1 },
+  { k: 'shPull', g: 'Charging gear', l: 'Gear shelf: how far it pulls out (18 in full-extension slides; the shelf is 17 1/2 deep)', d: 18, s: 1, a: 10, b: 40 },
   { k: 'fwT', g: 'Floor-to-ceiling walls', l: 'Wall thickness (the walls are inside the closet, the shower and the counter cabinet, so nothing else moves)', d: .75, s: .125, a: .25, b: 3 },
   { k: 'benchLen', g: 'Dinette', l: 'Bench length', d: 19.5, s: .5, a: 10, b: 40 },
   { k: 'benchD', g: 'Dinette', l: 'Bench depth', d: 28, s: .5, a: 15, b: 45 },
@@ -671,14 +674,16 @@ function layout(P0) {
   });
   L.doorZ = [P.cabBot + 0.5, P.cabBot + 0.5 + P.doorH];
   L.batt = [L.c0 - 1 - 21, L.c0 - 1];
-  // the charging gear under the couch, lying flat on the free floor next to the battery (y = out from the driver wall; the removable panel in the couch front is 3/4 in thick, at bedD - 3/4):
-  // the DC-DC charger on the floor behind (west of) the battery, in front of the wheel well (which is only 7 in out); the inverter in the strip in front of the battery, so its battery cables are about 1 ft;
-  // the shore charger beside the DC-DC charger, in the same strip as the inverter's row west of the battery (y from the DC-DC charger's front edge + 1/2 in)
-  { const hy = P.bedD - .75;
-    const dc = { x0: L.batt[0] - .5 - P.dcL, x1: L.batt[0] - .5, y0: 8, y1: 8 + P.dcW, z1: P.dcH, n: 'the DC-DC charger', id: 'G2' };
-    const inv = { x0: L.batt[0] + .5, x1: L.batt[0] + .5 + P.invL, y0: 17.3, y1: 17.3 + P.invW, z1: P.invH, n: 'the inverter', id: 'G1' };
-    const ch = { x0: dc.x0 + .5, x1: dc.x0 + .5 + P.chL, y0: dc.y1 + .5, y1: dc.y1 + .5 + P.chW, z1: P.chH, n: 'the shore charger', id: 'G3' };
-    L.gear = P.gearOn ? { inv, dc, ch, hatchY: hy } : null; }
+  // the charging gear on ONE pull-out shelf over the battery (y = out from the driver wall; the couch front over the gear is the shelf's own face, 3/4 in thick, at bedD - 3/4):
+  // a 1/2 in plywood tray between two 3/4 in end rails on two 18 in full-extension slides, one on the closet's end panel and one on a plywood divider west of the wheel well, 1 in over the battery top for the terminals and lugs;
+  // the tray runs from the front of the couch back over the battery (7 3/4 to 25 1/4 out) so an 18 in pull puts all of it in the aisle.
+  // Row 1 (rear): the DC-DC charger, then the inverter; row 2 (front): the shore charger. The battery stays on the floor under it.
+  { const hy = P.bedD - .75, sz0 = 9.5 + P.shG, sz1 = sz0 + P.shT, sx1 = L.c0 - .65, sx0 = sx1 - (P.dcL + P.invL + 2.5), dd = Math.max(P.dcW, P.invW), ty0 = hy - (.75 + dd + .5 + P.chW + .25);
+    const dc = { x0: sx0 + 1, x1: sx0 + 1 + P.dcL, y0: ty0 + .75, y1: ty0 + .75 + P.dcW, z0: sz1, z1: sz1 + P.dcH, n: 'the DC-DC charger', id: 'G2' };
+    const inv = { x0: dc.x1 + .5, x1: dc.x1 + .5 + P.invL, y0: ty0 + .75, y1: ty0 + .75 + P.invW, z0: sz1, z1: sz1 + P.invH, n: 'the inverter', id: 'G1' };
+    const ch = { x0: dc.x0, x1: dc.x0 + P.chL, y0: ty0 + .75 + dd + .5, y1: ty0 + .75 + dd + .5 + P.chW, z0: sz1, z1: sz1 + P.chH, n: 'the shore charger', id: 'G3' };
+    const sh = { x0: sx0, x1: sx1, y0: ty0, y1: hy, z0: sz0, z1: sz1, div: sx0 - .65 - .75 };
+    L.gear = P.gearOn ? { inv, dc, ch, sh, hatchY: hy } : null; }
   L.pan = P.panW; L.fr = [P.panW, P.panW + P.fridgeW]; L.cabS = L.fr[1];
   L.angS = L.cabS + P.flatLen; L.angLen = P.cabD > P.sinkD ? P.angLen : 0;
   L.slope = L.angLen > 0 ? (P.cabD - P.sinkD) / L.angLen : 0.4;
@@ -821,7 +826,7 @@ function bedState(s) {
 }
 // the dinette makes up into a bed: the table lowers, the backrest cushions come off and lie on it
 function dinState(s) { return { tbl: ease(clamp(s / .5, 0, 1)), back: 1 - ease(clamp((s - .15) / .4, 0, 1)), pil: clamp((s - .55) / .45, 0, 1) }; }
-const MOVER_IDS = ['dc0', 'dc1', 'dc2', 'dc3', 'dc4', 'dc5', 'clo_dr', 'clo_hi', 'bed', 'dinette', 'flap', 'ledge', 'fridge'];
+const MOVER_IDS = ['dc0', 'dc1', 'dc2', 'dc3', 'dc4', 'dc5', 'clo_dr', 'clo_hi', 'gear_sh', 'bed', 'dinette', 'flap', 'ledge', 'fridge'];
 MOVER_IDS.forEach(ensure);
 /* ================= elevation views (driver side and passenger side) ================= */
 function mkElev(flip, L) {
@@ -929,7 +934,7 @@ function drawDriver(L, V) {
     let g = box(0, P.bedLen, 0, deck - lt, { stroke: COL.P, sw: 1, dash: '5 3', so: .45 });
     g += box(0, P.bedLen, deck - lt, deck, { fill: COL.G, fo: .25, stroke: COL.G, sw: 1 });
     if (bs.legs > .01) {
-      const psi = bs.legs * Math.PI / 2, tp = lt / 2, LG = deck - tp - .25, pr = LW - P.legIn;
+      const psi = bs.legs * Math.PI / 2, tp = lt / 2, LG = Math.min(deck - tp - .25, 12.625) + Math.max(0, deck - tp - .25 - 12.625) * bs.legs, pr = LW - P.legIn;
       legXs(P).forEach(lx => {
         const a = deck + pr * sn + tp * cs, b = deck + (pr - LG * Math.cos(psi)) * sn + (tp + LG * Math.sin(psi)) * cs;
         g += box(lx, lx + 1.25, Math.min(a, b), Math.max(a, b), { fill: COL.G, fo: .8, stroke: COL.G, sw: 1 });
@@ -951,11 +956,14 @@ function drawDriver(L, V) {
   }
   o.push(GE());
   if (L.gear) {
-    const g = L.gear;
-    o.push(GB('gear', 'Charging gear under the couch'));
-    [[g.inv, 3, 'Inverter', 'BELTTT 2000 W'], [g.dc, 7, 'DC-DC charger', 'LiTime 60 A'], [g.ch, 3, 'Shore charger', 'VEVOR 80 A']].forEach(r => { const u = r[0];
-      o.push(box(u.x0, u.x1, 0, u.z1, { fill: '#B45309', fo: .16, stroke: '#B45309', sw: 1.4, rx: 2, dash: '4 3' }));
-      o.push(LBL(X(u.x0 + r[1]), Y(u.z1 / 2), r[2], `${r[3]}: ${fmt(u.x1 - u.x0)} x ${fmt(u.y1 - u.y0)} x ${fmt(u.z1)} in, flat on the floor under the couch, ${fmt(u.y0)} to ${fmt(u.y1)} in out from the wall`, { size: 10, fill: '#B45309' })); });
+    const g = L.gear, sh = g.sh, s = V.gear_sh || 0;
+    o.push(GB('gear', 'Charging gear on the shelf over the battery'));
+    let gg = box(sh.x0, sh.x1, sh.z0, sh.z1, { fill: '#8A6B4D', fo: .5, stroke: '#5A3A00', sw: 1.2 });
+    gg += [[g.inv, 1, 'Inverter', 'BELTTT 2000 W'], [g.dc, 7.5, 'DC-DC charger', 'LiTime 60 A'], [g.ch, .8, 'Charger', 'VEVOR 80 A']].map(r => { const u = r[0];
+      return box(u.x0, u.x1, u.z0, u.z1, { fill: '#B45309', fo: .16 + s * .1, stroke: '#B45309', sw: 1.4, rx: 2, dash: s > .01 ? null : '4 3' }) +
+        LBL(X(u.x0 + r[1]), Y((u.z0 + u.z1) / 2), r[2], `${r[3]}: ${fmt(u.x1 - u.x0)} x ${fmt(u.y1 - u.y0)} x ${fmt(u.z1 - u.z0)} in, on the gear shelf (${fmt(sh.z1)} up), ${fmt(u.y0)} to ${fmt(u.y1)} in out from the wall`, { size: 9.5, fill: '#B45309' }); }).join('');
+    gg += NOTE(X((sh.x0 + sh.x1) / 2), Y(sh.z1 + 7.6), s > .01 ? `gear shelf pulled out ${fmt(P.shPull * s)} in toward you` : 'gear shelf over the battery (click to pull out)', { size: 9.5, fill: '#5A3A00' });
+    o.push(MV('gear_sh', gg, HITR(Math.min(X(sh.x0), X(sh.x1)), Y(sh.z1 + 8), S * (sh.x1 - sh.x0), S * (sh.z1 - sh.z0 + 8))));
     o.push(GE());
   }
   // closet
@@ -1487,7 +1495,7 @@ function drawBedEnd(L, V) {
   o.push(GB('leaf', 'Leaf, leg and hinge'));
   o.push(Poly(leaf, { fill: '#B07A2A', fo: .75, stroke: '#5A3A00', sw: 1.2 }));
   // the leg slot is shown as the leg: lying in the leaf (dark line) or swung down
-  const tp = lt / 2, LG = deck - tp - .25, rp = LW - P.legIn, psi = bs.legs * Math.PI / 2;
+  const tp = lt / 2, LG = Math.min(deck - tp - .25, 12.625) + Math.max(0, deck - tp - .25 - 12.625) * bs.legs, rp = LW - P.legIn, psi = bs.legs * Math.PI / 2;
   const p0 = pt(rp, tp);
   if (bs.legs < .01) { const p1 = pt(rp - LG, tp); o.push(Ln(p0[0], p0[1], p1[0], p1[1], { stroke: '#2C2C2A', sw: 3.75, cap: 'round' })); }
   else { const tipY = hy + rp - LG * Math.cos(psi), tipZ = deck - tp - LG * Math.sin(psi); o.push(Ln(p0[0], p0[1], xx(tipY), yy(tipZ), { stroke: COL.G, sw: 3.75, cap: 'round' })); if (bs.legs > .9) { o.push(bx(tipY - .7, tipY + .7, 0, .25, { fill: COL.G })); o.push(T(xx(tipY - 1.4), yy(5.5), `legs land ${fmt(hy + rp)} in out`, { anchor: 'end', size: 10, fill: COL.G, halo: false, op: (bs.legs - .9) * 10 })); } }
@@ -1529,6 +1537,7 @@ function obstacles(L, V) {
     for (let k = 0; k <= 24; k++) { const r = wC * k / 24; D.push({ x0: hx + sg * r * Math.cos(th) - .4, x1: hx + sg * r * Math.cos(th) + .4, d: P.closetD + r * Math.sin(th), n: 'the closet door', door: true, px: hx + sg * r * Math.cos(th) }); }
   });
   { const s = V.clo_dr || 0; if (s > .02 && P.closetOn) D.push({ x0: L.c0, x1: L.c1, d: P.closetD + L.cloPull * s, n: 'the closet drawers (pulled out)' }); }
+  { const s = V.gear_sh || 0; if (s > .02 && L.gear) D.push({ x0: L.gear.sh.x0, x1: L.gear.sh.x1, d: L.gear.sh.y1 + .75 + P.shPull * s, n: 'the gear shelf (pulled out)' }); }
   Q.push({ x0: 0, x1: P.panW, d: P.panD, n: 'the shower pan' });
   if (P.fridgeOn) Q.push({ x0: L.fr[0], x1: L.fr[1], d: P.cabD, n: 'the fridge' });
   const sf = V.fridge || 0;
@@ -1633,8 +1642,13 @@ function drawPlan(L, V) {
   o.push(Ln(xx(50), yy(0), xx(50), yy(17), { stroke: '#A32D2D', sw: 1.5, mk: 1 }) + T(xx(48.6), yy(10), '17', { anchor: 'end', size: 10, fill: '#A32D2D', w: 700, halo: false }));
   o.push(GE());
   if (L.gear) {
-    o.push(GB('gear', 'Charging gear under the couch'));
-    [[L.gear.inv, 'Inverter', 'BELTTT 2000 W'], [L.gear.dc, 'DC-DC', 'LiTime 60 A'], [L.gear.ch, 'Charger', 'VEVOR 80 A']].forEach(r => o.push(it(r[0].x0, r[0].x1, r[0].y0, r[0].y1, '#B45309', r[1], `${fmt(r[0].x1 - r[0].x0)} x ${fmt(r[0].y1 - r[0].y0)}`, { fo: .22, fs: 9, dash: '3 2' })));
+    const g = L.gear, sh = g.sh, s = V.gear_sh || 0, off = P.shPull * s, ink = '#B45309';
+    o.push(GB('gear', 'Charging gear on the shelf over the battery'));
+    let gg = it(sh.x0, sh.x1, sh.y0 + off, sh.y1 + off, '#8A6B4D', '', null, { fo: .1 + s * .12, dash: s > .01 ? null : '5 3' });
+    gg += [[g.inv, 'Inverter', 'BELTTT 2000 W'], [g.dc, 'DC-DC', 'LiTime 60 A'], [g.ch, 'Charger', 'VEVOR 80 A']].map(r => it(r[0].x0, r[0].x1, r[0].y0 + off, r[0].y1 + off, ink, r[1], `${fmt(r[0].x1 - r[0].x0)} x ${fmt(r[0].y1 - r[0].y0)}`, { fo: .22 + s * .1, fs: 9, dash: s > .01 ? null : '3 2' })).join('');
+    gg += it(sh.x0, sh.x1, sh.y1 + off, sh.y1 + off + .75, '#5A3A00', '', null, { fo: .5 });
+    gg += T(xx((sh.x0 + sh.x1) / 2), yy(sh.y1 + off + 2), s > .01 ? `gear shelf out ${fmt(off)} in` : 'gear shelf over the battery: click to pull out', { size: 9.5, fill: '#5A3A00' });
+    o.push(MV('gear_sh', gg, HITR(xx(sh.x0), yy(sh.y1 + off + .75), S * (sh.x1 - sh.x0), S * (sh.y1 - sh.y0 + .75))));
     o.push(GE());
   }
   if (L.chairs) {
@@ -1977,13 +1991,14 @@ function computeChecks(L, V) {
   if (anyOpen) {
     const a1 = aisleMin(L, O);
     // with the bed made up the space beside it is the bed, not a walkway (and it floats above the shower pan), so that is information, not a problem
-    const bedUp = a1.dn === 'the bed (made up)', clo = a1.dn === 'the closet door' || a1.dn === 'the closet drawers (pulled out)', canOut = a1.qn === 'the trash can (pulled out)';
-    if (a1.v < 1e8) push(bedUp || clo || canOut ? 'ok' : a1.v < 0 ? 'bad' : lvA(a1.v), a1.v < 0 && !canOut ? `Right now ${a1.dn} and ${a1.qn} overlap by ${fmt(-a1.v)} in at ${fmt(a1.x)} in from the back.` : `Narrowest walkway right now: ${a1.v < 0 ? 'none' : fmt(a1.v) + ' in'} at ${fmt(a1.x)} in from the back (${a1.dn} against ${a1.qn})${bedUp ? ': with the bed made up that is where you step onto it, not a walkway' : ''}${clo ? '; you said the open closet door is fine' : ''}${canOut ? ': you stand beside the pulled-out can to change the bag; nobody walks past while it is out' : ''}.`);
+    const bedUp = a1.dn === 'the bed (made up)', clo = a1.dn === 'the closet door' || a1.dn === 'the closet drawers (pulled out)', canOut = a1.qn === 'the trash can (pulled out)', gearOut = a1.dn === 'the gear shelf (pulled out)';
+    if (a1.v < 1e8) push(bedUp || clo || canOut || gearOut ? 'ok' : a1.v < 0 ? 'bad' : lvA(a1.v), a1.v < 0 && !canOut && !gearOut ? `Right now ${a1.dn} and ${a1.qn} overlap by ${fmt(-a1.v)} in at ${fmt(a1.x)} in from the back.` : `Narrowest walkway right now: ${a1.v < 0 ? 'none' : fmt(a1.v) + ' in'} at ${fmt(a1.x)} in from the back (${a1.dn} against ${a1.qn})${bedUp ? ': with the bed made up that is where you step onto it, not a walkway' : ''}${clo ? '; you said the open closet door is fine' : ''}${canOut ? ': you stand beside the pulled-out can to change the bag; nobody walks past while it is out' : ''}${gearOut ? ': the gear shelf is out only while you work on it; nobody walks past' : ''}.`);
   }
   // bed leaf
-  const LEG = P.platform - .75 - .375 - .25, slotEnd = P.legIn + LEG + .25;
-  push('ok', `Bed: a ${fmt(P.bedBack)} x ${fmt(P.bedLen)} in leaf of 3/4 in plywood on a hinge along the front edge of the deck, flipped out level with the deck (${fmt(P.platform - .75)} in) on 4 legs ${fmt(LEG)} in long, about ${fmt((P.bedLen - 3.25) / 3)} in apart, that lie in slots in the leaf (no rails) and land ${fmt(P.bedD + P.bedBack - P.legIn)} in out from the wall (${fmt(P.legIn)} in in from its free edge), with the back cushion on it (${fmt(P.bedD)} + ${fmt(P.bedBack)} = ${fmt(P.bedD + P.bedBack)} in wide). The seat is ${fmt(P.platform + P.mattress)} in by day and ${fmt(P.bedD - P.mattress)} in deep, and the bed ${fmt(P.platform - .75 + P.mattress)} in at night. The seat cushion comes off to flip it. Put the legs down before anyone sits on the free edge: with the legs up it levers on the hinge screws.`);
+  const LEG = P.platform - .75 - .375 - .25, LEGB = 12.625, foot = Math.max(0, LEG - LEGB), slotEnd = P.legIn + Math.min(LEG, LEGB) + .25;   // the bar folds into the slot at 12 5/8 in; the rest of a taller couch's leg is a screw-out foot
+  push('ok', `Bed: a ${fmt(P.bedBack)} x ${fmt(P.bedLen)} in leaf of 3/4 in plywood on a hinge along the front edge of the deck, flipped out level with the deck (${fmt(P.platform - .75)} in) on 4 legs ${fmt(LEG)} in long${foot > .05 ? ` (the 12 5/8 in bar that folds into the slot plus a ${fmt(foot)} in screw-out foot)` : ''}, about ${fmt((P.bedLen - 3.25) / 3)} in apart, that lie in slots in the leaf (no rails) and land ${fmt(P.bedD + P.bedBack - P.legIn)} in out from the wall (${fmt(P.legIn)} in in from its free edge), with the back cushion on it (${fmt(P.bedD)} + ${fmt(P.bedBack)} = ${fmt(P.bedD + P.bedBack)} in wide). The seat is ${fmt(P.platform + P.mattress)} in by day and ${fmt(P.bedD - P.mattress)} in deep, and the bed ${fmt(P.platform - .75 + P.mattress)} in at night. The seat cushion comes off to flip it. Put the legs down before anyone sits on the free edge: with the legs up it levers on the hinge screws.`);
   if (slotEnd > P.bedBack - 1.5) push('warn', `The leg slots (${fmt(slotEnd)} in from the free edge) reach to within ${fmt(Math.max(0, P.bedBack - slotEnd))} in of the hinge; the leaf needs to be at least ${fmt(slotEnd + 1.5)} in wide, or the legs set in less.`);
+  if (foot > 4) push('warn', `The legs need a ${fmt(foot)} in screw-out foot at this couch height, which is more than a usual leveling foot turns out (about 4 in): use a longer bar or a two-piece leg.`);
   // wall lean
   if (P.leanOn) {
     const z0 = P.cabBot, z1 = L.ceilF, l0 = L.leanAt(z0), l1 = L.leanAt(z1), wc = P.vanW - 2 * L.leanAt(P.ceil), d = Math.abs(wc - P.ceilW);
@@ -2179,20 +2194,19 @@ function computeChecks(L, V) {
     if (P.showerOn) push('warn', `The toilet paper is about ${fmt(dHead)} in along the wall from the shower head and faces into the stall, so it will be splashed: put a small hinged acrylic door on the paper's part of the nook, or keep the rolls in a lidded holder, and keep a spare roll dry in the closet.`);
   }
   if (L.gear) {
-    const g = L.gear, u = [g.inv, g.dc, g.ch], names = ['the inverter', 'the DC-DC charger', 'the shore charger'];
+    const g = L.gear, sh = g.sh, u = [g.inv, g.dc, g.ch], names = ['the inverter', 'the DC-DC charger', 'the shore charger'];
     const ovl = (a, b) => Math.min(a.x1, b.x1) - Math.max(a.x0, b.x0) > .01 && Math.min(a.y1, b.y1) - Math.max(a.y0, b.y0) > .01;
-    const battBox = { x0: L.batt[0], x1: L.batt[1], y0: 7, y1: 17 }, chairX = L.chairs ? L.chairs.x1 : 0, bad = [];
+    const chairX = L.chairs ? L.chairs.x1 : 0, under = P.platform - 1.5, bad = [];
+    const air = under - Math.max(...u.map(q => q.z1));
     for (let i = 0; i < 3; i++) {
       for (let j = i + 1; j < 3; j++) if (ovl(u[i], u[j])) bad.push(`${names[i]} and ${names[j]} overlap`);
-      if (ovl(u[i], battBox)) bad.push(`${names[i]} overlaps the battery`);
-      if (u[i].y1 > g.hatchY + .01) bad.push(`${names[i]} sticks ${fmt(u[i].y1 - g.hatchY)} in into the panel in the couch front`);
-      if (u[i].x0 < chairX - .01) bad.push(`${names[i]} is over the lawn chairs`);
-      if (u[i].z1 > P.platform - 3) bad.push(`${names[i]} is taller than the space under the couch`);
-      if (u[i].y0 < 7 && u[i].x1 > 42 && u[i].x0 < 76) bad.push(`${names[i]} is on the wheel well`);
+      if (u[i].x0 < sh.x0 + 1 - .01 || u[i].x1 > sh.x1 - 1 + .01 || u[i].y0 < sh.y0 + .75 - .01 || u[i].y1 > sh.y1 - .25 + .01) bad.push(`${names[i]} hangs off the shelf`);
     }
-    const gapBattInv = g.inv.y0 - 17, gapHatch = g.hatchY - Math.max(g.inv.y1, g.ch.y1), gapBattDc = L.batt[0] - g.dc.x1, gapChairs = g.dc.x0 - chairX, gapDcCh = g.ch.y0 - g.dc.y1;
-    const tight = Math.min(gapBattInv, gapHatch, gapBattDc, gapChairs, gapDcCh);
-    push(bad.length ? 'bad' : tight < .2 ? 'warn' : 'ok', `Charging gear under the couch, lying flat on the free floor beside the battery (the couch front is a removable louvered panel, ${fmt(g.dc.x0 - 1)} to ${fmt(P.bedLen)} in from the back): ${bad.length ? 'PROBLEM: ' + bad.join('; ') + '. ' : ''}the DC-DC charger (LiTime 60 A, ${fmt(P.dcL)} x ${fmt(P.dcW)} x ${fmt(P.dcH)}, as you measured it) behind the battery at ${fmt(g.dc.x0)} to ${fmt(g.dc.x1)} in along the wall and ${fmt(g.dc.y0)} to ${fmt(g.dc.y1)} out, ${fmt(gapBattDc)} in from the battery and ${fmt(gapChairs)} in from the lawn chairs; the inverter (BELTTT 2000 W, ${fmt(P.invL)} x ${fmt(P.invW)} x ${fmt(P.invH)}, from its listing) in front of the battery at ${fmt(g.inv.x0)} to ${fmt(g.inv.x1)} in and ${fmt(g.inv.y0)} to ${fmt(g.inv.y1)} out, ${fmt(gapBattInv)} in from the battery and ${fmt(g.hatchY - g.inv.y1)} in from the panel, so its battery cables are about 1 ft; the shore charger (VEVOR 80 A, ${fmt(P.chL)} x ${fmt(P.chW)} x ${fmt(P.chH)}, as you measured it) beside the DC-DC charger at ${fmt(g.ch.x0)} to ${fmt(g.ch.x1)} in and ${fmt(g.ch.y0)} to ${fmt(g.ch.y1)} out, ${fmt(gapHatch === g.hatchY - g.ch.y1 ? gapHatch : g.hatchY - g.ch.y1)} in from the panel. The smallest gap is ${fmt(tight)} in: very tight for fans and cables, so measure the real units; the panel can be thin or notched. All three are under 4 1/2 in tall with about ${fmt(P.platform - 1.5 - 4.5)} in of air above them under the deck. The BELTTT has no charger and no transfer switch, so the AC panel needs a transfer switch, and the VEVOR runs from the shore side only.`);
+    if (air < 0) bad.push(`the tallest unit is ${fmt(-air)} in too tall for the space under the deck (${fmt(under)} in up): raise the couch or lower the gap under the shelf`);
+    if (sh.div < chairX - .01) bad.push('the slide divider is over the lawn chairs');
+    const Og = obstacles(L, { gear_sh: 1 }); let ag = { v: 1e9 }; for (let x = sh.x0; x <= sh.x1 + 1e-9; x += .5) { const r = aisleAt(L, Og, x); if (r.qm > 0 && r.v < ag.v) ag = r; }
+    const out = sh.y0 + P.shPull - g.hatchY, lbs = 7.7 + 6 + 6 + (sh.x1 - sh.x0) * (sh.y1 - sh.y0) * P.shT * .028;
+    push(bad.length ? 'bad' : air < .5 ? 'warn' : 'ok', `Charging gear on ONE pull-out shelf over the battery: a ${fmt(P.shT)} in plywood tray ${fmt(sh.x1 - sh.x0 - 1.5)} x ${fmt(sh.y1 - sh.y0)} in between two 3/4 x 2 1/2 in end rails (${fmt(sh.x1 - sh.x0)} wide with them, ${fmt(sh.x0)} to ${fmt(sh.x1)} in along the wall, ${fmt(sh.y0)} to ${fmt(sh.y1)} out), its top ${fmt(sh.z1)} in up and ${fmt(sh.z0 - 9.5)} in over the battery top (9 1/2) for the terminals, lugs and cable bends, on two ${fmt(P.shPull)} in full-extension slides, one on the closet's end panel (74 in) and one on a 3/4 in plywood divider at ${fmt(sh.div)} to ${fmt(sh.div + .75)} in, which is west of the wheel well (42) and ${fmt(sh.div - chairX)} in past the lawn chairs. The front of the tray is a louvered face, flush with the couch front, so pulling the face pulls the shelf. ${bad.length ? 'PROBLEM: ' + bad.join('; ') + '. ' : ''}On it, rear row: the DC-DC charger (LiTime 60 A, ${fmt(P.dcL)} x ${fmt(P.dcW)} x ${fmt(P.dcH)}, as you measured it) at ${fmt(g.dc.x0)} to ${fmt(g.dc.x1)} in and the inverter (BELTTT 2000 W, ${fmt(P.invL)} x ${fmt(P.invW)} x ${fmt(P.invH)}, from its listing) at ${fmt(g.inv.x0)} to ${fmt(g.inv.x1)} in, ${fmt(g.dc.y0)} to ${fmt(g.dc.y1)} out; front row: the shore charger (VEVOR 80 A, ${fmt(P.chL)} x ${fmt(P.chW)} x ${fmt(P.chH)}, as you measured it) at ${fmt(g.ch.x0)} to ${fmt(g.ch.x1)} in, ${fmt(g.ch.y0)} to ${fmt(g.ch.y1)} out. The tallest unit (${fmt(Math.max(...u.map(q => q.z1)))} up) leaves ${fmt(air)} in of air under the deck (${fmt(under)} up): ${air < .5 ? 'tight for the fans, so the face and the lower panel stay louvered' : 'the face and the lower panel stay louvered'}. The couch's front rail (14 1/2 to 16 in up) lifts out across the opening, ${fmt(sh.x1 - sh.x0)} in wide, so the units can pass; with ${fmt(P.shPull)} in of travel ${out >= 0 ? 'the whole tray is in the aisle' : 'all but ' + fmt(-out) + ' in of the tray\'s back edge is in the aisle'} (${ag.v >= 1e9 ? 'nothing across from it' : ag.v < 0 ? 'it reaches into the ' + ag.qn : fmt(ag.v) + ' in of aisle left between the face and ' + ag.qn}), so every unit and every terminal is open from above. About ${fmt(lbs)} lb (the inverter 7.7 lb from its listing, the others a guess) is within any 75 lb slide. The battery stays on the floor under the shelf behind a removable lower panel, so every cable from it and from the chargers to the shelf needs a loop about ${fmt(P.shPull + 6)} in longer than a fixed run. The BELTTT has no charger and no transfer switch, so the AC panel needs a transfer switch, and the VEVOR runs from the shore side only.`);
   }
   // headroom, battery, doors
   const head = Math.max(P.platform + P.mattress, P.seatH) + 37, hg = P.cabBot - head;
@@ -2210,13 +2224,13 @@ const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
 /* ================= views, movers, drawing loop ================= */
 const ALLDC = ['dc0', 'dc1', 'dc2', 'dc3', 'dc4', 'dc5'];
 const VIEWS = [
-  { id: 'driver', label: 'Driver side', drag: 'the lawn chairs under the couch (left-right and up-down)', draw: drawDriver, movers: [['Couch to bed', ['bed']], ['Dinette to bed', ['dinette']], ['Wall cabinet doors, bed side', ['dc0', 'dc1', 'dc2']], ['Wall cabinet doors, dinette side', ['dc3', 'dc4', 'dc5']], ['Closet door', ['clo_hi']], ['Closet drawers', ['clo_dr']]] },
+  { id: 'driver', label: 'Driver side', drag: 'the lawn chairs under the couch (left-right and up-down)', draw: drawDriver, movers: [['Couch to bed', ['bed']], ['Dinette to bed', ['dinette']], ['Wall cabinet doors, bed side', ['dc0', 'dc1', 'dc2']], ['Wall cabinet doors, dinette side', ['dc3', 'dc4', 'dc5']], ['Closet door', ['clo_hi']], ['Closet drawers', ['clo_dr']], ['Gear shelf', ['gear_sh']]] },
   { id: 'pass', label: 'Passenger side', drag: 'the drawers and shelves under the counter, the jar shelf, the microwave, the trash can, the dish towel hook, the hot water tank, the fresh water tank, the drain jug and the drain line (all of them left-right and up-down)', draw: drawPass, movers: [['Shower pan', ['pan']], ['Fridge door', ['fridge']], ['Trash can pull-out', ['can']], ['Fold-out table with the foot ledge', ['flap', 'ledge']], ['Foot ledge only', ['ledge']]] },
   { id: 'end', label: 'Bed, from the end', draw: drawBedEnd, movers: [['Couch to bed', ['bed']]] },
   { id: 'cross', label: 'Cross-section', draw: drawCross, movers: [] },
   { id: 'bare', label: 'Bare roof (mark the ribs)', drag: 'the roof fan and the air conditioner', draw: drawBare, movers: [] },
   { id: 'ceil', label: 'Ceiling', drag: 'the roof fan and the air conditioner', draw: drawCeiling, movers: [] },
-  { id: 'plan', label: 'From above', drag: 'the drawers (a whole column along the wall), the microwave, the trash can, the lawn chairs under the couch, the hot water tank, the fresh water tank, the drain jug (left-right and up-down, which is along the wall and out from it) and the drain line (along the wall only; its height is on the Passenger side tab)', draw: drawPlan, movers: [['Couch to bed', ['bed']], ['Dinette to bed', ['dinette']], ['Shower pan', ['pan']], ['Closet door', ['clo_hi']], ['Closet drawers', ['clo_dr']], ['Fridge door', ['fridge']], ['Trash can pull-out', ['can']], ['Fold-out table with the foot ledge', ['flap', 'ledge']], ['Foot ledge only', ['ledge']], ['Wall cabinet doors', ALLDC]] }
+  { id: 'plan', label: 'From above', drag: 'the drawers (a whole column along the wall), the microwave, the trash can, the lawn chairs under the couch, the hot water tank, the fresh water tank, the drain jug (left-right and up-down, which is along the wall and out from it) and the drain line (along the wall only; its height is on the Passenger side tab)', draw: drawPlan, movers: [['Couch to bed', ['bed']], ['Dinette to bed', ['dinette']], ['Shower pan', ['pan']], ['Closet door', ['clo_hi']], ['Closet drawers', ['clo_dr']], ['Gear shelf', ['gear_sh']], ['Fridge door', ['fridge']], ['Trash can pull-out', ['can']], ['Fold-out table with the foot ledge', ['flap', 'ledge']], ['Foot ledge only', ['ledge']], ['Wall cabinet doors', ALLDC]] }
 ];
 let view = 'driver', L = layout(P), lastSig = '';
 const DEFS = '<defs><marker id="arq" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker><pattern id="hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="6" stroke="#888780" stroke-width="1"/></pattern><pattern id="hq" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="6" stroke="#888780" stroke-width="1"/></pattern></defs>';
