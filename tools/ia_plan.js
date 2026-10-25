@@ -153,6 +153,9 @@ function drawPlan(L, V) {
     o.push(MV('pan', g, HITR(xx(0), yp(P.panD), S * P.panW, S * P.panD)));
   }
   o.push(GE());
+  o.push(GB('shower', 'Shower head and valve'));
+  if (P.showerOn) o.push(ip(P.headX - 2, P.headX + 2, P.headOut - 2, P.headOut + 2, '#185FA5', 'Shower head', `${fmt(P.headZ)} up`, { fo: .3 }));
+  o.push(GE());
   const nkx = Math.min(29.75, P.panW - 6.25);
   o.push(GB('snook', 'Shower nook'));
   o.push(ip(nkx - P.snookLen, nkx, 0, 4.5, '#7A4A1E', '', null, { fo: .3, dash: '3 2' }));

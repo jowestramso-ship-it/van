@@ -6,6 +6,7 @@ const PD = [
   { k: 'vanW', g: 'Van', l: 'Inside width', d: 68, s: .5, a: 50, b: 90 },
   { k: 'ceil', g: 'Van', l: 'Ceiling height at the wall (bare, to the rib)', d: 75.5, s: .5, a: 60, b: 90 },
   { k: 'numLbl', g: 'Take items out', l: 'Number the items in the side views and list their names and sizes under the drawing (untick to write them on the drawing)', d: true, t: 'c' },
+  { k: 'showerOn', g: 'Take items out', l: 'Shower head and valve in the wet bath', d: true, t: 'c' },
   { k: 'microOn', g: 'Take items out', l: 'Microwave and its shelf (untick to take it out of the diagram and the checks)', d: true, t: 'c' },
   { k: 'tvOn', g: 'Take items out', l: 'TV over the nook', d: true, t: 'c' },
   { k: 'towelOn', g: 'Take items out', l: 'Paper towel roll in its recess in the angled front', d: true, t: 'c' },
@@ -48,6 +49,11 @@ const PD = [
   { k: 'nookLen', g: 'Passenger side', l: 'Jar nook length along the wall (the nook ends at 93 1/4 on the cab side; a shorter nook comes off the rear end)', d: 17.25, s: .25, a: 6, b: 35.25 },
   { k: 'jarW', g: 'Passenger side', l: 'Jar width, center to center along the shelf (quart jars 3 3/4)', d: 3.75, s: .25, a: 2, b: 6 },
   { k: 'nookH', g: 'Passenger side', l: 'Jar nook height above the countertop (16 puts its top level with the bottom of the TV)', d: 16, s: .5, a: 8, b: 24 },
+  { k: 'headX', g: 'Passenger side', l: 'Shower head: along the wall, from the back (the stall is 0 to the shower pan length; it was put toward the rear so the wet bath outlet at the cab end stays away from the spray)', d: 9, s: .5, a: 1, b: 35 },
+  { k: 'headZ', g: 'Passenger side', l: 'Shower head: height up from the floor (the finished ceiling at the wall is about 74 1/2)', d: 70, s: .5, a: 50, b: 74 },
+  { k: 'headOut', g: 'Passenger side', l: 'Shower head: how far it sticks out from the wall on its arm', d: 6, s: .5, a: 2, b: 14 },
+  { k: 'valveX', g: 'Passenger side', l: 'Shower valve (mixer handle): along the wall, from the back', d: 33, s: .5, a: 1, b: 35 },
+  { k: 'valveZ', g: 'Passenger side', l: 'Shower valve: height up from the floor (above the tipped-up pan, which reaches about 25)', d: 44, s: .5, a: 26, b: 60 },
   { k: 'snookLip', g: 'Passenger side', l: 'Shower nook front lip, to keep things in (0 for none)', d: 1.5, s: .25, a: 0, b: 4 },
   { k: 'fridgeW', g: 'Passenger side', l: 'Fridge width', d: 22, s: .5, a: 14, b: 30 },
   { k: 'fridgeD', g: 'Passenger side', l: 'Fridge depth', d: 19, s: .5, a: 12, b: 26 },
@@ -254,7 +260,7 @@ const HITR = (x, y, w, h) => `<rect x="${f1(x)}" y="${f1(y)}" width="${f1(Math.m
 const GB = (id, label) => `<g class="hg" data-grp="${id}" data-label="${label}">`;
 const GE = () => '</g>';
 // items that were taken out (their tick box in Sizes is off): cut their groups and drag handles out of a finished drawing
-const REMOVED = () => [['microOn', 'Micro'], ['tvOn', 'tv'], ['towelOn', 'towels'], ['fridgeOn', 'fridge'], ['drawersOn', 'drawers'], ['battOn', 'batt'], ['closetOn', 'closet']].filter(r => !P[r[0]]).map(r => r[1]);
+const REMOVED = () => [['showerOn', 'shower'], ['microOn', 'Micro'], ['tvOn', 'tv'], ['towelOn', 'towels'], ['fridgeOn', 'fridge'], ['drawersOn', 'drawers'], ['battOn', 'batt'], ['closetOn', 'closet']].filter(r => !P[r[0]]).map(r => r[1]);
 function stripGroups(html, ids) {
   ids.forEach(id => {
     const open = `<g class="hg" data-grp="${id}"`;

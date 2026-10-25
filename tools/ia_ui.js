@@ -202,6 +202,10 @@ function computeChecks(L, V) {
   }
   const ov = Math.min(L.sinkE, P.doorX + P.slideW) - Math.max(L.sinkS, P.doorX);
   if (ov > .5) push('ok', `The sink cabinet (${fmt(L.sinkS)} to ${fmt(L.sinkE)}) sits ${fmt(ov)} in inside the sliding door opening (${fmt(P.doorX)} to ${fmt(P.doorX + P.slideW)} in, ${fmt(P.slideH)} tall); you said that overlap is intended.`);
+  if (P.showerOn) {
+    const tipTop = .8 + P.panD, vOk = P.valveZ > tipTop + 1;
+    push(P.headZ > L.ceilF - 1 ? 'bad' : 'ok', `Shower head: ${fmt(P.headX)} in from the back (the stall runs 0 to ${fmt(P.panW)}), ${fmt(P.headZ)} in up on a ${fmt(P.headOut)} in arm, ${fmt(L.ceilF - P.headZ)} in under the finished ceiling at the wall. A 6 ft person (72 in) is taller than the head, so they stand ${fmt(P.headOut + 2)} in or more out from the wall under the spray, or you use a hand-held wand on a slide bar. The valve is ${fmt(P.valveX)} in from the back and ${fmt(P.valveZ)} in up${vOk ? ', above the tipped-up pan' : ', inside the tipped-up pan (it reaches about ' + fmt(tipTop) + ' in): raise it'}.`);
+  }
   // headroom, battery, doors
   const head = Math.max(P.platform + P.mattress, P.seatH) + 37, hg = P.cabBot - head;
   push(hg < 1 ? 'bad' : hg < 3 ? 'warn' : 'ok', `Seated headroom under the wall cabinets: ${fmt(hg)} in for a 6 ft person (head at ${fmt(head)} up).`);

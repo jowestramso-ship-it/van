@@ -221,6 +221,18 @@ function drawPass(L, V) {
   o.push(LBL(X(P.panW / 2), Y(L.ceilF * 0.9), 'Wet bath', `${fmt(P.panW)} x ${fmt(P.panD)} in, shower curtain`, { size: 12, fill: COL.T }));
 
   o.push(GE());
+  // shower head and valve on the passenger wall of the stall (head on an arm that points out into the stall; valve below it at the cab end)
+  o.push(GB('shower', 'Shower head and valve'));
+  if (P.showerOn) {
+    const hx = P.headX, hz = P.headZ;
+    o.push(Poly([[X(hx - 2.6), Y(hz)], [X(hx + 2.6), Y(hz)], [X(hx + 1.6), Y(hz - 1.3)], [X(hx - 1.6), Y(hz - 1.3)]], { fill: '#9EC9E8', fo: .55, stroke: '#185FA5', sw: 1.6, join: 'round' }));
+    for (let k = -2; k <= 2; k++) o.push(Ln(X(hx + k * .9), Y(hz - 2), X(hx + k * 1.2), Y(hz - 6), { stroke: '#185FA5', so: .7, sw: 1.2, dash: '2 3' }));
+    o.push(LBL(X(hx), Y(hz + 3.4), 'Shower head', `${fmt(hz)} in up, ${fmt(P.headOut)} in out on its arm`, { size: 11, fill: '#185FA5', dy: 13, size2: 9.5 }));
+    const vx = P.valveX, vz = P.valveZ;
+    o.push(`<circle cx="${f1(X(vx))}" cy="${f1(Y(vz))}" r="${f1(S * 1.6)}" fill="#DCEAF6" fill-opacity=".9" stroke="#185FA5" stroke-width="1.8"/><line x1="${f1(X(vx))}" y1="${f1(Y(vz))}" x2="${f1(X(vx) + S * 1.1)}" y2="${f1(Y(vz) - S * 1.1)}" stroke="#185FA5" stroke-width="2.2" stroke-linecap="round"/>`);
+    o.push(LBL(X(vx), Y(vz - 3.6), 'Shower valve', `${fmt(vz)} in up`, { size: 10.5, fill: '#185FA5', dy: 13, size2: 9.5 }));
+  }
+  o.push(GE());
   // shower nook and counter nook are recesses in the wall (fixed positions)
   const nkx = Math.min(29.75, P.panW - 6.25), nk0 = nkx - P.snookLen;
   o.push(GB('snook', 'Shower nook'));
