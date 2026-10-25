@@ -3,8 +3,9 @@
 PLAT = 17.5                      # seat base: deck 3/4 + the 3/4 leaf folded on it (was 14)
 DECK_T = PLAT - .75              # deck top 16 3/4
 DECK_U = PLAT - 1.5              # deck underside 16
-SEAT_T = PLAT + 6                # seat cushion top 23 1/2
-BACK_T = SEAT_T + 20             # back cushion top 43 1/2
+CUSH = 5                         # seat and back cushion thickness (was 6; 5 keeps a seated head under the wall cabinets after the raise)
+SEAT_T = PLAT + CUSH             # seat cushion top 22 1/2
+BACK_T = SEAT_T + 20             # back cushion top 42 1/2
 BAT = (52, 73); C0 = 74
 SH_G, SH_T = 1.0, .5             # gap over the battery (9 1/2) and the tray's plywood
 SH_Z0 = 9.5 + SH_G; SH_Z1 = SH_Z0 + SH_T
