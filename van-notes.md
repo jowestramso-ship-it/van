@@ -11,7 +11,10 @@ Interior: 160 in long, 68 in wide, 76 in tall. Open `sides.html` (the scaled dia
 - No bulkhead across the van: the cab end stays open on the passenger side (so no cab seat gap measurement needed). Changed later: there is one floor-to-ceiling wall behind the driver seat, 28 in out from the driver wall, which the cab-end dinette back leans on (see the walls entry below).
 - Still open: roof width (assumed 68 in), fan and A/C models, electrical details; to be discussed later.
 
-## VEVOR size measured (latest)
+## LiTime size measured; the three units re-fitted (latest)
+User: 'litime is 16 x 9 4.5' (16 long, 9 wide, 4.5 thick; the size I had used was the 40 A model's 11.65 x 8.46 x 3.35). It no longer fits where it was (it would leave 0.05 in to the panel in the couch front and 0 to the battery), so the three units were rearranged on the free floor under the couch: the DC-DC charger 35.5 to 51.5 in along the wall, 8 to 17 out (behind the battery, in front of the wheel well; 1/2 in from the battery, 1 in from the lawn chairs); the shore charger (VEVOR 9.5 x 7 x 4) beside it at 36 to 45.5, 17.5 to 24.5 out (3/4 in from the panel); the inverter (BELTTT 14.8 x 7.7 x 3.9) in front of the battery at 52.5 to 67.3, 17.3 to 25 out (the battery cables are about 1 ft; 1/4 in from the panel, 3/10 in from the battery front). The smallest gap is about 1/4 in: very tight for the fans, so the real units need measuring in place; the panel in the couch front can be thin or notched. All three are under 4 1/2 in tall with about 8 in of air above them. The plan page, wall map, electric page, diagrams B and F and the table rows follow; 3D view not touched (on hold).
+
+## VEVOR size measured
 User: 'vevor 9.5 x 4x 7'. Read as 9.5 long, 7 wide and 4 thick (it lies flat on the floor: 9 1/2 along the wall, 7 out from it, 4 tall; the guess was 10 x 7 x 4). The shore charger now runs 53 to 62 1/2 in along the wall (it was 53 to 63), 17 1/2 to 24 1/2 out. Changed in the sizes (default and label), the 'Does it fit?' line, the plan table row and the diagram boxes, and the electric page note. The 'GUESS' wording is gone. The LiTime 60 A is still the 40 A model's size, not measured; the BELTTT's is from its listing. 3D view not touched (on hold).
 
 ## Charging gear under the couch beside the battery

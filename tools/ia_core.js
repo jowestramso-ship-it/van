@@ -38,9 +38,9 @@ const PD = [
   { k: 'invL', g: 'Charging gear', l: 'Inverter (BELTTT 2000 W): length, along the wall (14.8 x 7.7 x 3.9 from its listing; measure yours)', d: 14.8, s: .1, a: 6, b: 24 },
   { k: 'invW', g: 'Charging gear', l: 'Inverter: width, out from the wall', d: 7.7, s: .1, a: 4, b: 16 },
   { k: 'invH', g: 'Charging gear', l: 'Inverter: height off the floor', d: 3.9, s: .1, a: 2, b: 10 },
-  { k: 'dcL', g: 'Charging gear', l: 'DC-DC charger (LiTime 60 A): length, along the wall (11.65 x 8.46 x 3.35 is LiTime\'s 40 A model, not measured for the 60 A: measure yours)', d: 11.65, s: .1, a: 6, b: 20 },
-  { k: 'dcW', g: 'Charging gear', l: 'DC-DC charger: width, out from the wall', d: 8.46, s: .1, a: 4, b: 14 },
-  { k: 'dcH', g: 'Charging gear', l: 'DC-DC charger: height off the floor', d: 3.35, s: .1, a: 2, b: 10 },
+  { k: 'dcL', g: 'Charging gear', l: 'DC-DC charger (LiTime 60 A): length, along the wall (you measured 16 x 9 x 4.5)', d: 16, s: .1, a: 6, b: 20 },
+  { k: 'dcW', g: 'Charging gear', l: 'DC-DC charger: width, out from the wall', d: 9, s: .1, a: 4, b: 14 },
+  { k: 'dcH', g: 'Charging gear', l: 'DC-DC charger: height off the floor', d: 4.5, s: .1, a: 2, b: 10 },
   { k: 'chL', g: 'Charging gear', l: 'Shore charger (VEVOR 80 A): length, along the wall (you measured 9.5 x 4 x 7: 9.5 long, 7 wide, 4 thick)', d: 9.5, s: .1, a: 4, b: 20 },
   { k: 'chW', g: 'Charging gear', l: 'Shore charger: width, out from the wall', d: 7, s: .1, a: 3, b: 14 },
   { k: 'chH', g: 'Charging gear', l: 'Shore charger: height off the floor', d: 4, s: .1, a: 2, b: 10 },
@@ -473,11 +473,12 @@ function layout(P0) {
   L.doorZ = [P.cabBot + 0.5, P.cabBot + 0.5 + P.doorH];
   L.batt = [L.c0 - 1 - 21, L.c0 - 1];
   // the charging gear under the couch, lying flat on the free floor next to the battery (y = out from the driver wall; the removable panel in the couch front is 3/4 in thick, at bedD - 3/4):
-  // the inverter and the DC-DC charger one behind the other on the floor west of the battery (in front of the wheel well, which is only 7 in out), the shore charger in the strip in front of the battery
-  { const hy = P.bedD - .75, x0 = L.batt[0] - 16;
-    const inv = { x0, x1: x0 + P.invL, y0: 8, y1: 8 + P.invW, z1: P.invH, n: 'the inverter', id: 'G1' };
-    const dc = { x0, x1: x0 + P.dcL, y0: inv.y1 + .5, y1: inv.y1 + .5 + P.dcW, z1: P.dcH, n: 'the DC-DC charger', id: 'G2' };
-    const ch = { x0: L.batt[0] + 1, x1: L.batt[0] + 1 + P.chL, y0: 17.5, y1: 17.5 + P.chW, z1: P.chH, n: 'the shore charger', id: 'G3' };
+  // the DC-DC charger on the floor behind (west of) the battery, in front of the wheel well (which is only 7 in out); the inverter in the strip in front of the battery, so its battery cables are about 1 ft;
+  // the shore charger beside the DC-DC charger, in the same strip as the inverter's row west of the battery (y from the DC-DC charger's front edge + 1/2 in)
+  { const hy = P.bedD - .75;
+    const dc = { x0: L.batt[0] - .5 - P.dcL, x1: L.batt[0] - .5, y0: 8, y1: 8 + P.dcW, z1: P.dcH, n: 'the DC-DC charger', id: 'G2' };
+    const inv = { x0: L.batt[0] + .5, x1: L.batt[0] + .5 + P.invL, y0: 17.3, y1: 17.3 + P.invW, z1: P.invH, n: 'the inverter', id: 'G1' };
+    const ch = { x0: dc.x0 + .5, x1: dc.x0 + .5 + P.chL, y0: dc.y1 + .5, y1: dc.y1 + .5 + P.chW, z1: P.chH, n: 'the shore charger', id: 'G3' };
     L.gear = P.gearOn ? { inv, dc, ch, hatchY: hy } : null; }
   L.pan = P.panW; L.fr = [P.panW, P.panW + P.fridgeW]; L.cabS = L.fr[1];
   L.angS = L.cabS + P.flatLen; L.angLen = P.cabD > P.sinkD ? P.angLen : 0;
