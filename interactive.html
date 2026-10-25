@@ -214,7 +214,7 @@ const PD = [
   { k: 'drawersOn', g: 'Take items out', l: 'Drawers and shelves under the counter (all of them, with the rail)', d: true, t: 'c' },
   { k: 'battOn', g: 'Take items out', l: 'Battery under the couch', d: true, t: 'c' },
   { k: 'closetOn', g: 'Take items out', l: 'Closet and its doors (the space it leaves stays empty; the dinette still starts where the closet ends)', d: true, t: 'c' },
-  { k: 'toiletOn', g: 'Take items out', l: 'Toilet in the wet bath: the Reliance Fold-To-Go set up for use (at the cab end, sideways, its back against the wall to the fridge); it folds away to about 5 in thick when not in use', d: true, t: 'c' },
+  { k: 'toiletOn', g: 'Take items out', l: 'Toilet in the wet bath: the Reliance Fold-To-Go, left set up in the stall (at the cab end, sideways, its back against the wall to the fridge)', d: true, t: 'c' },
   { k: 'snItemsOn', g: 'Take items out', l: 'Towel bar, toilet paper and bottles in the shower nook', d: true, t: 'c' },
   { k: 'wallsOn', g: 'Take items out', l: 'Floor-to-ceiling walls: behind the dinette backs (at the closet end and behind the driver seat) and one on each side of the fridge', d: true, t: 'c' },
   { k: 'bedLen', g: 'Bed / couch', l: 'Length', d: 74, s: .5, a: 40, b: 120 },
@@ -1066,7 +1066,7 @@ function drawPass(L, V) {
     const t = L.toilet;
     o.push(GB('toilet', 'Toilet'));
     o.push(box(t.x0, t.x1, panTop, panTop + t.z1, { fill: '#993556', fo: .16, stroke: '#993556', sw: 1.6, rx: 4 }));
-    o.push(LBL(X((t.x0 + t.x1) / 2), Y(panTop + t.z1 / 2), 'Toilet', `Reliance Fold-To-Go set up: ${fmt(P.toiletD)} x ${fmt(P.toiletW)} x ${fmt(P.toiletH)}, sideways, back against the wall to the fridge, ${fmt(t.x0)} in of standing room in front; folds to about 5 thick and is stored in the closet`, { size: 11, fill: '#993556' }));
+    o.push(LBL(X((t.x0 + t.x1) / 2), Y(panTop + t.z1 / 2), 'Toilet', `Reliance Fold-To-Go, left in the stall: ${fmt(P.toiletD)} x ${fmt(P.toiletW)} x ${fmt(P.toiletH)}, sideways, back against the wall to the fridge, ${fmt(t.x0)} in of standing room in front`, { size: 11, fill: '#993556' }));
     o.push(GE());
   }
   if (L.sn) {
@@ -2122,7 +2122,7 @@ function computeChecks(L, V) {
   }
   if (L.toilet) {
     const t = L.toilet, front = t.x0, side = t.y0, reachH = Math.hypot(P.valveX - (t.x0 - 6), P.panD / 2), reach = Math.hypot(reachH, P.valveZ - 55);
-    push(front < 12 ? 'bad' : front < 16 ? 'warn' : 'ok', `Toilet: the Reliance Fold-To-Go, ${fmt(P.toiletD)} deep x ${fmt(P.toiletW)} wide x ${fmt(P.toiletH)} high, set up sideways at the cab end of the wet bath with its back against the wall to the fridge (${fmt(t.x0)} to ${fmt(t.x1)} in from the back), centered across the ${fmt(P.panD)} in stall: ${fmt(side)} in each side. That leaves ${fmt(front)} in of floor in front of it, where you stand to shower and where a seated person's feet and knees go (about 12 in is the least for the knees). It is a folding frame that holds a bag (Reliance's Double Doodie bags), so there is no tank, no vent, no drain and no plumbing; it folds to about ${fmt(5)} in thick and is a seat only while it is set up, which also keeps it out of the shower spray. The seat is about ${fmt(P.toiletH)} in high, lower than a house toilet (15 to 17 in); reviewers call it low. Used bags go in a sealed bag in the trash or out with you; keep the bags and gel dry (the shower nook is in the spray: keep them in the closet with the folded frame).`);
+    push(front < 12 ? 'bad' : front < 16 ? 'warn' : 'ok', `Toilet: the Reliance Fold-To-Go, ${fmt(P.toiletD)} deep x ${fmt(P.toiletW)} wide x ${fmt(P.toiletH)} high, set up sideways at the cab end of the wet bath with its back against the wall to the fridge (${fmt(t.x0)} to ${fmt(t.x1)} in from the back), centered across the ${fmt(P.panD)} in stall: ${fmt(side)} in each side. That leaves ${fmt(front)} in of floor in front of it, where you stand to shower and where a seated person's feet and knees go (about 12 in is the least for the knees). It is a folding frame that holds a bag (Reliance's Double Doodie bags), so there is no tank, no vent, no drain and no plumbing; it stays set up in the stall (you said so), so the seat and frame get wet when you shower and need a wipe afterward; it folds to about ${fmt(5)} in thick if you ever want the floor clear. The seat is about ${fmt(P.toiletH)} in high, lower than a house toilet (15 to 17 in); reviewers call it low. Used bags go in a sealed bag in the trash or out with you; the spare bags can be stored anywhere dry (you said it does not matter where).`);
     if (P.showerOn && P.valveX > t.x0 - .01) push(reach > 26 ? 'warn' : 'ok', `The shower valve (${fmt(P.valveX)} in from the back, ${fmt(P.valveZ)} up) is above the back of the toilet: easy to reach from the seat; from the standing space (6 in in front of the toilet, 55 in up at the shoulder) it is a reach of about ${fmt(reach)} in over the toilet${reach > 26 ? ', long for a short arm: moving the valve toward the head (a smaller number in Shower valve: along the wall) shortens it' : ''}.`);
   }
   if (L.sn) {

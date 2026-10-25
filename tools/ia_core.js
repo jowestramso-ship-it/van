@@ -15,7 +15,7 @@ const PD = [
   { k: 'drawersOn', g: 'Take items out', l: 'Drawers and shelves under the counter (all of them, with the rail)', d: true, t: 'c' },
   { k: 'battOn', g: 'Take items out', l: 'Battery under the couch', d: true, t: 'c' },
   { k: 'closetOn', g: 'Take items out', l: 'Closet and its doors (the space it leaves stays empty; the dinette still starts where the closet ends)', d: true, t: 'c' },
-  { k: 'toiletOn', g: 'Take items out', l: 'Toilet in the wet bath: the Reliance Fold-To-Go set up for use (at the cab end, sideways, its back against the wall to the fridge); it folds away to about 5 in thick when not in use', d: true, t: 'c' },
+  { k: 'toiletOn', g: 'Take items out', l: 'Toilet in the wet bath: the Reliance Fold-To-Go, left set up in the stall (at the cab end, sideways, its back against the wall to the fridge)', d: true, t: 'c' },
   { k: 'snItemsOn', g: 'Take items out', l: 'Towel bar, toilet paper and bottles in the shower nook', d: true, t: 'c' },
   { k: 'wallsOn', g: 'Take items out', l: 'Floor-to-ceiling walls: behind the dinette backs (at the closet end and behind the driver seat) and one on each side of the fridge', d: true, t: 'c' },
   { k: 'bedLen', g: 'Bed / couch', l: 'Length', d: 74, s: .5, a: 40, b: 120 },
