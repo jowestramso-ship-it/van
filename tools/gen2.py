@@ -158,16 +158,16 @@ def item(a,b,h0,h1,col,label,sub=None,ly=None):
     if sub: BA(f'<text class="ts" x="{X((a+b)/2)}" y="{yy+15}" text-anchor="middle" style="fill:{col};font-size:11px;paint-order:stroke;stroke:#fff;stroke-width:3px;stroke-opacity:.8">{sub}</text>')
 P='#534AB7'; G='#444441'; K='#993556'
 BG('wallcab','Wall cabinets')
-item(0,74,61,75.0625,P,'',None,Y(67.5))
-item(89,154,61,75.0625,P,'',None,Y(67.5))
-BA(f'<text class="th" x="{X(37)}" y="{Y(58.6)}" text-anchor="middle" style="fill:{P};font-size:12px;paint-order:stroke;stroke:#fff;stroke-width:3px">Wall cabinet, 74 long x 14 deep x 15 tall (61 to 76 in up)</text>')
-BA(f'<text class="th" x="{X(121.5)}" y="{Y(58.6)}" text-anchor="middle" style="fill:{P};font-size:12px;paint-order:stroke;stroke:#fff;stroke-width:3px">Wall cabinet, 65 long x 14 deep x 15 tall (61 to 76 in up)</text>')
+item(0,74,61,74.5625,P,'',None,Y(67.5))
+item(89,154,61,74.5625,P,'',None,Y(67.5))
+BA(f'<text class="th" x="{X(37)}" y="{Y(58.6)}" text-anchor="middle" style="fill:{P};font-size:12px;paint-order:stroke;stroke:#fff;stroke-width:3px">Wall cabinet, 74 long x 14 deep x 13 9/16 tall (61 to 74 9/16 in up)</text>')
+BA(f'<text class="th" x="{X(121.5)}" y="{Y(58.6)}" text-anchor="middle" style="fill:{P};font-size:12px;paint-order:stroke;stroke:#fff;stroke-width:3px">Wall cabinet, 65 long x 14 deep x 13 9/16 tall (61 to 74 9/16 in up)</text>')
 BG('pockets','Closet door pockets')
-# pockets on the inside of the two closet doors (dashed: they face into the closet): 2 columns x 4 rows on the lower door, 2 x 3 on the upper door
-for _z0,_z1 in ((5,12),(12.5,19.5),(20,27),(27.5,34.5),(42,49),(49.5,56.5),(57,64)):
+# pockets on the inside of the upper closet door (dashed: they face into the closet): 2 columns x 3 rows
+for _z0,_z1 in ((34.65,41.65),(42.15,49.15),(49.65,56.65)):
     for _x0,_x1 in ((74.625,81.2),(81.7,88.3)):
         BA(box(_x0,_x1,_z0,_z1,f'rx="2" fill="#B07A2A" fill-opacity="0.10" stroke="#8A5A00" stroke-width="1" stroke-dasharray="3 2"'))
-BA(f'<text class="ts" x="{X(81.5)}" y="{Y(66.5)}" text-anchor="middle" style="fill:#8A5A00;font-size:9.5px;paint-order:stroke;stroke:#fff;stroke-width:3px">dashed: door pockets inside</text>')
+BA(f'<text class="ts" x="{X(81.5)}" y="{Y(60)}" text-anchor="middle" style="fill:#8A5A00;font-size:9.5px;paint-order:stroke;stroke:#fff;stroke-width:3px">dashed: door pockets inside</text>')
 BG('doors','Cabinet doors')
 # doors, 12 tall (landscape, flip-up), three per cabinet, trimmed in width: 24 1/2 on the bed side, 21 1/2 on the dinette side, 1/8 in gaps
 for _d0,_w,_t in ((0.125,24.5,'door 24 1/2 x 12'),(24.75,24.5,'door 24 1/2 x 12'),(49.375,24.5,'door 24 1/2 x 12'),(89.125,21.5,'door 21 1/2 x 12'),(110.75,21.5,'door 21 1/2 x 12'),(132.375,21.5,'door 21 1/2 x 12')):
@@ -178,29 +178,39 @@ item(0,74,14,20,P,'Seat cushion, top at 20 in (deck at 13 1/4, leaf folded on it
 item(0,74,20,40,P,'Back cushion, upright (20 tall)',None,Y(30))
 BA(f'<line x1="{X(0)}" y1="{Y(14)}" x2="{X(74)}" y2="{Y(14)}" stroke="{P}" stroke-opacity="0.9" stroke-width="1.6"/>')
 BG('closet','Closet')
-item(74,89,0,75.0625,G,'Closet','15 in',Y(47))
+item(74,89,0,74.5625,G,'Closet','15 in',Y(47))
 BG('ceil','Ceiling covering')
-BA(box(0,154,75.8125,76,'fill="#D9C7A5" stroke="#8A6B4D" stroke-width="0.8"'))
-BA(box(0,154,75.0625,75.8125,'fill="#9A6B3A" fill-opacity="0.85" stroke="#5A3A00" stroke-width="0.8"'))
+BA(box(0,154,75.3125,75.5,'fill="#D9C7A5" stroke="#8A6B4D" stroke-width="0.8"'))
+BA(box(0,154,74.5625,75.3125,'fill="#9A6B3A" fill-opacity="0.85" stroke="#5A3A00" stroke-width="0.8"'))
 for _x0,_x1,_nm in ((0.25,14.25,'roof fan'),(36.375,50.625,'A/C')):
-    BA(box(_x0,_x1,75.0625,76,'fill="#2C2C2A" fill-opacity="0.85"'))
+    BA(box(_x0,_x1,74.5625,75.5,'fill="#2C2C2A" fill-opacity="0.85"'))
     BA(f'<text class="ts" x="{X((_x0+_x1)/2)}" y="{Y(77.4)}" text-anchor="middle" style="font-size:10px;fill:#2C2C2A;paint-order:stroke;stroke:#fff;stroke-width:3px">{_nm}</text>')
 for _lx in (20.67,74,127.33): BA(f'<circle cx="{X(_lx)}" cy="{Y(74.4)}" r="3" fill="#FFD84A" stroke="#B8860B" stroke-width="0.8"/>')
-BA(f'<text class="ts" x="{X(152)}" y="{Y(77.4)}" text-anchor="end" style="font-size:10px;fill:#5A3A00;paint-order:stroke;stroke:#fff;stroke-width:3px">ceiling covering: 3/16 plywood + 3/4 in cedar slats, finished ceiling at 75 1/16</text>')
-BG('cdoors','Closet doors')
-# two doors on the closet, stacked, split at 38 so each opens one rod
-for _z0,_z1,_n in ((0.25,37.9,'lower door'),(38.1,75.75,'upper door')):
-    BA(box(74.125,88.875,_z0,_z1,f'rx="3" fill="{G}" fill-opacity="0.12" stroke="{G}" stroke-width="1.6"'))
-    BA(f'<text class="th" x="{X(81.5)}" y="{Y((_z0+_z1)/2+(9 if _n=="upper door" else -9))}" text-anchor="middle" style="fill:{G};font-size:11.5px;paint-order:stroke;stroke:#fff;stroke-width:3px">{_n}</text><text class="ts" x="{X(81.5)}" y="{Y((_z0+_z1)/2+(9 if _n=="upper door" else -9))+13}" text-anchor="middle" style="fill:{G};font-size:10px;paint-order:stroke;stroke:#fff;stroke-width:3px">14 3/4 x 37 5/8</text>')
-BG('rods','Closet rods')
-for _rh in (71,36):
-    BA(f'<line x1="{X(76)}" y1="{Y(_rh)}" x2="{X(87)}" y2="{Y(_rh)}" stroke="{G}" stroke-width="3.5" stroke-linecap="round"/>')
-    BA(f'<text class="ts" x="{X(81.5)}" y="{Y(_rh)-5}" text-anchor="middle" style="fill:{G};font-size:10px;font-weight:700;paint-order:stroke;stroke:#fff;stroke-width:3px">rod, {_rh} in up</text>')
+BA(f'<text class="ts" x="{X(152)}" y="{Y(77.4)}" text-anchor="end" style="font-size:10px;fill:#5A3A00;paint-order:stroke;stroke:#fff;stroke-width:3px">ceiling covering: 3/16 plywood + 3/4 in cedar slats, finished ceiling at 74 9/16</text>')
+BG('cdoors','Closet door and drawers')
+# one door above the drawers (30.65 to 74.31 up) and four drawer fronts under the hanging clothes (1 to 30 1/2 up, 7 5/16 tall each)
+BA(box(74.125,88.875,30.65,74.3125,f'rx="3" fill="{G}" fill-opacity="0.12" stroke="{G}" stroke-width="1.6"'))
+BA(f'<text class="th" x="{X(81.5)}" y="{Y(62)}" text-anchor="middle" style="fill:{G};font-size:11.5px;paint-order:stroke;stroke:#fff;stroke-width:3px">upper door</text><text class="ts" x="{X(81.5)}" y="{Y(62)+13}" text-anchor="middle" style="fill:{G};font-size:10px;paint-order:stroke;stroke:#fff;stroke-width:3px">14 3/4 x 43 11/16</text>')
+for _i in range(4):
+    _z0=1+_i*(7.28125+.125)
+    BA(box(74.125,88.875,_z0,_z0+7.28125,f'rx="2" fill="#7A5A2E" fill-opacity="0.12" stroke="{G}" stroke-width="1.4"'))
+    BA(f'<line x1="{X(79.5)}" y1="{Y(_z0+3.64)}" x2="{X(83.5)}" y2="{Y(_z0+3.64)}" stroke="#2C2C2A" stroke-width="2.4" stroke-linecap="round"/>')
+BA(f'<text class="th" x="{X(81.5)}" y="{Y(15.5)}" text-anchor="middle" style="fill:{G};font-size:11px;paint-order:stroke;stroke:#fff;stroke-width:3px">4 drawers</text><text class="ts" x="{X(81.5)}" y="{Y(15.5)+13}" text-anchor="middle" style="fill:{G};font-size:10px;paint-order:stroke;stroke:#fff;stroke-width:3px">7 5/16 tall each</text>')
+BG('rods','Closet rod and hanging clothes')
+BA(box(75.5,87.5,31.5,70.2,'fill="#B5502F" fill-opacity="0.16" stroke="#B5502F" stroke-width="1" stroke-dasharray="3 2"'))
+BA(f'<text class="ts" x="{X(81.5)}" y="{Y(44)}" text-anchor="middle" style="fill:#7A2E10;font-size:9.5px;paint-order:stroke;stroke:#fff;stroke-width:3px">clothes up to 36 in long,</text><text class="ts" x="{X(81.5)}" y="{Y(44)+11}" text-anchor="middle" style="fill:#7A2E10;font-size:9.5px;paint-order:stroke;stroke:#fff;stroke-width:3px">hanging to 31 1/2 in up</text>')
+BA(f'<line x1="{X(76)}" y1="{Y(71)}" x2="{X(87)}" y2="{Y(71)}" stroke="{G}" stroke-width="3.5" stroke-linecap="round"/>')
+BA(f'<text class="ts" x="{X(81.5)}" y="{Y(71)-5}" text-anchor="middle" style="fill:{G};font-size:10px;font-weight:700;paint-order:stroke;stroke:#fff;stroke-width:3px">rod, 71 in up</text>')
 BG('benches','Dinette benches')
 item(89,108.5,0,17.5,K,'Bench',None,Y(2.5))
 item(89,91.9,17.5,38,K,'',None)
 item(134.5,154,0,17.5,K,'Bench',None,Y(2.5))
 item(151.1,154,17.5,38,K,'',None)
+BG('fwalls','Floor-to-ceiling walls')
+for _w0,_w1,_n in ((88.25,89,'W1'),(154,154.75,'W2')):
+    BA(box(_w0,_w1,0,74.5625,'fill="#8A6B4D" fill-opacity="0.6" stroke="#3E230B" stroke-width="1.2"'))
+    BA(f'<text class="th" x="{X(_w0)-3}" y="{Y(52)}" text-anchor="end" style="fill:#5A3A00;font-size:10.5px;font-weight:700;paint-order:stroke;stroke:#fff;stroke-width:3px">{_n}</text>')
+BA(f'<text class="ts" x="{X(121.5)}" y="{Y(46)}" text-anchor="middle" style="fill:#5A3A00;font-size:10px;paint-order:stroke;stroke:#fff;stroke-width:3px">W1 and W2: 3/4 in walls, floor to ceiling, 28 out; the dinette backs lean on them</text>')
 BG('table','Table')
 BA(box(108.5,134.5,28,29,f'fill="{G}" fill-opacity="0.35" stroke="{G}" stroke-width="1.4"'))
 BA(f'<text class="th" x="{X(121.5)}" y="{Y(25.3)}" text-anchor="middle" style="fill:{G};font-size:12.5px;paint-order:stroke;stroke:#fff;stroke-width:3px">Table, 29 in high</text>')
@@ -503,7 +513,7 @@ html=open((ROOT+'/sides.html')).read()
 blk='''<h3>Driver side: built items</h3>
 <div class="wide">'''+svg2+'''</div>
 <p><b>Battery.</b> The 21 x 10 x 9.5 in battery (280 Ah, taken as 12 V) sits on the floor next to the wheel well, on its aisle side, 1 in from the closet (52 to 73 in from the back). The well sticks out 7 in and the battery adds 10 in, so the two together reach 17 in into the van, which leaves 10 in of the bed's 27 in depth for storage. The battery is 9.5 in tall, so it clears the underside of the bed deck (12 1/2 in up) by 3 in. The looking-down view below shows the depths.</p>
-<p><b>Closet rods.</b> Two rods run along the wall inside the closet (74 to 89 in from the back, 15 wide by 25 deep), one above the other: the upper one at 71 in up and the lower one at 36 in up, each about 11 in long (76 to 87). The hangers sit across the 25 in depth, 1 1/2 in apart, so each rod holds about 7 or 8 garments, 14 to 16 in all. The gap between the rods is 35 in, so only short garments fit: about 32 in or less on top and about 30 in or less below. Long coats and dresses do not fit.</p>
+<p><b>Closet.</b> One rod runs along the wall inside the closet (74 to 89 in from the back, 15 wide by 25 deep) at 71 in up, about 11 in long (76 to 87). The hangers sit across the 25 in depth, 1 1/2 in apart. Clothes up to 36 in long hang from it (the shoulder is 3 1/2 in below the rod), down to 31 1/2 in up; under them, starting 1 in lower, are four drawers (1 to 30 1/2 in up, each 7 5/16 tall by 12 1/2 wide by 22 deep inside). One door above the drawers, 14 3/4 by 43 11/16, opens on the bed-side hinge; the drawers pull out 21 in, which leaves about 1 in of the aisle, so open them while standing there.</p>
 <p>The bed, closet, dinette and wall cabinets, drawn on their own so they do not cover the wall details above. They were measured from the rear doors earlier; check whether they use the same zero as the wall numbers (about 6 in in from the rear edge).</p>
 '''
 html=html.replace('<h2>Depth sections</h2>',blk+'\n<h2>Depth sections</h2>',1)
@@ -938,7 +948,7 @@ def passenger_items(tank=False):
     for h in range(0,81,10):
         a(f'<line x1="{xx(0)}" y1="{yy(h)}" x2="{xx(160)}" y2="{yy(h)}" stroke="#3F3E3A" stroke-opacity="0.4" stroke-width="0.9" stroke-dasharray="3 3"/>')
         a(f'<text x="{xx(0)-6}" y="{yy(h)+4}" text-anchor="end" style="font-size:11px;font-weight:700;fill:#8A4B0F">{h}↑</text>')
-    a(f'<rect x="{xx(0)}" y="{yy(76)}" width="{S*154}" height="{S*76}" fill="#F1EFE8" fill-opacity="0.6" stroke="#5F5E5A" stroke-width="1.2"/>')
+    a(f'<rect x="{xx(0)}" y="{yy(75.5)}" width="{S*154}" height="{S*75.5}" fill="#F1EFE8" fill-opacity="0.6" stroke="#5F5E5A" stroke-width="1.2"/>')
     def box(x0,x1,h0,h1,col,label,sub=None,ly=None,fo=0.12,dash=''):
         a(f'<rect x="{xx(x0):.1f}" y="{yy(h1):.1f}" width="{S*(x1-x0):.1f}" height="{S*(h1-h0):.1f}" rx="3" fill="{col}" fill-opacity="{fo}" stroke="{col}" stroke-width="1.5" {dash}/>')
         cy=yy((h0+h1)/2) if ly is None else ly
@@ -955,24 +965,40 @@ def passenger_items(tank=False):
     a('<polygon points="'+' '.join(f'{xx(x):.1f},{yy(h):.1f}' for x,h in WW)+'" fill="#D8B79A" fill-opacity="0.8" stroke="#8A6B4D" stroke-width="1.2"/>')
     a(f'<text class="ts" x="{xx(59):.1f}" y="{yy(3.2):.1f}" text-anchor="middle" style="font-size:10px">wheel well (same as the driver side)</text>')
     grp('ceil','Ceiling covering')
-    a(f'<rect x="{xx(0):.1f}" y="{yy(76):.1f}" width="{S*154:.1f}" height="{S*0.1875:.1f}" fill="#D9C7A5" stroke="#8A6B4D" stroke-width="0.8"/>')
-    a(f'<rect x="{xx(0):.1f}" y="{yy(75.8125):.1f}" width="{S*154:.1f}" height="{S*0.75:.1f}" fill="#9A6B3A" fill-opacity="0.85" stroke="#5A3A00" stroke-width="0.8"/>')
+    a(f'<rect x="{xx(0):.1f}" y="{yy(75.5):.1f}" width="{S*154:.1f}" height="{S*0.1875:.1f}" fill="#D9C7A5" stroke="#8A6B4D" stroke-width="0.8"/>')
+    a(f'<rect x="{xx(0):.1f}" y="{yy(75.3125):.1f}" width="{S*154:.1f}" height="{S*0.75:.1f}" fill="#9A6B3A" fill-opacity="0.85" stroke="#5A3A00" stroke-width="0.8"/>')
     for _x0,_x1,_nm in ((0.25,14.25,'roof fan'),(36.375,50.625,'A/C')):
-        a(f'<rect x="{xx(_x0):.1f}" y="{yy(76):.1f}" width="{S*(_x1-_x0):.1f}" height="{S*1.25:.1f}" fill="#2C2C2A" fill-opacity="0.85"/>')
+        a(f'<rect x="{xx(_x0):.1f}" y="{yy(75.5):.1f}" width="{S*(_x1-_x0):.1f}" height="{S*0.9375:.1f}" fill="#2C2C2A" fill-opacity="0.85"/>')
         a(f'<text class="ts" x="{xx((_x0+_x1)/2):.1f}" y="{yy(77.4):.1f}" text-anchor="middle" style="font-size:10px;fill:#2C2C2A;paint-order:stroke;stroke:#fff;stroke-width:3px">{_nm}</text>')
     for _lx in (20.67,74,127.33): a(f'<circle cx="{xx(_lx):.1f}" cy="{yy(74.4):.1f}" r="3" fill="#FFD84A" stroke="#B8860B" stroke-width="0.8"/>')
     grp('bath','Wet bath (shower pan)')
     if tank:
         TK='#6D6A62'
-        box(0,36,9.5,75.0625,T,'Wet bath','shower floor at 9.5 up, 65 9/16 in headroom',yy(68),0.08)
+        box(0,36,9.5,74.5625,T,'Wet bath','shower floor at 9.5 up, 65 9/16 in headroom',yy(68),0.08)
         box(0,30,0,9.5,TK,'Grey water tank','30 x 15 x 9.5 in, about 15 gal',yy(6.2),0.3)
         a(f'<line x1="{xx(0):.1f}" y1="{yy(9.5):.1f}" x2="{xx(36):.1f}" y2="{yy(9.5):.1f}" stroke="{T}" stroke-width="4"/>')
         a(f'<line x1="{xx(29):.1f}" y1="{yy(9.5):.1f}" x2="{xx(29):.1f}" y2="{yy(6.5):.1f}" stroke="#A32D2D" stroke-width="2" marker-end="url(#arq)"/><text class="ts" x="{xx(29):.1f}" y="{yy(11.6):.1f}" text-anchor="middle" style="font-size:10px;fill:#A32D2D;paint-order:stroke;stroke:#fff;stroke-width:3px">drain</text>')
     else:
-        box(0,36,0,75.0625,T,'Wet bath','36 x 24 in, shower curtain',yy(68),0.08)
+        box(0,36,0,74.5625,T,'Wet bath','36 x 24 in, fixed pan, shower curtain',yy(68),0.08)
+        a(f'<rect x="{xx(0):.1f}" y="{yy(3.8):.1f}" width="{S*36:.1f}" height="{S*3.8:.1f}" fill="#D9ECF7" fill-opacity="0.95" stroke="#185FA5" stroke-width="1.6"/>')
+        a(f'<text class="ts" x="{xx(8):.1f}" y="{yy(1.4):.1f}" text-anchor="middle" style="font-size:9.5px;fill:#185FA5">fixed pan, 3 in curb</text>')
+        box(20.75,35.25,3.8,18.3,K,'Toilet','Fold-To-Go 14 1/2',yy(11),0.16)
+        a(f'<circle cx="{xx(9):.1f}" cy="{yy(70):.1f}" r="8" fill="#9EC9E8" fill-opacity="0.6" stroke="#185FA5" stroke-width="1.6"/><text class="ts" x="{xx(9)-12:.1f}" y="{yy(70)+4:.1f}" text-anchor="end" style="font-size:10px;fill:#185FA5;paint-order:stroke;stroke:#fff;stroke-width:3px">head, 70 up</text>')
+        a(f'<circle cx="{xx(33):.1f}" cy="{yy(44):.1f}" r="{S*1.6:.1f}" fill="#DCEAF6" fill-opacity="0.9" stroke="#185FA5" stroke-width="1.6"/><text class="ts" x="{xx(33)+14:.1f}" y="{yy(44)+4:.1f}" style="font-size:10px;fill:#185FA5;paint-order:stroke;stroke:#fff;stroke-width:3px">valve, 44 up</text>')
     grp('snook','Shower nook')
-    box(12.5,29.75,38,54,'#7A4A1E','Shower nook','17.25 x 16, 4.5 deep, 1.5 lip',yy(46),0.2,'stroke-dasharray="5 3"')
+    box(12.5,29.75,38,54,'#7A4A1E','Shower nook','17.25 x 16, 4.5 deep, 1.5 lip',yy(60.5),0.2,'stroke-dasharray="5 3"')
     box(12.5,29.75,38,39.5,'#5A3510','',None,yy(38.5),0.9)
+    grp('snitems','Shower nook: towel bar, toilet paper and bottles')
+    a(f'<line x1="{xx(13):.1f}" y1="{yy(50.5):.1f}" x2="{xx(18):.1f}" y2="{yy(50.5):.1f}" stroke="#444441" stroke-width="3.4" stroke-linecap="round"/>')
+    a(f'<line x1="{xx(18.5):.1f}" y1="{yy(38):.1f}" x2="{xx(18.5):.1f}" y2="{yy(54):.1f}" stroke="#7A4A1E" stroke-width="1.2" stroke-dasharray="3 3"/>')
+    a(f'<rect x="{xx(18.5):.1f}" y="{yy(43.75):.1f}" width="{S*11.25:.1f}" height="{S*0.75:.1f}" fill="#8A6B4D" stroke="#3E230B" stroke-width="1"/>')
+    for _x0 in (20.25,25.25): a(f'<rect x="{xx(_x0):.1f}" y="{yy(42.5):.1f}" width="{S*4.5:.1f}" height="{S*4.5:.1f}" rx="2" fill="#F3E3B3" stroke="#8A5A00" stroke-width="1.2"/>')
+    for _x0,_w,_h,_c in ((19,2.6,8.5,'#9EC9E8'),(22.1,3,9,'#C7B3E0'),(25.6,2.6,7.5,'#A9D3B4')): a(f'<rect x="{xx(_x0):.1f}" y="{yy(43.75+_h):.1f}" width="{S*_w:.1f}" height="{S*_h:.1f}" rx="2" fill="{_c}" fill-opacity="0.75" stroke="#444441" stroke-width="0.9"/>')
+    a(f'<text class="ts" x="{xx(21.1):.1f}" y="{yy(35.5):.1f}" text-anchor="middle" style="font-size:9.5px;fill:#5A3510;paint-order:stroke;stroke:#fff;stroke-width:3px">towel bar 50 1/2, shelf 43 3/4, paper under</text>')
+    grp('fwalls3','Floor-to-ceiling walls (shower and fridge)')
+    for _w0,_w1,_n in ((35.25,36,'W3'),(58,58.75,'W4')):
+        a(f'<rect x="{xx(_w0):.1f}" y="{yy(74.5625):.1f}" width="{S*(_w1-_w0):.1f}" height="{S*74.5625:.1f}" fill="#8A6B4D" fill-opacity="0.6" stroke="#3E230B" stroke-width="1.2"/>')
+        a(f'<text class="th" x="{xx(_w0)-3:.1f}" y="{yy(60):.1f}" text-anchor="end" style="font-size:10.5px;font-weight:700;fill:#5A3A00;paint-order:stroke;stroke:#fff;stroke-width:3px">{_n}</text>')
     grp('cabs','Cabinets and countertop')
     box(58,103,0,38,C,'',None,yy(31),0.08)
     box(103,123,0,38,C,'Sink cabinet','20 wide, 17 deep',yy(35.3),0.08)   # label up under the countertop, over the sink, so the drain jug below does not cover it
