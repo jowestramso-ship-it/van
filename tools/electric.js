@@ -13,7 +13,12 @@ const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>
 // kinds: out120 = 120 V outlet, sw = switch, lt = light, strip = LED strip (x0..x1 at z), box = a mounted unit, inlet, panel, run = a wire run (vertical x from z0 to z1)
 const E_DRIVER = pl => { const tc = (pl.tbl[0] + pl.tbl[1]) / 2, q1 = pl.bedLen / 4, q3 = 3 * pl.bedLen / 4, lz = pl.cabBot - .5; return [
   {k:'box',   n:'Battery, 280 Ah (assumed lithium)',          x0:52, x1:73, z0:0, z1:9.5, note:'where the plan has it, in front of the wheel well; main fuse (Class T, 250 A) within 7 in of its + post'},
-  {k:'box',   n:'Power hub board',                             x0:72, x1:74, z0:1, z1:11, note:'a plywood board on the closet’s rear panel, facing the battery: inverter-charger, DC bus bars, shunt, 12 V fuse block, DC-DC charger, AC panel. Needs an access hatch in the couch front, 52 to 74 in'},
+  ...(pl.gear ? [
+    {k:'box', n:'Inverter, BELTTT 2000 W (inverter only: no charger, no transfer switch)', x0:pl.gear.inv.x0, x1:pl.gear.inv.x1, z0:0, z1:pl.gear.inv.z1, note:'flat on the floor under the couch, ' + fr(pl.gear.inv.y0) + ' to ' + fr(pl.gear.inv.y1) + ' in out from the wall, just rear of the battery, so its battery cables are 1 to 2 ft (2/0 AWG, Class T 250 A fuse within 7 in of the battery post, not the 3 ft cables it comes with); its AC output goes to the transfer switch on the hub board; the remote (23 ft cable) goes by the control panel'},
+    {k:'box', n:'DC-DC charger, LiTime 60 A', x0:pl.gear.dc.x0, x1:pl.gear.dc.x1, z0:0, z1:pl.gear.dc.z1, note:'flat on the floor in front of the inverter, ' + fr(pl.gear.dc.y0) + ' to ' + fr(pl.gear.dc.y1) + ' in out from the wall; 4 AWG from the starter battery (about 15 ft) with its fuse at the starter battery, 4 AWG to the battery bus; the size is LiTime’s 40 A model, not yet measured for the 60 A'},
+    {k:'box', n:'Shore charger, VEVOR 80 A (14.6 V lithium)', x0:pl.gear.ch.x0, x1:pl.gear.ch.x1, z0:0, z1:pl.gear.ch.z1, note:'flat on the floor in front of the battery, ' + fr(pl.gear.ch.y0) + ' to ' + fr(pl.gear.ch.y1) + ' in out; AC input from the shore side only, on its own 15 A breaker (about 11 A at 120 V), never from the inverter; 4 AWG to the battery bus with a 100 A fuse; the size is a guess, not measured'},
+  ] : []),
+  {k:'box',   n:'Power hub board',                             x0:72, x1:74, z0:1, z1:11, note:'a plywood board on the closet’s rear panel, facing the battery: DC bus bars, shunt, Class T fuse, 12 V fuse block, and the AC panel with its 30 A transfer switch (shore or inverter, never both) and the breakers for the shore charger. The inverter and the two chargers are separate, flat on the floor beside the battery. Needs an access hatch: a removable louvered panel in the couch front, about 35 to 74 in'},
   {k:'inlet', n:'Shore power inlet (30 A)',                    x:80, z:21,  note:'through the solid steel band at 19 1/2 to 23 in up (S3), inside the closet’s lower part; 30 A breaker on the hub board'},
   {k:'lt',    n:'Light under the cabinet, middle of the couch', x:pl.bedLen / 2, z:lz, note:'12 V LED on the underside of the wall cabinet (bottom at 61 in), in the middle of the couch (0 to 74); on the couch switch; the wire comes down from inside the cabinet'},
   {k:'lt',    n:'Light under the cabinet, dinette rear seat',  x:(pl.bA[0] + pl.bA[1]) / 2 + 6, z:lz, note:'centered over the rear bench seat (' + fr(pl.bA[0]) + ' to ' + fr(pl.bA[1]) + '), then 6 in toward the table; on the dinette switch'},
@@ -68,7 +73,7 @@ async function readPlan(page) {
       fan: { x: L.fan.x, y: L.fan.y, w: L.fan.w, u: L.fan.u },
       ac: { x: L.ac.x, y: L.ac.y, w: L.ac.w, u: L.ac.u },
       ribBands: L.ribBands,
-      batt: L.batt, bA: L.bA, bB: L.bB, headX: P.headX, headZ: P.headZ, headOut: P.headOut, valveX: P.valveX, valveZ: P.valveZ, cab: P.cab, ceilF: L.ceilF, panW: P.panW, panD: P.panD, toilet: L.toilet, sn: L.sn, wallsOn: P.wallsOn, fwT: P.fwT, hotX: L.hotX, snookEnd: Math.min(29.75, P.panW - 6.25), slatY: L.slatY, slatW: P.slatW, tbl: L.tbl, bedLen: P.bedLen, tableH: P.tableH, cabBot: P.cabBot,
+      batt: L.batt, bA: L.bA, bB: L.bB, headX: P.headX, headZ: P.headZ, headOut: P.headOut, valveX: P.valveX, valveZ: P.valveZ, cab: P.cab, ceilF: L.ceilF, panW: P.panW, panD: P.panD, gear: L.gear, toilet: L.toilet, sn: L.sn, wallsOn: P.wallsOn, fwT: P.fwT, hotX: L.hotX, snookEnd: Math.min(29.75, P.panW - 6.25), slatY: L.slatY, slatW: P.slatW, tbl: L.tbl, bedLen: P.bedLen, tableH: P.tableH, cabBot: P.cabBot,
     };
   });
 }
@@ -193,33 +198,40 @@ function oneLineSVG() {
   const box = (x, y, w, h, t1, t2, col) => { o.push(`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="6" fill="#fff" stroke="${col || INK}" stroke-width="1.8"/><text x="${x + w / 2}" y="${y + (t2 ? h / 2 - 3 : h / 2 + 4)}" text-anchor="middle" style="font-size:12.5px;font-weight:700;fill:${INK}">${esc(t1)}</text>`); if (t2) o.push(`<text x="${x + w / 2}" y="${y + h / 2 + 12}" text-anchor="middle" style="font-size:11px;fill:#5F5E5A">${esc(t2)}</text>`); };
   const ln = (x1, y1, x2, y2, col, lab, lx, ly, w) => { o.push(`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${col}" stroke-width="${w || 2.4}"/>`); if (lab) o.push(`<text x="${lx}" y="${ly}" text-anchor="middle" style="font-size:11px;fill:${INK}">${esc(lab)}</text>`); };
   // sources (left)
-  box(20, 40, 190, 52, 'Shore power inlet', '30 A, 120 V', CAC);
-  box(20, 160, 190, 56, 'Alternator', 'starter battery fuse 60 A', INK);
-  box(20, 250, 190, 52, 'DC-DC charger', '40 to 60 A, on the hub board', INK);
-  ln(115, 92, 115, 124, C120, '', 0, 0); ln(115, 124, 270, 124, C120, '30 A breaker', 190, 118);
-  ln(115, 216, 115, 250, C12, '', 0, 0); o.push(`<text x="122" y="238" style="font-size:11px;fill:${INK}">4 AWG, about 15 ft</text>`);
-  // inverter-charger
-  box(270, 100, 200, 74, 'Inverter-charger 2000 W', 'pure sine, 30 A pass-through', CAC);
+  box(20, 30, 190, 50, 'Shore power inlet', '30 A, 120 V', CAC);
+  box(20, 105, 190, 52, 'Shore charger VEVOR 80 A', 'shore side only, 14.6 V lithium', INK);
+  box(20, 185, 190, 56, 'Alternator', 'starter battery fuse 60 A', INK);
+  box(20, 270, 190, 52, 'DC-DC charger LiTime 60 A', 'under the couch', INK);
+  ln(115, 80, 115, 105, C120, '15 A breaker', 170, 98);
+  ln(210, 55, 270, 55, C120, '30 A', 240, 48);
+  ln(115, 241, 115, 270, C12, '', 0, 0); o.push(`<text x="122" y="259" style="font-size:11px;fill:${INK}">4 AWG, about 15 ft</text>`);
+  // the charger output to the battery (4 AWG, 100 A fuse), running down between the left column and the battery
+  ln(210, 131, 235, 131, C12, '', 0, 0); ln(235, 131, 235, 346, C12, '', 0, 0); ln(235, 346, 270, 346, C12, '', 0, 0);
+  o.push(`<text x="232" y="300" text-anchor="end" style="font-size:10.5px;fill:${INK}" transform="rotate(-90 232 300)">VEVOR 4 AWG, 100 A fuse</text>`);
+  // transfer switch and the inverter (inverter only: no charger, no transfer switch of its own)
+  box(270, 30, 200, 60, 'Transfer switch, 30 A', 'shore or inverter, never both', C120);
+  box(270, 115, 200, 60, 'Inverter BELTTT 2000 W', 'pure sine, inverter only', CAC);
+  ln(370, 115, 370, 90, C120, '', 0, 0);
   // battery + bus
   box(270, 330, 190, 66, 'Battery 280 Ah, 12.8 V', 'lithium assumed (3.6 kWh)', INK);
-  ln(115, 302, 115, 362, C12, '', 0, 0); ln(115, 362, 270, 362, C12, '4 AWG', 190, 356);
+  ln(115, 322, 115, 362, C12, '', 0, 0); ln(115, 362, 270, 362, C12, '4 AWG', 190, 356);
   ln(365, 330, 365, 300, C12, 'Class T 250 A, 2/0 AWG', 440, 322, 4); 
   box(270, 240, 190, 54, '+ bus bar and shunt (500 A)', 'near the battery', INK);
-  ln(365, 240, 365, 174, C12, '2/0 AWG, 250 A fuse', 440, 214, 4);
+  ln(365, 240, 365, 175, C12, '2/0 AWG, 250 A fuse', 440, 214, 4);
   // 12 V branches (right of the bus)
   const br = [['A/C 12 V, up to 58 A', '6 AWG pair, 100 A fuse', CAC], ['Fuse block: 2 ceiling, 3 cabinet lights, jar strip', '16 AWG, 5 A', CLT], ['Soft LED strip, about 31 ft in 3 runs', '14 AWG, its own 10 A circuit', CLT], ['Roof fan, up to 2.7 A', '14 AWG, 5 A', C12], ['Water pump, 7 A (under the sink)', '14 AWG, 10 A', C12], ['Control panel and shunt display', '18 AWG, 3 A', C12]];
   br.forEach((b, i) => { const y = 214 + i * 56; ln(460, 267, 540, 267, C12, '', 0, 0); ln(540, 267, 540, y + 20, C12, '', 0, 0); ln(540, y + 20, 600, y + 20, b[2], '', 0, 0, 2.8); box(600, y, 330, 40, b[0], b[1], b[2]); });
   o.push(`<text x="600" y="198" style="font-size:12px;font-weight:700;fill:${C12}">12 V DC circuits (blade fuse block, except the A/C)</text>`);
   // AC side
-  ln(460, 137, 540, 137, C120, '', 0, 0); ln(540, 137, 540, 80, C120, '', 0, 0); ln(540, 80, 600, 80, C120, '', 0, 0);
+  ln(470, 60, 600, 60, C120, '', 0, 0);
   box(600, 56, 150, 48, 'AC panel', '30 A main, GFCI', C120);
   o.push(`<text x="540" y="46" style="font-size:12px;font-weight:700;fill:${C120}">120 V AC circuits</text>`);
   [['A  counter outlets, GFCI', '15 A, 12 AWG'], ['B  microwave, its own', '15 A, 12 AWG'], ['C  fridge, TV, dinette outlets', '15 A, 12 AWG'], ['D  water heater 1440 W', '20 A, 12 AWG']].forEach((c, i) => { const y = 16 + i * 0; });
   const ac = [['A  couch, dinette, under-TV outlets (GFCI)', '15 A, 12 AWG'], ['B  microwave, via the selector', '15 A, 12 AWG'], ['C  fridge, its own breaker', '15 A, 12 AWG'], ['D  water heater 1440 W, via the selector', '20 A, 12 AWG']];
   ac.forEach((c, i) => { const x = 770, y = 12 + i * 34; ln(750, 80, 760, 80, C120, '', 0, 0); ln(760, 80, 760, y + 14, C120, '', 0, 0); ln(760, y + 14, x, y + 14, C120, '', 0, 0); o.push(`<rect x="${x}" y="${y}" width="280" height="28" rx="5" fill="#fff" stroke="${C120}" stroke-width="1.5"/><text x="${x + 8}" y="${y + 13}" style="font-size:11.5px;font-weight:700;fill:${INK}">${esc(c[0])}</text><text x="${x + 8}" y="${y + 24}" style="font-size:10.5px;fill:#5F5E5A">${esc(c[1])}</text>`); });
   o.push(`<rect x="600" y="112" width="150" height="58" rx="5" fill="#FFF1D6" stroke="${C120}" stroke-width="1.5"/><text x="610" y="128" style="font-size:11.5px;font-weight:700;fill:${INK}">B and D go through</text><text x="610" y="143" style="font-size:11px;fill:${INK}">one 2 pole, 3 position</text><text x="610" y="158" style="font-size:11px;fill:${INK}">selector (25 A or more)</text>`);
-  o.push(`<text x="20" y="${H - 54}" style="font-size:11.5px;fill:#5F5E5A">Fuses sit within 7 in of the battery or bus (Class T for the inverter, 100 A for the A/C). Wire sizes are for the short runs shown (battery to inverter under 3 ft, A/C about 12 ft);</text><text x="20" y="${H - 38}" style="font-size:11.5px;fill:#5F5E5A">the A/C size comes from a related OutEquipPro model. Follow your inverter’s and the A/C maker’s manuals where they differ.</text><text x="20" y="${H - 22}" style="font-size:11.5px;fill:#5F5E5A">One neutral-to-ground bond only, inside the inverter-charger (its manual says how). Have the 120 V side inspected before use.</text>`);
-  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="One-line diagram: shore power and alternator charging, battery, inverter-charger, fuses and circuits"><style>text{font-family:-apple-system,"Segoe UI",sans-serif}</style>${o.join('')}</svg>`;
+  o.push(`<text x="20" y="${H - 54}" style="font-size:11.5px;fill:#5F5E5A">Fuses sit within 7 in of the battery or bus (Class T for the inverter, 100 A for the A/C). Wire sizes are for the short runs shown (battery to inverter under 3 ft, A/C about 12 ft);</text><text x="20" y="${H - 38}" style="font-size:11.5px;fill:#5F5E5A">the A/C size comes from a related OutEquipPro model. Follow your inverter’s and the A/C maker’s manuals where they differ.</text><text x="20" y="${H - 22}" style="font-size:11.5px;fill:#5F5E5A">One neutral-to-ground bond only: follow the inverter\u2019s manual (the BELTTT\u2019s was not found) and make sure the transfer switch does not create a second one. Have the 120 V side inspected before use.</text>`);
+  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="One-line diagram: shore power and alternator charging, battery, inverter, chargers, transfer switch, fuses and circuits"><style>text{font-family:-apple-system,"Segoe UI",sans-serif}</style>${o.join('')}</svg>`;
 }
 
 function loadTable(d) {
@@ -239,7 +251,7 @@ function loadTable(d) {
   const tot = L.reduce((s, r) => s + r[2], 0);
   const rows = L.map(r => `<tr><td>${esc(r[0])}</td><td>${esc(r[1])}</td><td class="num">${Math.round(r[2])} Ah</td><td class="num">${ahToKwh(r[2]).toFixed(2)} kWh</td><td class="kd">${esc(r[3])}</td></tr>`).join('');
   return `<div class="tw"><table><thead><tr><th>Load</th><th>Use</th><th>Per day</th><th></th><th>Basis</th></tr></thead><tbody>${rows}<tr class="tot"><td><b>A hot day, everything</b></td><td></td><td class="num"><b>${Math.round(tot)} Ah</b></td><td class="num"><b>${ahToKwh(tot).toFixed(2)} kWh</b></td><td class="kd">the battery holds ${P.battAh} Ah, about ${batt.toFixed(1)} kWh</td></tr></tbody></table></div>
-  <p class="lead">That is ${(tot / P.battAh).toFixed(1)} times the battery on a hot day with the A/C on for ${fr(P.acEcoH)} hours, so it needs refilling every day: driving through the alternator charger (50 A is about 640 W, so 2 hours adds about 1.3 kWh) or shore power (60 A charger, about 770 W). The fridge and the inverter idling are about a quarter of that total: a 12 V fridge would cut it, because the inverter could be switched off. These are estimates to size the system, not a measurement.</p>`;
+  <p class="lead">That is ${(tot / P.battAh).toFixed(1)} times the battery on a hot day with the A/C on for ${fr(P.acEcoH)} hours, so it needs refilling every day: driving through the alternator charger (the 60 A DC-DC is about 800 W, so 2 hours adds about 1.6 kWh) or shore power (the VEVOR 80 A is about 1.1 kW, so an hour adds about 1.1 kWh). The fridge and the inverter idling are about a quarter of that total: a 12 V fridge would cut it, because the inverter could be switched off. These are estimates to size the system, not a measurement.</p>`;
 }
 
 (async () => {
@@ -278,8 +290,7 @@ function loadTable(d) {
   <p class="lead">A proposal for where the electrics go, drawn on the same steel and furring strips as the wall marking map, with the furniture outlined for reference. Positions are inches from the back mark (0 is 6 in in from the rear-door edge) and up from the floor; the ceiling plan uses inches from the rear-door edge. The steel and strips are the measured drawing; the electrical items are my proposal, so check each one against the real wall and tell me what to move.</p>
   <div class="note"><b>What you chose:</b> a 2000 W inverter, charging from the alternator and from shore power (no solar), a 120 V fridge, and the water pump under the sink. <b>What I assumed (tell me if wrong):</b>
   <ul><li>The battery is lithium, 280 Ah at 12.8 V (about 3.6 kWh), where the plan has it under the couch, 52 to 73 in.</li>
-  <li>A combined inverter-charger with at least a 30 A pass-through, so shore power both runs the 120 V loads and charges the battery.</li>
-  <li>A 40 to 60 A DC-DC charger from the alternator, 4 AWG from the starter battery.</li>
+  <li><b>Your equipment:</b> a BELTTT 2000 W inverter (an inverter only: the listings show no charger and no transfer switch), a LiTime 60 A DC-DC charger from the alternator (4 AWG from the starter battery), and a VEVOR 80 A lithium shore charger. All three lie flat on the free floor under the couch beside the battery. Because the inverter has no transfer switch, the AC panel has a 30 A transfer switch that connects either shore power or the inverter, never both, and the shore charger is fed from the shore side only, on its own 15 A breaker (about 11 A at 120 V). With the charger running, a heater or microwave and the fridge could pass the 30 A shore inlet, so the charger is its own circuit and the total is worth watching.</li>
   <li><b>Ceiling lights:</b> only two, one over the shower (wet rated) and one over the countertop and sink together, both on one slat and 2 in clear of the ribs. Everything else is lit from the cabinets, the jar nook and the soft LED strip.</li>
   <li><b>Light switches:</b> by the couch (the light under the cabinet over the middle of the couch), by the dinette on the cab wall (the two lights under the cabinet over the seats, the ceiling light over the countertop and the sink, and the jar nook strip), a small plate at the rear doors (roof fan and the shower light), and the dimmer for the soft strip. Each switch runs its own group, so ordinary 12 V rated switches work: no push buttons or controller are needed.</li>
   <li><b>Under-cabinet lights:</b> one in the middle of the couch, and two over the dinette, each centered over its bench seat and then moved 6 in toward the table, all on the underside of the wall cabinets. They replace the under-cabinet LED strips, the wall reading lights and the single light over the table I had first suggested.</li>
@@ -308,7 +319,7 @@ function loadTable(d) {
   <div class="note"><ul>
   <li>Before the walls and ceiling are covered: run the risers, the ceiling trunk and every branch, with grommets in all steel and the 12 V and 120 V in separate looms (at least 2 in apart, crossing at right angles). This is the rough-in step of the build order.</li>
   <li>With the furring strips: fix the electrical boxes to blocking between the strips, and add the blocking behind the hub board, the switch plates and the outlets before the planks go on.</li>
-  <li>Last: the hub board, fuses and inverter-charger, the lights and the plates, after the covering is up.</li>
+  <li>Last: the hub board and fuses, the inverter and the two chargers, the transfer switch, the lights and the plates, after the covering is up.</li>
   <li>Test every circuit with a meter before you connect the battery, and test the GFCI outlets with the button.</li></ul></div>
   <p class="lead" style="margin-top:14px"><a href="interactive.html">Back to the interactive plan</a> &middot; <a href="wall-map.html">Wall marking map</a></p>
   </div>`;

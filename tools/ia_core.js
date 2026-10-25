@@ -17,6 +17,7 @@ const PD = [
   { k: 'closetOn', g: 'Take items out', l: 'Closet and its doors (the space it leaves stays empty; the dinette still starts where the closet ends)', d: true, t: 'c' },
   { k: 'toiletOn', g: 'Take items out', l: 'Toilet in the wet bath: the Reliance Fold-To-Go, left set up in the stall (at the cab end, sideways, its back against the wall to the fridge)', d: true, t: 'c' },
   { k: 'snItemsOn', g: 'Take items out', l: 'Towel bar, toilet paper and bottles in the shower nook', d: true, t: 'c' },
+  { k: 'gearOn', g: 'Take items out', l: 'Charging gear under the couch: the BELTTT inverter, the LiTime DC-DC charger and the VEVOR shore charger, lying flat on the floor beside the battery', d: true, t: 'c' },
   { k: 'wallsOn', g: 'Take items out', l: 'Floor-to-ceiling walls: behind the dinette backs (at the closet end and behind the driver seat) and one on each side of the fridge', d: true, t: 'c' },
   { k: 'bedLen', g: 'Bed / couch', l: 'Length', d: 74, s: .5, a: 40, b: 120 },
   { k: 'bedD', g: 'Bed / couch', l: 'Depth, closed (the couch on its base)', d: 26, s: .5, a: 15, b: 40 },
@@ -34,6 +35,15 @@ const PD = [
   { k: 'cloDrawD', g: 'Closet', l: 'Drawers: depth (the slide length; they pull out about 1 in less than this)', d: 22, s: 2, a: 10, b: 24 },
   { k: 'hinge', g: 'Closet', l: 'Door hinges on the', d: 'rear', t: 's', o: [['rear', 'bed side'], ['cab', 'dinette side']] },
   { k: 'openAng', g: 'Closet', l: 'Doors open to (degrees)', d: 90, s: 5, a: 30, b: 180 },
+  { k: 'invL', g: 'Charging gear', l: 'Inverter (BELTTT 2000 W): length, along the wall (14.8 x 7.7 x 3.9 from its listing; measure yours)', d: 14.8, s: .1, a: 6, b: 24 },
+  { k: 'invW', g: 'Charging gear', l: 'Inverter: width, out from the wall', d: 7.7, s: .1, a: 4, b: 16 },
+  { k: 'invH', g: 'Charging gear', l: 'Inverter: height off the floor', d: 3.9, s: .1, a: 2, b: 10 },
+  { k: 'dcL', g: 'Charging gear', l: 'DC-DC charger (LiTime 60 A): length, along the wall (11.65 x 8.46 x 3.35 is LiTime\'s 40 A model, not measured for the 60 A: measure yours)', d: 11.65, s: .1, a: 6, b: 20 },
+  { k: 'dcW', g: 'Charging gear', l: 'DC-DC charger: width, out from the wall', d: 8.46, s: .1, a: 4, b: 14 },
+  { k: 'dcH', g: 'Charging gear', l: 'DC-DC charger: height off the floor', d: 3.35, s: .1, a: 2, b: 10 },
+  { k: 'chL', g: 'Charging gear', l: 'Shore charger (VEVOR 80 A): length, along the wall (A GUESS: no size found, measure yours)', d: 10, s: .1, a: 4, b: 20 },
+  { k: 'chW', g: 'Charging gear', l: 'Shore charger: width, out from the wall', d: 7, s: .1, a: 3, b: 14 },
+  { k: 'chH', g: 'Charging gear', l: 'Shore charger: height off the floor', d: 4, s: .1, a: 2, b: 10 },
   { k: 'fwT', g: 'Floor-to-ceiling walls', l: 'Wall thickness (the walls are inside the closet, the shower and the counter cabinet, so nothing else moves)', d: .75, s: .125, a: .25, b: 3 },
   { k: 'benchLen', g: 'Dinette', l: 'Bench length', d: 19.5, s: .5, a: 10, b: 40 },
   { k: 'benchD', g: 'Dinette', l: 'Bench depth', d: 28, s: .5, a: 15, b: 45 },
@@ -274,7 +284,7 @@ const HITR = (x, y, w, h) => `<rect x="${f1(x)}" y="${f1(y)}" width="${f1(Math.m
 const GB = (id, label) => `<g class="hg" data-grp="${id}" data-label="${label}">`;
 const GE = () => '</g>';
 // items that were taken out (their tick box in Sizes is off): cut their groups and drag handles out of a finished drawing
-const REMOVED = () => [['showerOn', 'shower'], ['microOn', 'Micro'], ['tvOn', 'tv'], ['towelOn', 'towels'], ['fridgeOn', 'fridge'], ['drawersOn', 'drawers'], ['battOn', 'batt'], ['closetOn', 'closet'], ['wallsOn', 'fwalls'], ['toiletOn', 'toilet'], ['snItemsOn', 'snitems']].filter(r => !P[r[0]]).map(r => r[1]);
+const REMOVED = () => [['showerOn', 'shower'], ['microOn', 'Micro'], ['tvOn', 'tv'], ['towelOn', 'towels'], ['fridgeOn', 'fridge'], ['drawersOn', 'drawers'], ['battOn', 'batt'], ['closetOn', 'closet'], ['wallsOn', 'fwalls'], ['toiletOn', 'toilet'], ['snItemsOn', 'snitems'], ['gearOn', 'gear']].filter(r => !P[r[0]]).map(r => r[1]);
 function stripGroups(html, ids) {
   ids.forEach(id => {
     const open = `<g class="hg" data-grp="${id}"`;
@@ -462,6 +472,13 @@ function layout(P0) {
   });
   L.doorZ = [P.cabBot + 0.5, P.cabBot + 0.5 + P.doorH];
   L.batt = [L.c0 - 1 - 21, L.c0 - 1];
+  // the charging gear under the couch, lying flat on the free floor next to the battery (y = out from the driver wall; the removable panel in the couch front is 3/4 in thick, at bedD - 3/4):
+  // the inverter and the DC-DC charger one behind the other on the floor west of the battery (in front of the wheel well, which is only 7 in out), the shore charger in the strip in front of the battery
+  { const hy = P.bedD - .75, x0 = L.batt[0] - 16;
+    const inv = { x0, x1: x0 + P.invL, y0: 8, y1: 8 + P.invW, z1: P.invH, n: 'the inverter', id: 'G1' };
+    const dc = { x0, x1: x0 + P.dcL, y0: inv.y1 + .5, y1: inv.y1 + .5 + P.dcW, z1: P.dcH, n: 'the DC-DC charger', id: 'G2' };
+    const ch = { x0: L.batt[0] + 1, x1: L.batt[0] + 1 + P.chL, y0: 17.5, y1: 17.5 + P.chW, z1: P.chH, n: 'the shore charger', id: 'G3' };
+    L.gear = P.gearOn ? { inv, dc, ch, hatchY: hy } : null; }
   L.pan = P.panW; L.fr = [P.panW, P.panW + P.fridgeW]; L.cabS = L.fr[1];
   L.angS = L.cabS + P.flatLen; L.angLen = P.cabD > P.sinkD ? P.angLen : 0;
   L.slope = L.angLen > 0 ? (P.cabD - P.sinkD) / L.angLen : 0.4;

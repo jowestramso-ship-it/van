@@ -119,6 +119,11 @@ function drawPlan(L, V) {
   o.push(it(L.batt[0], L.batt[1], 7, 17, COL.B, 'Battery', '21 x 10 x 9.5', { fo: .5, fs: 10 }));
   o.push(Ln(xx(50), yy(0), xx(50), yy(17), { stroke: '#A32D2D', sw: 1.5, mk: 1 }) + T(xx(48.6), yy(10), '17', { anchor: 'end', size: 10, fill: '#A32D2D', w: 700, halo: false }));
   o.push(GE());
+  if (L.gear) {
+    o.push(GB('gear', 'Charging gear under the couch'));
+    [[L.gear.inv, 'Inverter', 'BELTTT 2000 W'], [L.gear.dc, 'DC-DC', 'LiTime 60 A'], [L.gear.ch, 'Charger', 'VEVOR 80 A']].forEach(r => o.push(it(r[0].x0, r[0].x1, r[0].y0, r[0].y1, '#B45309', r[1], `${fmt(r[0].x1 - r[0].x0)} x ${fmt(r[0].y1 - r[0].y0)}`, { fo: .22, fs: 9, dash: '3 2' })));
+    o.push(GE());
+  }
   if (L.chairs) {
     // the lawn chairs stacked flat on the floor under the couch (the outline shows the footprint)
     const c = L.chairs, cc = L.coll.ids.has('Chairs') ? '#A32D2D' : '#2F5E3F';

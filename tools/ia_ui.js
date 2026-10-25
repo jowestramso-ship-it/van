@@ -224,6 +224,21 @@ function computeChecks(L, V) {
     push(n.rollClear < -.01 || n.bottleClear < 6 ? 'bad' : 'ok', `Shower nook contents (the nook is ${fmt(n.x1 - n.x0)} wide x ${fmt(P.snookH)} tall, ${fmt(n.z0)} to ${fmt(n.z1)} up, 4 1/2 deep): a ${fmt(n.bar.x1 - n.bar.x0)} in towel bar ${fmt(n.bar.z)} up in the rear ${fmt(P.tbarBay)} in of it (a hand towel hangs inside the nook, from the bar down to ${fmt(Math.max(n.z0, n.bar.z - 9))} up); in the rest a shelf board (top ${fmt(n.shelfTop)} up) with ${fmt(n.shelfTop - .75 - n.z0)} in under it for the toilet paper, a roll in use and a spare (a 4 1/2 in roll leaves ${fmt(n.rollClear)} in), and ${fmt(n.bottleClear)} in above it for three bottles up to ${fmt(n.bottleClear - .5)} in tall. A standard roll is about 4 1/2 in across and the nook is 4 1/2 deep (4 3/8 over the 1/8 in ribs), so it is a snug fit; an RV-size roll (about 4 in) goes in easier.`);
     if (P.showerOn) push('warn', `The toilet paper is about ${fmt(dHead)} in along the wall from the shower head and faces into the stall, so it will be splashed: put a small hinged acrylic door on the paper's part of the nook, or keep the rolls in a lidded holder, and keep a spare roll dry in the closet.`);
   }
+  if (L.gear) {
+    const g = L.gear, u = [g.inv, g.dc, g.ch], names = ['the inverter', 'the DC-DC charger', 'the shore charger'];
+    const ovl = (a, b) => Math.min(a.x1, b.x1) - Math.max(a.x0, b.x0) > .01 && Math.min(a.y1, b.y1) - Math.max(a.y0, b.y0) > .01;
+    const battBox = { x0: L.batt[0], x1: L.batt[1], y0: 7, y1: 17 }, chairX = L.chairs ? L.chairs.x1 : 0, bad = [];
+    for (let i = 0; i < 3; i++) {
+      for (let j = i + 1; j < 3; j++) if (ovl(u[i], u[j])) bad.push(`${names[i]} and ${names[j]} overlap`);
+      if (ovl(u[i], battBox)) bad.push(`${names[i]} overlaps the battery`);
+      if (u[i].y1 > g.hatchY + .01) bad.push(`${names[i]} sticks ${fmt(u[i].y1 - g.hatchY)} in into the panel in the couch front`);
+      if (u[i].x0 < chairX - .01) bad.push(`${names[i]} is over the lawn chairs`);
+      if (u[i].z1 > P.platform - 3) bad.push(`${names[i]} is taller than the space under the couch`);
+      if (u[i].y0 < 7 && u[i].x1 > 42 && u[i].x0 < 76) bad.push(`${names[i]} is on the wheel well`);
+    }
+    const gapBatt = L.batt[0] - g.inv.x1, gapHatch = g.hatchY - Math.max(g.dc.y1, g.ch.y1), gapChairs = g.inv.x0 - chairX;
+    push(bad.length ? 'bad' : gapHatch < .25 || gapBatt < .25 ? 'warn' : 'ok', `Charging gear under the couch, lying flat on the free floor beside the battery (the couch front is a removable louvered panel, ${fmt(g.inv.x0 - 1)} to ${fmt(P.bedLen)} in from the back): ${bad.length ? 'PROBLEM: ' + bad.join('; ') + '. ' : ''}the inverter (BELTTT 2000 W, ${fmt(P.invL)} x ${fmt(P.invW)} x ${fmt(P.invH)}, from its listing) at ${fmt(g.inv.x0)} to ${fmt(g.inv.x1)} in along the wall and ${fmt(g.inv.y0)} to ${fmt(g.inv.y1)} out, ${fmt(gapBatt)} in from the battery, so its battery cables are about 1 to 2 ft; the DC-DC charger (LiTime 60 A, ${fmt(P.dcL)} x ${fmt(P.dcW)} x ${fmt(P.dcH)}, the size of LiTime's 40 A model and not yet measured) in front of it at ${fmt(g.dc.y0)} to ${fmt(g.dc.y1)} out, ${fmt(gapHatch)} in from the panel; the shore charger (VEVOR 80 A, ${fmt(P.chL)} x ${fmt(P.chW)} x ${fmt(P.chH)}, a GUESS: measure it) in front of the battery at ${fmt(g.ch.x0)} to ${fmt(g.ch.x1)} in. ${fmt(gapChairs)} in is left to the lawn chairs. All three are under 4 in tall with about ${fmt(P.platform - 1.5 - 4)} in of air above them under the deck, and each needs an inch or two beside its fan. The BELTTT has no charger and no transfer switch, so the AC panel needs a transfer switch, and the VEVOR runs from the shore side only.`);
+  }
   // headroom, battery, doors
   const head = Math.max(P.platform + P.mattress, P.seatH) + 37, hg = P.cabBot - head;
   push(hg < 1 ? 'bad' : hg < 3 ? 'warn' : 'ok', `Seated headroom under the wall cabinets: ${fmt(hg)} in for a 6 ft person (head at ${fmt(head)} up).`);

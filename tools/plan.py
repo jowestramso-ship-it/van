@@ -45,6 +45,9 @@ item(134.5,154,0,28,K,'Bench','19.5 x 28, seat 17.5 up',0.14)
 # driver wheel well and battery
 item(42,76,0,7,W2,'Wheel well','34 x 7, 7.5 tall',0.5,'',10)
 item(52,73,7,17,B,'Battery','21 x 10 x 9.5',0.5,'',10)
+item(36,50.8,8,15.7,'#B45309','Inverter','14.8 x 7.7',0.22,'stroke-dasharray="3 2"',9)
+item(36,47.65,16.2,24.66,'#B45309','DC-DC','11.65 x 8.46',0.22,'stroke-dasharray="3 2"',9)
+item(53,63,17.5,24.5,'#B45309','Charger','10 x 7',0.22,'stroke-dasharray="3 2"',9)
 a(f'<line x1="{xx(50)}" y1="{yy(0)}" x2="{xx(50)}" y2="{yy(17)}" stroke="#A32D2D" stroke-width="1.5" marker-start="url(#arq)" marker-end="url(#arq)"/><text x="{xx(48.6)}" y="{yy(10)}" text-anchor="end" style="font-size:10px;font-weight:700;fill:#A32D2D">17</text>')
 # passenger side (wall at y=68)
 item(0,36,44,68,T,'',None,0.08,'stroke-dasharray="6 4"')
@@ -166,6 +169,9 @@ rows=[('Driver','Bed / couch','0 to 74','74 x 26 (couch), 74 x 46 opened','deck 
 ('Under the van','Grey water tank','not set','30 x 17 x 8 space (was 24 x 17 x 8)','','shower and sink (grey water only); both drains run down through the floor; no off-the-shelf tank found that fits; size to be chosen; toilet waste (black water) is not covered'),
 ('Aisles','Bed to counter','','21 across (couch, 26 deep), 22 with the bed opened to 46 in','',''),
 ('Aisles','Dinette to counter','','19 1/4 at 89 (tightest: the counter is 21 deep up to 88, then angles in), 23 from 103 (was 17 1/4 and 21 with the dinette 30 deep)','','across from the closet it is 22'),
+('Driver','Inverter (BELTTT 2000 W)','36 to 50.8','14.8 x 7.7 x 3.9 (from its listing)','flat on the floor under the couch, 8 to 15.7 in out from the wall','inverter only: no charger and no transfer switch (so a 30 A transfer switch on the hub board); 1 to 2 ft of 2/0 AWG to the battery; its remote has a 23 ft cable'),
+('Driver','DC-DC charger (LiTime 60 A)','36 to 47.65','11.65 x 8.46 x 3.35 (LiTime\'s 40 A model: measure the 60 A)','flat on the floor, 16.2 to 24.66 in out from the wall','in front of the inverter; 4 AWG from the starter battery (about 15 ft)'),
+('Driver','Shore charger (VEVOR 80 A)','53 to 63','10 x 7 x 4 (a GUESS: measure it)','flat on the floor, 17.5 to 24.5 in out from the wall, in front of the battery','14.6 V lithium charger; AC from the shore side only, on its own 15 A breaker; 4 AWG and a 100 A fuse to the battery bus'),
 ('Aisles','Closet to cabinet','','22 across','',''),
 ('Aisles','Shower to bed','','19 across','','in front of the shower')]
 tbl='<table><tr><th>Side</th><th>Item</th><th>Along the wall (in from the back)</th><th>Size, along x out (in)</th><th>Height (in)</th><th>Notes</th></tr>'+''.join('<tr>'+''.join(f'<td>{c}</td>' for c in r)+'</tr>' for r in rows)+'</table>'

@@ -125,6 +125,14 @@ function drawDriver(L, V) {
     o.push(MV('bed', g, HITR(Math.min(X(0), X(P.bedLen)), Y(bt + LW), S * P.bedLen, S * (bt + LW))));
   }
   o.push(GE());
+  if (L.gear) {
+    const g = L.gear;
+    o.push(GB('gear', 'Charging gear under the couch'));
+    [[g.inv, 3, 'Inverter', 'BELTTT 2000 W'], [g.dc, 7, 'DC-DC charger', 'LiTime 60 A'], [g.ch, 3, 'Shore charger', 'VEVOR 80 A']].forEach(r => { const u = r[0];
+      o.push(box(u.x0, u.x1, 0, u.z1, { fill: '#B45309', fo: .16, stroke: '#B45309', sw: 1.4, rx: 2, dash: '4 3' }));
+      o.push(LBL(X(u.x0 + r[1]), Y(u.z1 / 2), r[2], `${r[3]}: ${fmt(u.x1 - u.x0)} x ${fmt(u.y1 - u.y0)} x ${fmt(u.z1)} in, flat on the floor under the couch, ${fmt(u.y0)} to ${fmt(u.y1)} in out from the wall`, { size: 10, fill: '#B45309' })); });
+    o.push(GE());
+  }
   // closet
   o.push(GB('closet', 'Closet and its doors'));
   o.push(box(L.c0, L.c1, 0, L.ceilF, { fill: COL.G, fo: .12, stroke: COL.G, sw: 1.4, rx: 3 }));
