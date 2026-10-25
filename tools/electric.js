@@ -21,15 +21,15 @@ const E_DRIVER = pl => { const tc = (pl.tbl[0] + pl.tbl[1]) / 2, q1 = pl.bedLen 
   {k:'out120',n:'Couch outlet (120 V duplex)',                  x:62, z:44, note:'above the back cushion (40 in up); circuit A (GFCI), 12 AWG'},
   {k:'sw',    n:'Switch plate at the rear doors (fan, wet bath light)', x:3,  z:48, note:'2 gang: roof fan and the wet bath light. You did not list this one, but those two need a switch; the ceiling lights are not on it'},
   {k:'sw',    n:'Light switch by the couch',                   x:70, z:50, note:'ceiling lights (one of three points, with the dinette and the sink) and the two lights under the cabinet over the couch'},
-  {k:'sw',    n:'Light switch by the dinette',                  x:106, z:48, note:'ceiling lights (second point) and the entry light over the sliding door'},
+  {k:'sw',    n:'Light switch by the dinette',                  x:pl.cab - 1, z:48, note:'on the wall behind the driver seat (the cab wall, at the cab end of the dinette; drawn here at its corner with the driver wall), above the bench back (38 in): ceiling lights (second point), the light over the table and the entry light over the sliding door. The wire comes down the corner behind the planks'},
   {k:'out120',n:'Outlet over the dinette table (120 V duplex)', x:tc, z:36, note:'on the wall just over the table (its top is at 29 in), in the middle of it, clear of the backrests (38 in); circuit A (GFCI)'},
   {k:'strip', n:'Closet light',                                x0:76,x1:87, z:73, note:'inside the closet, on a door switch'},
   {k:'run',   n:'Riser A: A/C, 12 V and lights feed',          x:73, z0:11, z1:75, note:'up inside the wall behind the planks (4 1/2 in space) to the ceiling: A/C 6 AWG pair in its own loom, plus the 12 V ceiling feed (12 AWG). Grommet where it crosses the top steel'},
   {k:'run',   n:'Cab charge cable (DC-DC input)',              x:70, z0:0, z1:1,  note:'4 AWG from the starter battery fuse (60 A) under the van along the driver side frame to a sealed floor grommet next to the battery'},
 ]; };
-const E_PASS = pl => { const wb = pl.lights.filter(l => l.y > 44 && l.x - 6 < 36).sort((a, b) => a.x - b.x)[0] || { x: 26.7 }; return [
+const E_PASS = pl => { const wbx = pl.panW / 2, wby = pl.P.vanW - pl.panD / 2; return [
   {k:'out120',n:'Wet bath outlet (120 V, GFCI, in-use cover)',  x:33, z:60, note:'inside the stall at the cab end, high on the wall (60 in) and as far from the shower head as the stall allows; GFCI with a wet-location in-use cover; circuit A (GFCI). I do not know where your shower head goes: tell me and I will move it (the rear end, 4 in, is the other choice). A hair dryer (1500 W) cannot run with the water heater on a 2000 W inverter'},
-  {k:'lt',    n:'Wet bath light (ceiling, IP65)',               x:wb.x - 6, z:pl.ceilF - .5, note:'the first light of the plan\u2019s passenger-side row, over the stall (the ceiling plan shows it); a wet-rated (IP65) recessed LED; switched at the rear doors plate (ED8 on the driver wall); the shower nook strip is on the same switch'},
+  {k:'lt',    n:'Wet bath light (ceiling, IP65), center of the stall', x:wbx, z:pl.ceilF - .5, note:'at the center of the stall: ' + fr(wbx) + ' in along the wall, ' + fr(wby) + ' in across from the driver wall (the ceiling plan shows it); a wet-rated (IP65) LED. It takes the place of the plan\u2019s first passenger-side ceiling light, so there are still six lights in all. Switched at the rear doors plate (ED8 on the driver wall); the shower nook strip is on the same switch'},
   {k:'out120',n:'Fridge outlet, behind the fridge (120 V)',    x:47, z:6,  note:'on the wall behind the fridge platform (the fridge stands on a platform 8 1/4 up); circuit C, the fridge alone'},
   {k:'out120',n:'Microwave outlet (120 V, its own breaker)',    x:60, z:64, note:'a fifth outlet you did not list: the microwave (1500 W) needs its own, on the wall just cab-side of it (36 to 58); circuit B. Drop it if the microwave plugs in elsewhere'},
   {k:'panel', n:'Control panel (battery monitor, pump switch, tank levels)', x:66, z:50, note:'12 V, small 18 AWG, 3 A'},
@@ -56,7 +56,7 @@ async function readPlan(page) {
       fan: { x: L.fan.x, y: L.fan.y, w: L.fan.w, u: L.fan.u },
       ac: { x: L.ac.x, y: L.ac.y, w: L.ac.w, u: L.ac.u },
       ribBands: L.ribBands,
-      batt: L.batt, ceilF: L.ceilF, tbl: L.tbl, bedLen: P.bedLen, tableH: P.tableH, cabBot: P.cabBot,
+      batt: L.batt, cab: P.cab, ceilF: L.ceilF, panW: P.panW, panD: P.panD, slatY: L.slatY, slatW: P.slatW, tbl: L.tbl, bedLen: P.bedLen, tableH: P.tableH, cabBot: P.cabBot,
     };
   });
 }
@@ -139,8 +139,13 @@ function ceilingSVG(d) {
   o.push(`<rect x="${X(RX) - 11}" y="${Y(34) - 8}" width="22" height="16" rx="3" fill="#FFF1D6" stroke="${CAC}" stroke-width="2"/><text x="${X(RX)}" y="${Y(34) + 4}" text-anchor="middle" style="font-size:10px;font-weight:700;fill:${CAC}">JB</text>`);
   // the wet bath stall (36 along the wall, 24 out from the passenger wall; wall numbers + 6 from the rear-door edge)
   o.push(`<rect x="${X(6)}" y="${Y(44)}" width="${S * 36}" height="${S * 24}" fill="${C12}" fill-opacity=".07" stroke="${C12}" stroke-width="1.4" stroke-dasharray="5 3"/><text x="${X(6) + 6}" y="${Y(44) + 14}" style="font-size:11px;font-weight:700;fill:${C12}">wet bath stall</text>`);
+  // the wet bath light moves to the center of the stall, off the slat row, with a short branch from the row
+  const wx = 6 + d.panW / 2, wy = d.P.vanW - d.panD / 2, rowY = d.chanY.reduce((a, c) => Math.abs(c - wy) < Math.abs(a - wy) ? c : a, d.chanY[0]);
+  const wl = d.lights.find(l => l.y > d.P.vanW - d.panD && l.x < 6 + d.panW && l.x > 6);
+  o.push(line([[wl ? wl.x : wx, rowY], [wx, rowY], [wx, wy]], CLT, 2.2));
+  o.push(`<circle cx="${X(wx)}" cy="${Y(wy)}" r="${Math.max(6, S * d.P.lightD / 2)}" fill="#FFD84A" stroke="${C12}" stroke-width="3"/><text x="${X(wx) + 12}" y="${Y(wy) + 16}" style="font-size:10.5px;font-weight:700;fill:${C12}">wet bath light (IP65), stall center</text>`);
   // lights
-  d.lights.forEach((l, i) => { const wet = l.y > 44 && l.x < 42 && l.x > 6; o.push(`<circle cx="${X(l.x)}" cy="${Y(l.y)}" r="${Math.max(6, S * d.P.lightD / 2)}" fill="#FFD84A" stroke="${wet ? C12 : CLT}" stroke-width="${wet ? 3 : 1.8}"/>`); if (wet) o.push(`<text x="${X(l.x) + 12}" y="${Y(l.y) + 16}" style="font-size:10.5px;font-weight:700;fill:${C12}">wet-rated (IP65)</text>`); });
+  d.lights.forEach((l, i) => { const inStall = l.y > d.P.vanW - d.panD && l.x < 6 + d.panW && l.x > 6; if (inStall) return; const wet = false; o.push(`<circle cx="${X(l.x)}" cy="${Y(l.y)}" r="${Math.max(6, S * d.P.lightD / 2)}" fill="#FFD84A" stroke="${wet ? C12 : CLT}" stroke-width="${wet ? 3 : 1.8}"/>`); if (wet) o.push(`<text x="${X(l.x) + 12}" y="${Y(l.y) + 16}" style="font-size:10.5px;font-weight:700;fill:${C12}">wet-rated (IP65)</text>`); });
   // where the risers meet the walls
   o.push(`<text x="${X(RX) + 16}" y="${Y(0) + 14}" style="font-size:11px;font-weight:700;fill:${INK}">riser A (A/C, 12 V) at ${RX}</text><text x="${X(RX) + 16}" y="${Y(68) - 8}" style="font-size:11px;font-weight:700;fill:${INK}">riser B (120 V, branches) at ${RX}</text>`);
   // legend
@@ -243,7 +248,7 @@ function loadTable(d) {
   <li><b>Light switches:</b> by the couch, the dinette and the sink, as you asked. They all control the ceiling lights from three places, which needs momentary push-buttons into a 12 V dimming controller (a lighting module with several button inputs), not ordinary 3 way switches. I kept a small 2 gang plate at the rear doors only for the roof fan and the wet bath light.</li>
   <li><b>Under-cabinet lights:</b> two over the couch (a quarter and three quarters along it) and one centered over the dinette table, all on the underside of the wall cabinets. They replace the under-cabinet LED strips and the wall reading lights I had first suggested.</li>
   <li><b>Outlets:</b> the four 120 V outlets you asked for (couch, over the middle of the dinette table, under the TV, behind the fridge), plus one for the microwave, which cannot share a circuit with them. Everything else is 12 V: the lights, the fan, the pump and the control panel. There are no USB-C or 12 V sockets (you said they are not needed); phones charge from the 120 V outlets.</li>
-  <li><b>Wet bath:</b> a GFCI outlet high on the stall wall and a wet-rated ceiling light (the plan\u2019s first passenger-side light) over the stall. Only those two are in the wet area; everything else stays outside the curtain. The light is the one the slat rows put at 47 in from the driver wall, near the front (curtain side) edge of the stall (it spans 44 to 68): say if you want a light at the stall\u2019s center instead.</li>
+  <li><b>Wet bath:</b> a GFCI outlet high on the stall wall and a wet-rated ceiling light (the plan\u2019s first passenger-side light) over the stall. Only those two are in the wet area; everything else stays outside the curtain. The light is at the center of the stall (18 in along the wall, 56 in across from the driver wall). That point falls in the 1 in gap between two slats, so mount the light on a short cross block laid across the gap, or on the nearest slat 2 in to one side. It takes the place of the plan\u2019s first passenger-side light, so there are still six lights.</li>
   <li>The hot water heater (1440 W) and the microwave (about 1500 W) must not run together: that is more than a 2000 W inverter can supply.</li>
   <li>All 120 V work is for an electrician to check; I give layout and sizes, not a code review.</li></ul></div>
   <h2>1. One-line diagram</h2>
