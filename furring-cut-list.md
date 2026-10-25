@@ -76,8 +76,9 @@ The wood blocks are the spacers that hold S4, S5, S6 (and the nook frames V1 to 
 
 - **Size: 3 5/8 in long x 1 1/2 x 1 1/2 in.** Cut them from **2x2 stock** (it is really 1 1/2 x 1 1/2). The 3 5/8 in is the standoff: 3 3/4 in to the common line minus the 1/8 in the steel already stands off the body at the ribs and the thin strips.
 - **How they go on:** one 1 1/2 x 1 1/2 in end is glued (structural adhesive or VHB) to the steel at a dot, on solid steel, away from the holes; the strip is screwed to the other end with a #8 x 1 1/2 in screw through the strip into the block. Block length is the dimension that points out from the wall.
-- **How many:** 34 on the driver side (S4 12, S5 10, S6 12) and about 30 on the passenger side (S4 8, S5 4 in the middle, S6 8, and 3 each under V1, V2 and V3), so **about 65**. A 2x2x8 ft stick gives 25 blocks with a 1/8 in kerf, so **3 sticks** (75 blocks, a few spare).
-- **S7 and S8** only need thin shims at their dots: 1/4 in thick for S7 and 5/8 in for S8 (1 1/2 x 1 1/2 in, cut from plywood), about 10 each side.
+- **How many:** 34 on the driver side (S4 12, S5 10, S6 12) and 29 on the passenger side (S4 8, S5 4 in the middle piece only, S6 8, and 3 each under V1, V2 and V3), so **63**. A 2x2x8 ft stick gives 25 blocks with a 1/8 in kerf, so **3 sticks** (75 blocks, a few spare).
+- **Where each one goes:** one at every dot of those strips, drawn as a dark square on the furring maps (diagram A for the driver side, diagram D for the passenger side) with the count printed on each strip.
+- **S7 and S8** only need thin shims at their dots: 1/4 in thick for S7 and 5/8 in for S8 (1 1/2 x 1 1/2 in, cut from plywood): 37 in all (driver S7 10 and S8 10, passenger S7 7 and S8 10), drawn as light dashed squares.
 - If you would rather use 1x2 (3/4 x 1 1/2), cut the same 3 5/8 in lengths and stand them on their 3/4 x 1 1/2 end; the glue face is half as big, so use a 2x2.
 
 ## Things to check before you cut
