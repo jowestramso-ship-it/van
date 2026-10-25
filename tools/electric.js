@@ -189,7 +189,8 @@ function loadTable(d) {
   const batt = P.battAh * Vn / 1000;
   const L = [
     ['Air conditioner, eco', `${fr(P.acEcoA)} A for ${fr(P.acEcoH)} h`, P.acEcoA * P.acEcoH, 'figures from the listing and reviews'],
-    ['Fridge, 120 V, with the inverter on all day', 'about 1.0 kWh a day plus about 0.5 kWh of inverter idle', (1.0 + 0.5) / Vn * 1000, 'assumed: check the fridge’s label; the inverter idles about 20 W'],
+    ['Fridge, 120 V', 'about 100 W while it runs, assumed 45% of the day', 0.1 * 24 * 0.45 / Vn * 1000, 'your figure of 100 W; the 45% is my assumption for a warm van'],
+    ['Inverter idling, on all day for the fridge', 'about 20 W for 24 h', 0.02 * 24 / Vn * 1000, 'assumed; some inverters have a search mode that cuts this to a few watts, but check it still wakes for the fridge'],
     ['Ceiling lights, strips, reading lights', 'about 4 A for 4 h', 16, 'assumed LEDs, about 50 W together'],
     ['Roof fan', `${fr(P.fanLowW)} W low, ${fr(P.fanHighW)} W high for ${fr(P.fanHighH)} h`, ((P.fanLowW * (24 - P.fanHighH) + P.fanHighW * P.fanHighH) / 12), 'from the plan'],
     ['Water pump and USB charging', 'about 17 Ah', 17, 'assumed'],
