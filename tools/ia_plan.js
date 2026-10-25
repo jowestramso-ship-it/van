@@ -151,7 +151,7 @@ function drawPlan(L, V) {
   o.push(GE());
   if (L.toilet) {
     o.push(GB('toilet', 'Toilet'));
-    o.push(ip(L.toilet.x0, L.toilet.x1, L.toilet.y0, L.toilet.y1, '#993556', 'Toilet', `${fmt(P.toiletD)} x ${fmt(P.toiletW)}, ${fmt(P.toiletH)} high`, { fo: .2, fs: 10 }));
+    o.push(ip(L.toilet.x0, L.toilet.x1, L.toilet.y0, L.toilet.y1, '#993556', 'Toilet', `Fold-To-Go ${fmt(P.toiletD)} x ${fmt(P.toiletW)}`, { fo: .2, fs: 10 }));
     o.push(GE());
   }
   o.push(GB('shower', 'Shower head and valve'));

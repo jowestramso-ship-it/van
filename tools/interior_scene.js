@@ -166,11 +166,13 @@
     bx(0, P.panW, 0, 3, zc - .2, zc + .2, MT.white, 12);
     bx(0, P.panW, 0, .8, zc, VW, MT.white, 24, { cast: false });   // the fixed pan
     const T0 = D.L.toilet;
-    if (T0) { // the toilet: sideways at the cab end, facing the rear, back against the wall to the fridge
-      const z0 = VW - T0.y1, z1 = VW - T0.y0, zm = (z0 + z1) / 2, H = T0.z1, xm = T0.x0 + Math.min(8, (T0.x1 - T0.x0) / 2.2);
-      bx(T0.x0, T0.x1, .8, H - 2.2, z0, z1, MT.white, 24); bx(T0.x0 - .2, T0.x1 - 1.2, H - 2.2, H, z0 - .2, z1 + .2, MT.white, 24);
-      const bowl = new THREE.Mesh(new THREE.CylinderGeometry(Math.min(5.2, (z1 - z0) / 2.7), Math.min(5.2, (z1 - z0) / 2.7), .25, 28), MT.dark); bowl.position.set(xm, H + .05, zm); bowl.scale.set(1, 1, 1.2); add(bowl);
-      bx(T0.x1 - 1.2, T0.x1, H - 2.2, H + 5, z0 + 1, z1 - 1, MT.white, 24);   // the back of the toilet, against the wall
+    if (T0) { // the toilet: a Reliance Fold-To-Go set up sideways at the cab end, facing the rear, back against the wall to the fridge (four legs, a seat, a bag in the frame)
+      const z0 = VW - T0.y1, z1 = VW - T0.y0, zm = (z0 + z1) / 2, H = T0.z1, xm = (T0.x0 + T0.x1) / 2, leg = 1.1;
+      [[T0.x0, z0], [T0.x1 - leg, z0], [T0.x0, z1 - leg], [T0.x1 - leg, z1 - leg]].forEach(c => bx(c[0], c[0] + leg, .8, H - 1.6, c[1], c[1] + leg, MT.steel, 6));
+      bx(T0.x0, T0.x1, .8 + (H - 1.6) * .4, .8 + (H - 1.6) * .4 + .4, z0, z1, MT.steel, 8, { cast: false });   // a cross brace
+      bx(T0.x0, T0.x1, H - 1.6, H, z0, z1, MT.white, 24);                                                        // the seat
+      const bowl = new THREE.Mesh(new THREE.CylinderGeometry(Math.min(4.8, (z1 - z0) / 2.6), Math.min(4.8, (z1 - z0) / 2.6), .2, 28), MT.dark); bowl.position.set(xm, H + .02, zm); add(bowl);
+      const bag = new THREE.Mesh(new THREE.CylinderGeometry(Math.min(4.6, (z1 - z0) / 2.7), Math.min(3.6, (z1 - z0) / 3.6), H - 5, 20, 1, true), std({ color: 0x4a4d52, roughness: .8, side: THREE.DoubleSide })); bag.position.set(xm, H - 2.5 - (H - 5) / 2 + 2.5, zm); add(bag);   // the bag hanging in the frame
     }
     if (P.showerOn) { // head on its arm, valve below it
       bx(P.headX - .3, P.headX + .3, P.headZ - .3, P.headZ + .3, VW - P.headOut, VW, MT.steel, 4, { cast: false });

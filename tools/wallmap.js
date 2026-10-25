@@ -48,7 +48,7 @@ async function grab(page, side) {
       if (P.fridgeOn) add('Fridge', L.fr[0], L.fr[1], 8.25, 8.25 + P.fridgeH, `${F(P.fridgeW)} x ${F(P.fridgeD)} x ${F(P.fridgeH)}, on a platform`);
       if (P.microOn) add('Microwave', L.microX[0], L.microX[1], L.microZ[0], L.microZ[1], 'on its shelf');
       L.walls.filter(w => w.side === 'p').forEach(w => add('Floor-to-ceiling wall', w.x0, w.x1, 0, L.ceilF, `${w.id}: ${F(P.fwT)} thick, ${F(w.d)} out from the wall, ${w.id === 'W3' ? 'between the shower and the fridge' : 'between the fridge and the counter cabinet'}`));
-      if (L.toilet) add('Toilet', L.toilet.x0, L.toilet.x1, 3.8, 3.8 + L.toilet.z1, `${F(P.toiletD)} along the wall x ${F(P.toiletW)} out, ${F(L.toilet.z1)} high, back against the wall to the fridge`);
+      if (L.toilet) add('Toilet', L.toilet.x0, L.toilet.x1, 3.8, 3.8 + L.toilet.z1, `${F(P.toiletD)} along the wall x ${F(P.toiletW)} out, ${F(L.toilet.z1)} high, back against the wall to the fridge, the folding Reliance Fold-To-Go set up (it folds away to about 5 thick)`);
       if (L.sn) {
         add('Towel bar (in the shower nook)', L.sn.bar.x0, L.sn.bar.x1, L.sn.bar.z - .5, L.sn.bar.z + .5, `${F(L.sn.bar.z)} up, inside the nook`, L.sn.bar.z);
         add('Shelf board (in the shower nook)', L.sn.bay, L.sn.x1, L.sn.shelfTop - .75, L.sn.shelfTop, `top at ${F(L.sn.shelfTop)} up, toilet paper under it, bottles on it`, L.sn.shelfTop);

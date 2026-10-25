@@ -265,7 +265,7 @@ function drawPass(L, V) {
     const t = L.toilet;
     o.push(GB('toilet', 'Toilet'));
     o.push(box(t.x0, t.x1, panTop, panTop + t.z1, { fill: '#993556', fo: .16, stroke: '#993556', sw: 1.6, rx: 4 }));
-    o.push(LBL(X((t.x0 + t.x1) / 2), Y(panTop + t.z1 / 2), 'Toilet', `${fmt(P.toiletD)} x ${fmt(P.toiletW)} x ${fmt(P.toiletH)}, sideways, back against the wall to the fridge, ${fmt(t.x0)} in of standing room in front`, { size: 11, fill: '#993556' }));
+    o.push(LBL(X((t.x0 + t.x1) / 2), Y(panTop + t.z1 / 2), 'Toilet', `Reliance Fold-To-Go set up: ${fmt(P.toiletD)} x ${fmt(P.toiletW)} x ${fmt(P.toiletH)}, sideways, back against the wall to the fridge, ${fmt(t.x0)} in of standing room in front; folds to about 5 thick and is stored in the closet`, { size: 11, fill: '#993556' }));
     o.push(GE());
   }
   if (L.sn) {

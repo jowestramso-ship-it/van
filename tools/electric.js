@@ -53,7 +53,6 @@ const PLUMB = pl => {
     {k:'ppath', n:'Feed from the valve to the shower head', pts:[[rx, vz + 1.5], [rx, bz], [pl.headX, bz], [pl.headX, pl.headZ - 1.2]], at:[(rx + pl.headX) / 2, bz], note:'up beside the nook past furring strip S5 (drill a 3/4 in hole through it, do not notch it), along the band at ' + fr(bz) + ' in up over the nook (between S6 and S7) and down to the head; one mixed-water line'},
     {k:'pdrain', n:'Shower drain, through the floor to the grey water tank under the van', x:sx, z:.8, note:'a 1 1/2 in drain in the middle of the standing part of the pan (' + fr(sx) + ' in along, about ' + fr(pl.panD / 2) + ' in out from the wall), the pan floor sloping to it; straight down through the floor, a shallow trap under it, then to the grey tank (30 x 17 x 8 space, position not set) with its vent. The tank has to be lower than the pan'},
   ];
-  if (pl.toilet) out.push({k:'pvent', n:'Toilet vent hose (composting toilet)', x:pl.toilet.x1 - 3, z:12, note:'a 1 1/2 in hose from the fan on the back of the toilet through the passenger wall with a vent cap outside, or down through the floor; I have not checked what is behind the wall at this spot (holes and pans on diagram D), it has to be flat steel clear of them. No water line goes to a composting toilet'});
   return out;
 };
 
