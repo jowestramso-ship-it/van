@@ -58,6 +58,7 @@
     white: std({ color: 0xeceeef, roughness: .45 }),
     fridge: std({ color: 0xe3e6e9, roughness: .34, metalness: .12 }),
     black: std({ color: 0x1d1f22, roughness: .55 }),
+    greyFront: std({ color: 0x8b8e93, roughness: .38, metalness: .3 }),
     glass: std({ color: 0x131a22, roughness: .1, metalness: .6 }),
     steel: std({ color: 0xc4c9cf, roughness: .35, metalness: .45 }),
     dark: std({ color: 0x35302a, roughness: .9 }),
@@ -111,7 +112,14 @@
   /* ---------- floor, walls, ends ---------- */
   bx(XB, WEND + 70, -1, 0, 0, VW, MT.floor, 48, { cast: false });
   const hw = bare(0) - L.lining;                 // finished ceiling height at the walls
-  surf([V(XB, 0, 0), V(XE, 0, 0), V(XE, hw, 0), V(XB, hw, 0)], MT.wall, 48);   // driver wall
+  if (L.cn) { // driver wall with the couch back nook cut out of it, and the recess behind
+    const cn = L.cn, sh = new THREE.Shape(); sh.moveTo(XB, 0); sh.lineTo(XE, 0); sh.lineTo(XE, hw); sh.lineTo(XB, hw); sh.lineTo(XB, 0);
+    const hole = new THREE.Path(); hole.moveTo(cn.x0, cn.z0); hole.lineTo(cn.x1, cn.z0); hole.lineTo(cn.x1, cn.z1); hole.lineTo(cn.x0, cn.z1); hole.lineTo(cn.x0, cn.z0); sh.holes.push(hole);
+    const g = new THREE.ShapeGeometry(sh), pos = g.attributes.position, uv = g.attributes.uv; for (let i = 0; i < pos.count; i++) uv.setXY(i, pos.getX(i) / 48, pos.getY(i) / 48);
+    const m = new THREE.Mesh(g, Object.assign(MT.wall.clone(), { side: THREE.DoubleSide })); m.castShadow = true; m.receiveShadow = true; add(m);
+    bx(cn.x0, cn.x1, cn.z0, cn.z1, -cn.d - .3, -cn.d, MT.wall, 48); bx(cn.x0 - .3, cn.x1 + .3, cn.z1, cn.z1 + .3, -cn.d - .3, 0, MT.wall, 48); bx(cn.x0 - .3, cn.x1 + .3, cn.z0 - .3, cn.z0, -cn.d - .3, 0, MT.wall, 48);
+    bx(cn.x0 - .3, cn.x0, cn.z0, cn.z1, -cn.d - .3, 0, MT.wall, 48); bx(cn.x1, cn.x1 + .3, cn.z0, cn.z1, -cn.d - .3, 0, MT.wall, 48);
+  } else surf([V(XB, 0, 0), V(XE, 0, 0), V(XE, hw, 0), V(XB, hw, 0)], MT.wall, 48);   // driver wall
   { // passenger wall with the sliding door opening and the nook recess cut out
     const sh = new THREE.Shape(); sh.moveTo(XB, 0); sh.lineTo(P.doorX, 0); sh.lineTo(P.doorX, P.slideH); sh.lineTo(WEND, P.slideH); sh.lineTo(WEND, hw); sh.lineTo(XB, hw); sh.lineTo(XB, 0);
     const nk = D.nook; const hole = new THREE.Path(); hole.moveTo(nk[0], P.counterH); hole.lineTo(nk[1], P.counterH); hole.lineTo(nk[1], P.counterH + P.nookH); hole.lineTo(nk[0], P.counterH + P.nookH); hole.lineTo(nk[0], P.counterH); sh.holes.push(hole);
@@ -119,7 +127,7 @@
     const m = new THREE.Mesh(g, Object.assign(MT.wall.clone(), { side: THREE.DoubleSide })); m.position.z = VW; m.castShadow = true; m.receiveShadow = true; add(m);
   }
   // sheet joints every 48 in
-  for (let x = XB + 48; x < WEND; x += 48) { bx(x - .04, x + .04, 0, hw - .1, -.02, .02, MT.gap, 8, { cast: false }); if (x < P.doorX - 1 || x > WEND) bx(x - .04, x + .04, 0, hw - .1, VW - .02, VW + .02, MT.gap, 8, { cast: false }); }
+  for (let x = XB + 48; x < WEND; x += 48) { if (L.cn && x > L.cn.x0 - .1 && x < L.cn.x1 + .1) { bx(x - .04, x + .04, 0, L.cn.z0, -.02, .02, MT.gap, 8, { cast: false }); bx(x - .04, x + .04, L.cn.z1, hw - .1, -.02, .02, MT.gap, 8, { cast: false }); } else bx(x - .04, x + .04, 0, hw - .1, -.02, .02, MT.gap, 8, { cast: false }); if (x < P.doorX - 1 || x > WEND) bx(x - .04, x + .04, 0, hw - .1, VW - .02, VW + .02, MT.gap, 8, { cast: false }); }
   // outside, seen through the sliding door and the windshield
   bx(P.doorX - 2, WEND + 60, -2, -1, VW, VW + 400, MT.ground, 48, { cast: false });
   const skyS = new THREE.Mesh(new THREE.PlaneGeometry(500, 300), MT.sky); skyS.position.set(130, 80, VW + 170); skyS.rotation.y = Math.PI; add(skyS);
@@ -141,13 +149,22 @@
   L.doors.forEach(d => { const dz = P.cabDepth, y0 = L.doorZ[0], y1 = L.doorZ[1]; bx(d.x0 - .2, d.x1 + .2, y0 - .2, y1 + .2, dz - .05, dz + .12, MT.gap, 8, { cast: false }); bx(d.x0, d.x1, y0, y1, dz + .1, dz + .75, MT.woodH, 36); handle((d.x0 + d.x1) / 2, y0 + 1.6, dz + .75, 4, false, 1); });
   // couch: base, cushions
   bx(0, P.bedLen, 0, P.platform, 0, P.bedD, MT.wood, 36); bx(.3, P.bedLen - .3, P.platform, P.platform + P.mattress, .6, P.bedD - .3, MT.fabric, 24);
-  bx(.3, P.bedLen - .3, P.platform + P.mattress, P.platform + P.mattress + P.bedBack, .3, .3 + P.mattress, MT.fabric, 24);
-  [[12, 18, MT.pillow, .3], [60, 17, MT.pillow2, -.25]].forEach(p => { const m = bx(p[0] - 8, p[0] + 8, P.platform + P.mattress, P.platform + P.mattress + 15, 8, 12.5, p[2], 12); m.position.set(p[0], P.platform + P.mattress + 7.7, 9.2); m.rotation.set(-.18, p[3], .0); });
+  const ca = L.cnA;
+  { // the back cushion stands on the seat cushion with its rear face at the wall; with the nook it pivots on its bottom rear edge and leans back into the recess
+    const w = P.bedLen - .6, gp = new THREE.Group(); gp.position.set(P.bedLen / 2, P.platform + P.mattress, .3); gp.rotation.x = -ca;
+    gp.add(bx(-w / 2, w / 2, 0, P.bedBack, 0, P.mattress, MT.fabric, 24)); scene.add(gp);
+  }
+  [[12, 18, MT.pillow, .3], [60, 17, MT.pillow2, -.25]].forEach(p => { const m = bx(p[0] - 8, p[0] + 8, P.platform + P.mattress, P.platform + P.mattress + 15, 8, 12.5, p[2], 12); m.position.set(p[0], P.platform + P.mattress + 7.7, ca > 0 ? 7.4 : 9.2); m.rotation.set(-(ca > 0 ? ca + .1 : .18), p[3], .0); });
   // closet
-  bx(L.c0, L.c1, 0, L.ceilF, 0, P.closetD, MT.wood, 36);
+  const cEnd = L.c1 - (L.walls.some(w => w.id === 'W1') ? P.fwT : 0);   // the closet's cab-side panel is the wall the rear bench leans on
+  bx(L.c0, cEnd, 0, L.ceilF, 0, P.closetD, MT.wood, 36);
   [[.25, P.split - .1], [P.split + .1, L.ceilF - .25]].forEach((r, i) => { bx(L.c0 + .1, L.c1 - .1, r[0] - .15, r[1] + .15, P.closetD - .05, P.closetD + .1, MT.gap, 8, { cast: false }); bx(L.c0 + .3, L.c1 - .3, r[0], r[1], P.closetD + .08, P.closetD + .75, MT.wood, 36); handle(L.c1 - 2.2, i ? r[0] + 8 : r[1] - 8, P.closetD + .75, 5, true, 1); });
   // dinette benches, table
-  [L.bA, L.bB].forEach((b, i) => { bx(b[0], b[1], 0, P.seatH - 3.2, 0, P.benchD, MT.wood, 36); bx(b[0] + .2, b[1] - .2, P.seatH - 3.2, P.seatH, .4, P.benchD - .2, MT.fabric, 24); bx(b[0] + .2, b[1] - .2, P.seatH, P.backH, .2, .2 + P.pillowT, MT.fabric, 24); });
+  [L.bA, L.bB].forEach((b, i) => { bx(b[0], b[1], 0, P.seatH - 3.2, 0, P.benchD, MT.wood, 36); bx(b[0] + .2, b[1] - .2, P.seatH - 3.2, P.seatH, .4, P.benchD - .2, MT.fabric, 24); if (i) bx(b[1] - P.pillowT, b[1] - .2, P.seatH, P.backH, .2, P.benchD - .2, MT.fabric, 24); else bx(b[0] + .2, b[0] + P.pillowT, P.seatH, P.backH, .2, P.benchD - .2, MT.fabric, 24); });   // the backrests stand at the ends, against the walls
+  // floor-to-ceiling walls: their tops follow the arched ceiling, so they are built of 2 in strips; the passenger ones stand .05 proud of the cabinet fronts so the faces do not flicker
+  const colWall = (x0, x1, z0, z1) => { for (let z = z0; z < z1 - 1e-6; z += 2) { const e = Math.min(z1, z + 2); bx(x0, x1, 0, fin((z + e) / 2) - .05, z, e, MT.wall, 48); } };
+  L.walls.forEach(w => w.side === 'd' ? colWall(w.x0, w.x1, 0, w.d) : colWall(w.x0, w.x1, VW - w.d - .05, VW));
+  if (L.walls.some(w => w.id === 'W2')) bx(P.cab - .12, P.cab, 46.5, 49.5, 1.2, 3.2, MT.white, 4, { cast: false });   // the dinette light switch plate
   if (L.tableLen > 0) { bx(L.tbl[0], L.tbl[1], P.tableH - 1.4, P.tableH, 0, P.tableD, MT.woodH, 36); const lx = (L.tbl[0] + L.tbl[1]) / 2; const lg = new THREE.Mesh(new THREE.CylinderGeometry(.9, 1.1, P.tableH - 1.4, 16), MT.steel); lg.position.set(lx, (P.tableH - 1.4) / 2, P.tableD - 3); lg.castShadow = true; add(lg); }
 
   /* ---------- passenger side: stall, fridge, counter, sink, nook, TV ---------- */
@@ -160,13 +177,13 @@
   }
   const fz = zf(2 + P.fridgeD);                     // fridge front
   bx(L.fr[0], L.fr[1], 0, 8.25, fz, VW - 1, MT.wood, 36);
-  bx(L.fr[0] + .15, L.fr[1] - .15, 8.25, 8.25 + P.fridgeH, fz, VW - 2, MT.fridge, 24);
+  bx(L.fr[0] + .15, L.fr[1] - .15, 8.25, 8.25 + P.fridgeH, fz, VW - 2, [MT.black, MT.black, MT.black, MT.black, MT.black, MT.greyFront], 24);
   bx(L.fr[1] - 2.6, L.fr[1] - 2, 8.25 + P.fridgeH - 30, 8.25 + P.fridgeH - 8, fz - .9, fz, MT.steel, 8, { cast: false });
   bx(L.fr[0] + .15, L.fr[1] - .15, 8.25 + P.fridgeH * .27, 8.25 + P.fridgeH * .275, fz - .02, fz + .03, MT.gap, 4, { cast: false });
-  if (P.microOn) { const mz = zf(P.microIn + 12); bx(L.microX[0], L.microX[1], L.microZ[0] - .75, L.microZ[0], mz, VW - 1, MT.wood, 36); bx(L.microX[0] + .6, L.microX[1] - .6, L.microZ[0], L.microZ[1], mz, VW - P.microIn, MT.steel, 10); bx(L.microX[0] + 2, L.microX[1] - 6, L.microZ[0] + 1.4, L.microZ[1] - 1.4, mz - .15, mz + .02, MT.glass, 10, { cast: false }); bx(L.microX[1] - 5, L.microX[1] - 1.4, L.microZ[0] + 1.4, L.microZ[1] - 1.4, mz - .1, mz + .02, MT.black, 6, { cast: false }); }
+  if (P.microOn) { const mz = zf(P.microIn + 12); bx(L.microX[0], L.microX[1], L.microZ[0] - .75, L.microZ[0], mz, VW - 1, MT.wood, 36); bx(L.microX[0] + .6, L.microX[1] - .6, L.microZ[0], L.microZ[1], mz, VW - P.microIn, [MT.black, MT.black, MT.black, MT.black, MT.black, MT.greyFront], 10); bx(L.microX[0] + 2, L.microX[1] - 6, L.microZ[0] + 1.4, L.microZ[1] - 1.4, mz - .15, mz + .02, MT.glass, 10, { cast: false }); bx(L.microX[1] - 5, L.microX[1] - 1.4, L.microZ[0] + 1.4, L.microZ[1] - 1.4, mz - .1, mz + .02, MT.black, 6, { cast: false }); }
   // counter cabinet: footprint extruded, countertop slab on top
-  const cD = P.cabD, sD = P.sinkD, aS = L.angS, sS = L.sinkS, sE = L.sinkE, cS = L.cabS;
-  const foot = [[cS, VW], [cS, zf(cD)], [aS, zf(cD)], [sS, zf(sD)], [sE, zf(sD)], [sE, VW]];
+  const cD = P.cabD, sD = P.sinkD, aS = L.angS, sS = L.sinkS, sE = L.sinkE, cS = L.cabS, cF = cS + (L.walls.some(w => w.id === 'W4') ? P.fwT : 0);   // the cabinet body starts at the far face of the fridge-side wall
+  const foot = [[cF, VW], [cF, zf(cD)], [aS, zf(cD)], [sS, zf(sD)], [sE, zf(sD)], [sE, VW]];
   function extrude(h, y0, mat, inset) { const sh = new THREE.Shape(); foot.forEach((p, i) => i ? sh.lineTo(p[0], -p[1]) : sh.moveTo(p[0], -p[1])); sh.closePath(); const g = new THREE.ExtrudeGeometry(sh, { depth: h, bevelEnabled: false }); const uv = g.attributes.uv, pos = g.attributes.position; for (let i = 0; i < uv.count; i++) uv.setXY(i, (pos.getX(i) + pos.getY(i)) / 30, pos.getZ(i) / 30 + pos.getY(i) / 40); const m = new THREE.Mesh(g, mat); m.rotation.x = -Math.PI / 2; m.position.y = y0; m.castShadow = true; m.receiveShadow = true; return add(m); }
   extrude(P.counterH - 1.2, 0, MT.wood); extrude(1.2, P.counterH - 1.2, MT.counter);
   { // the counter's front: drawers on the flat part, doors on the rest
@@ -206,6 +223,7 @@
   const pl = (x, y, z, c, i, dist, shadow) => { const l = new THREE.PointLight(c, i, dist, 2); l.position.set(x, y, z); if (shadow) { l.castShadow = true; l.shadow.mapSize.set(512, 512); l.shadow.bias = -.002; } scene.add(l); return l; };
   L.lights.forEach(l => { const y = fin(l.y); const d = new THREE.Mesh(new THREE.CylinderGeometry(1, 1, .5, 20), MT.glow); d.position.set(l.x - 6, y - .1, l.y); add(d); pl(l.x - 6, y - 4, l.y, 0xffe1b0, .85, 200, true); });
   D.cabLights.forEach(x => { const d = new THREE.Mesh(new THREE.CylinderGeometry(1.05, 1.05, .3, 18), MT.glow); d.position.set(x, P.cabBot - .2, P.cabDepth / 2); add(d); pl(x, P.cabBot - 3, P.cabDepth / 2 + 3, 0xffd9a0, .5, 90, false); });
+  if (L.cn) pl((L.cn.x0 + L.cn.x1) / 2, L.cn.z1 - 6, 6, 0xffd9a0, .22, 90, false);
   [[20, 1.5], [95, 1.5], [20, VW - 1.5], [95, VW - 1.5]].forEach(p => pl(p[0], hw - 3, p[1], 0xffcf90, .28, 130, false)); pl(-3, hw - 3, VW / 2, 0xffcf90, .25, 100, false);
 
   /* ---------- camera, viewpoints, controls ---------- */
@@ -216,6 +234,8 @@
     dinette: { n: 'Dinette', p: [114, 60, 44], t: [122, 38, 6] },
     couch: { n: 'Couch', p: [34, 60, 43], t: [38, 40, 4] },
     shower: { n: 'Shower and fridge', p: [90, 63, 33], t: [38, 36, 60] },
+    fridge: { n: 'Fridge and microwave', p: [47, 50, 20], t: [47, 46, 68] },
+    nook: { n: 'Couch back nook', p: [37, 40, 37], t: [37, 33, 0] },
   };
   let yaw = 0, pitch = 0, fov = 72, cur = 'rear';
   function setView(k) { cur = k; const v = VIEWS[k], p = V(...v.p), t = V(...v.t), d = t.clone().sub(p); camera.position.copy(p); yaw = Math.atan2(d.z, d.x); pitch = Math.atan2(d.y, Math.hypot(d.x, d.z)); fov = 72; draw(); document.querySelectorAll('[data-v]').forEach(b => b.setAttribute('aria-pressed', b.dataset.v === k)); }

@@ -15,12 +15,17 @@ const PD = [
   { k: 'drawersOn', g: 'Take items out', l: 'Drawers and shelves under the counter (all of them, with the rail)', d: true, t: 'c' },
   { k: 'battOn', g: 'Take items out', l: 'Battery under the couch', d: true, t: 'c' },
   { k: 'closetOn', g: 'Take items out', l: 'Closet and its doors (the space it leaves stays empty; the dinette still starts where the closet ends)', d: true, t: 'c' },
+  { k: 'wallsOn', g: 'Take items out', l: 'Floor-to-ceiling walls: behind the dinette backs (at the closet end and behind the driver seat) and one on each side of the fridge', d: true, t: 'c' },
+  { k: 'cnOn', g: 'Take items out', l: 'Couch back nook (the wall behind the back cushion is recessed and the cushion leans back into it)', d: true, t: 'c' },
   { k: 'bedLen', g: 'Bed / couch', l: 'Length', d: 74, s: .5, a: 40, b: 120 },
   { k: 'bedD', g: 'Bed / couch', l: 'Depth, closed (the couch on its base)', d: 26, s: .5, a: 15, b: 40 },
   { k: 'bedBack', g: 'Bed / couch', l: 'Leaf width (flips out in front; = back cushion length)', d: 20, s: .5, a: 0, b: 40 },
   { k: 'platform', g: 'Bed / couch', l: 'Seat base (deck 3/4 in lower; the leaf folds onto it)', d: 14, s: .5, a: 6, b: 30 },
   { k: 'mattress', g: 'Bed / couch', l: 'Seat and back cushion thickness', d: 6, s: .5, a: 2, b: 12 },
   { k: 'legIn', g: 'Bed / couch', l: 'Legs set in from the leaf free edge', d: 3, s: .5, a: 0, b: 10 },
+  { k: 'cnD', g: 'Bed / couch', l: 'Back nook: depth into the wall (the back cushion leans back into it; the passenger nooks are 4 1/2)', d: 4.5, s: .5, a: 1, b: 6 },
+  { k: 'cnTop', g: 'Bed / couch', l: 'Back nook: top, up from the floor (its bottom is the top of the seat cushion)', d: 46, s: .5, a: 30, b: 58 },
+  { k: 'cnIn', g: 'Bed / couch', l: 'Back nook: plain wall left at each end of the couch', d: 2, s: .5, a: 0, b: 20 },
   { k: 'closetW', g: 'Closet', l: 'Width', d: 15, s: .25, a: 8, b: 40 },
   { k: 'closetD', g: 'Closet', l: 'Depth', d: 25, s: .5, a: 10, b: 40 },
   { k: 'rodHi', g: 'Closet', l: 'Upper rod, up from floor', d: 71, s: .5, a: 40, b: 85 },
@@ -28,6 +33,7 @@ const PD = [
   { k: 'split', g: 'Closet', l: 'Two doors split at', d: 38, s: .5, a: 20, b: 60 },
   { k: 'hinge', g: 'Closet', l: 'Door hinges on the', d: 'rear', t: 's', o: [['rear', 'bed side'], ['cab', 'dinette side']] },
   { k: 'openAng', g: 'Closet', l: 'Doors open to (degrees)', d: 90, s: 5, a: 30, b: 180 },
+  { k: 'fwT', g: 'Floor-to-ceiling walls', l: 'Wall thickness (the walls are inside the closet, the shower and the counter cabinet, so nothing else moves)', d: .75, s: .125, a: .25, b: 3 },
   { k: 'benchLen', g: 'Dinette', l: 'Bench length', d: 19.5, s: .5, a: 10, b: 40 },
   { k: 'benchD', g: 'Dinette', l: 'Bench depth', d: 28, s: .5, a: 15, b: 45 },
   { k: 'seatH', g: 'Dinette', l: 'Seat height', d: 17.5, s: .5, a: 10, b: 26 },
@@ -261,7 +267,7 @@ const HITR = (x, y, w, h) => `<rect x="${f1(x)}" y="${f1(y)}" width="${f1(Math.m
 const GB = (id, label) => `<g class="hg" data-grp="${id}" data-label="${label}">`;
 const GE = () => '</g>';
 // items that were taken out (their tick box in Sizes is off): cut their groups and drag handles out of a finished drawing
-const REMOVED = () => [['showerOn', 'shower'], ['microOn', 'Micro'], ['tvOn', 'tv'], ['towelOn', 'towels'], ['fridgeOn', 'fridge'], ['drawersOn', 'drawers'], ['battOn', 'batt'], ['closetOn', 'closet']].filter(r => !P[r[0]]).map(r => r[1]);
+const REMOVED = () => [['showerOn', 'shower'], ['microOn', 'Micro'], ['tvOn', 'tv'], ['towelOn', 'towels'], ['fridgeOn', 'fridge'], ['drawersOn', 'drawers'], ['battOn', 'batt'], ['closetOn', 'closet'], ['wallsOn', 'fwalls'], ['cnOn', 'cnook']].filter(r => !P[r[0]]).map(r => r[1]);
 function stripGroups(html, ids) {
   ids.forEach(id => {
     const open = `<g class="hg" data-grp="${id}"`;
@@ -287,7 +293,7 @@ function HIT(id, x, y, w, h, ax, bad, label, on, grp) {
 // x0/x1 along the wall and z0/z1 up (the planned spot plus how far it was dragged, both ways), y0/y1 out from the wall. The planned spots fill the space between the shelves, the
 // top drawers and the tanks, as before; dragging only adds to them.
 function cabinetParts(L) {
-  const P = L.P, ch = P.counterH, d0 = L.cabS + 1.25, dm = L.cabS + 14.75, z0 = ch - 6.75, z1 = ch - 2.75, tl = z0 - .25, can = !!P.canOn, bs = (can ? L.backShelf : L.cabShelf) + 1, tot = tl - bs, parts = [];
+  const P = L.P, ch = P.counterH, d0 = L.cabS + 1.25, dm = L.cabS + 14.75, sx0 = L.cabS + (P.wallsOn ? P.fwT : 0), z0 = ch - 6.75, z1 = ch - 2.75, tl = z0 - .25, can = !!P.canOn, bs = (can ? L.backShelf : L.cabShelf) + 1, tot = tl - bs, parts = [];
   const add = (kind, id, n, x0, x1, b0, b1) => {
     const dx = P['dx' + id] || 0, dz = P['dz' + id] || 0;
     parts.push({ kind, id, n, x0: x0 + dx, x1: x1 + dx, z0: b0 + dz, z1: b1 + dz, y0: 0, y1: 20, dxk: 'dx' + id, dzk: 'dz' + id });
@@ -299,7 +305,7 @@ function cabinetParts(L) {
   if (tot >= 3) {
     const ws = L.wellShelf;
     if (!can) add('shelf', 'SC', 'the shelf under the cab-side drawers', dm, L.angS - .75, L.cabShelf, L.cabShelf + .75);   // with the trash can the cab-side column has no lower drawers or shelves
-    add('shelf', 'SB', 'the shelf under the back-side drawers', L.cabS, dm, ws, ws + .75);
+    add('shelf', 'SB', 'the shelf under the back-side drawers', sx0, dm, ws, ws + .75);
     if (tot >= 11) {
       const bt = tl - 6, bb = ws + 1, many = bt - bb >= 14.5, rh2 = (bt - bb - 1) / 2;
       if (!can) {
@@ -308,8 +314,8 @@ function cabinetParts(L) {
         add('drawer', 'C2', 'the lower cab-side drawer', dm + 1, dm + 14, tl - 11, tl - 6);
       }
       if (many) {
-        add('shelf', 'SB1', 'the board between the upper and middle back-side drawers', L.cabS, dm, bt, bt + .75);
-        add('shelf', 'SB2', 'the board between the middle and bottom back-side drawers', L.cabS, dm, bb + rh2, bb + rh2 + .75);
+        add('shelf', 'SB1', 'the board between the upper and middle back-side drawers', sx0, dm, bt, bt + .75);
+        add('shelf', 'SB2', 'the board between the middle and bottom back-side drawers', sx0, dm, bb + rh2, bb + rh2 + .75);
         add('drawer', 'B1', 'the upper back-side drawer', d0, dm - .5, tl - 5, tl);
         add('drawer', 'B2', 'the middle back-side drawer', d0, dm - .5, bb + rh2 + 1, bt);
         add('drawer', 'B3', 'the bottom back-side drawer', d0, dm - .5, bb, bb + rh2);
@@ -348,6 +354,7 @@ function collisions(L) {
   if (P.hotShelf > .5) mov.push(bx('hot', 'the hot water tank shelf', L.hotX[0] - 1, L.hotX[1] + 1, P.hotBack, P.hotBack + P.hotD, P.hotShelf - .75, P.hotShelf, { kind: 'hotboard', vs: ['drawer', 'tank', 'can', 'jug'] }));
   const fix = [
     bx('', 'the wheel well', 42, 76, 0, 7, 0, 7.5, { prof: wellH }), P.fridgeOn && bx('', 'the fridge', L.fr[0], L.fr[1], 2, 2 + P.fridgeD, 8.25, ft), bx('', 'the cab wall', P.cab, P.cab + 60, 0, 40, 0, 120),
+    ...L.walls.filter(w => w.side === 'p').map(w => bx('', w.n, w.x0, w.x1, 0, w.d, 0, L.ceilF)),
     bx('', 'the floor', -10, P.cab + 10, -5, 45, -40, 0), bx('', 'the ceiling', -10, P.cab + 10, -5, 45, L.ceilF, L.ceilF + 40),
     bx('', 'the counter and its rail', L.cabS, L.angS - .75, 0, P.cabD, ch - 2.25, ch), bx('', 'the countertop', L.angS - .75, L.sinkE, 0, P.cabD, ch - 1.2, ch),
     bx('', 'the sink under the counter', L.sinkS, L.sinkE, 0, P.sinkD, ch - P.sinkBowlD, ch - 1.2),
@@ -410,6 +417,18 @@ function layout(P0) {
   const L = { P };
   L.c0 = P.bedLen; L.c1 = P.bedLen + P.closetW;
   L.bA = [L.c1, L.c1 + P.benchLen]; L.bB = [P.cab - P.benchLen, P.cab];
+  // floor-to-ceiling walls. Driver side (y = out from the driver wall): the closet's cab-side panel carried out to the bench depth, which the back of the rear bench leans on,
+  // and the wall behind the driver seat (face at the cab wall mark, body behind it), which the back of the cab-end bench leans on. Passenger side (y = out from the passenger wall):
+  // one each side of the fridge, taken out of the shower and out of the counter cabinet so that no other position moves; the shower one is as deep as the pan, the counter one as deep as the cabinet
+  L.walls = !P.wallsOn ? [] : [
+    { id: 'W1', side: 'd', x0: L.c1 - P.fwT, x1: L.c1, d: P.benchD, n: 'wall behind the rear dinette seat (closet end)' },
+    { id: 'W2', side: 'd', x0: P.cab, x1: P.cab + P.fwT, d: P.benchD, n: 'wall behind the driver seat' },
+    { id: 'W3', side: 'p', x0: P.panW - P.fwT, x1: P.panW, d: Math.max(P.panD, 2 + P.fridgeD), n: 'wall between the shower and the fridge' },
+    { id: 'W4', side: 'p', x0: P.panW + P.fridgeW, x1: P.panW + P.fridgeW + P.fwT, d: Math.max(P.cabD, 2 + P.fridgeD), n: 'wall between the fridge and the counter cabinet' },
+  ];
+  // the couch back nook: the back cushion stands on the seat cushion with its rear face at the wall and leans back until its top edge is cnD - 1/4 into the recess
+  L.cnA = P.cnOn ? Math.asin(Math.min(.7, Math.max(0, P.cnD - .25) / Math.max(1, P.bedBack))) : 0;
+  L.cn = P.cnOn ? { x0: P.cnIn, x1: P.bedLen - P.cnIn, z0: P.platform + P.mattress, z1: P.cnTop, d: P.cnD } : null;
   L.gap = L.bB[0] - L.bA[1];
   L.tableLen = P.tableAuto ? Math.max(0, L.gap) : P.tableLen;
   L.spare = L.gap - L.tableLen;

@@ -61,6 +61,20 @@ function elevTail(E, L, xlabel) {
   return o.join('');
 }
 
+// the floor-to-ceiling walls on one side, seen edge-on (3/4 in thick, so drawn as a bar): they are the backs the dinette seats lean on and the sides of the fridge
+function wallsDraw(E, L, side) {
+  const P = L.P, ws = L.walls.filter(w => w.side === side), o = [];
+  if (!ws.length) return '';
+  o.push(GB('fwalls', 'Floor-to-ceiling walls'));
+  ws.forEach(w => {
+    const xm = (w.x0 + w.x1) / 2, lab = w.id === 'W1' ? 'Wall at the closet end' : w.id === 'W2' ? 'Wall behind the driver seat' : w.id === 'W3' ? 'Wall, shower side of the fridge' : 'Wall, counter side of the fridge';
+    o.push(E.box(w.x0, w.x1, 0, L.ceilF, { fill: '#8A6B4D', fo: .6, stroke: '#3E230B', sw: 1.3 }));
+    o.push(LBL(E.xx(xm), E.yy(w.id === 'W2' ? 50 : w.id === 'W1' ? 50 : 56), lab, `${fmt(P.fwT)} thick, ${fmt(w.d)} in out from the wall, floor to ceiling`, { size: 10, fill: '#5A3A00' }));
+  });
+  o.push(GE());
+  return o.join('');
+}
+
 function drawDriver(L, V) {
   const P = L.P, E = mkElev(false, L), { S, FL, xx, yy, box } = E, o = [];
   const X = x => xx(x), Y = z => yy(z);
@@ -109,6 +123,12 @@ function drawDriver(L, V) {
     if (s > .85) g += LBL(X(P.bedLen / 2), Y(deck + P.mattress / 2 - 0.4), 'Bed made up', `${fmt(P.bedD + LW)} wide, top at ${fmt(deck + P.mattress)} in, leaf on 4 legs`, { size: 12.5, fill: COL.P, op: (s - .85) / .15 });
     else if (s >= .3) g += T(X(P.bedLen / 2), Y(bt + 6), 'leaf flips over (the seat cushion comes off)', { size: 11, fill: '#5A3A00', op: Math.min(1, (s - .3) * 4) * (s > .75 ? (.85 - s) * 10 : 1) });
     o.push(MV('bed', g, HITR(Math.min(X(0), X(P.bedLen)), Y(bt + LW), S * P.bedLen, S * (bt + LW))));
+  }
+  if (L.cn) {
+    o.push(GB('cnook', 'Couch back nook'));
+    o.push(box(L.cn.x0, L.cn.x1, L.cn.z0, L.cn.z1, { fill: '#2C2C2A', fo: .1, stroke: '#2C2C2A', sw: 1.4, dash: '6 3' }));
+    o.push(LBL(X((L.cn.x0 + L.cn.x1) / 2), Y(L.cn.z1 - 3.5), 'Couch back nook', `${fmt(L.cn.x1 - L.cn.x0)} long, ${fmt(L.cn.z1 - L.cn.z0)} tall (${fmt(L.cn.z0)} to ${fmt(L.cn.z1)} up), ${fmt(L.cn.d)} deep into the wall; the back cushion leans back into it`, { size: 11, fill: '#2C2C2A' }));
+    o.push(GE());
   }
   o.push(GE());
   // closet
@@ -168,6 +188,7 @@ function drawDriver(L, V) {
     o.push(MV('dinette', g, HITR(Math.min(X(L.bA[0]), X(L.bB[1])), Y(P.backH), S * (L.bB[1] - L.bA[0]), S * P.backH)));
   }
   o.push(GE());
+  o.push(wallsDraw(E, L, 'd'));
   // wall cabinet doors: flip up (hinged on the top edge), shown from the front so the door gets shorter as it swings up
   o.push(GB('cabdoors', 'Wall cabinet doors'));
   L.doors.forEach(d => {
@@ -282,6 +303,7 @@ function drawPass(L, V) {
     o.push(MV('fridge', g, HITR(Math.min(X(q0), X(q1)), Y(ft), S * P.fridgeW, S * P.fridgeH)));
   }
   o.push(GE());
+  o.push(wallsDraw(E, L, 'p'));
   const md = P.dzMicro, mx = P.dxMicro;
   o.push(GB('Micro', 'Microwave and its shelf'));
   o.push(box(q0 + mx, q1 + mx, ft + 2 + md, ft + 2.75 + md, { fill: '#8A6B4D', stroke: '#3E230B', sw: 1 }));
@@ -586,7 +608,13 @@ function drawBedEnd(L, V) {
   o.push(T(xx(yMax / 2), FL + 38, 'inches out from the wall', { size: 12, fill: '#5F5E5A', halo: false }));
   o.push(GE());
   o.push(Ln(xx(0), yy(0), xx(yMax), yy(0), { stroke: '#5F5E5A', sw: 2 }));
-  o.push(Ln(xx(0), yy(zMax), xx(0), yy(0), { stroke: '#2C2C2A', sw: 3 }));
+  if (L.cn) {
+    o.push(Ln(xx(0), yy(zMax), xx(0), yy(L.cn.z1), { stroke: '#2C2C2A', sw: 3 })); o.push(Ln(xx(0), yy(L.cn.z0), xx(0), yy(0), { stroke: '#2C2C2A', sw: 3 }));
+    o.push(GB('cnook', 'Couch back nook'));
+    o.push(bx(-L.cn.d, 0, L.cn.z0, L.cn.z1, { fill: '#2C2C2A', fo: .12, stroke: '#2C2C2A', sw: 2 }));
+    o.push(T(xx(-L.cn.d / 2) - 4, yy(L.cn.z1) - 6, `nook ${fmt(L.cn.d)} deep, ${fmt(L.cn.z0)} to ${fmt(L.cn.z1)} up`, { anchor: 'start', size: 10.5, fill: '#2C2C2A', halo: false }));
+    o.push(GE());
+  } else o.push(Ln(xx(0), yy(zMax), xx(0), yy(0), { stroke: '#2C2C2A', sw: 3 }));
   // wheel well, battery, and the shower pan's front edge (all are at other places along the wall; dashed)
   o.push(GB('wellbatt', 'Wheel well and battery'));
   o.push(bx(0, 6.25, 0, 7.5, { fill: '#E24B4A', fo: .2, stroke: '#A32D2D', sw: 1.4, dash: '5 3' }));
@@ -629,7 +657,12 @@ function drawBedEnd(L, V) {
   const sb0 = deck + lt * Math.max(0, Math.cos(th)), fade = 1 - .75 * Math.sin(clamp((s - .2) / .6, 0, 1) * Math.PI);
   o.push(GB('cushions', 'Cushions'));
   o.push(bx(0, P.bedD, sb0, sb0 + P.mattress, { fill: COL.P, fo: .12 * fade, stroke: COL.P, sw: 1.4, rx: 3, so: fade }));
-  if (bs.back > .02) o.push(bx(0, P.mattress, bt, bt + LW * bs.back, { fill: COL.P, fo: .1, stroke: COL.P, sw: 1.4, rx: 3 }));
+  if (bs.back > .02 && L.cn && L.cnA > .005) {
+    // standing back cushion leaning back into the nook: pivots on the rear edge of its bottom (at the wall); bs.back shortens it as it folds
+    const a = L.cnA, hh = LW * bs.back, q = (r, t) => [xx(-r * Math.sin(a) + t * Math.cos(a)), yy(bt + r * Math.cos(a) + t * Math.sin(a))];
+    o.push(Poly([q(0, 0), q(hh, 0), q(hh, P.mattress), q(0, P.mattress)], { fill: COL.P, fo: .1, stroke: COL.P, sw: 1.4, join: 'round' }));
+    if (bs.back > .9) o.push(T(xx(P.mattress + 2), yy(bt + LW * .75), `leans back ${Math.round(a * 180 / Math.PI)}\u00B0 into the nook`, { anchor: 'start', size: 10.5, fill: COL.P, halo: false }));
+  } else if (bs.back > .02) o.push(bx(0, P.mattress, bt, bt + LW * bs.back, { fill: COL.P, fo: .1, stroke: COL.P, sw: 1.4, rx: 3 }));
   if (bs.flat > .02) {
     o.push(bx(0, P.bedD, deck, deck + P.mattress, { fill: COL.P, fo: .2 * bs.flat, stroke: COL.P, sw: 2, rx: 3, so: bs.flat }));
     o.push(bx(P.bedD, P.bedD + LW, deck, deck + P.mattress, { fill: COL.P, fo: .2 * bs.flat, stroke: COL.P, sw: 2, rx: 3, so: bs.flat }));

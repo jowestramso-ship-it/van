@@ -193,6 +193,20 @@ function drawPlan(L, V) {
   o.push(GB('fridge', 'Fridge'));
   o.push(ip(L.fr[0], L.fr[1], 0, P.cabD, '#8A6B4D', '', null, { fo: .08, dash: '6 3' }));
   o.push(GE());
+  if (L.walls.length) {
+    o.push(GB('fwalls', 'Floor-to-ceiling walls'));
+    L.walls.forEach(w => {
+      o.push(w.side === 'd' ? it(w.x0, w.x1, 0, w.d, '#5A3A00', '', null, { fo: .85 }) : ip(w.x0, w.x1, 0, w.d, '#5A3A00', '', null, { fo: .85 }));
+      o.push(T(xx((w.x0 + w.x1) / 2), w.side === 'd' ? yy(w.d) + 12 : yy(Wd - w.d) - 5, w.id, { size: 9, fill: '#5A3A00', w: 700, halo: false }));
+    });
+    o.push(GE());
+  }
+  if (L.cn) {
+    o.push(GB('cnook', 'Couch back nook'));
+    o.push(R(xx(L.cn.x0), yy(-L.cn.d), S * (L.cn.x1 - L.cn.x0), S * L.cn.d, { fill: '#2C2C2A', fo: .1, stroke: '#2C2C2A', sw: 1.4, dash: '5 3' }));
+    o.push(T(xx((L.cn.x0 + L.cn.x1) / 2), yy(-L.cn.d) - 3, `couch back nook ${fmt(L.cn.d)} deep (in the wall)`, { size: 9, fill: '#2C2C2A', halo: false }));
+    o.push(GE());
+  }
   o.push(GB('Micro', 'Microwave'));
   o.push(ip(L.microX[0] + 1.75, L.microX[1] - 1.75, P.microIn, P.microIn + 12, COL.G, '', null, { fo: .2, dash: '4 3' }));
   o.push(T(xx((L.microX[0] + L.microX[1]) / 2), yp(5.5 + P.microIn), 'Microwave 18.5 x 12', { size: 9, fill: COL.G, w: 500 }));

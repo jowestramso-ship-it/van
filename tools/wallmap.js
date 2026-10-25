@@ -11,7 +11,7 @@ const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>
 
 // category -> colour (token names resolved in CSS)
 const CAT = [
-  [/wall cabinet|closet|counter cabinet|sink cabinet|drawer|shelf board|board/i, 'c1'],
+  [/floor-to-ceiling wall|wall cabinet|closet|counter cabinet|sink cabinet|drawer|shelf board|board/i, 'c1'],
   [/couch|cushion|bench|dinette|fold-out|foot ledge/i, 'c2'],
   [/tank|jug|drain|paper towel|trash/i, 'c3'],
   [/fridge|microwave|\btv\b|nook|jar/i, 'c4'],
@@ -40,12 +40,15 @@ async function grab(page, side) {
       add('Dinette bench', L.bA[0], L.bA[1], 0, P.seatH, `seat at ${F(P.seatH)}, ${F(P.benchD)} deep`);
       add('Dinette bench', L.bB[0], L.bB[1], 0, P.seatH, `seat at ${F(P.seatH)}, ${F(P.benchD)} deep`);
       if (L.tableLen > 0) add('Dinette table', L.tbl[0], L.tbl[1], P.tableH - 1.5, P.tableH, `top at ${F(P.tableH)}`, P.tableH);
+      L.walls.filter(w => w.side === 'd').forEach(w => add('Floor-to-ceiling wall', w.x0, w.x1, 0, L.ceilF, `${w.id}: ${F(P.fwT)} thick, ${F(w.d)} out from the wall, ${w.id === 'W1' ? 'the back of the rear bench leans on it' : 'behind the driver seat, the back of the cab-end bench leans on it'}`));
+      if (L.cn) add('Couch back nook (recess)', L.cn.x0, L.cn.x1, L.cn.z0, L.cn.z1, `${F(L.cn.d)} deep into the wall, the back cushion leans into it`);
       L.cabs.forEach((c, i) => add('Wall cabinet', c[0], c[1], P.cabBot, L.ceilF, `${F(c[1] - c[0])} long x ${F(P.cabDepth)} deep, 3 doors ${F(L.doors[i * 3].w)} wide`));
     } else {
       add('Wet bath (shower)', 0, P.panW, 0, L.ceilF, `${F(P.panW)} x ${F(P.panD)}`);
       { const nkx = Math.min(29.75, P.panW - 6.25), nk0 = nkx - P.snookLen; add('Shower nook', nk0, nkx, P.snookTop - P.snookH, P.snookTop, `${F(P.snookLen)} wide x ${F(P.snookH)} tall, 4 1/2 deep`); }
       if (P.fridgeOn) add('Fridge', L.fr[0], L.fr[1], 8.25, 8.25 + P.fridgeH, `${F(P.fridgeW)} x ${F(P.fridgeD)} x ${F(P.fridgeH)}, on a platform`);
       if (P.microOn) add('Microwave', L.microX[0], L.microX[1], L.microZ[0], L.microZ[1], 'on its shelf');
+      L.walls.filter(w => w.side === 'p').forEach(w => add('Floor-to-ceiling wall', w.x0, w.x1, 0, L.ceilF, `${w.id}: ${F(P.fwT)} thick, ${F(w.d)} out from the wall, ${w.id === 'W3' ? 'between the shower and the fridge' : 'between the fridge and the counter cabinet'}`));
       add('Counter cabinet', L.cabS, L.sinkS, 0, ch, `top at ${F(ch)}, ${F(P.cabD)} deep`);
       add('Sink cabinet', L.sinkS, L.sinkE, 0, ch, `${F(P.sinkW)} wide, ${F(P.sinkD)} deep`);
       if (P.drawersOn) L.parts.forEach(p => add(cap(p.n.replace(/^the /i, '')), p.x0, p.x1, p.z0, p.z1, `${F(p.x1 - p.x0)} wide x ${F(p.z1 - p.z0)} tall`));
