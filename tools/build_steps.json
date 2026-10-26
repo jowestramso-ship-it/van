@@ -10,6 +10,11 @@
   "body": "Air conditioner 14 1/4 in square at 49 1/2 in from the rear doors and 34 across; fan 14 in square at 13 1/4 and 34 across. Ribs start at 21 3/4, 37 7/8, 58 3/8, 97 3/8, 126 3/8 in (2 3/4 wide), so the openings sit between them: frame each opening, then seal, rust-proof the cut edges and fit the units."
  },
  {
+  "id": "window",
+  "title": "Cut and fit the side window",
+  "body": "The cutout (the slider frame's outline) is 39 11/16 x 22 5/8 in, 101 3/4 to 141 7/16 in from the back and 39 to 61 5/8 in up, over the dinette table (the glass is bigger, 54 3/8 x 29 1/8 in). The opening is already cut and dry-fitted; the glass is not bonded yet. Where the hole really is on the van is not in the plan (the numbers here assume it is centered over the table): measure its edges from the back mark and the floor and type them in the Side window sizes. Then bond the glass in one planned session. It is steel work, so it comes before the insulation and the wiring."
+ },
+ {
   "id": "wiring",
   "title": "Rough in the wiring before anything is covered",
   "body": "12 V DC runs for the fan (up to 2.7 A), the air conditioner (up to 58 A), the 2 ceiling lights and the battery cable; the hot water heater needs about 133 A through the inverter. Decide the battery (280 Ah), inverter and fuses first, since the electrics are still undecided."
@@ -27,7 +32,7 @@
  {
   "id": "furring",
   "title": "Fit the furring strips and the blocking",
-  "body": "The eight horizontal strips on each wall (at 3, 12, 21 1/2, 30 1/4, 43 1/2, 57 1/4, 66, 76 3/4 in up, at most 13 3/4 in apart; S7 stops at the sliding door opening and only S8 carries over it), then the blocking for the ceiling slats. Do the ceiling blocking before the walls."
+  "body": "The eight horizontal strips on each wall (at 3, 12, 21 1/2, 30 1/4, 43 1/2, 57 1/4, 66, 76 3/4 in up, at most 13 3/4 in apart; S7 stops at the sliding door opening and only S8 carries over it), On the driver side S5 and S6 stop at a four-piece frame around the side window, and the dinette outlet sits at 34 in up under it; then the blocking for the ceiling slats. Do the ceiling blocking before the walls."
  },
  {
   "id": "cover",

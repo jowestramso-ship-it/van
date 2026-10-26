@@ -10,6 +10,7 @@ from install import svg, R, L, C, T, P, PL, dimh, dimv, arrow, fr
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
+exec(open(HERE + '/shelfdata.py').read())      # the window's place in the plan (WIN_*), CAB_BOT and the fraction helpers
 
 WIN_W, WIN_H = 54.35, 29.12          # overall, inches (1380.6 x 739.7 mm on the listing)
 
@@ -267,6 +268,12 @@ def build():
             '<li><b>The open time is short:</b> 15 minutes. Cut and dry-fit first (done); do the bonding in one planned session with a helper.</li>'
             '<li><b>Weather:</b> cover the opening whenever you stop.</li></ul>'
             '<p class="swipe">On a phone, swipe a drawing sideways to see all of it.</p></div>'
+            '<div class="card"><h3 style="margin-top:0">Where it goes in this van</h3><ul>'
+            f'<li><b>Over the dinette, centered on the table.</b> The cutout (the slider frame&rsquo;s outline, {fr16(WIN_CW)} x {fr16(WIN_CH)} in) runs {fr16(WIN_CX0)} to {fr16(WIN_CX1)} in from the back mark and {fr16(WIN_CZ0)} to {fr16(WIN_CZ1)} in up. The glass ({fr16(WIN_GW)} x {fr16(WIN_GH)}) is bigger than the cutout: it ends {fr16(WIN_OL)} in left of it and {fr16(WIN_OB)} in below it, so on the outside it covers {fr16(WIN_GX0)} to {fr16(WIN_GX1)} in from the back and {fr16(WIN_GZ0)} to {fr16(WIN_GZ1)} in up.</li>'
+            f'<li><b>Clearances inside:</b> the sill is {fr8(WIN_CZ0 - 29)} in over the table (29 up) and {fr8(WIN_CZ0 - 38)} in over the backrest tops (38 up); the top of the cutout is {fr16(CAB_BOT - WIN_CZ1)} in under the wall cabinet (its bottom is at {fr8(CAB_BOT)}).</li>'
+            f'<li><b>This place is an assumption.</b> Your opening is already cut, but where it sits on the wall is not in the plan. Measure its edges from the back mark and the floor, and put the numbers in the Side window group on the interactive page, so the furring frame, the outlet and the drawings follow the real hole.</li>'
+            f'<li><b>The seam:</b> the steel map shows a seam or pillar at about 98 in from the back, {fr16(WIN_CX0 - 98)} in left of the cutout. It runs under the left end of the glass, so the bead crosses it there: find it on the outside and seal it before the bead goes on.</li>'
+            f'<li><b>Inside:</b> furring strips S5 and S6 stop at a frame of four pieces (J1 to J4) around the cutout, and the dinette outlet drops from 36 to 34 in up. See the build guide and the furring cut list.</li></ul></div>'
             '<div class="card"><div class="cols"><div><h3 style="margin-top:0">Materials</h3><ul class="chk">'
             + ''.join(f'<li><input type="checkbox" data-s="m{i}"><span>{m}</span></li>' for i, m in enumerate(mats)) +
             '</ul></div><div><h3 style="margin-top:0">Tools</h3><ul class="chk">'

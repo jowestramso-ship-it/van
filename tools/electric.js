@@ -11,7 +11,7 @@ const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>
 
 // ------------------------------------------------------------------ the proposal (x = inches from the back mark, z = inches up from the floor)
 // kinds: out120 = 120 V outlet, sw = switch, lt = light, strip = LED strip (x0..x1 at z), box = a mounted unit, inlet, panel, run = a wire run (vertical x from z0 to z1)
-const E_DRIVER = pl => { const tc = (pl.tbl[0] + pl.tbl[1]) / 2, q1 = pl.bedLen / 4, q3 = 3 * pl.bedLen / 4, lz = pl.cabBot - .5; return [
+const E_DRIVER = pl => { const oz = pl.win && pl.win.cz0 - 5 < 36 ? pl.win.cz0 - 5 : 36, tc = (pl.tbl[0] + pl.tbl[1]) / 2, q1 = pl.bedLen / 4, q3 = 3 * pl.bedLen / 4, lz = pl.cabBot - .5; return [
   {k:'box',   n:'Battery, 280 Ah (assumed lithium)',          x0:52, x1:73, z0:0, z1:9.5, note:'where the plan has it, in front of the wheel well; main fuse (Class T, 250 A) within 7 in of its + post. The gear shelf slides over it, 1 in above its top, so the posts need right-angle lugs'},
   ...(pl.gear ? [
     {k:'box', n:'Inverter, BELTTT 2000 W (inverter only: no charger, no transfer switch)', x0:pl.gear.inv.x0, x1:pl.gear.inv.x1, z0:pl.gear.inv.z0, z1:pl.gear.inv.z1, note:'on the pull-out gear shelf over the battery, rear row, ' + fr(pl.gear.inv.y0) + ' to ' + fr(pl.gear.inv.y1) + ' in out from the wall; its battery cables are 2/0 AWG to the bus with a loop about 2 ft longer than a fixed run so the shelf can slide out (Class T 250 A fuse within 7 in of the battery post, fixed; not the 3 ft cables it comes with); its AC output goes to the transfer switch on the hub board; the remote (23 ft cable) goes by the control panel'},
@@ -28,7 +28,7 @@ const E_DRIVER = pl => { const tc = (pl.tbl[0] + pl.tbl[1]) / 2, q1 = pl.bedLen 
   {k:'sw',    n:'Light switch by the dinette',                  x:pl.cab - 1, z:48, note:'on the wall behind the driver seat (the cab wall, at the cab end of the dinette; drawn here at its corner with the driver wall), above the bench back (38 in): the two lights under the cabinet over the dinette seats, the ceiling light over the countertop and the sink, and the jar nook strip. The wire comes down the corner behind the planks'},
   {k:'strip', n:'Soft LED strip, ceiling edge, driver side run (154 in)', x0:1, x1:pl.cab - 1, z:73, note:'one of three runs of one warm white (2700 K or warmer) dimmable 12 V strip in an aluminum channel with a frosted diffuser, at the ceiling edge, aimed up so it glows off the cedar ceiling. The wall cabinets run up to the ceiling here, so the channel sits on the top front edge of the cabinets behind a 1 in lip. Fed from the ceiling junction box through riser A'},
   {k:'sw',    n:'Switch and dimmer for the soft LED lighting',  x:70, z:44, note:'next to the couch plate (a separate single gang box, 8 in along from it): a momentary push button into a dimming controller for the soft strip, which has its own 12 V circuit (10 A, 14 AWG) because the strip draws more than the other lights. Say if you want it on the rear doors plate or the dinette plate instead'},
-  {k:'out120',n:'Outlet over the dinette table (120 V duplex)', x:tc, z:36, note:'on the wall just over the table (its top is at 29 in), in the middle of it, clear of the backrests (38 in); circuit A (GFCI)'},
+  {k:'out120',n:'Outlet over the dinette table (120 V duplex)', x:tc, z:oz, note:'on the wall just over the table (its top is at 29 in), in the middle of it, clear of the backrests (38 in)' + (pl.win ? '; moved down from 36 to ' + fr(oz) + ' in up because the side window (its frame starts at ' + fr(pl.win.cz0 - 1.5) + ') is now over the table' : '') + '; circuit A (GFCI)'},
   {k:'run',   n:'Riser A: A/C, 12 V and lights feed',          x:73, z0:11, z1:75, note:'up inside the wall behind the planks (4 1/2 in space) to the ceiling: A/C 6 AWG pair in its own loom, plus the 12 V ceiling feed (12 AWG). Grommet where it crosses the top steel'},
   {k:'run',   n:'Cab charge cable (DC-DC input)',              x:70, z0:0, z1:1,  note:'2 AWG from the starter battery fuse (80 A) under the van along the driver side frame to a sealed floor grommet next to the battery'},
 ]; };
@@ -73,7 +73,7 @@ async function readPlan(page) {
       fan: { x: L.fan.x, y: L.fan.y, w: L.fan.w, u: L.fan.u },
       ac: { x: L.ac.x, y: L.ac.y, w: L.ac.w, u: L.ac.u },
       ribBands: L.ribBands,
-      batt: L.batt, bA: L.bA, bB: L.bB, headX: P.headX, headZ: P.headZ, headOut: P.headOut, valveX: P.valveX, valveZ: P.valveZ, cab: P.cab, ceilF: L.ceilF, panW: P.panW, panD: P.panD, gear: L.gear, toilet: L.toilet, sn: L.sn, wallsOn: P.wallsOn, fwT: P.fwT, hotX: L.hotX, snookEnd: Math.min(29.75, P.panW - 6.25), slatY: L.slatY, slatW: P.slatW, tbl: L.tbl, bedLen: P.bedLen, tableH: P.tableH, cabBot: P.cabBot,
+      win: L.win, batt: L.batt, bA: L.bA, bB: L.bB, headX: P.headX, headZ: P.headZ, headOut: P.headOut, valveX: P.valveX, valveZ: P.valveZ, cab: P.cab, ceilF: L.ceilF, panW: P.panW, panD: P.panD, gear: L.gear, toilet: L.toilet, sn: L.sn, wallsOn: P.wallsOn, fwT: P.fwT, hotX: L.hotX, snookEnd: Math.min(29.75, P.panW - 6.25), slatY: L.slatY, slatW: P.slatW, tbl: L.tbl, bedLen: P.bedLen, tableH: P.tableH, cabBot: P.cabBot,
     };
   });
 }
@@ -83,6 +83,7 @@ async function grabItems(page) {            // the furniture outlines (same posi
     const D = [a(0, P.bedLen, 0, P.platform + P.mattress + P.bedBack), a(42, 76, 0, 7.5), a(L.c0, L.c1, 0, L.ceilF), a(L.bA[0], L.bA[1], 0, P.seatH), a(L.bB[0], L.bB[1], 0, P.seatH)];
     if (L.tableLen > 0) D.push(a(L.tbl[0], L.tbl[1], P.tableH - 1.5, P.tableH));
     L.cabs.forEach(c => D.push(a(c[0], c[1], P.cabBot, L.ceilF)));
+    if (L.win) D.push(Object.assign(a(L.win.cx0, L.win.cx1, L.win.cz0, L.win.cz1), { win: true }));
     const nkx = Math.min(29.75, P.panW - 6.25), nk0 = nkx - P.snookLen;
     const PS = [a(0, P.panW, 0, L.ceilF), a(nk0, nkx, P.snookTop - P.snookH, P.snookTop), a(L.fr[0], L.fr[1], 8.25, 8.25 + P.fridgeH), a(L.microX[0], L.microX[1], L.microZ[0], L.microZ[1]),
       a(L.cabS, L.sinkE, 0, ch), a(76.5, 103.5, ch + 16, ch + 31.4), a(NK(P)[0], NK(P)[1], ch, ch + P.nookH), a(L.tankX[0], L.tankX[1], P.tankLift, P.tankLift + P.tankH),
@@ -126,7 +127,9 @@ function symbol(e, X, Y) {
 function wallSVG(list, side, base, furn, plumb) {
   const flip = side === 'P', X = x => +(flip ? 1020 - 6 * x : 50 + 6 * x).toFixed(1), Y = z => +(544 - 6 * z).toFixed(1);
   const o = [], placed = [];
-  furn.forEach(it => { const xa = X(it.x0), xb = X(it.x1); o.push(`<rect x="${Math.min(xa, xb)}" y="${Y(it.z1)}" width="${Math.abs(xb - xa)}" height="${6 * (it.z1 - it.z0)}" rx="2" fill="none" stroke="${INK}" stroke-opacity=".28" stroke-width="1.2" stroke-dasharray="4 3"/>`); });
+  furn.forEach(it => { const xa = X(it.x0), xb = X(it.x1); o.push(it.win
+    ? `<rect x="${Math.min(xa, xb)}" y="${Y(it.z1)}" width="${Math.abs(xb - xa)}" height="${6 * (it.z1 - it.z0)}" rx="2" fill="#B5D4F4" fill-opacity=".3" stroke="#185FA5" stroke-width="1.6"/><text x="${(xa + xb) / 2}" y="${Y(it.z0) - 6}" text-anchor="middle" style="font-size:10px;font-weight:700;fill:#0C447C;paint-order:stroke;stroke:#fff;stroke-width:3px">side window</text>`
+    : `<rect x="${Math.min(xa, xb)}" y="${Y(it.z1)}" width="${Math.abs(xb - xa)}" height="${6 * (it.z1 - it.z0)}" rx="2" fill="none" stroke="${INK}" stroke-opacity=".28" stroke-width="1.2" stroke-dasharray="4 3"/>`); });
   const rows = list.map((e, i) => {
     e.id = 'E' + side + (i + 1);
     const [g, cx, cy] = symbol(e, X, Y); o.push(g);

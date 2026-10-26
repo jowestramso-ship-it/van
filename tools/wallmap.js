@@ -15,7 +15,7 @@ const CAT = [
   [/couch|cushion|bench|dinette|fold-out|foot ledge/i, 'c2'],
   [/tank|jug|drain|paper towel|trash/i, 'c3'],
   [/fridge|microwave|\btv\b|nook|jar/i, 'c4'],
-  [/wheel well|battery|inverter|charger|sliding door|wet bath|hook|lawn chair/i, 'c5'],
+  [/wheel well|battery|inverter|charger|sliding door|wet bath|hook|lawn chair|side window/i, 'c5'],
 ];
 const colorOf = n => (CAT.find(c => c[0].test(n)) || [,'c6'])[1];
 
@@ -45,6 +45,12 @@ async function grab(page, side) {
       add('Dinette bench', L.bA[0], L.bA[1], 0, P.seatH, `seat at ${F(P.seatH)}, ${F(P.benchD)} deep`);
       add('Dinette bench', L.bB[0], L.bB[1], 0, P.seatH, `seat at ${F(P.seatH)}, ${F(P.benchD)} deep`);
       if (L.tableLen > 0) add('Dinette table', L.tbl[0], L.tbl[1], P.tableH - 1.5, P.tableH, `top at ${F(P.tableH)}`, P.tableH);
+      if (L.win) {
+        const w = L.win;
+        add('Side window cutout (cut through the steel)', w.cx0, w.cx1, w.cz0, w.cz1, `${F(w.cx1 - w.cx0)} wide x ${F(w.cz1 - w.cz0)} tall, sill ${F(w.cz0)} up (the slider frame outline; mark it from the template, then cut)`);
+        add('Side window glass outline (outside the van)', w.gx0, w.gx1, w.gz0, w.gz1, `${F(w.gx1 - w.gx0)} x ${F(w.gz1 - w.gz0)}, the glass is bigger than the hole: it ends ${F(w.cx0 - w.gx0)} in left of the cutout`);
+        add('Side window frame (furring: two jambs, sill and head)', w.cx0 - 1.5, w.cx1 + 1.5, w.cz0 - 1.5, w.cz1 + 1.5, `3/4 x 1 1/2 in strip all round the cutout; S5 and S6 stop at it`);
+      }
       L.walls.filter(w => w.side === 'd').forEach(w => add('Floor-to-ceiling wall', w.x0, w.x1, 0, L.ceilF, `${w.id}: ${F(P.fwT)} thick, ${F(w.d)} out from the wall, ${w.id === 'W1' ? 'the back of the rear bench leans on it' : 'behind the driver seat, the back of the cab-end bench leans on it'}`));
       L.cabs.forEach((c, i) => add('Wall cabinet', c[0], c[1], P.cabBot, L.ceilF, `${F(c[1] - c[0])} long x ${F(P.cabDepth)} deep, 3 doors ${F(L.doors[i * 3].w)} wide`));
     } else {

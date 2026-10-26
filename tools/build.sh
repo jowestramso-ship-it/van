@@ -15,6 +15,7 @@ cd "$(dirname "$0")"
 cat ia_head.html zoom.js ia_core.js ia_elev.js ia_plan.js ia_ui.js > ../interactive.html
 node buildsteps.js 2>/dev/null || echo 'build_steps.json not rebuilt (node + playwright needed)'
 python3 gen2.py
+python3 furrlist.py
 python3 install.py
 python3 window.py
 python3 wtemplate.py

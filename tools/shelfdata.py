@@ -30,6 +30,13 @@ RAIL_L = GAP_E - GAP_W - .125    # 1/16 in each end
 LEDGE = 1.25                     # angle legs 1 1/4 x 1 1/4 x 1/8
 # the wall cabinets: the bottom was 61, raised 2 in to 63 (user: 'make the wall cabinets be 2 in higher'); the top stays at the finished ceiling at the wall
 CAB_BOT = 63; CAB_TOP = 74.5625; DOOR_H = 10; DOOR_Z0 = CAB_BOT + .5; DOOR_Z1 = DOOR_Z0 + DOOR_H
+# the side window over the dinette: Van Windows Direct TL201-SE, driver side forward slider (the numbers of window.py and wtemplate.py)
+WIN_CX0, WIN_CZ0 = 101.75, 39.0       # the cutout's left edge from the back, and its bottom edge up from the floor (centered on the table, sill 1 in over the backrests)
+WIN_CW, WIN_CH = 39.6875, 22.625      # the cutout (the slider frame's outline)
+WIN_GW, WIN_GH = 54.35, 29.12         # the glass, overall
+WIN_OL, WIN_OB = 9.6875, 2.75         # the glass's left edge is this far left of the cutout, its bottom edge this far below it
+WIN_GX0 = WIN_CX0 - WIN_OL; WIN_GX1 = WIN_GX0 + WIN_GW; WIN_GZ0 = WIN_CZ0 - WIN_OB; WIN_GZ1 = WIN_GZ0 + WIN_GH
+WIN_CX1 = WIN_CX0 + WIN_CW; WIN_CZ1 = WIN_CZ0 + WIN_CH
 AIR = DECK_U - (SH_Z1 + max(DC['h'], INV['h'], CHG['h']))   # air above the tallest unit
 def fr8(v):
     """inches as a whole number and eighths: 41.6 -> '41 5/8'"""

@@ -38,6 +38,9 @@ def _md(text):
 
 
 def pages(root):
+    FD = {}
+    exec(_read(os.path.join(root, 'tools', 'shelfdata.py')), FD); exec(_read(os.path.join(root, 'tools', 'furring.py')), FD)   # the window's place and the furring counts
+    fr16, fr8 = FD['fr16'], FD['fr8']
     sides = _read(os.path.join(root, 'sides.html'))
     rows = json.load(open(os.path.join(root, 'tools', 'plan_rows.json'), encoding='utf-8'))
     try:
@@ -86,7 +89,8 @@ def pages(root):
     P.append(dict(slug='fan-ac', nav='Fan and A/C', title='Roof fan and air conditioner', ext='install.html',
         kick='Cut the roof first: it is dirty, and everything under it is still open.', desc='Step by step with drawings: cutting, framing and mounting the roof fan and the air conditioner.', intro='', steps=[], blocks=[]))
     P.append(dict(slug='window', nav='Side window', title='Side window', ext='window.html', also=('window-template.html', 'the window template'),
-        kick='Another steel cut, so it also comes before the insulation and the wiring.', desc='Step by step with drawings: installing the side window, with a cardboard template.', intro='', steps=[], blocks=[]))
+        kick='Another steel cut, so it also comes before the insulation and the wiring.', desc=f"Step by step with drawings: installing the side window over the dinette (cutout {fr16(FD['WIN_CW'])} x {fr16(FD['WIN_CH'])} in, sill {fr8(FD['WIN_CZ0'])} in up), with a cardboard template.",
+        intro=(f"<p>{H.escape(body('window'))}</p>" if body('window') else '') + f"<p>Inside, the window cutout is boxed with a four-piece frame of the furring strip (J1 to J4, on the furring page): furring strips S5 and S6 stop at it, and the dinette outlet moves down to {fr8(FD['WIN_CZ0'] - 5)} in up. The cutout is {fr16(FD['WIN_CW'])} x {fr16(FD['WIN_CH'])} in, {fr16(FD['WIN_CX0'])} to {fr16(FD['WIN_CX1'])} in from the back mark and {fr16(FD['WIN_CZ0'])} to {fr16(FD['WIN_CZ1'])} in up: {fr8(FD['WIN_CZ0'] - 29)} in over the table, {fr16(FD['CAB_BOT'] - FD['WIN_CZ1'])} in under the wall cabinet. <b>This place is an assumption: the opening is already cut, so measure where it really is and put the numbers in the plan.</b></p>", steps=[], blocks=[]))
     P.append(dict(slug='wiring', nav='Wiring rough-in', title='Wiring rough-in',
         kick='Everything that will be hidden gets wired before it is covered.',
         intro=f'<p>{H.escape(body("wiring"))}</p><p>The drawings, the wire sizes and the cable table are on the <a href="../electric.html">electrical layout page</a>.</p>',
@@ -94,7 +98,7 @@ def pages(root):
                '<b>Ceiling first (it is hidden first):</b> the two ceiling lights (16 AWG, each on one slat), the soft LED strip (14 AWG, its own 10 A circuit), the roof fan (14 AWG, 5 A) and the A/C feed (a 6 AWG pair, a 100 A fuse at the battery, about 12 ft).',
                '<b>The 12 V trunk</b> to the fuse block (12 AWG), the water pump circuit (14 AWG, 10 A, under the sink) and the control panel (18 AWG, 3 A).',
                '<b>The 120 V circuits</b> in flexible conduit (12 AWG): the outlets (A), the microwave through the selector (B), the fridge (C) and the water heater through the selector (D). One shore inlet (30 A), at 80 in from the back and 21 in up, through the solid steel band at 19 1/2 to 23 in up.',
-               '<b>With the furring strips:</b> fix the electrical boxes to blocking between the strips, and add blocking behind the hub board, the switch plates and the outlets before the planks go on.',
+               '<b>With the furring strips:</b> fix the electrical boxes to blocking between the strips, and add blocking behind the hub board, the switch plates and the outlets before the planks go on. The dinette outlet goes at 34 in up, under the side window frame (not 36).',
                '<b>Last, after the covering is up:</b> the hub board (on the closet\'s rear panel, 72 to 74 in from the back, 1 to 11 in up) with its fuses, the inverter and the two chargers on the gear shelf, the transfer switch, the lights and the plates. Every cable to the gear shelf needs a loop about 24 in longer than a fixed run.',
                '<b>Test</b> every circuit with a meter before you connect the battery, test the GFCI outlets with their button, and have the 120 V side inspected before you use it.'],
         blocks=[]))
@@ -107,13 +111,14 @@ def pages(root):
     P.append(dict(slug='furring', nav='Furring strips', title='Furring strips, spacer blocks and shims',
         kick='Eight strips on each wall, so every plank is held at least every 14 in.',
         intro=f'<p>{H.escape(body("furring"))}</p>',
-        steps=['<b>Cut the 1x2 strips</b> to the cut list below: 40 pieces, about 26 eight-foot sticks. Any strip over 8 ft is two pieces butted at an attachment dot.',
-               '<b>Cut the spacer blocks and shims:</b> 63 blocks (1 1/2 in cuts off a 2x4, stood on the 3 1/2 in side) and 37 thin plywood shims (1/4 in for S7, 5/8 in for S8).',
+        steps=[f"<b>Cut the 1x2 strips</b> to the cut list below: {FD['N_PIECES']} pieces, about {FD['N_STICKS']} eight-foot sticks. Any strip over 8 ft is two pieces butted at an attachment dot.",
+               f"<b>Cut the spacer blocks and shims:</b> {FD['TOT_BLOCKS']} blocks (1 1/2 in cuts off a 2x4, stood on the 3 1/2 in side) and {FD['TOT_SHIMS']} thin plywood shims (1/4 in for S7, 5/8 in for S8).",
                '<b>Mark the dots on the steel</b> from the maps below (white dots; dark squares are blocks, light dashed squares are shims). Keep every dot on solid steel, clear of the holes.',
-               '<b>Glue the blocks to the steel</b> (adhesive, never screws into the van\'s body) at the dots of S4, S5 and S6 and the nook frames V1 to V3, with adhesive pads for S1, S2 and S3, and hold them until cured.',
+               '<b>Glue the blocks to the steel</b> (adhesive, never screws into the van\'s body) at the dots of S4, S5 and S6, the side window frame J1 to J4 and the nook frames V1 to V3, with adhesive pads for S1, S2 and S3, and hold them until cured.',
                '<b>Fix the strips to the blocks:</b> glue and a #8 x 1 1/2 in screw through the strip into each block. S7 and S8 sit on their shims.',
+               f"<b>Around the side window (driver side):</b> once you have measured the real hole (it is already cut), fit the four frame pieces (the two jambs {fr16(FD['FR_Z1'] - FD['FR_Z0'])} in long, the sill and the head {fr16(FD['WIN_CW'])} in), each on three blocks. S5 and S6 stop at the jambs: each is a piece from the back to {fr16(FD['WL'])} in and a short piece of {fr16(154 - FD['WR'])} in past the window.",
                '<b>Check the line:</b> every strip\'s back should sit on one line, 3 3/4 in off the body, so the planks lie flat 4 1/2 in off it.',
-               '<b>Passenger side:</b> the strips stop at the sliding door opening (104 in) except S8; S5 is cut away at the two nooks; then add the nook frames V1 to V4 and the three cross pieces.',
+               '<b>Passenger side:</b> the strips stop at the sliding door opening (104 in) except S8; S5 is cut away at the two nooks; then add the nook frames V1 to V4 and the three cross pieces. No window on this side.',
                '<b>Blocking for the ceiling slats</b> goes in before the walls are covered.'],
         blocks=[_md(cut), A, D]))
     P.append(dict(slug='ceiling', nav='Ceiling', title='Ceiling covering',
@@ -177,7 +182,7 @@ def pages(root):
         blocks=[E]))
     P.append(dict(slug='closet-dinette', nav='Closet and dinette', title='Closet and dinette',
         kick='Driver side, cab end of the couch.',
-        intro=table(['^Closet$', 'Closet door', 'Dinette', 'Floor-to-ceiling wall W1', 'Floor-to-ceiling wall W2']),
+        intro=table(['^Closet$', 'Closet door', 'Dinette', 'Side window', 'Floor-to-ceiling wall W1', 'Floor-to-ceiling wall W2']),
         steps=[fp.replace('<p class="sug">', '').replace('</p>', ''),
                '<b>Closet:</b> 15 x 25 in, starting at 74 in from the back (right at the end of the couch); the side panel next to the couch is the couch\'s end panel (26 deep).',
                '<b>One rod</b> along the wall at 71 in up, then the four drawers under the clothes (each 7 5/16 in tall), and the one door above them on the bed-side hinge.',

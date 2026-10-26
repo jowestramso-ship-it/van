@@ -17,6 +17,7 @@ const PD = [
   { k: 'closetOn', g: 'Take items out', l: 'Closet and its doors (the space it leaves stays empty; the dinette still starts where the closet ends)', d: true, t: 'c' },
   { k: 'toiletOn', g: 'Take items out', l: 'Toilet in the wet bath: the Reliance Fold-To-Go, left set up in the stall (at the cab end, sideways, its back against the wall to the fridge)', d: true, t: 'c' },
   { k: 'snItemsOn', g: 'Take items out', l: 'Towel bar, toilet paper and bottles in the shower nook', d: true, t: 'c' },
+  { k: 'winOn', g: 'Take items out', l: 'Side window over the dinette (Van Windows Direct TL201-SE, driver side forward slider)', d: true, t: 'c' },
   { k: 'gearOn', g: 'Take items out', l: 'Charging gear on a pull-out shelf over the battery under the couch: the BELTTT inverter, the LiTime DC-DC charger and the VEVOR shore charger', d: true, t: 'c' },
   { k: 'wallsOn', g: 'Take items out', l: 'Floor-to-ceiling walls: behind the dinette backs (at the closet end and behind the driver seat) and one on each side of the fridge', d: true, t: 'c' },
   { k: 'bedLen', g: 'Bed / couch', l: 'Length', d: 74, s: .5, a: 40, b: 120 },
@@ -46,6 +47,14 @@ const PD = [
   { k: 'chH', g: 'Charging gear', l: 'Shore charger: height off the floor (its thickness)', d: 4, s: .1, a: 2, b: 10 },
   { k: 'shG', g: 'Charging gear', l: 'Gear shelf: gap from the battery top (9 1/2 up) to the underside of the shelf, for the terminals, lugs and cable bends', d: 1, s: .25, a: .5, b: 4 },
   { k: 'shT', g: 'Charging gear', l: 'Gear shelf: thickness of the plywood tray', d: .5, s: .125, a: .25, b: 1 },
+  { k: 'winX', g: 'Side window', l: 'Window cutout (the slider frame): left edge, from the back (centered over the table at 101 3/4)', d: 101.75, s: .25, a: 60, b: 150 },
+  { k: 'winZ', g: 'Side window', l: 'Window cutout: bottom edge (the sill), up from the floor', d: 39, s: .25, a: 25, b: 70 },
+  { k: 'winCW', g: 'Side window', l: 'Window cutout: width (from your tape readings: 39 11/16)', d: 39.6875, s: .0625, a: 30, b: 50 },
+  { k: 'winCH', g: 'Side window', l: 'Window cutout: height (22 5/8)', d: 22.625, s: .0625, a: 15, b: 30 },
+  { k: 'winGW', g: 'Side window', l: 'Window glass, overall: width (54.35 on the listing; it is glued on the outside, over the stamping)', d: 54.35, s: .05, a: 40, b: 70 },
+  { k: 'winGH', g: 'Side window', l: 'Window glass, overall: height (29.12)', d: 29.12, s: .05, a: 20, b: 40 },
+  { k: 'winOL', g: 'Side window', l: 'Glass edge to cutout: the glass starts this far left of the cutout (9 11/16)', d: 9.6875, s: .0625, a: 0, b: 20 },
+  { k: 'winOB', g: 'Side window', l: 'Glass edge to cutout: the glass starts this far below the cutout (2 3/4)', d: 2.75, s: .125, a: 0, b: 8 },
   { k: 'shPull', g: 'Charging gear', l: 'Gear shelf: how far it pulls out (18 in full-extension slides; the shelf is 17 1/2 deep)', d: 18, s: 1, a: 10, b: 40 },
   { k: 'fwT', g: 'Floor-to-ceiling walls', l: 'Wall thickness (the walls are inside the closet, the shower and the counter cabinet, so nothing else moves)', d: .75, s: .125, a: .25, b: 3 },
   { k: 'benchLen', g: 'Dinette', l: 'Bench length', d: 19.5, s: .5, a: 10, b: 40 },
@@ -287,7 +296,7 @@ const HITR = (x, y, w, h) => `<rect x="${f1(x)}" y="${f1(y)}" width="${f1(Math.m
 const GB = (id, label) => `<g class="hg" data-grp="${id}" data-label="${label}">`;
 const GE = () => '</g>';
 // items that were taken out (their tick box in Sizes is off): cut their groups and drag handles out of a finished drawing
-const REMOVED = () => [['showerOn', 'shower'], ['microOn', 'Micro'], ['tvOn', 'tv'], ['towelOn', 'towels'], ['fridgeOn', 'fridge'], ['drawersOn', 'drawers'], ['battOn', 'batt'], ['closetOn', 'closet'], ['wallsOn', 'fwalls'], ['toiletOn', 'toilet'], ['snItemsOn', 'snitems'], ['gearOn', 'gear']].filter(r => !P[r[0]]).map(r => r[1]);
+const REMOVED = () => [['showerOn', 'shower'], ['microOn', 'Micro'], ['tvOn', 'tv'], ['towelOn', 'towels'], ['fridgeOn', 'fridge'], ['drawersOn', 'drawers'], ['battOn', 'batt'], ['closetOn', 'closet'], ['wallsOn', 'fwalls'], ['toiletOn', 'toilet'], ['snItemsOn', 'snitems'], ['gearOn', 'gear'], ['winOn', 'win']].filter(r => !P[r[0]]).map(r => r[1]);
 function stripGroups(html, ids) {
   ids.forEach(id => {
     const open = `<g class="hg" data-grp="${id}"`;
@@ -485,6 +494,9 @@ function layout(P0) {
     const ch = { x0: dc.x0, x1: dc.x0 + P.chL, y0: ty0 + .75 + dd + .5, y1: ty0 + .75 + dd + .5 + P.chW, z0: sz1, z1: sz1 + P.chH, n: 'the shore charger', id: 'G3' };
     const sh = { x0: sx0, x1: sx1, y0: ty0, y1: hy, z0: sz0, z1: sz1, div: sx0 - .65 - .75 };
     L.gear = P.gearOn ? { inv, dc, ch, sh, hatchY: hy } : null; }
+  // the side window over the dinette: the cutout (the slider frame's outline, what goes through the steel) and the glass (outside, glued over the stamping)
+  { const cx0 = P.winX, cx1 = cx0 + P.winCW, cz0 = P.winZ, cz1 = cz0 + P.winCH, gx0 = cx0 - P.winOL, gz0 = cz0 - P.winOB;
+    L.win = P.winOn ? { cx0, cx1, cz0, cz1, gx0, gx1: gx0 + P.winGW, gz0, gz1: gz0 + P.winGH, div: gx0 + 28.625 } : null; }
   L.pan = P.panW; L.fr = [P.panW, P.panW + P.fridgeW]; L.cabS = L.fr[1];
   L.angS = L.cabS + P.flatLen; L.angLen = P.cabD > P.sinkD ? P.angLen : 0;
   L.slope = L.angLen > 0 ? (P.cabD - P.sinkD) / L.angLen : 0.4;

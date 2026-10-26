@@ -158,6 +158,13 @@ def item(a,b,h0,h1,col,label,sub=None,ly=None):
     BA(f'<text class="th" x="{X((a+b)/2)}" y="{yy}" text-anchor="middle" style="fill:{col};font-size:12.5px;paint-order:stroke;stroke:#fff;stroke-width:3px;stroke-opacity:.8">{label}</text>')
     if sub: BA(f'<text class="ts" x="{X((a+b)/2)}" y="{yy+15}" text-anchor="middle" style="fill:{col};font-size:11px;paint-order:stroke;stroke:#fff;stroke-width:3px;stroke-opacity:.8">{sub}</text>')
 P='#534AB7'; G='#444441'; K='#993556'
+BG('win','Side window')
+# the TL201-SE slider over the dinette: the glass (outside the van) dashed, the cutout in the wall solid
+BA(box(WIN_GX0,WIN_GX1,WIN_GZ0,WIN_GZ1,'fill="none" stroke="#185FA5" stroke-width="1.2" stroke-dasharray="6 3"'))
+BA(box(WIN_CX0,WIN_CX1,WIN_CZ0,WIN_CZ1,'rx="2" fill="#B5D4F4" fill-opacity="0.4" stroke="#185FA5" stroke-width="2"'))
+BA(f'<line x1="{X(WIN_GX0+28.625)}" y1="{Y(WIN_GZ1)}" x2="{X(WIN_GX0+28.625)}" y2="{Y(WIN_GZ0)}" stroke="#185FA5" stroke-width="1" stroke-dasharray="3 3"/>')
+BA(f'<text class="th" x="{X((WIN_CX0+WIN_CX1)/2)}" y="{Y(WIN_CZ0+4.4)}" text-anchor="middle" style="fill:#0C447C;font-size:12px;paint-order:stroke;stroke:#fff;stroke-width:3px">Side window cutout {fr16(WIN_CW)} x {fr16(WIN_CH)}, sill {fr8(WIN_CZ0)} in up</text>')
+BA(f'<text class="ts" x="{X((WIN_CX0+WIN_CX1)/2)}" y="{Y(WIN_CZ0+4.4)+15}" text-anchor="middle" style="fill:#0C447C;font-size:10.5px;paint-order:stroke;stroke:#fff;stroke-width:3px">dashed: the glass outside, {fr16(WIN_GW)} x {fr16(WIN_GH)}</text>')
 BG('wallcab','Wall cabinets')
 item(0,74,CAB_BOT,CAB_TOP,P,'',None,Y((CAB_BOT+CAB_TOP)/2))
 item(89,154,CAB_BOT,CAB_TOP,P,'',None,Y((CAB_BOT+CAB_TOP)/2))
@@ -835,7 +842,7 @@ html=html.replace('</body>','<h2>All measurements</h2>\n'+block+'\n</body>',1)
 open((ROOT+'/sides.html'),'w').write(html)
 
 # ---- furring layout for vertical planks ----
-AP={'S1': [6, 17.75, 31.25, 82.94, 98.9, 119.35, 139.95], 'S2': [15, 30.75, 40, 54, 62, 72, 80, 96, 104, 119.35, 139.95], 'S3': [22, 34, 46, 58, 70, 78, 99, 110, 122, 134, 146], 'S4': [10, 17.75, 31.25, 44.5, 58.6, 71.31, 82.94, 98.9, 114.94, 127.25, 139.75, 147], 'S5': [17.75, 31.25, 44.5, 58.6, 71.31, 82.94, 98.9, 114.94, 127.25, 139.75], 'S6': [10, 17.75, 31.25, 44.5, 58.6, 71.31, 82.94, 98.9, 114.94, 127.25, 139.75, 147], 'S7': [17.75, 31.25, 44.5, 58.6, 71.31, 82.94, 98.9, 114.94, 127.25, 139.75], 'S8': [10, 24, 36, 58.6, 76, 93, 98.9, 114, 127, 140]}
+exec(open(HERE+'/furring.py').read())   # AP, HT, SEG_D, WIN_FRAME, PAP, SEG_P, VFR: one set of numbers for the maps, the tables and the cut list
 def BLK(cx,cy,S):
     """a spacer block seen from the front: 1 1/2 x 1 1/2 in (3 5/8 in long, pointing out from the wall)"""
     return f'<rect x="{cx-S*.75:.1f}" y="{cy-S*.75:.1f}" width="{S*1.5:.1f}" height="{S*1.5:.1f}" fill="#5A2E0A" stroke="#fff" stroke-width="1" rx="1"/>'
@@ -847,11 +854,10 @@ def furring_svg():
     xx=lambda i:X0+S*i
     yy=lambda h:FL-S*h
     base=section_e2()
-    strips=[('S1',3),('S2',12),('S3',21.4),('S4',30.25),('S5',43.5),('S6',57.25),('S7',66),('S8',76.75)]
+    strips=list(HT.items())
     o=[]; a=o.append
     for n,h in strips:
-        segs=[(0,154)] if n!='S1' else [(0,42),(76,154)]
-        for x0,x1 in segs:
+        for x0,x1 in SEG_D[n]:
             fill='#7A4A1E' if n in ('S1','S2','S3') else ('url(#spc)' if n in ('S4','S5','S6') else '#D9A05B')
             a(f'<rect x="{xx(x0):.1f}" y="{yy(h+0.75):.1f}" width="{S*(x1-x0):.1f}" height="{S*1.5:.1f}" fill="{fill}" fill-opacity="0.95" stroke="#3E230B" stroke-width="1"/>')
         for px in AP[n]:
@@ -859,14 +865,30 @@ def furring_svg():
             elif n in ('S7','S8'): a(SHIM(xx(px),yy(h),S))
             a(f'<circle cx="{xx(px):.1f}" cy="{yy(h):.1f}" r="{2.6 if n in ("S4","S5","S6","S7","S8") else 4.2}" fill="#fff" stroke="#3E230B" stroke-width="1.5"/>')
         if n in ('S4','S5','S6'):
-            a(f'<text x="{xx(152):.1f}" y="{yy(h)-9:.1f}" text-anchor="end" style="font-size:9px;font-weight:700;fill:#3E230B;paint-order:stroke;stroke:#fff;stroke-width:2.5px">{len(AP[n])} spacer blocks, 3 5/8 x 1 1/2 x 1 1/2, one at each dot</text>')
+            a(f'<text x="{xx(152 if n=="S4" else WL-1):.1f}" y="{yy(h)-9:.1f}" text-anchor="end" style="font-size:9px;font-weight:700;fill:#3E230B;paint-order:stroke;stroke:#fff;stroke-width:2.5px">{len(AP[n])} spacer blocks, 3 5/8 x 1 1/2 x 1 1/2, one at each dot</text>')
         if n in ('S7','S8'):
             a(f'<text x="{xx(152):.1f}" y="{yy(h)-9:.1f}" text-anchor="end" style="font-size:9px;font-weight:700;fill:#3E230B;paint-order:stroke;stroke:#fff;stroke-width:2.5px">{len(AP[n])} shims, {"1/4" if n=="S7" else "5/8"} in thick, 1 1/2 x 1 1/2, one at each dot</text>')
         a(f'<circle cx="{xx(3):.1f}" cy="{yy(h)-0:.1f}" r="9" fill="#fff" stroke="#3E230B" stroke-width="1.2"/><text x="{xx(3):.1f}" y="{yy(h)+3.5:.1f}" text-anchor="middle" style="font-size:9px;font-weight:700;fill:#3E230B">{n}</text>')
+    # the side window: a frame of the same strip around the opening (J1 to J4), each on three blocks
+    for nm,x0,x1,z0,z1 in WIN_FRAME:
+        a(f'<rect x="{xx(x0):.1f}" y="{yy(z1):.1f}" width="{S*(x1-x0):.1f}" height="{S*(z1-z0):.1f}" fill="url(#spc)" fill-opacity="0.95" stroke="#3E230B" stroke-width="1"/>')
+    for nm,cx,cz in FRAME_BLK:
+        a(BLK(xx(cx),yy(cz),S))
+        a(f'<circle cx="{xx(cx):.1f}" cy="{yy(cz):.1f}" r="2.6" fill="#fff" stroke="#3E230B" stroke-width="1.5"/>')
+    for nm,x0,x1,z0,z1 in WIN_FRAME:
+        lx,lz=((x0+x1)/2,(z0+z1)/2+4.9) if z1-z0>x1-x0 else (x0+(x1-x0)/3,(z0+z1)/2)
+        a(f'<circle cx="{xx(lx):.1f}" cy="{yy(lz):.1f}" r="9" fill="#fff" stroke="#3E230B" stroke-width="1.2"/><text x="{xx(lx):.1f}" y="{yy(lz)+3.5:.1f}" text-anchor="middle" style="font-size:9px;font-weight:700;fill:#3E230B">{nm[:2]}</text>')
+    a(f'<text x="{xx((WIN_CX0+WIN_CX1)/2):.1f}" y="{yy(FR_Z1)-4:.1f}" text-anchor="middle" style="font-size:9px;font-weight:700;fill:#3E230B;paint-order:stroke;stroke:#fff;stroke-width:2.5px">{len(FRAME_BLK)} blocks under the window frame, S5 and S6 stop at it</text>')
     a(f'<text class="th" x="{xx(59):.1f}" y="{yy(5.6):.1f}" text-anchor="middle" style="font-size:10px;fill:#791F1F;paint-order:stroke;stroke:#fff;stroke-width:3px">box out the wheel well (sticks out 7 in)</text>')
     t=base.replace('Driver side wall. Inside every hole you see the body. The steel around it is colored by how far it is from the body.','Driver side wall: depth colors with the furring strips on top (S1 to S8, white dots are attachment points). Untick the box above to hide the strips.')
     t=t.replace('<defs>','<defs><pattern id="spc" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="7" height="7" fill="#C7792A"/><line x1="0" y1="0" x2="0" y2="7" stroke="#FFF1D6" stroke-width="2.5"/></pattern>',1)
-    t=t.replace('</svg>','<g id="furr">'+''.join(o)+'</g></svg>')
+    w=[]
+    w.append(f'<rect x="{xx(WIN_GX0):.1f}" y="{yy(WIN_GZ1):.1f}" width="{S*WIN_GW:.1f}" height="{S*WIN_GH:.1f}" fill="none" stroke="#185FA5" stroke-width="1.2" stroke-dasharray="6 3"/>')
+    w.append(f'<rect x="{xx(WIN_CX0):.1f}" y="{yy(WIN_CZ1):.1f}" width="{S*WIN_CW:.1f}" height="{S*WIN_CH:.1f}" fill="#B5D4F4" fill-opacity=".45" stroke="#185FA5" stroke-width="2"/>')
+    w.append(f'<line x1="{xx(WIN_GX0+28.625):.1f}" y1="{yy(WIN_GZ1):.1f}" x2="{xx(WIN_GX0+28.625):.1f}" y2="{yy(WIN_GZ0):.1f}" stroke="#185FA5" stroke-width="1" stroke-dasharray="3 3"/>')
+    w.append(f'<text x="{xx((WIN_CX0+WIN_CX1)/2):.1f}" y="{yy((WIN_CZ0+WIN_CZ1)/2)+3:.1f}" text-anchor="middle" style="font-size:10px;font-weight:700;fill:#0C447C;paint-order:stroke;stroke:#fff;stroke-width:3px">side window cutout {fr16(WIN_CW)} x {fr16(WIN_CH)}</text>')
+    w.append(f'<text x="{xx((WIN_GX0+WIN_GX1)/2):.1f}" y="{yy(WIN_GZ0)+10:.1f}" text-anchor="middle" style="font-size:9px;font-weight:700;fill:#0C447C;paint-order:stroke;stroke:#fff;stroke-width:2.5px">glass outline (outside the van)</text>')
+    t=t.replace('</svg>','<g id="furr">'+''.join(o)+'</g><g id="winmark">'+''.join(w)+'</g></svg>')
     return t
 rows=[('S1','3 in up','the flat lower wall (3 3/4 in deep); stops at the wheel well, which sticks out 7 in and has to be boxed out','0 (strip sits straight on the steel)'),
 ('S2','12 in up','the lower wall; it bridges the L, R and PO holes, so anchor it on the steel between them','0; 1 1/4 in at the back, before 15 in'),
@@ -880,10 +902,11 @@ tbl='<table><tr><th>Strip</th><th>Height (center)</th><th>What it sits on</th><t
 blk='''<h3>Driver side: furring layout for vertical planks</h3>
 <div class="wide">'''+furring_svg()+'''</div>
 <p class="legend"><span><i class="sw" style="background:#7A4A1E"></i>Dark brown strip: sits straight on the steel, no spacer (S1, S2, S3)</span><span><i class="sw" style="background:repeating-linear-gradient(45deg,#C7792A,#C7792A 3px,#FFF1D6 3px,#FFF1D6 5px)"></i>Orange striped strip: needs a 3 5/8 in spacer at every dot (S4, S5, S6)</span><span><i class="sw" style="background:#D9A05B"></i>Light tan strip: needs a small spacer, 1/4 to 5/8 in (S7, S8)</span><span><i class="sw" style="background:#5A2E0A"></i>Dark square: a spacer block (a 1 1/2 in cut of 2x4 stood on its 3 1/2 in side, 3 5/8 in with the glue) set at the dot</span><span><i class="sw" style="background:#F2D8A8;border:1px dashed #5A2E0A"></i>Light dashed square: a 1/4 in (S7) or 5/8 in (S8) plywood shim</span></p>
-<p>Vertical planks need strips that run sideways, so they cross every plank. Eight strips, 3/4 in thick and 1 1/2 in wide, with the planks fixed to them. The strips are spaced 9 to 14 in apart from the floor to the top, so every plank is held at least every 14 in. The "spacer needed" column is how much each strip has to be built up so its back sits on a common line 3 3/4 in off the body, the deepest steel on the wall (the lower wall and the top part). The planks then lie flat against the strips' fronts, 4 1/2 in off the body, with nothing sticking out through them. The wheel well sticks out 7 in, so it needs its own box built around it.</p>
+<p>Vertical planks need strips that run sideways, so they cross every plank. Eight strips, 3/4 in thick and 1 1/2 in wide, with the planks fixed to them. The strips are spaced 9 to 14 in apart from the floor to the top, so every plank is held at least every 14 in. The "spacer needed" column is how much each strip has to be built up so its back sits on a common line 3 3/4 in off the body, the deepest steel on the wall (the lower wall and the top part). The planks then lie flat against the strips' fronts, 4 1/2 in off the body, with nothing sticking out through them. The wheel well sticks out 7 in, so it needs its own box built around it. The side window over the dinette cuts through S5 and S6, so those two stop at a small frame built around the opening (J1 to J4, below).</p>
 '''+tbl+'''
-<p><b>Attachment points.</b> Each white dot on the drawing is a place where the strip is fixed to the van. On S1, S2, S3, S7, and S8 a dot is an adhesive pad (structural adhesive or VHB tape) straight onto the steel, placed on solid steel and kept clear of the holes. On S4 and S6 a dot is a 3 5/8 in spacer block glued to the 1 1/2 in strip of steel (adhesive, not screws: nothing is drilled into the van's body), with the strip glued and screwed to the block (a #8 x 1 1/2 in screw through the strip into the block). On S5 a dot is a spacer block bonded onto a rib, so S5 touches the van only at the ten ribs, 13 to 16 in apart, and spans the pans between them. This is general van-build practice, so test the adhesive bond on your own steel before you rely on it.</p>
-<p>Rough materials, counting 154 in per strip with S1 stopping at the wheel well: about 100 ft of 3/4 x 1 1/2 in strip. Spacer blocks (1 1/2 in cuts of 2x4, stood on their 3 1/2 in side so the grain runs across; the 1/8 in glue line makes 3 5/8) go at every dot of S4, S5 and S6: 12 + 10 + 12 = 34 on this side; S7 and S8 take 10 + 10 thin shims. This is a starting layout from your measurements, so check the strip positions against where you want shelves, cabinets, and outlets before you glue anything.</p>
+<p><b>Attachment points.</b> Each white dot on the drawing is a place where the strip is fixed to the van. On S1, S2, S3, S7, and S8 a dot is an adhesive pad (structural adhesive or VHB tape) straight onto the steel, placed on solid steel and kept clear of the holes. On S4 and S6 a dot is a 3 5/8 in spacer block glued to the 1 1/2 in strip of steel (adhesive, not screws: nothing is drilled into the van's body), with the strip glued and screwed to the block (a #8 x 1 1/2 in screw through the strip into the block). On S5 a dot is a spacer block bonded onto a rib, so S5 touches the van only at its dots and spans the pans between them. This is general van-build practice, so test the adhesive bond on your own steel before you rely on it.</p>
+<p><b>Around the side window.</b> The cutout is '''+fr16(WIN_CW)+''' x '''+fr16(WIN_CH)+''' in, '''+fr16(WIN_CX0)+''' to '''+fr16(WIN_CX1)+''' in from the back mark and '''+fr16(WIN_CZ0)+''' to '''+fr16(WIN_CZ1)+''' in up (the dashed blue line is the glass outside the van, '''+fr16(WIN_GW)+''' x '''+fr16(WIN_GH)+'''). S5 and S6 would run right across it, so each stops at the window frame: four pieces of the same strip, two jambs (J1 and J2, '''+fr16(FR_Z1-FR_Z0)+''' in long) and a sill and a head (J3 and J4, '''+fr16(WIN_CW)+''' in long) between them. They leave the cutout clear and give the planks an edge to land on. The frame stands on the same 3 5/8 in blocks as S4 to S6, three under each piece ('''+str(len(FRAME_BLK))+''' in all). S5 and S6 become two pieces on the left, joined at 71 1/4 in, and a short piece of '''+fr16(154-WR)+''' in past the window held by one block and glued to the jamb. S4 (under the window, 30 1/4 in up) and S7 and S8 (above it) go straight on across. The window moves nothing else on this side except the dinette outlet, which drops from 36 in up to 34.</p>
+<p>Rough materials, counting 154 in per strip with S1 stopping at the wheel well and S5 and S6 at the window frame: about '''+str(round((sum(r[3]-r[2] for r in DRV_PIECES)+sum(max(z1-z0,x1-x0) for _n,x0,x1,z0,z1 in WIN_FRAME))/12))+''' ft of 3/4 x 1 1/2 in strip. Spacer blocks (1 1/2 in cuts of 2x4, stood on their 3 1/2 in side so the grain runs across; the 1/8 in glue line makes 3 5/8) go at every dot of S4, S5 and S6 and under the window frame: '''+str(len(AP['S4']))+' + '+str(len(AP['S5']))+' + '+str(len(AP['S6']))+' + '+str(len(FRAME_BLK))+' = '+str(DRV_BLOCKS)+''' on this side; S7 and S8 take '''+str(len(AP['S7']))+' + '+str(len(AP['S8']))+''' thin shims. This is a starting layout from your measurements, so check the strip positions against where you want shelves, cabinets, and outlets before you glue anything.</p>
 '''
 html=open((ROOT+'/sides.html')).read()
 # merge: the depth map now carries the furring strips; drop the separate furring diagram
@@ -904,9 +927,8 @@ def furring_pass_group():
     xx=lambda i:X0+S*i
     yy=lambda h:FL-S*h
     o=[]; a=o.append
-    strips=[('S1',3),('S2',12),('S3',21.4),('S4',30.25),('S5',43.5),('S6',57.25),('S7',66),('S8',76.75)]
-    SEG={'S1':[(0,42),(76,104)],'S2':[(0,104)],'S3':[(0,104)],'S4':[(0,104)],'S5':[(0,11),(31.25,74.5),(94.75,104)],'S6':[(0,104)],'S7':[(0,104)],'S8':[(0,154)]}
-    PAP={'S1':[6,17.75,31.25,82.94,98.9],'S2':[15,30.75,40,54,62,72,80,96,104],'S3':[22,34,46,58,70,78,99],'S4':[10,17.75,31.25,44.5,58.6,71.31,82.94,98.9],'S5':[2,9,32,44.5,58.6,71.31,98.9],'S6':[10,17.75,31.25,44.5,58.6,71.31,82.94,98.9],'S7':[x for x in AP['S7'] if x<=104],'S8':AP['S8']}
+    strips=list(HT.items())
+    SEG=SEG_P
     for n,h in strips:
         for x0,x1 in SEG[n]:
             fill='#7A4A1E' if n in ('S1','S2','S3') else ('url(#spcP)' if n in ('S4','S5','S6') else '#D9A05B')
@@ -923,7 +945,7 @@ def furring_pass_group():
         if _nb: a(f'<text x="{xx(102):.1f}" y="{yy(h)-9:.1f}" text-anchor="end" style="font-size:9px;font-weight:700;fill:#3E230B;paint-order:stroke;stroke:#fff;stroke-width:2.5px">{_nb} spacer blocks, one at each dot</text>')
         elif n in ('S7','S8'): a(f'<text x="{xx(102 if n=="S7" else 152):.1f}" y="{yy(h)-9:.1f}" text-anchor="end" style="font-size:9px;font-weight:700;fill:#3E230B;paint-order:stroke;stroke:#fff;stroke-width:2.5px">{len(PAP[n])} shims, {"1/4" if n=="S7" else "5/8"} in thick</text>')
     # vertical frames at the nook ends: (name, x0, x1, bottom, top, spacer?)
-    for n,x0,x1,b,t,sp in (('V1',11,12.5,38,54,True),('V2',29.75,31.25,38,54,True),('V3',74.5,76,31,56.5,True),('V4',93.25,94.75,31,56.5,False)):
+    for n,x0,x1,b,t,sp in VFR:
         fill='url(#spcP)' if sp else '#5B3A1A'
         a(f'<rect x="{xx(x0):.1f}" y="{yy(t):.1f}" width="{S*(x1-x0):.1f}" height="{S*(t-b):.1f}" fill="{fill}" fill-opacity="0.95" stroke="#3E230B" stroke-width="1"/>')
         cx=(x0+x1)/2

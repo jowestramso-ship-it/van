@@ -88,6 +88,16 @@ function drawDriver(L, V) {
   o.push(Poly(WW.map(p => [X(p[0]), Y(p[1])]), { fill: '#E24B4A', fo: .35, stroke: '#A32D2D', sw: 1.6, dash: '5 3', join: 'round' }));
   o.push(LBL(X(59), Y(3.2), 'Wheel well', '', { size: 12, fill: '#791F1F', halo: false, keyMore: '42 to 76 in from the back, 7 1/2 tall' }));
   o.push(GE());
+  // side window over the dinette: the glass outline (outside, dashed), the cutout (the slider frame) and the divider
+  if (L.win) {
+    const w = L.win;
+    o.push(GB('win', 'Side window over the dinette'));
+    o.push(box(w.gx0, w.gx1, w.gz0, w.gz1, { fill: '#2f4a40', fo: .06, stroke: '#2f4a40', sw: 1.2, rx: 5, dash: '6 4' }));
+    o.push(box(w.cx0, w.cx1, w.cz0, w.cz1, { fill: '#6FA8C8', fo: .3, stroke: '#1d4e6e', sw: 2, rx: 3 }));
+    o.push(Ln(X(w.div), Y(w.cz0), X(w.div), Y(w.cz1), { stroke: '#1d4e6e', sw: 1.6 }));
+    o.push(LBL(X((w.cx0 + w.cx1) / 2), Y((w.cz0 + w.cz1) / 2), 'Side window', `cutout ${fmt(w.cx1 - w.cx0)} x ${fmt(w.cz1 - w.cz0)} in, ${fmt(w.cx0)} to ${fmt(w.cx1)} in from the back and ${fmt(w.cz0)} to ${fmt(w.cz1)} in up; the glass outside is ${fmt(w.gx1 - w.gx0)} x ${fmt(w.gz1 - w.gz0)} in (${fmt(w.gx0)} to ${fmt(w.gx1)}, ${fmt(w.gz0)} to ${fmt(w.gz1)} up)`, { size: 12, fill: '#1d4e6e' }));
+    o.push(GE());
+  }
   // wall cabinets
   o.push(GB('wallcab', 'Wall cabinets'));
   L.cabs.forEach(c => {

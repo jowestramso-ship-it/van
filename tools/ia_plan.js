@@ -120,6 +120,13 @@ function drawPlan(L, V) {
   o.push(it(L.batt[0], L.batt[1], 7, 17, COL.B, 'Battery', '21 x 10 x 9.5', { fo: .5, fs: 10 }));
   o.push(Ln(xx(50), yy(0), xx(50), yy(17), { stroke: '#A32D2D', sw: 1.5, mk: 1 }) + T(xx(48.6), yy(10), '17', { anchor: 'end', size: 10, fill: '#A32D2D', w: 700, halo: false }));
   o.push(GE());
+  if (L.win) {
+    const w = L.win;
+    o.push(GB('win', 'Side window over the dinette'));
+    o.push(it(w.cx0, w.cx1, 0, 1.4, '#1d4e6e', '', null, { fo: .55 }));
+    o.push(T(xx((w.cx0 + w.cx1) / 2), yy(3), `side window, cutout ${fmt(w.cx1 - w.cx0)} wide`, { size: 9.5, fill: '#1d4e6e' }));
+    o.push(GE());
+  }
   if (L.gear) {
     const g = L.gear, sh = g.sh, s = V.gear_sh || 0, off = P.shPull * s, ink = '#B45309';
     o.push(GB('gear', 'Charging gear on the shelf over the battery'));

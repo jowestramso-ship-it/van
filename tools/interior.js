@@ -25,7 +25,7 @@ const fs = require('fs');
         fan: {x: L.fan.x, y: L.fan.y, w: L.fan.w}, ac: {x: L.ac.x, y: L.ac.y, w: L.ac.w},
         hook: L.hook ? {x: f(L.hook.x), z: f(L.hook.z), z0: f(L.hook.z0)} : null,
         split: f(L.split), cloDr: L.cloDr.map(d => ({z0: f(d.z0), z1: f(d.z1)})), hangBot: f(L.hangBot),
-        toilet: L.toilet, sn: L.sn, batt: L.batt.map(f), chairs: L.chairs ? { x0: f(L.chairs.x0), x1: f(L.chairs.x1), d0: f(L.chairs.d0), d1: f(L.chairs.d1), z0: f(L.chairs.z0), z1: f(L.chairs.z1) } : null, gear: L.gear ? JSON.parse(JSON.stringify(L.gear, (k, v) => typeof v === 'number' ? f(v) : v)) : null,
+        toilet: L.toilet, sn: L.sn, batt: L.batt.map(f), win: L.win ? JSON.parse(JSON.stringify(L.win, (k, v) => typeof v === 'number' ? f(v) : v)) : null, chairs: L.chairs ? { x0: f(L.chairs.x0), x1: f(L.chairs.x1), d0: f(L.chairs.d0), d1: f(L.chairs.d1), z0: f(L.chairs.z0), z1: f(L.chairs.z1) } : null, gear: L.gear ? JSON.parse(JSON.stringify(L.gear, (k, v) => typeof v === 'number' ? f(v) : v)) : null,
         walls: L.walls.map(w => ({id: w.id, side: w.side, x0: f(w.x0), x1: f(w.x1), d: f(w.d)})),
       },
     };

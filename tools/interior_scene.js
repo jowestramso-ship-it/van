@@ -60,6 +60,7 @@
     black: std({ color: 0x1d1f22, roughness: .55 }),
     greyFront: std({ color: 0x8b8e93, roughness: .38, metalness: .3 }),
     glass: std({ color: 0x131a22, roughness: .1, metalness: .6 }),
+    winGlass: std({ color: 0xa9bccb, roughness: .05, metalness: .15, transparent: true, opacity: .32 }),
     steel: std({ color: 0xc4c9cf, roughness: .35, metalness: .45 }),
     dark: std({ color: 0x35302a, roughness: .9 }),
     gap: std({ color: 0x7a6040, roughness: 1 }),
@@ -112,7 +113,25 @@
   /* ---------- floor, walls, ends ---------- */
   bx(XB, WEND + 70, -1, 0, 0, VW, MT.floor, 48, { cast: false });
   const hw = bare(0) - L.lining;                 // finished ceiling height at the walls
-  surf([V(XB, 0, 0), V(XE, 0, 0), V(XE, hw, 0), V(XB, hw, 0)], MT.wall, 48);   // driver wall
+  if (L.win) { // driver wall with the side window cut out of it (the hole is the cutout: the slider's frame outline)
+    const w = L.win, sh = new THREE.Shape(), hole = new THREE.Path();
+    sh.moveTo(XB, 0); sh.lineTo(XE, 0); sh.lineTo(XE, hw); sh.lineTo(XB, hw); sh.lineTo(XB, 0);
+    hole.moveTo(w.cx0, w.cz0); hole.lineTo(w.cx1, w.cz0); hole.lineTo(w.cx1, w.cz1); hole.lineTo(w.cx0, w.cz1); hole.lineTo(w.cx0, w.cz0); sh.holes.push(hole);
+    const g = new THREE.ShapeGeometry(sh), pos = g.attributes.position, uv = g.attributes.uv; for (let i = 0; i < pos.count; i++) uv.setXY(i, pos.getX(i) / 48, pos.getY(i) / 48);
+    const m = new THREE.Mesh(g, Object.assign(MT.wall.clone(), { side: THREE.DoubleSide })); m.castShadow = true; m.receiveShadow = true; add(m);
+    // the reveal (the inside faces of the 1 1/2 in frame strips, 3 5/8 in of blocks plus the planks), the black slider frame and the glass behind them
+    const RD = 4.5, FW = 1.1, FD = 1.4, zi = -RD - FD;
+    bx(w.cx0, w.cx1, w.cz0 - .75, w.cz0, -RD, 0, MT.wood, 24); bx(w.cx0, w.cx1, w.cz1, w.cz1 + .75, -RD, 0, MT.wood, 24);
+    bx(w.cx0 - .75, w.cx0, w.cz0 - .75, w.cz1 + .75, -RD, 0, MT.wood, 24); bx(w.cx1, w.cx1 + .75, w.cz0 - .75, w.cz1 + .75, -RD, 0, MT.wood, 24);
+    bx(w.cx0, w.cx1, w.cz0, w.cz0 + FW, zi, -RD, MT.black, 20); bx(w.cx0, w.cx1, w.cz1 - FW, w.cz1, zi, -RD, MT.black, 20);
+    bx(w.cx0, w.cx0 + FW, w.cz0, w.cz1, zi, -RD, MT.black, 20); bx(w.cx1 - FW, w.cx1, w.cz0, w.cz1, zi, -RD, MT.black, 20);
+    bx(w.cx0 + FW, w.cx1 - FW, w.cz0 + FW, w.cz1 - FW, -RD - .9, -RD - .8, MT.winGlass, 20, { cast: false });
+    bx(w.div - .7, w.div + .7, w.cz0 + FW, w.cz1 - FW, zi, -RD, MT.black, 20);            // the divider between the fixed glass and the slider
+    bx(w.div + 1.2, w.div + 3.2, (w.cz0 + w.cz1) / 2 - 2.5, (w.cz0 + w.cz1) / 2 + 2.5, -RD + .02, -RD + .5, MT.black, 12);   // the latch on the slider
+    // outside, seen through the window: the sky and the ground on the driver side
+    bx(XB, WEND + 60, -2, -1, -400, -RD - FD, MT.ground, 48, { cast: false });
+    const skyD = new THREE.Mesh(new THREE.PlaneGeometry(500, 300), MT.sky); skyD.position.set(130, 80, -170); add(skyD);
+  } else surf([V(XB, 0, 0), V(XE, 0, 0), V(XE, hw, 0), V(XB, hw, 0)], MT.wall, 48);   // driver wall
   { // passenger wall with the sliding door opening and the nook recess cut out
     const sh = new THREE.Shape(); sh.moveTo(XB, 0); sh.lineTo(P.doorX, 0); sh.lineTo(P.doorX, P.slideH); sh.lineTo(WEND, P.slideH); sh.lineTo(WEND, hw); sh.lineTo(XB, hw); sh.lineTo(XB, 0);
     const nk = D.nook; const hole = new THREE.Path(); hole.moveTo(nk[0], P.counterH); hole.lineTo(nk[1], P.counterH); hole.lineTo(nk[1], P.counterH + P.nookH); hole.lineTo(nk[0], P.counterH + P.nookH); hole.lineTo(nk[0], P.counterH); sh.holes.push(hole);
@@ -310,6 +329,7 @@
     cab: { n: 'From the cab end', p: [148, 61, 34], t: [-6, 48, 33] },
     kitchen: { n: 'Kitchen', p: [134, 62, 36], t: [86, 42, 62] },
     dinette: { n: 'Dinette', p: [114, 60, 44], t: [122, 38, 6] },
+    window: { n: 'Side window', p: [125, 50, 46], t: [121, 49, 0], fov: 62 },
     couch: { n: 'Couch', p: [34, 60, 43], t: [38, 40, 4] },
     shower: { n: 'Shower and fridge', p: [90, 63, 33], t: [38, 36, 60] },
     closet: { n: 'Closet', p: [83, 34, 45], t: [82, 30, 0], fov: 95 },
