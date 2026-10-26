@@ -1,0 +1,502 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Couch, deck and the bed leaf - Van build guide</title>
+<style>
+  body { font-family: -apple-system, "Segoe UI", sans-serif; margin: 24px auto; max-width: 760px; padding: 0 16px; color: #2C2C2A; background: #fff; }
+  h1 { font-size: 22px; font-weight: 500; }
+  h2 { font-size: 18px; font-weight: 500; margin-top: 36px; }
+  p, li { line-height: 1.6; font-size: 15px; }
+  svg { width: 100%; height: auto; display: block; }
+  svg text { font-family: -apple-system, "Segoe UI", sans-serif; fill: #2C2C2A; }
+  svg .th { font-size: 14px; font-weight: 500; }
+  svg .ts { font-size: 12px; fill: #5F5E5A; }
+  svg .box { fill: #FAF9F5; stroke: #5F5E5A; }
+  svg .arr { stroke: #5F5E5A; stroke-width: 0.75; fill: none; }
+  svg .c-purple > rect { fill: #EEEDFE; stroke: #534AB7; }
+  svg .c-purple .th { fill: #3C3489; } svg .c-purple .ts { fill: #534AB7; }
+  svg .c-teal > rect { fill: #E1F5EE; stroke: #0F6E56; }
+  svg .c-teal .th { fill: #085041; } svg .c-teal .ts { fill: #0F6E56; }
+  svg .c-coral > rect { fill: #FAECE7; stroke: #993C1D; }
+  svg .c-coral .th { fill: #712B13; } svg .c-coral .ts { fill: #993C1D; }
+  svg .c-pink > rect { fill: #FBEAF0; stroke: #993556; }
+  svg .c-pink .th { fill: #72243E; } svg .c-pink .ts { fill: #993556; }
+  svg .c-gray > rect { fill: #F1EFE8; stroke: #5F5E5A; }
+  svg .c-gray .th { fill: #444441; } svg .c-gray .ts { fill: #5F5E5A; }
+  svg .c-amber > rect { fill: #FAEEDA; stroke: #854F0B; }
+  svg .c-amber .th { fill: #633806; } svg .c-amber .ts { fill: #854F0B; }
+  svg .c-purple > rect, svg .c-teal > rect, svg .c-coral > rect, svg .c-pink > rect, svg .c-gray > rect, svg .c-amber > rect { stroke-width: 0.75; }
+</style><style>
+  body { max-width: 1100px; }
+  figure { margin: 0; } figure img { width: 100%; height: auto; border-radius: 4px; display: block; }
+  figcaption { font-size: 12px; color: #5F5E5A; margin-top: 4px; }
+  .photos { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+  .legend span { display: inline-block; margin-right: 16px; font-size: 13px; }
+  .sw { display: inline-block; width: 14px; height: 12px; vertical-align: -1px; margin-right: 5px; border: 1px solid #5F5E5A; }
+  table { border-collapse: collapse; font-size: 14px; } td, th { border-bottom: 1px solid #D3D1C7; padding: 3px 14px 3px 0; text-align: left; }
+  .wide { overflow-x: auto; }
+</style>
+
+<style>
+  .tgbar { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin: 4px 0 10px; }
+  .tgbar .hint { flex: 1 1 100%; margin: 0 0 2px; font-size: 13px; line-height: 1.4; color: #5F5E5A; }
+  .tgbar button { font: inherit; font-size: 13px; line-height: 1.3; padding: 4px 10px; border: 1px solid #B4B2A9; border-radius: 14px; background: #fff; color: #2C2C2A; cursor: pointer; }
+  .tgbar button:hover { border-color: #2C2C2A; }
+  .tgbar button.chip::before { content: ""; display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 6px; background: var(--c, #888780); }
+  .tgbar button.chip[aria-pressed="false"] { background: #F1EFE8; color: #888780; text-decoration: line-through; }
+  .tgbar button.chip[aria-pressed="false"]::before { opacity: .35; }
+  .tgbar button.all { background: #2C2C2A; border-color: #2C2C2A; color: #fff; }
+  svg g.tg { cursor: pointer; }
+  svg g.tg.off { display: none; }
+  svg g.tg.hl, svg g.tg:hover { filter: drop-shadow(0 0 3px rgba(186, 117, 23, .95)); }
+</style>
+<style>.gk{color:#5F5E5A;margin:-4px 0 14px}.steps{padding-left:22px}.steps li{margin:0 0 9px}.sug{color:#5F5E5A;font-size:14px;border-left:3px solid #D3D1C7;padding:2px 12px;margin:10px 0}.rt td,.rt th{vertical-align:top;padding:5px 12px 5px 0;font-size:13px}.rt td:last-child{min-width:260px}.gp{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;margin:28px 0 8px}.gp a{padding:8px 14px;border:1px solid #B4B2A9;border-radius:18px;text-decoration:none;color:#185FA5}.gp a:hover{border-color:#2C2C2A}h1 .gn{color:#5F5E5A;font-weight:400}</style><style>.vannav{display:flex;flex-wrap:wrap;gap:4px 6px;align-items:center;margin:0;padding:8px max(12px,env(safe-area-inset-left,0px));font:14px/1.3 -apple-system,"Segoe UI",system-ui,sans-serif;background:#f3f1ea;border-bottom:1px solid #cfcbbd;color:#26241f}.vannav a{color:#185FA5;text-decoration:none;padding:4px 9px;border-radius:14px;white-space:nowrap}.vannav a:hover{background:#e3e0d4}.vannav a[aria-current=page]{background:#26241f;color:#fff;font-weight:600}@media (prefers-color-scheme:dark){.vannav{background:#26241f;border-bottom-color:#4a473e;color:#ece9e0}.vannav a{color:#8fc2f0}.vannav a:hover{background:#3a372f}.vannav a[aria-current=page]{background:#ece9e0;color:#1b1a17}}</style><style>.guidenav{display:flex;flex-wrap:wrap;gap:3px 5px;align-items:center;margin:0;padding:6px max(12px,env(safe-area-inset-left,0px));font:13px/1.3 -apple-system,"Segoe UI",system-ui,sans-serif;background:#fff;border-bottom:1px solid #cfcbbd;color:#26241f}.guidenav b{margin-right:4px;color:#5F5E5A;font-weight:600}.guidenav a{color:#185FA5;text-decoration:none;padding:3px 8px;border-radius:12px;white-space:nowrap}.guidenav a:hover{background:#e3e0d4}.guidenav a[aria-current=page]{background:#185FA5;color:#fff;font-weight:600}@media (prefers-color-scheme:dark){.guidenav{background:#1b1a17;border-bottom-color:#4a473e;color:#ece9e0}.guidenav a{color:#8fc2f0}.guidenav a[aria-current=page]{background:#8fc2f0;color:#1b1a17}}</style></head>
+<body><nav class="vannav" aria-label="All pages"><a href="../index.html">Home</a><a href="../build/index.html" aria-current="page">Build guide</a><a href="../interactive.html">Plan</a><a href="../diagrams.html">Diagrams</a><a href="../interior.html">3D view</a><a href="../wall-map.html">Wall map</a><a href="../electric.html">Electrical</a><a href="../install.html">Fan and A/C</a><a href="../window.html">Side window</a><a href="../window-template.html">Window template</a></nav><nav class="guidenav" aria-label="Build guide, in order"><b>Build order:</b><a href="index.html">All</a><a href="01-before.html">1 Before you cut</a><a href="../install.html">2 Fan and A/C</a><a href="../window.html">3 Side window</a><a href="04-wiring.html">4 Wiring rough-in</a><a href="05-insulate.html">5 Insulation and floor</a><a href="06-furring.html">6 Furring strips</a><a href="07-ceiling.html">7 Ceiling</a><a href="08-walls.html">8 Walls</a><a href="09-heavy.html">9 Battery and tanks</a><a href="10-couch.html" aria-current="page">10 Couch and bed</a><a href="11-gear-shelf.html">11 Gear shelf</a><a href="12-lift-out-rail.html">12 Lift-out rail</a><a href="13-bath.html">13 Wet bath</a><a href="14-kitchen.html">14 Kitchen side</a><a href="15-closet-dinette.html">15 Closet and dinette</a><a href="16-cabinets.html">16 Wall cabinets</a><a href="17-finish.html">17 Finish and test</a></nav><h1><span class="gn">Step 10 of 17</span><br>Couch, deck and the bed leaf</h1><p class="gk">After the battery is in; the shelf goes into this frame.</p>
+<p>The couch is 74 x 26 in and sits on a base 3 1/2 in higher than the old plan, so the gear shelf fits over the battery. The front under the deck is open (nothing covers it). The bed makes up with a hinged leaf and four fold-down legs.</p><div class="wide"><table class="rt"><tr><th>Item</th><th>In from the back</th><th>Size</th><th>Up from the floor</th><th>Notes</th></tr><tr><td><b>Bed / couch</b></td><td>0 to 74</td><td>74 x 26 (couch), 74 x 46 opened</td><td>deck top 16 3/4, seat base 17 1/2 (deck + the 3/4 in leaf), seat top 22 1/2 by day, bed top 21 3/4 at night (raised 3 1/2 in from 13 1/4 / 14 / 20 / 19 1/4 so the gear shelf fits over the battery, with the cushions cut from 6 in to 5 in to keep the headroom)</td><td>makes up with a hinged leaf: the 20 in leaf (3/4 in plywood, a plain slab with no rails) lies back on the deck, face down, under the seat cushion by day and flips out level with the deck on 4 legs, about 24 in apart (12 5/8 in of 3/8 x 1 1/4 in flat bar folded into through-slots in the leaf so they are flush, plus a 3 1/2 in screw-out foot, 16 1/8 in standing) at night, 3 in in from the free edge so they land 43 in out from the wall (1 in short of the front edge of the shower pan, 44 in, when the pan is down); the back cushion (5 in thick, one 20 in piece, 20 in tall) lies on it, 26 + 20 = 46 in wide; the couch sits on a base (end panels, a wall ledger and a rail under the front edge of the deck); no rails or slides under the deck; the space under it is 16 in, with the gear shelf over the battery (see the gear shelf row)</td></tr><tr><td><b>Wheel well</b></td><td>42 to 76</td><td>34 x 7</td><td>7.5 tall</td><td>measured; flat top 15.5 long</td></tr><tr><td><b>Wheel well</b></td><td>42 to 76</td><td>34 x 7</td><td>7.5 tall</td><td>same as the driver side (flat top 15.5 long)</td></tr></table></div>
+<h2>Steps, in order</h2><ol class="steps"><li><b>Build the base:</b> two end panels (the one next to the closet is 26 in deep), a ledger on the wall and a front rail, so the deck is 16 to 16 3/4 in up. Add the slide divider at 38 5/8 in (next page) while the frame is open.</li><li><b>Leave the front under the deck open:</b> only the front rail carries the deck edge (a steel tube lifts out across the gear shelf opening).</li><li><b>Deck:</b> 3/4 in plywood, 74 x 26 in. <b>Leaf:</b> 3/4 in birch plywood, 20 x 73 3/4 in, a plain slab; hinge it with a 74 in continuous hinge on the top faces (#8 x 5/8 in screws every 3 to 4 in, a 1/8 to 3/16 in gap).</li><li><b>Legs:</b> cut four through-slots (1 1/2 x 13 in) in the leaf, 3 in from the free edge, about 24 in apart; each leg is a 3/8 x 1 1/4 in bar, 12 5/8 in long, on a 1/4 in pin, with a threaded foot that screws out about 3 1/2 in.</li><li><b>Latches:</b> two turn buttons or magnetic catches hold the leaf folded back while driving.</li><li><b>Cushions:</b> the seat cushion 5 in thick, and the back cushion 5 in thick and 20 in tall in one piece, leaning back 12 degrees; check the seated headroom (1 1/2 in).</li></ol>
+<h2>Drawings and numbers</h2>
+<h3>C. Driver side: bed and couch, side section</h3>
+<div class="wide"><svg viewBox="0 0 414 690" role="img" style="max-width:820px"><title>Driver side bed and couch, side section</title>
+<defs><marker id="arc" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+<text class="ts" x="40" y="21" style="font-size:13px">Looking from the rear</text>
+<line x1="64.0" y1="640.0" x2="374.0" y2="640.0" stroke="#3F3E3A" stroke-opacity="0.25" stroke-dasharray="3 3"/><text x="60.0" y="644.0" text-anchor="end" style="font-size:10px;font-weight:700;fill:#8A4B0F">0↑</text>
+<line x1="64.0" y1="560.0" x2="374.0" y2="560.0" stroke="#3F3E3A" stroke-opacity="0.25" stroke-dasharray="3 3"/><text x="60.0" y="564.0" text-anchor="end" style="font-size:10px;font-weight:700;fill:#8A4B0F">10↑</text>
+<line x1="64.0" y1="480.0" x2="374.0" y2="480.0" stroke="#3F3E3A" stroke-opacity="0.25" stroke-dasharray="3 3"/><text x="60.0" y="484.0" text-anchor="end" style="font-size:10px;font-weight:700;fill:#8A4B0F">20↑</text>
+<line x1="64.0" y1="400.0" x2="374.0" y2="400.0" stroke="#3F3E3A" stroke-opacity="0.25" stroke-dasharray="3 3"/><text x="60.0" y="404.0" text-anchor="end" style="font-size:10px;font-weight:700;fill:#8A4B0F">30↑</text>
+<line x1="64.0" y1="320.0" x2="374.0" y2="320.0" stroke="#3F3E3A" stroke-opacity="0.25" stroke-dasharray="3 3"/><text x="60.0" y="324.0" text-anchor="end" style="font-size:10px;font-weight:700;fill:#8A4B0F">40↑</text>
+<line x1="64.0" y1="240.0" x2="374.0" y2="240.0" stroke="#3F3E3A" stroke-opacity="0.25" stroke-dasharray="3 3"/><text x="60.0" y="244.0" text-anchor="end" style="font-size:10px;font-weight:700;fill:#8A4B0F">50↑</text>
+<line x1="64.0" y1="160.0" x2="374.0" y2="160.0" stroke="#3F3E3A" stroke-opacity="0.25" stroke-dasharray="3 3"/><text x="60.0" y="164.0" text-anchor="end" style="font-size:10px;font-weight:700;fill:#8A4B0F">60↑</text>
+<line x1="64.0" y1="80.0" x2="374.0" y2="80.0" stroke="#3F3E3A" stroke-opacity="0.25" stroke-dasharray="3 3"/><text x="60.0" y="84.0" text-anchor="end" style="font-size:10px;font-weight:700;fill:#8A4B0F">70↑</text>
+<line x1="70.0" y1="640.0" x2="70.0" y2="32.0" stroke="#3F3E3A" stroke-opacity="0.25" stroke-dasharray="3 3"/><text x="70.0" y="656.0" text-anchor="middle" style="font-size:10px;font-weight:700;fill:#185FA5">0→</text>
+<line x1="110.0" y1="640.0" x2="110.0" y2="32.0" stroke="#3F3E3A" stroke-opacity="0.25" stroke-dasharray="3 3"/><text x="110.0" y="656.0" text-anchor="middle" style="font-size:10px;font-weight:700;fill:#185FA5">5→</text>
+<line x1="150.0" y1="640.0" x2="150.0" y2="32.0" stroke="#3F3E3A" stroke-opacity="0.25" stroke-dasharray="3 3"/><text x="150.0" y="656.0" text-anchor="middle" style="font-size:10px;font-weight:700;fill:#185FA5">10→</text>
+<line x1="190.0" y1="640.0" x2="190.0" y2="32.0" stroke="#3F3E3A" stroke-opacity="0.25" stroke-dasharray="3 3"/><text x="190.0" y="656.0" text-anchor="middle" style="font-size:10px;font-weight:700;fill:#185FA5">15→</text>
+<line x1="230.0" y1="640.0" x2="230.0" y2="32.0" stroke="#3F3E3A" stroke-opacity="0.25" stroke-dasharray="3 3"/><text x="230.0" y="656.0" text-anchor="middle" style="font-size:10px;font-weight:700;fill:#185FA5">20→</text>
+<line x1="270.0" y1="640.0" x2="270.0" y2="32.0" stroke="#3F3E3A" stroke-opacity="0.25" stroke-dasharray="3 3"/><text x="270.0" y="656.0" text-anchor="middle" style="font-size:10px;font-weight:700;fill:#185FA5">25→</text>
+<line x1="310.0" y1="640.0" x2="310.0" y2="32.0" stroke="#3F3E3A" stroke-opacity="0.25" stroke-dasharray="3 3"/><text x="310.0" y="656.0" text-anchor="middle" style="font-size:10px;font-weight:700;fill:#185FA5">30→</text>
+<line x1="350.0" y1="640.0" x2="350.0" y2="32.0" stroke="#3F3E3A" stroke-opacity="0.25" stroke-dasharray="3 3"/><text x="350.0" y="656.0" text-anchor="middle" style="font-size:10px;font-weight:700;fill:#185FA5">35→</text>
+<text class="ts" x="222.0" y="672.0" text-anchor="middle" style="font-size:11px">inches into the van from the body</text>
+<rect x="22.0" y="32.0" width="48.0" height="608.0" fill="#D3E4F2" fill-opacity="0.6"/><text class="ts" x="46.0" y="360.0" text-anchor="middle" style="font-size:11px">outside</text>
+<line x1="22.0" y1="640.0" x2="374.0" y2="640.0" stroke="#5F5E5A" stroke-width="2"/>
+<line x1="70.0" y1="32.0" x2="374.0" y2="32.0" stroke="#5F5E5A" stroke-width="1.5" stroke-dasharray="6 3"/><text class="ts" x="374.0" y="28.0" text-anchor="end" style="font-size:10px">ceiling 76 (bare), 75 1/16 with the covering</text>
+<rect x="70.0" y="32.0" width="304.0" height="1.5" fill="#D9C7A5" stroke="#8A6B4D" stroke-width="0.6"/><rect x="70.0" y="33.5" width="304.0" height="6.0" fill="#9A6B3A" fill-opacity="0.85" stroke="#5A3A00" stroke-width="0.6"/>
+<line x1="70.0" y1="640.0" x2="70.0" y2="32.0" stroke="#2C2C2A" stroke-width="3"/><text class="th" x="73.0" y="24.0" style="font-size:11px">body (0)</text>
+<polyline points="100.0,640.0 100.0,454.0 82.0,454.0 82.0,404.0 71.0,404.0 71.0,392.0 70.0,392.0 70.0,188.0 71.0,188.0 71.0,176.0 97.2,176.0 97.2,32.0" fill="none" stroke="#B5502F" stroke-width="3" stroke-linejoin="round"/>
+<line x1="106.0" y1="640.0" x2="106.0" y2="32.0" stroke="#7A4A1E" stroke-width="1.6" stroke-dasharray="6 3"/><text class="ts" x="109.0" y="80.0" style="font-size:10px;fill:#7A4A1E">planks, 4 1/2 off the body</text>
+<rect x="106.0" y="506.0" width="208.0" height="6.0" fill="#8A6B4D" stroke="#3E230B"/>
+<rect x="308.0" y="512.0" width="6.0" height="12.0" fill="#8A6B4D" stroke="#3E230B"/>
+<rect x="154.0" y="500.0" width="160.0" height="6.0" fill="#B07A2A" fill-opacity="0.85" stroke="#5A3A00"/>
+<rect x="178.0" y="501.5" width="101.0" height="3.0" fill="#2C2C2A" fill-opacity="0.8"/>
+<circle cx="314.0" cy="506.0" r="3.2" fill="#2C2C2A"/>
+<text class="ts" x="322.0" y="502.0" style="font-size:10px;fill:#5A3A00">leaf, folded back</text><text class="ts" x="322.0" y="514.0" style="font-size:10px;fill:#5A3A00">(leg in its slot)</text>
+<text class="ts" x="322.0" y="542.2" style="font-size:10px;fill:#444441">base front rail</text>
+<rect x="106.0" y="460.0" width="208.0" height="40.0" fill="#534AB7" fill-opacity="0.18" stroke="#534AB7" stroke-width="1.6"/>
+<text class="th" x="210.0" y="484.0" text-anchor="middle" style="font-size:11px;fill:#534AB7">Seat cushion 5 in, top at 22 1/2</text>
+<text class="ts" x="298.0" y="592.0" text-anchor="middle" style="font-size:10px">space under the bed,</text><text class="ts" x="298.0" y="604.0" text-anchor="middle" style="font-size:10px">16 in tall</text>
+<polygon points="106.0,460.0 146.9,460.0 112.9,300.0 72.0,300.0" fill="#F2B84B" fill-opacity="0.65" stroke="#8A5A00" stroke-width="2"/>
+<text class="th" x="151.7" y="356.0" style="font-size:11px;fill:#5A3A00">Back cushion</text><text class="ts" x="151.7" y="369.0" style="font-size:10px;fill:#5A3A00">5 thick, 20 tall,</text><text class="ts" x="151.7" y="381.0" style="font-size:10px;fill:#5A3A00">leaning back 12 degrees</text>
+<line x1="146.9" y1="441.6" x2="314.0" y2="441.6" stroke="#A32D2D" stroke-width="1.6" marker-start="url(#arc)" marker-end="url(#arc)"/><text class="th" x="230.4" y="436.6" text-anchor="middle" style="font-size:11px;fill:#A32D2D">seat about 21 in deep</text>
+<line x1="106.0" y1="418.4" x2="314.0" y2="418.4" stroke="#534AB7" stroke-width="1.4" marker-start="url(#arc)" marker-end="url(#arc)"/>
+<text class="ts" x="206.0" y="414.4" text-anchor="middle" style="font-size:10px;fill:#534AB7">bed 26 deep from the planks</text>
+<rect x="100.0" y="580.0" width="56.0" height="60.0" fill="#D8B79A" fill-opacity="0.8" stroke="#8A6B4D" stroke-dasharray="4 3"/>
+<rect x="156.0" y="564.0" width="80.0" height="76.0" fill="#F2B84B" fill-opacity="0.5" stroke="#8A5A00" stroke-dasharray="4 3"/>
+<text class="ts" x="196.0" y="598.4" text-anchor="middle" style="font-size:9px;fill:#5A3A00">well + battery</text>
+<rect x="168.0" y="552.0" width="140.0" height="4.0" fill="#8A6B4D" fill-opacity="0.6" stroke="#5A3A00"/>
+<rect x="174.0" y="516.0" width="72.0" height="36.0" fill="#B45309" fill-opacity="0.18" stroke="#B45309" stroke-width="1.4" stroke-dasharray="4 3"/>
+<rect x="250.0" y="520.0" width="56.0" height="32.0" fill="#B45309" fill-opacity="0.18" stroke="#B45309" stroke-width="1.4" stroke-dasharray="4 3"/>
+<text class="ts" x="210.0" y="534.4" text-anchor="middle" style="font-size:9px;fill:#7A3B07">DC-DC (behind)</text><text class="ts" x="278.0" y="534.4" text-anchor="middle" style="font-size:9px;fill:#7A3B07">charger</text><text class="ts" x="322.0" y="556.6" style="font-size:10px;fill:#5A3A00">gear shelf (C4)</text>
+<rect x="106.0" y="39.5" width="112.0" height="112.5" fill="#534AB7" fill-opacity="0.06" stroke="#534AB7" stroke-dasharray="5 3"/><text class="ts" x="162.0" y="80.0" text-anchor="middle" style="font-size:9px;fill:#534AB7">overhead cabinet, bottom 61</text>
+<g><rect x="3" y="3" width="26" height="26" rx="13" fill="#2C2C2A"/><text x="16" y="22" text-anchor="middle" style="font-size:17px;font-weight:700;fill:#fff">C</text></g></svg></div>
+<p>By day the seat is at 22 1/2 in: a 16 3/4 in deck with the 3/4 in leaf lying on it, face down (top at 17 1/2 in), and a 5 in seat cushion (it was 6: 5 in keeps a seated head 1 1/2 in under the wall cabinets after the raise). The couch was raised 3 1/2 in (the seat was 20, now 22 1/2) so the gear shelf, with the inverter and the two chargers on it, fits over the battery (diagram C4). At night the leaf is flipped out level with the deck, so the bed is at 21 3/4 in (diagram C2). The back cushion is 5 in thick, 20 in tall (to 42 1/2 in up), and leans back 12 degrees into the wall. The seat in front of it is about 21 in deep (26 in couch minus the cushion's base). The couch sits on a base (two end panels, a ledger on the wall and a rail under the front edge of the deck, the small square under the front of the deck) that supports its ends and front. The bed makes up with a hinged leaf: a 20 in leaf (3/4 in plywood, 74 in long, no rails) is hinged on the front edge of the deck and lies back flat on it, face down, under the seat cushion, by day; the dark strip in it is one of the four legs, folded into its slot, so nothing sticks out. For the bed you lift the seat cushion, flip the leaf out until it is level with the deck, fold down its four legs (12 5/8 in of flat bar plus a 3 1/2 in screw-out foot), put the seat cushion back and lay the back cushion, as one 20 in piece, on the leaf: 26 + 20 = 46 in wide (diagram C2, with the build in C3). There are no rails or slides, so the space under the base stays free (16 in tall, with the gear shelf over the battery). The bed is drawn 26 in deep measured from the planks; the wheel well and battery are only under the part of the bed where the well is, and the well's 7 in is measured from the wall steel (confirmed), which is 3 3/4 in off the body, so it sticks out 10 3/4 in from the body.</p>
+<table><tr><th>Height up</th><th>Steel off the body</th><th>Room behind the planks (4 1/2 off)</th><th>The back's rear edge</th></tr>
+<tr><td>22 1/2 to 23 1/4</td><td>3 3/4 in</td><td>3/4 in</td><td>0 to 0.2 in behind the planks</td></tr>
+<tr><td>23 1/4 to 29 1/2 (blue band)</td><td>1 1/2 in</td><td>3 in</td><td>0.2 to 1.5 in</td></tr>
+<tr><td>29 1/2 to 31 (yellow strip)</td><td>1/8 in</td><td>4 3/8 in</td><td>1.5 to 1.8 in</td></tr>
+<tr><td>31 to 42 1/2 (pans)</td><td>0</td><td>4 1/2 in</td><td>1.8 to 4.25 in (1/4 in short of the body at the top)</td></tr></table>
+<h3>C2. Driver side: the bed with a hinged leaf, day and night</h3>
+<div class="wide"><svg viewBox="0 0 1050 480" role="img"><title>The bed with a hinged leaf, seen from the aisle, day and night</title>
+<text class="th" x="50" y="24" style="font-size:14px">Day: couch</text>
+<rect class="box" x="50" y="40" width="460" height="380" stroke-width="0.5"/>
+<g class="c-amber"><rect x="50" y="40" width="460" height="0.9375" stroke-width="0.5"/><rect x="50" y="40.9375" width="460" height="3.75" stroke-width="0.5"/></g>
+<g class="c-purple"><rect x="50" y="44.6875" width="370" height="70.3125" stroke-width="0.5" stroke-dasharray="5 3"/><text class="ts" x="235" y="77.5" text-anchor="middle" dominant-baseline="central">Wall cabinets</text></g>
+<g class="c-gray"><rect x="420" y="44.6875" width="75" height="375.312" stroke-width="0.5"/><text class="ts" x="457.5" y="220" text-anchor="middle" dominant-baseline="central">Closet</text></g>
+<g class="c-gray"><rect x="50" y="340" width="370" height="80" stroke-width="0.5" stroke-dasharray="5 3"/><text class="ts" x="235" y="390" text-anchor="middle" dominant-baseline="central">Under the deck, 16 in tall</text><rect x="50" y="336.25" width="370" height="3.75" stroke-width="0.5"/></g>
+<g class="c-amber"><rect x="50" y="332.5" width="370" height="3.75" stroke-width="0.5"/></g>
+<g class="c-purple"><rect x="50" y="307.5" width="370" height="25" stroke-width="0.5"/><text class="th" x="235" y="320" text-anchor="middle" dominant-baseline="central">Seat cushion, top at 22 1/2</text></g>
+<g class="c-purple"><rect x="50" y="207.5" width="370" height="100" stroke-width="0.5"/><text class="th" x="235" y="257.5" text-anchor="middle" dominant-baseline="central">Back cushion, upright (20 tall)</text></g>
+<text class="ts" x="50" y="442" style="font-size:12px">Leaf folded back flat on the deck under the seat cushion, legs in their slots,</text><text class="ts" x="50" y="457" style="font-size:12px">back cushion against the wall, seat top at 22 1/2 in</text>
+<text class="th" x="540" y="24" style="font-size:14px">Night: bed</text>
+<rect class="box" x="540" y="40" width="460" height="380" stroke-width="0.5"/>
+<g class="c-amber"><rect x="540" y="40" width="460" height="0.9375" stroke-width="0.5"/><rect x="540" y="40.9375" width="460" height="3.75" stroke-width="0.5"/></g>
+<g class="c-purple"><rect x="540" y="44.6875" width="370" height="70.3125" stroke-width="0.5" stroke-dasharray="5 3"/><text class="ts" x="725" y="77.5" text-anchor="middle" dominant-baseline="central">Wall cabinets</text></g>
+<g class="c-gray"><rect x="910" y="44.6875" width="75" height="375.312" stroke-width="0.5"/><text class="ts" x="947.5" y="220" text-anchor="middle" dominant-baseline="central">Closet</text></g>
+<g class="c-gray"><rect x="540" y="340" width="370" height="80" stroke-width="0.5" stroke-dasharray="5 3"/><rect x="540" y="336.25" width="370" height="3.75" stroke-width="0.5"/></g>
+<g class="c-gray"><rect x="545" y="340" width="6.25" height="78.75" stroke-width="0.5"/><rect x="663" y="340" width="6.25" height="78.75" stroke-width="0.5"/><rect x="781" y="340" width="6.25" height="78.75" stroke-width="0.5"/><rect x="898.75" y="340" width="6.25" height="78.75" stroke-width="0.5"/></g>
+<text class="ts" x="635" y="390" text-anchor="middle" dominant-baseline="central">4 fold-down legs</text>
+<g class="c-amber"><rect x="540" y="336.25" width="370" height="3.75" stroke-width="0.5"/></g>
+<g class="c-purple"><rect x="540" y="311.25" width="370" height="25" stroke-width="1"/><text class="th" x="725" y="323.75" text-anchor="middle" dominant-baseline="central">Back cushion on the leaf, top at 21 3/4</text></g>
+<text class="ts" x="540" y="442" style="font-size:12px">Leaf flipped out level with the deck on four legs, back cushion on it,</text><text class="ts" x="540" y="457" style="font-size:12px">seat cushion back on the deck: bed 74 x 46, top at 21 3/4 in</text>
+<g><rect x="-3" y="3" width="38" height="26" rx="13" fill="#2C2C2A"/><text x="16" y="22" text-anchor="middle" style="font-size:15px;font-weight:700;fill:#fff">C2</text></g></svg></div>
+<p>Seen from the aisle, looking at the driver side wall. <b>Day (left):</b> the 20 in leaf lies back flat on the deck (deck top at 16 3/4 in), face down, under the seat cushion (leaf top at 17 1/2 in, seat cushion 17 1/2 to 22 1/2 in), and the back cushion (5 in thick, 20 in tall) stands against the wall (22 1/2 to 42 1/2 in up). The couch is 3 1/2 in higher than it was so the gear shelf fits over the battery (diagram C4). The seat is 22 1/2 in high and 21 in deep (the 26 in couch minus the 5 in cushion). <b>Night (right):</b> the seat cushion comes off, the leaf is flipped out on its hinge along the front edge of the deck until it is level with the deck, four legs (12 5/8 in of bar plus a 3 1/2 in screw-out foot) fold down out of slots in the leaf (one near each end and two between them, about 24 in apart, because the leaf is 74 in long), the seat cushion goes back and the back cushion lies on the leaf as one 20 in piece. The bed is 74 x 46 in (26 + 20) with its top at 21 3/4 in (the seat is 22 1/2 in by day, 3/4 in higher because the folded leaf sits under it); from the aisle only the low strip shows. There are no rails and no slides, so the space under the deck stays open at 16 in (the battery and wheel well stay where they are, with the gear shelf over the battery). The legs, the hinge and the slots are on C3, and the flip is animated on the interactive page (click the couch, or open the Bed, from the end view).</p>
+<h3>C3. Driver side: building the leaf, slots and legs</h3>
+<div class="wide"><svg viewBox="0 0 680 640" role="img"><title>Leaf, hinge and leg detail</title>
+<text class="th" x="60" y="26" style="font-size:14px">Day: leaf folded back</text>
+<line x1="60" y1="40" x2="60" y2="290" stroke="#2C2C2A" stroke-width="2"/>
+<line x1="60" y1="290" x2="620" y2="290" stroke="#2C2C2A" stroke-width="1"/>
+<rect x="60" y="215" width="62.5" height="75" fill="#E24B4A" fill-opacity="0.15" stroke="#A32D2D" stroke-width="1" stroke-dasharray="5 3"/>
+<rect x="122.5" y="195" width="100" height="95" fill="#F2B84B" fill-opacity="0.3" stroke="#8A5A00" stroke-width="1" stroke-dasharray="5 3"/>
+<text class="ts" x="91" y="258" text-anchor="middle" style="font-size:9px">well</text><text class="ts" x="172.5" y="245" text-anchor="middle" style="font-size:9px">battery</text>
+<g class="c-gray"><rect x="60" y="122.5" width="260" height="7.5" stroke-width="0.5"/><rect x="312.5" y="130" width="7.5" height="15" stroke-width="0.5"/></g>
+<g class="c-amber"><rect x="120" y="115" width="200" height="7.5" stroke-width="0.5"/></g>
+<rect x="150" y="116.875" width="126.25" height="3.75" fill="#2C2C2A" opacity="0.85"/>
+<circle cx="320" cy="122.5" r="3.5" fill="#2C2C2A"/>
+<g class="c-purple"><rect x="60" y="65" width="260" height="50" stroke-width="0.5"/><text class="th" x="190" y="90" text-anchor="middle" dominant-baseline="central">Seat cushion</text></g>
+<text class="ts" x="335" y="79">Hinge on the top faces,</text><text class="ts" x="335" y="94">closes flat</text>
+<line x1="334" y1="98" x2="323" y2="123.5" stroke="#888780" stroke-width="0.6" stroke-dasharray="3 3"/>
+<text class="ts" x="335" y="151">Base front rail under the deck edge</text>
+<line x1="334" y1="147" x2="321" y2="138" stroke="#888780" stroke-width="0.6" stroke-dasharray="3 3"/>
+<text class="ts" x="235" y="234">Leaf folded back, face down: the leg lies in its slot,</text><text class="ts" x="235" y="249">nothing sticks out under the cushion</text>
+<line x1="270" y1="230" x2="260" y2="123.5" stroke="#888780" stroke-width="0.6" stroke-dasharray="3 3"/>
+<text class="th" x="60" y="346" style="font-size:14px">Night: leaf flipped out</text>
+<line x1="60" y1="350" x2="60" y2="600" stroke="#2C2C2A" stroke-width="2"/>
+<line x1="60" y1="600" x2="620" y2="600" stroke="#2C2C2A" stroke-width="1"/>
+<rect x="60" y="525" width="62.5" height="75" fill="#E24B4A" fill-opacity="0.15" stroke="#A32D2D" stroke-width="1" stroke-dasharray="5 3"/>
+<rect x="122.5" y="505" width="100" height="95" fill="#F2B84B" fill-opacity="0.3" stroke="#8A5A00" stroke-width="1" stroke-dasharray="5 3"/>
+<text class="ts" x="91" y="568" text-anchor="middle" style="font-size:9px">well</text><text class="ts" x="172.5" y="555" text-anchor="middle" style="font-size:9px">battery</text>
+<g class="c-gray"><rect x="60" y="432.5" width="260" height="7.5" stroke-width="0.5"/><rect x="312.5" y="440" width="7.5" height="15" stroke-width="0.5"/></g>
+<g class="c-amber"><rect x="320" y="432.5" width="200" height="7.5" stroke-width="0.5"/></g>
+<rect x="361.25" y="433.5" width="136.25" height="5.5" fill="none" stroke="#5A3A00" stroke-width="0.8" stroke-dasharray="3 2"/>
+<rect x="488.1" y="436.25" width="3.8" height="124.75" fill="#2C2C2A" opacity="0.8"/><rect x="489" y="561" width="2" height="35" fill="#2C2C2A" opacity="0.8"/><rect x="483" y="596" width="14" height="4" fill="#2C2C2A"/>
+<circle cx="490" cy="436.25" r="3" fill="#2C2C2A"/>
+<circle cx="320" cy="432.5" r="3.5" fill="#2C2C2A"/>
+<g class="c-purple"><rect x="60" y="382.5" width="260" height="50" stroke-width="0.5"/><text class="th" x="190" y="407.5" text-anchor="middle" dominant-baseline="central">Seat cushion</text><rect x="320" y="382.5" width="200" height="50" stroke-width="0.5"/><text class="th" x="420" y="407.5" text-anchor="middle" dominant-baseline="central">Back cushion, 5 thick</text></g>
+<rect x="500" y="570" width="80" height="30" fill="#185FA5" fill-opacity="0.15" stroke="#185FA5" stroke-width="1" stroke-dasharray="4 3"/><text class="ts" x="540" y="587" text-anchor="middle" style="font-size:9px;fill:#185FA5">shower pan, down</text>
+<line x1="491.9" y1="554" x2="500" y2="554" stroke="#A32D2D" stroke-width="1.6"/><text class="ts" x="525" y="544" text-anchor="middle" style="font-size:9px;fill:#A32D2D">1 in to the pan</text>
+<text class="ts" x="230" y="518">Leg: 3/8 x 1 1/4 bar, 12 5/8 long + a 3 1/2 in screw-out foot, on a pin through</text><text class="ts" x="230" y="533">the leaf; it lands 43 in out (3 in in)</text>
+<line x1="482" y1="514" x2="489" y2="512" stroke="#888780" stroke-width="0.6" stroke-dasharray="3 3"/>
+<text class="ts" x="230" y="568">Slot (dashed): the leg lies in it when folded</text>
+<line x1="370" y1="564" x2="390" y2="437" stroke="#888780" stroke-width="0.6" stroke-dasharray="3 3"/>
+<text class="ts" x="325" y="352.5">Both halves are 5 in of padding on a level top at 21 3/4 in</text>
+<g><rect x="-3" y="3" width="38" height="26" rx="13" fill="#2C2C2A"/><text x="16" y="22" text-anchor="middle" style="font-size:15px;font-weight:700;fill:#fff">C3</text></g></svg></div>
+<p>Section from the rear (wall on the left, 0 is the finished wall face). <b>Base:</b> the couch sits on a base of two end panels, a ledger on the wall and a 3/4 x 1 1/2 in rail under the front edge of the deck; that supports the couch ends and front (nothing slides under the deck, so the rail is free to go there). <b>Leaf:</b> 3/4 in birch plywood, 20 x 73 3/4 in, edges banded, about 24 lb, a plain flat slab with no rails, so folded back it leaves no ridges under the seat cushion. <b>Hinge:</b> a 74 in continuous hinge, 1 1/2 in leaves, on the top faces of the deck and the leaf, #8 x 5/8 in screws every 3 to 4 in, a 1/8 to 3/16 in gap so it folds flat both ways. <b>Legs:</b> four 3/8 x 1 1/4 in aluminum flat bars, 12 5/8 in long, each with a threaded rubber foot that screws out about 3 1/2 in (the couch is 3 1/2 in higher than it was, so the leg is 16 1/8 in from pin to floor; the foot is a 3/8 in stud that screws into the bar's end; folded, only the bar lies in the slot), each lying in a through-slot (1 1/2 x 13 in) cut in the leaf, on a 1/4 in stainless pin through the plywood either side of the slot, 3 in from the free edge; folded, the leg is inside the plywood, so the leaf is flat on both faces. The pin is 3 in in from the free edge, so the leg lands 43 in out from the wall (the bed is 46) and the front 3 in of the leaf overhangs it. The two end slots are 1 in in from the ends of the leaf (the sides) and the other two are evenly between them (the four are about 24 in apart, so the free edge never spans more than that; with three legs it spanned 35 in); each slot leaves about 4 in of solid plywood at the hinge end. A stop (the end of the slot) keeps the leg from passing vertical and a ball catch or magnet holds it up. <b>Latches:</b> two turn buttons or magnetic catches hold the leaf folded back while driving. <b>Shower:</b> the leg at the rear end of the leaf lands 43 in out, 1 in short of the front edge of the shower pan (44 in) with the pan down, and the leaf edge hangs 2 in over the pan; the pan is tipped up anyway when the bed is made up. <b>Loads (rough):</b> two adults (350 lb) put about 150 lb on the 20 in leaf; with the legs down about 75 lb of that goes through the hinge (about 3 1/2 lb a screw) and the legs take about 19 lb each. A 200 lb person sitting on the free edge between two legs puts about 100 lb on each nearest leg. With the legs up the same person is a lever of about 4,000 in-lb on the hinge, which is several hundred pounds a screw and more than a #8 screw holds in plywood, so the legs go down before anyone sits on the free edge. A 3/8 x 1 1/4 in flat bar buckles at about 3,500 lb, so the bar is not the weak point; the pin, the slot walls and the hinge screws are.</p>
+
+<h3>B. Driver side: built items</h3>
+<div class="wide"><svg viewBox="0 0 1070 636" role="img"><title>Driver side: built items</title>
+<defs><marker id="ar" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+<text class="ts" x="50" y="22" style="font-size:14px">Driver side built items (bed, closet, dinette, wall cabinets), seen from the aisle. Wheel well shown for reference.</text>
+<line x1="50.0" y1="42.0" x2="50.0" y2="540" stroke="#3F3E3A" stroke-opacity="0.4" stroke-width="0.9" stroke-dasharray="3 3"/>
+<line x1="110.0" y1="42.0" x2="110.0" y2="540" stroke="#3F3E3A" stroke-opacity="0.4" stroke-width="0.9" stroke-dasharray="3 3"/>
+<line x1="170.0" y1="42.0" x2="170.0" y2="540" stroke="#3F3E3A" stroke-opacity="0.4" stroke-width="0.9" stroke-dasharray="3 3"/>
+<line x1="230.0" y1="42.0" x2="230.0" y2="540" stroke="#3F3E3A" stroke-opacity="0.4" stroke-width="0.9" stroke-dasharray="3 3"/>
+<line x1="290.0" y1="42.0" x2="290.0" y2="540" stroke="#3F3E3A" stroke-opacity="0.4" stroke-width="0.9" stroke-dasharray="3 3"/>
+<line x1="350.0" y1="42.0" x2="350.0" y2="540" stroke="#3F3E3A" stroke-opacity="0.4" stroke-width="0.9" stroke-dasharray="3 3"/>
+<line x1="410.0" y1="42.0" x2="410.0" y2="540" stroke="#3F3E3A" stroke-opacity="0.4" stroke-width="0.9" stroke-dasharray="3 3"/>
+<line x1="470.0" y1="42.0" x2="470.0" y2="540" stroke="#3F3E3A" stroke-opacity="0.4" stroke-width="0.9" stroke-dasharray="3 3"/>
+<line x1="530.0" y1="42.0" x2="530.0" y2="540" stroke="#3F3E3A" stroke-opacity="0.4" stroke-width="0.9" stroke-dasharray="3 3"/>
+<line x1="590.0" y1="42.0" x2="590.0" y2="540" stroke="#3F3E3A" stroke-opacity="0.4" stroke-width="0.9" stroke-dasharray="3 3"/>
+<line x1="650.0" y1="42.0" x2="650.0" y2="540" stroke="#3F3E3A" stroke-opacity="0.4" stroke-width="0.9" stroke-dasharray="3 3"/>
+<line x1="710.0" y1="42.0" x2="710.0" y2="540" stroke="#3F3E3A" stroke-opacity="0.4" stroke-width="0.9" stroke-dasharray="3 3"/>
+<line x1="770.0" y1="42.0" x2="770.0" y2="540" stroke="#3F3E3A" stroke-opacity="0.4" stroke-width="0.9" stroke-dasharray="3 3"/>
+<line x1="830.0" y1="42.0" x2="830.0" y2="540" stroke="#3F3E3A" stroke-opacity="0.4" stroke-width="0.9" stroke-dasharray="3 3"/>
+<line x1="890.0" y1="42.0" x2="890.0" y2="540" stroke="#3F3E3A" stroke-opacity="0.4" stroke-width="0.9" stroke-dasharray="3 3"/>
+<line x1="950.0" y1="42.0" x2="950.0" y2="540" stroke="#3F3E3A" stroke-opacity="0.4" stroke-width="0.9" stroke-dasharray="3 3"/>
+<line x1="1010.0" y1="42.0" x2="1010.0" y2="540" stroke="#3F3E3A" stroke-opacity="0.4" stroke-width="0.9" stroke-dasharray="3 3"/>
+<line x1="50.0" y1="540.0" x2="1010.0" y2="540.0" stroke="#3F3E3A" stroke-opacity="0.4" stroke-width="0.9" stroke-dasharray="3 3"/>
+<text class="ts" x="44.0" y="544.0" text-anchor="end" style="font-size:11px;font-weight:700;fill:#8A4B0F">0↑</text>
+<line x1="50.0" y1="480.0" x2="1010.0" y2="480.0" stroke="#3F3E3A" stroke-opacity="0.4" stroke-width="0.9" stroke-dasharray="3 3"/>
+<text class="ts" x="44.0" y="484.0" text-anchor="end" style="font-size:11px;font-weight:700;fill:#8A4B0F">10↑</text>
+<line x1="50.0" y1="420.0" x2="1010.0" y2="420.0" stroke="#3F3E3A" stroke-opacity="0.4" stroke-width="0.9" stroke-dasharray="3 3"/>
+<text class="ts" x="44.0" y="424.0" text-anchor="end" style="font-size:11px;font-weight:700;fill:#8A4B0F">20↑</text>
+<line x1="50.0" y1="360.0" x2="1010.0" y2="360.0" stroke="#3F3E3A" stroke-opacity="0.4" stroke-width="0.9" stroke-dasharray="3 3"/>
+<text class="ts" x="44.0" y="364.0" text-anchor="end" style="font-size:11px;font-weight:700;fill:#8A4B0F">30↑</text>
+<line x1="50.0" y1="300.0" x2="1010.0" y2="300.0" stroke="#3F3E3A" stroke-opacity="0.4" stroke-width="0.9" stroke-dasharray="3 3"/>
+<text class="ts" x="44.0" y="304.0" text-anchor="end" style="font-size:11px;font-weight:700;fill:#8A4B0F">40↑</text>
+<line x1="50.0" y1="240.0" x2="1010.0" y2="240.0" stroke="#3F3E3A" stroke-opacity="0.4" stroke-width="0.9" stroke-dasharray="3 3"/>
+<text class="ts" x="44.0" y="244.0" text-anchor="end" style="font-size:11px;font-weight:700;fill:#8A4B0F">50↑</text>
+<line x1="50.0" y1="180.0" x2="1010.0" y2="180.0" stroke="#3F3E3A" stroke-opacity="0.4" stroke-width="0.9" stroke-dasharray="3 3"/>
+<text class="ts" x="44.0" y="184.0" text-anchor="end" style="font-size:11px;font-weight:700;fill:#8A4B0F">60↑</text>
+<line x1="50.0" y1="120.0" x2="1010.0" y2="120.0" stroke="#3F3E3A" stroke-opacity="0.4" stroke-width="0.9" stroke-dasharray="3 3"/>
+<text class="ts" x="44.0" y="124.0" text-anchor="end" style="font-size:11px;font-weight:700;fill:#8A4B0F">70↑</text>
+<line x1="50.0" y1="60.0" x2="1010.0" y2="60.0" stroke="#3F3E3A" stroke-opacity="0.4" stroke-width="0.9" stroke-dasharray="3 3"/>
+<text class="ts" x="44.0" y="64.0" text-anchor="end" style="font-size:11px;font-weight:700;fill:#8A4B0F">80↑</text>
+<rect x="50.0" y="66.0" width="960.0" height="474.0" fill="#F1EFE8" fill-opacity="0.6" stroke="#5F5E5A" stroke-width="1.2"/>
+<g class="tg" data-g="ww" data-label="Wheel well">
+<polygon points="302.0,540.0 506.0,540.0 506.0,528.0 450.5,495.0 357.5,495.0 302.0,528.0" fill="#E24B4A" fill-opacity="0.35" stroke="#A32D2D" stroke-width="1.6" stroke-dasharray="5 3" stroke-linejoin="round"/>
+<text class="th" x="404.0" y="520.8" text-anchor="middle" style="fill:#791F1F;font-size:12px">wheel well</text>
+</g>
+<g class="tg" data-g="wallcab" data-label="Wall cabinets">
+<rect x="50.0" y="92.6" width="444.0" height="81.4" rx="3" fill="#534AB7" fill-opacity="0.12" stroke="#534AB7" stroke-opacity="0.9" stroke-width="1.4"/>
+<text class="th" x="272.0" y="135.0" text-anchor="middle" style="fill:#534AB7;font-size:12.5px;paint-order:stroke;stroke:#fff;stroke-width:3px;stroke-opacity:.8"></text>
+<rect x="584.0" y="92.6" width="390.0" height="81.4" rx="3" fill="#534AB7" fill-opacity="0.12" stroke="#534AB7" stroke-opacity="0.9" stroke-width="1.4"/>
+<text class="th" x="779.0" y="135.0" text-anchor="middle" style="fill:#534AB7;font-size:12.5px;paint-order:stroke;stroke:#fff;stroke-width:3px;stroke-opacity:.8"></text>
+<text class="th" x="272.0" y="188.39999999999998" text-anchor="middle" style="fill:#534AB7;font-size:12px;paint-order:stroke;stroke:#fff;stroke-width:3px">Wall cabinet, 74 long x 14 deep x 13 9/16 tall (61 to 74 9/16 in up)</text>
+<text class="th" x="779.0" y="188.39999999999998" text-anchor="middle" style="fill:#534AB7;font-size:12px;paint-order:stroke;stroke:#fff;stroke-width:3px">Wall cabinet, 65 long x 14 deep x 13 9/16 tall (61 to 74 9/16 in up)</text>
+</g>
+<g class="tg" data-g="pockets" data-label="Closet door pockets">
+<rect x="497.8" y="290.1" width="39.5" height="42.0" rx="2" fill="#B07A2A" fill-opacity="0.10" stroke="#8A5A00" stroke-width="1" stroke-dasharray="3 2"/>
+<rect x="540.2" y="290.1" width="39.6" height="42.0" rx="2" fill="#B07A2A" fill-opacity="0.10" stroke="#8A5A00" stroke-width="1" stroke-dasharray="3 2"/>
+<rect x="497.8" y="245.1" width="39.5" height="42.0" rx="2" fill="#B07A2A" fill-opacity="0.10" stroke="#8A5A00" stroke-width="1" stroke-dasharray="3 2"/>
+<rect x="540.2" y="245.1" width="39.6" height="42.0" rx="2" fill="#B07A2A" fill-opacity="0.10" stroke="#8A5A00" stroke-width="1" stroke-dasharray="3 2"/>
+<rect x="497.8" y="200.1" width="39.5" height="42.0" rx="2" fill="#B07A2A" fill-opacity="0.10" stroke="#8A5A00" stroke-width="1" stroke-dasharray="3 2"/>
+<rect x="540.2" y="200.1" width="39.6" height="42.0" rx="2" fill="#B07A2A" fill-opacity="0.10" stroke="#8A5A00" stroke-width="1" stroke-dasharray="3 2"/>
+<text class="ts" x="539.0" y="180.0" text-anchor="middle" style="fill:#8A5A00;font-size:9.5px;paint-order:stroke;stroke:#fff;stroke-width:3px">dashed: door pockets inside</text>
+</g>
+<g class="tg" data-g="doors" data-label="Cabinet doors">
+<rect x="50.8" y="99.0" width="147.0" height="72.0" rx="3" fill="#534AB7" fill-opacity="0.18" stroke="#534AB7" stroke-width="1.6"/>
+<text class="th" x="124.25" y="133.20000000000005" text-anchor="middle" style="fill:#534AB7;font-size:12px;paint-order:stroke;stroke:#fff;stroke-width:3px">door 24 1/2 x 12</text>
+<rect x="198.5" y="99.0" width="147.0" height="72.0" rx="3" fill="#534AB7" fill-opacity="0.18" stroke="#534AB7" stroke-width="1.6"/>
+<text class="th" x="272.0" y="133.20000000000005" text-anchor="middle" style="fill:#534AB7;font-size:12px;paint-order:stroke;stroke:#fff;stroke-width:3px">door 24 1/2 x 12</text>
+<rect x="346.2" y="99.0" width="147.0" height="72.0" rx="3" fill="#534AB7" fill-opacity="0.18" stroke="#534AB7" stroke-width="1.6"/>
+<text class="th" x="419.75" y="133.20000000000005" text-anchor="middle" style="fill:#534AB7;font-size:12px;paint-order:stroke;stroke:#fff;stroke-width:3px">door 24 1/2 x 12</text>
+<rect x="584.8" y="99.0" width="129.0" height="72.0" rx="3" fill="#534AB7" fill-opacity="0.18" stroke="#534AB7" stroke-width="1.6"/>
+<text class="th" x="649.25" y="133.20000000000005" text-anchor="middle" style="fill:#534AB7;font-size:12px;paint-order:stroke;stroke:#fff;stroke-width:3px">door 21 1/2 x 12</text>
+<rect x="714.5" y="99.0" width="129.0" height="72.0" rx="3" fill="#534AB7" fill-opacity="0.18" stroke="#534AB7" stroke-width="1.6"/>
+<text class="th" x="779.0" y="133.20000000000005" text-anchor="middle" style="fill:#534AB7;font-size:12px;paint-order:stroke;stroke:#fff;stroke-width:3px">door 21 1/2 x 12</text>
+<rect x="844.2" y="99.0" width="129.0" height="72.0" rx="3" fill="#534AB7" fill-opacity="0.18" stroke="#534AB7" stroke-width="1.6"/>
+<text class="th" x="908.75" y="133.20000000000005" text-anchor="middle" style="fill:#534AB7;font-size:12px;paint-order:stroke;stroke:#fff;stroke-width:3px">door 21 1/2 x 12</text>
+</g>
+<g class="tg" data-g="bed" data-label="Bed / couch">
+<rect x="50.0" y="405.0" width="444.0" height="30.0" rx="3" fill="#534AB7" fill-opacity="0.12" stroke="#534AB7" stroke-opacity="0.9" stroke-width="1.4"/>
+<text class="th" x="272.0" y="424.8" text-anchor="middle" style="fill:#534AB7;font-size:12.5px;paint-order:stroke;stroke:#fff;stroke-width:3px;stroke-opacity:.8">Seat cushion, top at 22 1/2 in (deck at 16 3/4, leaf folded on it)</text>
+<rect x="50.0" y="285.0" width="444.0" height="120.0" rx="3" fill="#534AB7" fill-opacity="0.12" stroke="#534AB7" stroke-opacity="0.9" stroke-width="1.4"/>
+<text class="th" x="272.0" y="345.0" text-anchor="middle" style="fill:#534AB7;font-size:12.5px;paint-order:stroke;stroke:#fff;stroke-width:3px;stroke-opacity:.8">Back cushion, upright (20 tall)</text>
+<line x1="50.0" y1="435.0" x2="494.0" y2="435.0" stroke="#534AB7" stroke-opacity="0.9" stroke-width="1.6"/>
+<line x1="50.0" y1="444.0" x2="494.0" y2="444.0" stroke="#534AB7" stroke-opacity="0.5" stroke-width="1" stroke-dasharray="5 3"/><text class="ts" x="56.0" y="455.0" style="fill:#534AB7;font-size:9.5px;paint-order:stroke;stroke:#fff;stroke-width:3px">deck underside 16 up (couch raised 3 1/2 in)</text>
+</g>
+<g class="tg" data-g="gear" data-label="Charging gear on the shelf over the battery">
+<rect x="281.9" y="444.0" width="4.5" height="96.0" fill="#8A6B4D" fill-opacity="0.35" stroke="#5A3A00" stroke-width="1" stroke-dasharray="3 2"/>
+<rect x="290.3" y="474.0" width="199.8" height="3.0" rx="1" fill="#8A6B4D" fill-opacity="0.6" stroke="#5A3A00" stroke-width="1.2"/>
+<rect x="296.3" y="447.0" width="96.0" height="27.0" rx="2" fill="#B45309" fill-opacity="0.16" stroke="#B45309" stroke-width="1.4" stroke-dasharray="4 3"/>
+<rect x="296.3" y="450.0" width="57.0" height="24.0" rx="2" fill="#B45309" fill-opacity="0.16" stroke="#B45309" stroke-width="1.4" stroke-dasharray="4 3"/>
+<rect x="395.3" y="450.6" width="88.8" height="23.4" rx="2" fill="#B45309" fill-opacity="0.16" stroke="#B45309" stroke-width="1.4" stroke-dasharray="4 3"/>
+<text class="ts" x="275.9" y="471.6" text-anchor="end" style="fill:#7A3B07;font-size:9.5px;paint-order:stroke;stroke:#fff;stroke-width:3px">gear shelf (pulls out toward you):</text><text class="ts" x="275.9" y="482.6" text-anchor="end" style="fill:#7A3B07;font-size:9.5px;paint-order:stroke;stroke:#fff;stroke-width:3px">DC-DC, charger, inverter</text><text class="ts" x="443.0" y="445.0" text-anchor="middle" style="fill:#7A3B07;font-size:9.5px;paint-order:stroke;stroke:#fff;stroke-width:3px">inverter</text>
+</g>
+<g class="tg" data-g="closet" data-label="Closet">
+<rect x="494.0" y="92.6" width="90.0" height="447.4" rx="3" fill="#444441" fill-opacity="0.12" stroke="#444441" stroke-opacity="0.9" stroke-width="1.4"/>
+<text class="th" x="539.0" y="258.0" text-anchor="middle" style="fill:#444441;font-size:12.5px;paint-order:stroke;stroke:#fff;stroke-width:3px;stroke-opacity:.8">Closet</text>
+<text class="ts" x="539.0" y="273.0" text-anchor="middle" style="fill:#444441;font-size:11px;paint-order:stroke;stroke:#fff;stroke-width:3px;stroke-opacity:.8">15 in</text>
+</g>
+<g class="tg" data-g="ceil" data-label="Ceiling covering">
+<rect x="50.0" y="87.0" width="924.0" height="1.1" fill="#D9C7A5" stroke="#8A6B4D" stroke-width="0.8"/>
+<rect x="50.0" y="88.1" width="924.0" height="4.5" fill="#9A6B3A" fill-opacity="0.85" stroke="#5A3A00" stroke-width="0.8"/>
+<rect x="51.5" y="87.0" width="84.0" height="5.6" fill="#2C2C2A" fill-opacity="0.85"/>
+<text class="ts" x="93.5" y="75.59999999999997" text-anchor="middle" style="font-size:10px;fill:#2C2C2A;paint-order:stroke;stroke:#fff;stroke-width:3px">roof fan</text>
+<rect x="268.2" y="87.0" width="85.5" height="5.6" fill="#2C2C2A" fill-opacity="0.85"/>
+<text class="ts" x="311.0" y="75.59999999999997" text-anchor="middle" style="font-size:10px;fill:#2C2C2A;paint-order:stroke;stroke:#fff;stroke-width:3px">A/C</text>
+<circle cx="174.02" cy="93.59999999999997" r="3" fill="#FFD84A" stroke="#B8860B" stroke-width="0.8"/>
+<circle cx="494.0" cy="93.59999999999997" r="3" fill="#FFD84A" stroke="#B8860B" stroke-width="0.8"/>
+<circle cx="813.98" cy="93.59999999999997" r="3" fill="#FFD84A" stroke="#B8860B" stroke-width="0.8"/>
+<text class="ts" x="962.0" y="75.59999999999997" text-anchor="end" style="font-size:10px;fill:#5A3A00;paint-order:stroke;stroke:#fff;stroke-width:3px">ceiling covering: 3/16 plywood + 3/4 in cedar slats, finished ceiling at 74 9/16</text>
+</g>
+<g class="tg" data-g="cdoors" data-label="Closet door and drawers">
+<rect x="494.8" y="94.1" width="88.5" height="262.0" rx="3" fill="#444441" fill-opacity="0.12" stroke="#444441" stroke-width="1.6"/>
+<text class="th" x="539.0" y="168.0" text-anchor="middle" style="fill:#444441;font-size:11.5px;paint-order:stroke;stroke:#fff;stroke-width:3px">upper door</text><text class="ts" x="539.0" y="181.0" text-anchor="middle" style="fill:#444441;font-size:10px;paint-order:stroke;stroke:#fff;stroke-width:3px">14 3/4 x 43 11/16</text>
+<rect x="494.8" y="490.3" width="88.5" height="43.7" rx="2" fill="#7A5A2E" fill-opacity="0.12" stroke="#444441" stroke-width="1.4"/>
+<line x1="527.0" y1="512.16" x2="551.0" y2="512.16" stroke="#2C2C2A" stroke-width="2.4" stroke-linecap="round"/>
+<rect x="494.8" y="445.9" width="88.5" height="43.7" rx="2" fill="#7A5A2E" fill-opacity="0.12" stroke="#444441" stroke-width="1.4"/>
+<line x1="527.0" y1="467.72249999999997" x2="551.0" y2="467.72249999999997" stroke="#2C2C2A" stroke-width="2.4" stroke-linecap="round"/>
+<rect x="494.8" y="401.4" width="88.5" height="43.7" rx="2" fill="#7A5A2E" fill-opacity="0.12" stroke="#444441" stroke-width="1.4"/>
+<line x1="527.0" y1="423.28499999999997" x2="551.0" y2="423.28499999999997" stroke="#2C2C2A" stroke-width="2.4" stroke-linecap="round"/>
+<rect x="494.8" y="357.0" width="88.5" height="43.7" rx="2" fill="#7A5A2E" fill-opacity="0.12" stroke="#444441" stroke-width="1.4"/>
+<line x1="527.0" y1="378.84749999999997" x2="551.0" y2="378.84749999999997" stroke="#2C2C2A" stroke-width="2.4" stroke-linecap="round"/>
+<text class="th" x="539.0" y="447.0" text-anchor="middle" style="fill:#444441;font-size:11px;paint-order:stroke;stroke:#fff;stroke-width:3px">4 drawers</text><text class="ts" x="539.0" y="460.0" text-anchor="middle" style="fill:#444441;font-size:10px;paint-order:stroke;stroke:#fff;stroke-width:3px">7 5/16 tall each</text>
+</g>
+<g class="tg" data-g="rods" data-label="Closet rod and hanging clothes">
+<rect x="503.0" y="118.8" width="72.0" height="232.2" fill="#B5502F" fill-opacity="0.16" stroke="#B5502F" stroke-width="1" stroke-dasharray="3 2"/>
+<text class="ts" x="539.0" y="276.0" text-anchor="middle" style="fill:#7A2E10;font-size:9.5px;paint-order:stroke;stroke:#fff;stroke-width:3px">clothes up to 36 in long,</text><text class="ts" x="539.0" y="287.0" text-anchor="middle" style="fill:#7A2E10;font-size:9.5px;paint-order:stroke;stroke:#fff;stroke-width:3px">hanging to 31 1/2 in up</text>
+<line x1="506.0" y1="114.0" x2="572.0" y2="114.0" stroke="#444441" stroke-width="3.5" stroke-linecap="round"/>
+<text class="ts" x="539.0" y="109.0" text-anchor="middle" style="fill:#444441;font-size:10px;font-weight:700;paint-order:stroke;stroke:#fff;stroke-width:3px">rod, 71 in up</text>
+</g>
+<g class="tg" data-g="benches" data-label="Dinette benches">
+<rect x="584.0" y="435.0" width="117.0" height="105.0" rx="3" fill="#993556" fill-opacity="0.12" stroke="#993556" stroke-opacity="0.9" stroke-width="1.4"/>
+<text class="th" x="642.5" y="525.0" text-anchor="middle" style="fill:#993556;font-size:12.5px;paint-order:stroke;stroke:#fff;stroke-width:3px;stroke-opacity:.8">Bench</text>
+<rect x="584.0" y="312.0" width="17.4" height="123.0" rx="3" fill="#993556" fill-opacity="0.12" stroke="#993556" stroke-opacity="0.9" stroke-width="1.4"/>
+<text class="th" x="592.7" y="373.5" text-anchor="middle" style="fill:#993556;font-size:12.5px;paint-order:stroke;stroke:#fff;stroke-width:3px;stroke-opacity:.8"></text>
+<rect x="857.0" y="435.0" width="117.0" height="105.0" rx="3" fill="#993556" fill-opacity="0.12" stroke="#993556" stroke-opacity="0.9" stroke-width="1.4"/>
+<text class="th" x="915.5" y="525.0" text-anchor="middle" style="fill:#993556;font-size:12.5px;paint-order:stroke;stroke:#fff;stroke-width:3px;stroke-opacity:.8">Bench</text>
+<rect x="956.6" y="312.0" width="17.4" height="123.0" rx="3" fill="#993556" fill-opacity="0.12" stroke="#993556" stroke-opacity="0.9" stroke-width="1.4"/>
+<text class="th" x="965.3000000000001" y="373.5" text-anchor="middle" style="fill:#993556;font-size:12.5px;paint-order:stroke;stroke:#fff;stroke-width:3px;stroke-opacity:.8"></text>
+</g>
+<g class="tg" data-g="fwalls" data-label="Floor-to-ceiling walls">
+<rect x="579.5" y="92.6" width="4.5" height="447.4" fill="#8A6B4D" fill-opacity="0.6" stroke="#3E230B" stroke-width="1.2"/>
+<text class="th" x="576.5" y="228.0" text-anchor="end" style="fill:#5A3A00;font-size:10.5px;font-weight:700;paint-order:stroke;stroke:#fff;stroke-width:3px">W1</text>
+<rect x="974.0" y="92.6" width="4.5" height="447.4" fill="#8A6B4D" fill-opacity="0.6" stroke="#3E230B" stroke-width="1.2"/>
+<text class="th" x="971.0" y="228.0" text-anchor="end" style="fill:#5A3A00;font-size:10.5px;font-weight:700;paint-order:stroke;stroke:#fff;stroke-width:3px">W2</text>
+<text class="ts" x="779.0" y="264.0" text-anchor="middle" style="fill:#5A3A00;font-size:10px;paint-order:stroke;stroke:#fff;stroke-width:3px">W1 and W2: 3/4 in walls, floor to ceiling, 28 out; the dinette backs lean on them</text>
+</g>
+<g class="tg" data-g="table" data-label="Table">
+<rect x="701.0" y="366.0" width="156.0" height="6.0" fill="#444441" fill-opacity="0.35" stroke="#444441" stroke-width="1.4"/>
+<text class="th" x="779.0" y="388.2" text-anchor="middle" style="fill:#444441;font-size:12.5px;paint-order:stroke;stroke:#fff;stroke-width:3px">Table, 29 in high</text>
+</g>
+<defs><pattern id="hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="6" stroke="#888780" stroke-width="1"/></pattern></defs>
+<rect x="950.0" y="66.0" width="48.0" height="474.0" fill="url(#hatch)" fill-opacity="0.4"/>
+<rect x="962.0" y="66.0" width="24.0" height="474.0" fill="url(#hatch)" fill-opacity="0.4"/>
+<line x1="974.0" y1="66.0" x2="974.0" y2="540" stroke="#5F5E5A" stroke-width="2" stroke-dasharray="6 3"/>
+<text class="ts" x="970.0" y="44.0" text-anchor="end" style="font-size:11px">cab wall about 154; could be 150 to 158 (cab-end numbers may be off by 2 to 4 in)</text>
+<line x1="50.0" y1="556" x2="1010.0" y2="556" stroke="#888780" stroke-width="0.6"/>
+<line x1="50.0" y1="552" x2="50.0" y2="560" stroke="#888780" stroke-width="0.6"/>
+<text class="ts" x="50.0" y="574" text-anchor="middle" style="font-size:11px;font-weight:700;fill:#185FA5">0→</text>
+<line x1="110.0" y1="552" x2="110.0" y2="560" stroke="#888780" stroke-width="0.6"/>
+<text class="ts" x="110.0" y="574" text-anchor="middle" style="font-size:11px;font-weight:700;fill:#185FA5">10→</text>
+<line x1="170.0" y1="552" x2="170.0" y2="560" stroke="#888780" stroke-width="0.6"/>
+<text class="ts" x="170.0" y="574" text-anchor="middle" style="font-size:11px;font-weight:700;fill:#185FA5">20→</text>
+<line x1="230.0" y1="552" x2="230.0" y2="560" stroke="#888780" stroke-width="0.6"/>
+<text class="ts" x="230.0" y="574" text-anchor="middle" style="font-size:11px;font-weight:700;fill:#185FA5">30→</text>
+<line x1="290.0" y1="552" x2="290.0" y2="560" stroke="#888780" stroke-width="0.6"/>
+<text class="ts" x="290.0" y="574" text-anchor="middle" style="font-size:11px;font-weight:700;fill:#185FA5">40→</text>
+<line x1="350.0" y1="552" x2="350.0" y2="560" stroke="#888780" stroke-width="0.6"/>
+<text class="ts" x="350.0" y="574" text-anchor="middle" style="font-size:11px;font-weight:700;fill:#185FA5">50→</text>
+<line x1="410.0" y1="552" x2="410.0" y2="560" stroke="#888780" stroke-width="0.6"/>
+<text class="ts" x="410.0" y="574" text-anchor="middle" style="font-size:11px;font-weight:700;fill:#185FA5">60→</text>
+<line x1="470.0" y1="552" x2="470.0" y2="560" stroke="#888780" stroke-width="0.6"/>
+<text class="ts" x="470.0" y="574" text-anchor="middle" style="font-size:11px;font-weight:700;fill:#185FA5">70→</text>
+<line x1="530.0" y1="552" x2="530.0" y2="560" stroke="#888780" stroke-width="0.6"/>
+<text class="ts" x="530.0" y="574" text-anchor="middle" style="font-size:11px;font-weight:700;fill:#185FA5">80→</text>
+<line x1="590.0" y1="552" x2="590.0" y2="560" stroke="#888780" stroke-width="0.6"/>
+<text class="ts" x="590.0" y="574" text-anchor="middle" style="font-size:11px;font-weight:700;fill:#185FA5">90→</text>
+<line x1="650.0" y1="552" x2="650.0" y2="560" stroke="#888780" stroke-width="0.6"/>
+<text class="ts" x="650.0" y="574" text-anchor="middle" style="font-size:11px;font-weight:700;fill:#185FA5">100→</text>
+<line x1="710.0" y1="552" x2="710.0" y2="560" stroke="#888780" stroke-width="0.6"/>
+<text class="ts" x="710.0" y="574" text-anchor="middle" style="font-size:11px;font-weight:700;fill:#185FA5">110→</text>
+<line x1="770.0" y1="552" x2="770.0" y2="560" stroke="#888780" stroke-width="0.6"/>
+<text class="ts" x="770.0" y="574" text-anchor="middle" style="font-size:11px;font-weight:700;fill:#185FA5">120→</text>
+<line x1="830.0" y1="552" x2="830.0" y2="560" stroke="#888780" stroke-width="0.6"/>
+<text class="ts" x="830.0" y="574" text-anchor="middle" style="font-size:11px;font-weight:700;fill:#185FA5">130→</text>
+<line x1="890.0" y1="552" x2="890.0" y2="560" stroke="#888780" stroke-width="0.6"/>
+<text class="ts" x="890.0" y="574" text-anchor="middle" style="font-size:11px;font-weight:700;fill:#185FA5">140→</text>
+<line x1="950.0" y1="552" x2="950.0" y2="560" stroke="#888780" stroke-width="0.6"/>
+<text class="ts" x="950.0" y="574" text-anchor="middle" style="font-size:11px;font-weight:700;fill:#185FA5">150→</text>
+<line x1="1010.0" y1="552" x2="1010.0" y2="560" stroke="#888780" stroke-width="0.6"/>
+<text class="ts" x="1010.0" y="574" text-anchor="middle" style="font-size:11px;font-weight:700;fill:#185FA5">160→</text>
+<text class="ts" x="530.0" y="592" text-anchor="middle" style="font-size:12px">inches from where you start measuring at the back (about 6 in in from the rear edge; the rear lip is not counted)</text>
+<text class="ts" x="50.0" y="592" style="font-size:12px">Back (your zero)</text><text class="ts" x="1010.0" y="592" text-anchor="end" style="font-size:12px">Cab</text>
+<text class="ts" x="20.0" y="34.0" style="font-size:11px">in up from floor</text>
+<g pointer-events="none"><text x="172.0" y="483.0" style="font-size:10px;font-weight:700;fill:#185FA5;paint-order:stroke;stroke:#fff;stroke-width:2.5px;stroke-opacity:.8">20→</text><text x="172.0" y="363.0" style="font-size:10px;font-weight:700;fill:#185FA5;paint-order:stroke;stroke:#fff;stroke-width:2.5px;stroke-opacity:.8">20→</text><text x="172.0" y="243.0" style="font-size:10px;font-weight:700;fill:#185FA5;paint-order:stroke;stroke:#fff;stroke-width:2.5px;stroke-opacity:.8">20→</text><text x="172.0" y="123.0" style="font-size:10px;font-weight:700;fill:#185FA5;paint-order:stroke;stroke:#fff;stroke-width:2.5px;stroke-opacity:.8">20→</text><text x="292.0" y="483.0" style="font-size:10px;font-weight:700;fill:#185FA5;paint-order:stroke;stroke:#fff;stroke-width:2.5px;stroke-opacity:.8">40→</text><text x="292.0" y="363.0" style="font-size:10px;font-weight:700;fill:#185FA5;paint-order:stroke;stroke:#fff;stroke-width:2.5px;stroke-opacity:.8">40→</text><text x="292.0" y="243.0" style="font-size:10px;font-weight:700;fill:#185FA5;paint-order:stroke;stroke:#fff;stroke-width:2.5px;stroke-opacity:.8">40→</text><text x="292.0" y="123.0" style="font-size:10px;font-weight:700;fill:#185FA5;paint-order:stroke;stroke:#fff;stroke-width:2.5px;stroke-opacity:.8">40→</text><text x="412.0" y="483.0" style="font-size:10px;font-weight:700;fill:#185FA5;paint-order:stroke;stroke:#fff;stroke-width:2.5px;stroke-opacity:.8">60→</text><text x="412.0" y="363.0" style="font-size:10px;font-weight:700;fill:#185FA5;paint-order:stroke;stroke:#fff;stroke-width:2.5px;stroke-opacity:.8">60→</text><text x="412.0" y="243.0" style="font-size:10px;font-weight:700;fill:#185FA5;paint-order:stroke;stroke:#fff;stroke-width:2.5px;stroke-opacity:.8">60→</text><text x="412.0" y="123.0" style="font-size:10px;font-weight:700;fill:#185FA5;paint-order:stroke;stroke:#fff;stroke-width:2.5px;stroke-opacity:.8">60→</text><text x="532.0" y="483.0" style="font-size:10px;font-weight:700;fill:#185FA5;paint-order:stroke;stroke:#fff;stroke-width:2.5px;stroke-opacity:.8">80→</text><text x="532.0" y="363.0" style="font-size:10px;font-weight:700;fill:#185FA5;paint-order:stroke;stroke:#fff;stroke-width:2.5px;stroke-opacity:.8">80→</text><text x="532.0" y="243.0" style="font-size:10px;font-weight:700;fill:#185FA5;paint-order:stroke;stroke:#fff;stroke-width:2.5px;stroke-opacity:.8">80→</text><text x="532.0" y="123.0" style="font-size:10px;font-weight:700;fill:#185FA5;paint-order:stroke;stroke:#fff;stroke-width:2.5px;stroke-opacity:.8">80→</text><text x="652.0" y="483.0" style="font-size:10px;font-weight:700;fill:#185FA5;paint-order:stroke;stroke:#fff;stroke-width:2.5px;stroke-opacity:.8">100→</text><text x="652.0" y="363.0" style="font-size:10px;font-weight:700;fill:#185FA5;paint-order:stroke;stroke:#fff;stroke-width:2.5px;stroke-opacity:.8">100→</text><text x="652.0" y="243.0" style="font-size:10px;font-weight:700;fill:#185FA5;paint-order:stroke;stroke:#fff;stroke-width:2.5px;stroke-opacity:.8">100→</text><text x="652.0" y="123.0" style="font-size:10px;font-weight:700;fill:#185FA5;paint-order:stroke;stroke:#fff;stroke-width:2.5px;stroke-opacity:.8">100→</text><text x="772.0" y="483.0" style="font-size:10px;font-weight:700;fill:#185FA5;paint-order:stroke;stroke:#fff;stroke-width:2.5px;stroke-opacity:.8">120→</text><text x="772.0" y="363.0" style="font-size:10px;font-weight:700;fill:#185FA5;paint-order:stroke;stroke:#fff;stroke-width:2.5px;stroke-opacity:.8">120→</text><text x="772.0" y="243.0" style="font-size:10px;font-weight:700;fill:#185FA5;paint-order:stroke;stroke:#fff;stroke-width:2.5px;stroke-opacity:.8">120→</text><text x="772.0" y="123.0" style="font-size:10px;font-weight:700;fill:#185FA5;paint-order:stroke;stroke:#fff;stroke-width:2.5px;stroke-opacity:.8">120→</text><text x="892.0" y="483.0" style="font-size:10px;font-weight:700;fill:#185FA5;paint-order:stroke;stroke:#fff;stroke-width:2.5px;stroke-opacity:.8">140→</text><text x="892.0" y="363.0" style="font-size:10px;font-weight:700;fill:#185FA5;paint-order:stroke;stroke:#fff;stroke-width:2.5px;stroke-opacity:.8">140→</text><text x="892.0" y="243.0" style="font-size:10px;font-weight:700;fill:#185FA5;paint-order:stroke;stroke:#fff;stroke-width:2.5px;stroke-opacity:.8">140→</text><text x="892.0" y="123.0" style="font-size:10px;font-weight:700;fill:#185FA5;paint-order:stroke;stroke:#fff;stroke-width:2.5px;stroke-opacity:.8">140→</text><text x="112.0" y="417.0" style="font-size:10px;font-weight:700;fill:#8A4B0F;paint-order:stroke;stroke:#fff;stroke-width:2.5px;stroke-opacity:.8">20↑</text><text x="352.0" y="417.0" style="font-size:10px;font-weight:700;fill:#8A4B0F;paint-order:stroke;stroke:#fff;stroke-width:2.5px;stroke-opacity:.8">20↑</text><text x="592.0" y="417.0" style="font-size:10px;font-weight:700;fill:#8A4B0F;paint-order:stroke;stroke:#fff;stroke-width:2.5px;stroke-opacity:.8">20↑</text><text x="832.0" y="417.0" style="font-size:10px;font-weight:700;fill:#8A4B0F;paint-order:stroke;stroke:#fff;stroke-width:2.5px;stroke-opacity:.8">20↑</text><text x="112.0" y="297.0" style="font-size:10px;font-weight:700;fill:#8A4B0F;paint-order:stroke;stroke:#fff;stroke-width:2.5px;stroke-opacity:.8">40↑</text><text x="352.0" y="297.0" style="font-size:10px;font-weight:700;fill:#8A4B0F;paint-order:stroke;stroke:#fff;stroke-width:2.5px;stroke-opacity:.8">40↑</text><text x="592.0" y="297.0" style="font-size:10px;font-weight:700;fill:#8A4B0F;paint-order:stroke;stroke:#fff;stroke-width:2.5px;stroke-opacity:.8">40↑</text><text x="832.0" y="297.0" style="font-size:10px;font-weight:700;fill:#8A4B0F;paint-order:stroke;stroke:#fff;stroke-width:2.5px;stroke-opacity:.8">40↑</text><text x="112.0" y="177.0" style="font-size:10px;font-weight:700;fill:#8A4B0F;paint-order:stroke;stroke:#fff;stroke-width:2.5px;stroke-opacity:.8">60↑</text><text x="352.0" y="177.0" style="font-size:10px;font-weight:700;fill:#8A4B0F;paint-order:stroke;stroke:#fff;stroke-width:2.5px;stroke-opacity:.8">60↑</text><text x="592.0" y="177.0" style="font-size:10px;font-weight:700;fill:#8A4B0F;paint-order:stroke;stroke:#fff;stroke-width:2.5px;stroke-opacity:.8">60↑</text><text x="832.0" y="177.0" style="font-size:10px;font-weight:700;fill:#8A4B0F;paint-order:stroke;stroke:#fff;stroke-width:2.5px;stroke-opacity:.8">60↑</text><text class="ts" x="50.0" y="628" style="font-size:11px"><tspan style="fill:#185FA5;font-weight:600">blue numbers with an arrow →</tspan> = inches from the back; <tspan style="fill:#8A4B0F;font-weight:700">brown numbers with ↑</tspan> = inches up from the floor (marked every 20 in)</text></g><g class="tg" data-g="battery" data-label="Battery"><rect x="362.0" y="483.0" width="126.0" height="57.0" rx="3" fill="#F2B84B" fill-opacity="0.65" stroke="#8A5A00" stroke-width="2"/><text class="th" x="425.0" y="505.2" text-anchor="middle" style="font-size:11px;fill:#5A3A00;paint-order:stroke;stroke:#fff;stroke-width:3px">Battery</text><text class="ts" x="425.0" y="518.2" text-anchor="middle" style="font-size:10px;fill:#5A3A00;paint-order:stroke;stroke:#fff;stroke-width:3px">21 x 9.5 in, 52 to 73 in</text><text class="ts" x="425.0" y="530.2" text-anchor="middle" style="font-size:10px;fill:#5A3A00;paint-order:stroke;stroke:#fff;stroke-width:3px">in front of the well</text></g><g><rect x="3" y="3" width="26" height="26" rx="13" fill="#2C2C2A"/><text x="16" y="22" text-anchor="middle" style="font-size:17px;font-weight:700;fill:#fff">B</text></g></svg></div>
+<p><b>Battery.</b> The 21 x 10 x 9.5 in battery (280 Ah, taken as 12 V) sits on the floor next to the wheel well, on its aisle side, 1 in from the closet (52 to 73 in from the back). The well sticks out 7 in and the battery adds 10 in, so the two together reach 17 in into the van, which leaves 10 in of the bed's 27 in depth for storage. The battery is 9.5 in tall, so it clears the underside of the bed deck (16 in up, after the couch was raised 3 1/2 in for the gear shelf) by 6 1/2 in: that room holds the pull-out gear shelf (diagram C4) with the inverter, the DC-DC charger and the shore charger on it, 1 in over the battery.</p>
+<p><b>Closet.</b> One rod runs along the wall inside the closet (74 to 89 in from the back, 15 wide by 25 deep) at 71 in up, about 11 in long (76 to 87). The hangers sit across the 25 in depth, 1 1/2 in apart. Clothes up to 36 in long hang from it (the shoulder is 3 1/2 in below the rod), down to 31 1/2 in up; under them, starting 1 in lower, are four drawers (1 to 30 1/2 in up, each 7 5/16 tall by 12 1/2 wide by 22 deep inside). One door above the drawers, 14 3/4 by 43 11/16, opens on the bed-side hinge; the drawers pull out 21 in, which leaves about 1 in of the aisle, so open them while standing there.</p>
+<p>The bed, closet, dinette and wall cabinets, drawn on their own so they do not cover the wall details above. They were measured from the rear doors earlier; check whether they use the same zero as the wall numbers (about 6 in in from the rear edge).</p>
+
+
+<div class="gp"><a href="09-heavy.html">&larr; 9. Battery and tanks</a><a href="11-gear-shelf.html">11. Gear shelf &rarr;</a></div><script>
+(function () {
+  document.querySelectorAll('svg').forEach(function (svg) {
+    var groups = Array.prototype.slice.call(svg.querySelectorAll('g.tg'));
+    if (!groups.length) return;
+    var wrap = svg.closest('.wide') || svg.parentNode;
+    var bar = document.createElement('div');
+    bar.className = 'tgbar';
+    var hint = document.createElement('p');
+    hint.className = 'hint';
+    hint.textContent = 'Click a part of the drawing to hide it, or use the buttons. A crossed-out button is hidden; click it to bring the part back.';
+    bar.appendChild(hint);
+    var chips = {};
+    function set(g, show) {
+      g.classList.toggle('off', !show);
+      chips[g.dataset.g].setAttribute('aria-pressed', show ? 'true' : 'false');
+    }
+    function mkBtn(text, cls) {
+      var b = document.createElement('button');
+      b.type = 'button'; b.className = cls; b.textContent = text;
+      return b;
+    }
+    var showAll = mkBtn('Show all', 'all'), hideAll = mkBtn('Hide all', 'all');
+    showAll.onclick = function () { groups.forEach(function (g) { set(g, true); }); };
+    hideAll.onclick = function () { groups.forEach(function (g) { set(g, false); }); };
+    bar.appendChild(showAll); bar.appendChild(hideAll);
+    groups.forEach(function (g) {
+      var b = mkBtn(g.dataset.label, 'chip');
+      var colored = g.querySelector('[stroke]:not([stroke="none"])');
+      if (colored) b.style.setProperty('--c', colored.getAttribute('stroke'));
+      b.setAttribute('aria-pressed', 'true');
+      b.onclick = function () { set(g, g.classList.contains('off')); };
+      b.onmouseenter = function () { g.classList.add('hl'); };
+      b.onmouseleave = function () { g.classList.remove('hl'); };
+      chips[g.dataset.g] = b;
+      bar.appendChild(b);
+      g.addEventListener('click', function (e) { e.stopPropagation(); set(g, false); g.classList.remove('hl'); });
+    });
+    wrap.parentNode.insertBefore(bar, wrap);
+  });
+})();
+</script><script>
+/* zoom and pan for the diagrams: + / - / reset buttons in the corner, Ctrl (or Cmd) + scroll, pinch on a touch screen, drag to move once zoomed */
+(function () {
+  var CSS = '.zvp{position:relative;overflow:hidden}.zvp>svg{transform-origin:0 0}.zvp.zoomed{cursor:grab;touch-action:none}.zvp.zdrag{cursor:grabbing}' +
+    '.zbar{position:absolute;top:6px;right:6px;z-index:5;display:flex;gap:4px}' +
+    '.zbar button{font:inherit;font-size:15px;line-height:1;min-width:30px;height:30px;padding:0 9px;border:1px solid #B4B2A9;border-radius:6px;background:rgba(255,255,255,.93);color:#2C2C2A;cursor:pointer}' +
+    '.zbar button:hover{border-color:#2C2C2A}.zbar button[disabled]{opacity:.4;cursor:default}';
+  var st = document.createElement('style'); st.textContent = CSS; document.head.appendChild(st);
+  var MAX = 8;
+  function make(svg) {
+    if (svg.__zoom || !svg.parentNode) return;
+    var vp = document.createElement('div'); vp.className = 'zvp';
+    svg.parentNode.insertBefore(vp, svg); vp.appendChild(svg);
+    var k = 1, x = 0, y = 0, ptrs = {}, last = null, dragged = false, down = null;
+    var bar = document.createElement('div'); bar.className = 'zbar';
+    function btn(t, label, f) { var b = document.createElement('button'); b.type = 'button'; b.textContent = t; b.title = label; b.setAttribute('aria-label', label); b.onclick = function (e) { e.stopPropagation(); f(); }; bar.appendChild(b); return b; }
+    var bIn = btn('+', 'Zoom in', function () { zoomAt(vp.clientWidth / 2, vp.clientHeight / 2, 1.5); });
+    var bOut = btn('−', 'Zoom out', function () { zoomAt(vp.clientWidth / 2, vp.clientHeight / 2, 1 / 1.5); });
+    var bReset = btn('Reset', 'Reset the zoom', reset);
+    vp.appendChild(bar);
+    function apply() {
+      var cs = getComputedStyle(svg), sw = parseFloat(cs.width) || vp.clientWidth, sh = parseFloat(cs.height) || vp.clientHeight;
+      x = Math.max(Math.min(0, vp.clientWidth - sw * k), Math.min(0, x));
+      y = Math.max(Math.min(0, vp.clientHeight - sh * k), Math.min(0, y));
+      if (k <= 1.001) { k = 1; x = 0; y = 0; }
+      svg.style.transform = k === 1 ? '' : 'translate(' + x + 'px,' + y + 'px) scale(' + k + ')';
+      vp.classList.toggle('zoomed', k > 1);
+      if (k > 1) vp.scrollLeft = 0;
+      bIn.disabled = k >= MAX - .01; bOut.disabled = bReset.disabled = k === 1;
+    }
+    function zoomAt(cx, cy, f) {
+      var nk = Math.min(MAX, Math.max(1, k * f)); f = nk / k;
+      x = cx - (cx - x) * f; y = cy - (cy - y) * f; k = nk; apply();
+    }
+    function reset() { k = 1; x = 0; y = 0; apply(); }
+    svg.__zoom = true; svg.__zoomReset = reset;
+    vp.addEventListener('wheel', function (e) {
+      if (!(e.ctrlKey || e.metaKey)) return;
+      e.preventDefault();
+      var r = vp.getBoundingClientRect();
+      zoomAt(e.clientX - r.left, e.clientY - r.top, Math.exp(-e.deltaY * (e.deltaMode === 1 ? .05 : .0025)));
+    }, { passive: false });
+    function dist() { var a = Object.keys(ptrs).map(function (i) { return ptrs[i]; }); return Math.hypot(a[0].x - a[1].x, a[0].y - a[1].y); }
+    function mid() { var a = Object.keys(ptrs).map(function (i) { return ptrs[i]; }); return { x: (a[0].x + a[1].x) / 2, y: (a[0].y + a[1].y) / 2 }; }
+    var listening = false;
+    function mv(ev) {
+      var p = ptrs[ev.pointerId]; if (!p) return;
+      var n = Object.keys(ptrs).length, r = vp.getBoundingClientRect();
+      if (n === 2 && last) {
+        p.x = ev.clientX; p.y = ev.clientY;
+        var d = dist(), m = mid();
+        x += m.x - last.m.x; y += m.y - last.m.y;
+        zoomAt(m.x - r.left, m.y - r.top, d / last.d); last = { d: d, m: m }; dragged = true;
+      } else if (n === 1 && k > 1) {
+        if (Math.hypot(ev.clientX - down.x, ev.clientY - down.y) > 4) { dragged = true; vp.classList.add('zdrag'); }
+        if (dragged) { x += ev.clientX - p.x; y += ev.clientY - p.y; apply(); }
+        p.x = ev.clientX; p.y = ev.clientY;
+      } else { p.x = ev.clientX; p.y = ev.clientY; }
+    }
+    function up(ev) {
+      delete ptrs[ev.pointerId]; last = null; vp.classList.remove('zdrag');
+      if (!Object.keys(ptrs).length) { listening = false; window.removeEventListener('pointermove', mv); window.removeEventListener('pointerup', up); window.removeEventListener('pointercancel', up); }
+    }
+    vp.addEventListener('pointerdown', function (e) {
+      if (e.target.closest('.zbar') || e.target.closest('[data-drag]')) return;
+      if (!Object.keys(ptrs).length) dragged = false;
+      ptrs[e.pointerId] = { x: e.clientX, y: e.clientY }; down = { x: e.clientX, y: e.clientY };
+      last = Object.keys(ptrs).length === 2 ? { d: dist(), m: mid() } : null;
+      if (!listening) { listening = true; window.addEventListener('pointermove', mv); window.addEventListener('pointerup', up); window.addEventListener('pointercancel', up); }
+    });
+    // a drag is not a click: keep it from toggling or opening whatever is under the pointer
+    vp.addEventListener('click', function (e) { if (dragged) { e.stopPropagation(); e.preventDefault(); dragged = false; } }, true);
+    window.addEventListener('resize', apply);
+  }
+  window.makeZoomable = make;
+  window.zoomAll = function () { document.querySelectorAll('svg[role="img"]').forEach(make); };
+})();
+zoomAll();
+</script></body></html>

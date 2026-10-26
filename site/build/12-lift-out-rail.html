@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>The lift-out front rail - Van build guide</title>
+<style>
+  body { font-family: -apple-system, "Segoe UI", sans-serif; margin: 24px auto; max-width: 760px; padding: 0 16px; color: #2C2C2A; background: #fff; }
+  h1 { font-size: 22px; font-weight: 500; }
+  h2 { font-size: 18px; font-weight: 500; margin-top: 36px; }
+  p, li { line-height: 1.6; font-size: 15px; }
+  svg { width: 100%; height: auto; display: block; }
+  svg text { font-family: -apple-system, "Segoe UI", sans-serif; fill: #2C2C2A; }
+  svg .th { font-size: 14px; font-weight: 500; }
+  svg .ts { font-size: 12px; fill: #5F5E5A; }
+  svg .box { fill: #FAF9F5; stroke: #5F5E5A; }
+  svg .arr { stroke: #5F5E5A; stroke-width: 0.75; fill: none; }
+  svg .c-purple > rect { fill: #EEEDFE; stroke: #534AB7; }
+  svg .c-purple .th { fill: #3C3489; } svg .c-purple .ts { fill: #534AB7; }
+  svg .c-teal > rect { fill: #E1F5EE; stroke: #0F6E56; }
+  svg .c-teal .th { fill: #085041; } svg .c-teal .ts { fill: #0F6E56; }
+  svg .c-coral > rect { fill: #FAECE7; stroke: #993C1D; }
+  svg .c-coral .th { fill: #712B13; } svg .c-coral .ts { fill: #993C1D; }
+  svg .c-pink > rect { fill: #FBEAF0; stroke: #993556; }
+  svg .c-pink .th { fill: #72243E; } svg .c-pink .ts { fill: #993556; }
+  svg .c-gray > rect { fill: #F1EFE8; stroke: #5F5E5A; }
+  svg .c-gray .th { fill: #444441; } svg .c-gray .ts { fill: #5F5E5A; }
+  svg .c-amber > rect { fill: #FAEEDA; stroke: #854F0B; }
+  svg .c-amber .th { fill: #633806; } svg .c-amber .ts { fill: #854F0B; }
+  svg .c-purple > rect, svg .c-teal > rect, svg .c-coral > rect, svg .c-pink > rect, svg .c-gray > rect, svg .c-amber > rect { stroke-width: 0.75; }
+</style><style>
+  body { max-width: 1100px; }
+  figure { margin: 0; } figure img { width: 100%; height: auto; border-radius: 4px; display: block; }
+  figcaption { font-size: 12px; color: #5F5E5A; margin-top: 4px; }
+  .photos { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+  .legend span { display: inline-block; margin-right: 16px; font-size: 13px; }
+  .sw { display: inline-block; width: 14px; height: 12px; vertical-align: -1px; margin-right: 5px; border: 1px solid #5F5E5A; }
+  table { border-collapse: collapse; font-size: 14px; } td, th { border-bottom: 1px solid #D3D1C7; padding: 3px 14px 3px 0; text-align: left; }
+  .wide { overflow-x: auto; }
+</style>
+
+<style>
+  .tgbar { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin: 4px 0 10px; }
+  .tgbar .hint { flex: 1 1 100%; margin: 0 0 2px; font-size: 13px; line-height: 1.4; color: #5F5E5A; }
+  .tgbar button { font: inherit; font-size: 13px; line-height: 1.3; padding: 4px 10px; border: 1px solid #B4B2A9; border-radius: 14px; background: #fff; color: #2C2C2A; cursor: pointer; }
+  .tgbar button:hover { border-color: #2C2C2A; }
+  .tgbar button.chip::before { content: ""; display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 6px; background: var(--c, #888780); }
+  .tgbar button.chip[aria-pressed="false"] { background: #F1EFE8; color: #888780; text-decoration: line-through; }
+  .tgbar button.chip[aria-pressed="false"]::before { opacity: .35; }
+  .tgbar button.all { background: #2C2C2A; border-color: #2C2C2A; color: #fff; }
+  svg g.tg { cursor: pointer; }
+  svg g.tg.off { display: none; }
+  svg g.tg.hl, svg g.tg:hover { filter: drop-shadow(0 0 3px rgba(186, 117, 23, .95)); }
+</style>
+<style>.gk{color:#5F5E5A;margin:-4px 0 14px}.steps{padding-left:22px}.steps li{margin:0 0 9px}.sug{color:#5F5E5A;font-size:14px;border-left:3px solid #D3D1C7;padding:2px 12px;margin:10px 0}.rt td,.rt th{vertical-align:top;padding:5px 12px 5px 0;font-size:13px}.rt td:last-child{min-width:260px}.gp{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;margin:28px 0 8px}.gp a{padding:8px 14px;border:1px solid #B4B2A9;border-radius:18px;text-decoration:none;color:#185FA5}.gp a:hover{border-color:#2C2C2A}h1 .gn{color:#5F5E5A;font-weight:400}</style><style>.vannav{display:flex;flex-wrap:wrap;gap:4px 6px;align-items:center;margin:0;padding:8px max(12px,env(safe-area-inset-left,0px));font:14px/1.3 -apple-system,"Segoe UI",system-ui,sans-serif;background:#f3f1ea;border-bottom:1px solid #cfcbbd;color:#26241f}.vannav a{color:#185FA5;text-decoration:none;padding:4px 9px;border-radius:14px;white-space:nowrap}.vannav a:hover{background:#e3e0d4}.vannav a[aria-current=page]{background:#26241f;color:#fff;font-weight:600}@media (prefers-color-scheme:dark){.vannav{background:#26241f;border-bottom-color:#4a473e;color:#ece9e0}.vannav a{color:#8fc2f0}.vannav a:hover{background:#3a372f}.vannav a[aria-current=page]{background:#ece9e0;color:#1b1a17}}</style><style>.guidenav{display:flex;flex-wrap:wrap;gap:3px 5px;align-items:center;margin:0;padding:6px max(12px,env(safe-area-inset-left,0px));font:13px/1.3 -apple-system,"Segoe UI",system-ui,sans-serif;background:#fff;border-bottom:1px solid #cfcbbd;color:#26241f}.guidenav b{margin-right:4px;color:#5F5E5A;font-weight:600}.guidenav a{color:#185FA5;text-decoration:none;padding:3px 8px;border-radius:12px;white-space:nowrap}.guidenav a:hover{background:#e3e0d4}.guidenav a[aria-current=page]{background:#185FA5;color:#fff;font-weight:600}@media (prefers-color-scheme:dark){.guidenav{background:#1b1a17;border-bottom-color:#4a473e;color:#ece9e0}.guidenav a{color:#8fc2f0}.guidenav a[aria-current=page]{background:#8fc2f0;color:#1b1a17}}</style></head>
+<body><nav class="vannav" aria-label="All pages"><a href="../index.html">Home</a><a href="../build/index.html" aria-current="page">Build guide</a><a href="../interactive.html">Plan</a><a href="../diagrams.html">Diagrams</a><a href="../interior.html">3D view</a><a href="../wall-map.html">Wall map</a><a href="../electric.html">Electrical</a><a href="../install.html">Fan and A/C</a><a href="../window.html">Side window</a><a href="../window-template.html">Window template</a></nav><nav class="guidenav" aria-label="Build guide, in order"><b>Build order:</b><a href="index.html">All</a><a href="01-before.html">1 Before you cut</a><a href="../install.html">2 Fan and A/C</a><a href="../window.html">3 Side window</a><a href="04-wiring.html">4 Wiring rough-in</a><a href="05-insulate.html">5 Insulation and floor</a><a href="06-furring.html">6 Furring strips</a><a href="07-ceiling.html">7 Ceiling</a><a href="08-walls.html">8 Walls</a><a href="09-heavy.html">9 Battery and tanks</a><a href="10-couch.html">10 Couch and bed</a><a href="11-gear-shelf.html">11 Gear shelf</a><a href="12-lift-out-rail.html" aria-current="page">12 Lift-out rail</a><a href="13-bath.html">13 Wet bath</a><a href="14-kitchen.html">14 Kitchen side</a><a href="15-closet-dinette.html">15 Closet and dinette</a><a href="16-cabinets.html">16 Wall cabinets</a><a href="17-finish.html">17 Finish and test</a></nav><h1><span class="gn">Step 12 of 17</span><br>The lift-out front rail</h1><p class="gk">After the shelf slides are on the divider and the couch end panel.</p>
+
+<h3>C5. Driver side: the lift-out front rail, how to make it</h3>
+<div class="wide"><svg viewBox="0 0 1000 560" role="img"><title>The lift-out front rail: parts, the ledges and how it comes out</title>
+<defs><marker id="c4a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+<text class="ts" x="50.0" y="26.0" text-anchor="start" style="font-size:13px;font-weight:700;fill:#2C2C2A;paint-order:stroke;stroke:#fff;stroke-width:3px" >Seen from the aisle: the rail in place, the shelf stowed behind and under it</text>
+<rect x="620.0" y="118.0" width="30.0" height="135.0" fill="#9A9DA3" fill-opacity="0.55" stroke="#2C2C2A" stroke-width="1.2"/>
+<text class="ts" x="635.0" y="185.5" text-anchor="middle" style="font-size:9.5px;font-weight:400;fill:#2C2C2A;paint-order:stroke;stroke:#fff;stroke-width:3px" transform="rotate(-90 635.0 185.5)">couch end panel</text>
+<rect x="89.7" y="148.0" width="11.2" height="105.0" fill="#E3C48F" fill-opacity="0.9" stroke="#2C2C2A" stroke-width="1.2"/>
+<text class="ts" x="86.7" y="200.5" text-anchor="end" style="font-size:9.5px;font-weight:400;fill:#2C2C2A;paint-order:stroke;stroke:#fff;stroke-width:3px" >divider</text>
+<rect x="50.0" y="136.8" width="570.0" height="11.2" fill="#8A6B4D" fill-opacity="0.9" stroke="#3E230B" stroke-width="1"/>
+<rect x="50.0" y="125.5" width="570.0" height="11.2" fill="#B07A2A" fill-opacity="0.85" stroke="#5A3A00" stroke-width="1"/>
+<text class="ts" x="54.5" y="115.5" text-anchor="start" style="font-size:9.5px;font-weight:400;fill:#2C2C2A;paint-order:stroke;stroke:#fff;stroke-width:3px" >deck 16 to 16 3/4 up, folded leaf above it</text>
+<rect x="110.7" y="174.2" width="499.5" height="60.0" fill="#E3C48F" fill-opacity="1" stroke="#2C2C2A" stroke-width="1.3"/>
+<rect x="335.0" y="183.2" width="90.0" height="5.2" fill="#5A3A00" fill-opacity="0.8" stroke="#2C2C2A" stroke-width="1"/>
+<text class="ts" x="365.0" y="209.0" text-anchor="middle" style="font-size:9.5px;font-weight:400;fill:#2C2C2A;paint-order:stroke;stroke:#fff;stroke-width:3px" >shelf face, 10 1/4 to 14 1/4 up</text>
+<rect x="373.2" y="164.5" width="222.0" height="58.5" fill="none" fill-opacity="1" stroke="#A32D2D" stroke-width="1.2" stroke-dasharray="3 3"/>
+<rect x="125.7" y="155.5" width="240.0" height="67.5" fill="none" fill-opacity="1" stroke="#A32D2D" stroke-width="1.2" stroke-dasharray="3 3"/>
+<rect x="125.7" y="163.0" width="142.5" height="60.0" fill="none" fill-opacity="1" stroke="#A32D2D" stroke-width="1.2" stroke-dasharray="3 3"/>
+<text class="ts" x="360.5" y="256.2" text-anchor="middle" style="font-size:9.5px;font-weight:700;fill:#A32D2D;paint-order:stroke;stroke:#fff;stroke-width:3px" >dashed red: the units behind the face, 14 7/8 to 15 1/2 in up: taller than the 14 1/2 in under the rail</text>
+<rect x="101.0" y="170.5" width="18.8" height="1.9" fill="#7C8088" fill-opacity="1" stroke="#2C2C2A" stroke-width="1.2"/>
+<rect x="101.0" y="153.6" width="1.9" height="18.8" fill="#7C8088" fill-opacity="1" stroke="#2C2C2A" stroke-width="1.2"/>
+<rect x="601.2" y="170.5" width="18.8" height="1.9" fill="#7C8088" fill-opacity="1" stroke="#2C2C2A" stroke-width="1.2"/>
+<rect x="618.1" y="153.6" width="1.9" height="18.8" fill="#7C8088" fill-opacity="1" stroke="#2C2C2A" stroke-width="1.2"/>
+<rect x="101.9" y="148.0" width="517.1" height="22.5" fill="#B9BCC2" fill-opacity="1" stroke="#2C2C2A" stroke-width="1.6"/>
+<rect x="110.5" y="168.8" width="5.0" height="1.7" fill="#3E3E3A" fill-opacity="1" stroke="#2C2C2A" stroke-width="1"/>
+<rect x="605.5" y="168.8" width="5.0" height="1.7" fill="#3E3E3A" fill-opacity="1" stroke="#2C2C2A" stroke-width="1"/>
+<rect x="101.9" y="149.1" width="15.0" height="20.2" fill="none" fill-opacity="1" stroke="#8A5A00" stroke-width="1.2" stroke-dasharray="4 2"/>
+<rect x="604.1" y="149.1" width="15.0" height="20.2" fill="none" fill-opacity="1" stroke="#8A5A00" stroke-width="1.2" stroke-dasharray="4 2"/>
+<text class="ts" x="410.0" y="163.2" text-anchor="middle" style="font-size:10px;font-weight:700;fill:#2C2C2A;paint-order:stroke;stroke:#fff;stroke-width:3px" >steel tube 3/4 x 1 1/2, 34 1/2 long</text>
+<circle cx="200.0" cy="159.2" r="8" fill="#fff" stroke="#2C2C2A" stroke-width="1.2"/><text class="ts" x="200.0" y="162.8" text-anchor="middle" style="font-size:10px;font-weight:700;fill:#2C2C2A;paint-order:stroke;stroke:#fff;stroke-width:0px" >A</text>
+<circle cx="109.2" cy="159.2" r="8" fill="#fff" stroke="#2C2C2A" stroke-width="1.2"/><text class="ts" x="109.2" y="162.8" text-anchor="middle" style="font-size:10px;font-weight:700;fill:#2C2C2A;paint-order:stroke;stroke:#fff;stroke-width:0px" >B</text>
+<circle cx="113.0" cy="200.5" r="8" fill="#fff" stroke="#2C2C2A" stroke-width="1.2"/><text class="ts" x="113.0" y="204.0" text-anchor="middle" style="font-size:10px;font-weight:700;fill:#2C2C2A;paint-order:stroke;stroke:#fff;stroke-width:0px" >C</text>
+<circle cx="134.7" cy="192.5" r="8" fill="#fff" stroke="#2C2C2A" stroke-width="1.2"/><text class="ts" x="134.7" y="196.0" text-anchor="middle" style="font-size:10px;font-weight:700;fill:#2C2C2A;paint-order:stroke;stroke:#fff;stroke-width:0px" >D</text>
+<circle cx="611.8" cy="159.2" r="8" fill="#fff" stroke="#2C2C2A" stroke-width="1.2"/><text class="ts" x="611.8" y="162.8" text-anchor="middle" style="font-size:10px;font-weight:700;fill:#2C2C2A;paint-order:stroke;stroke:#fff;stroke-width:0px" >B</text>
+<line x1="101.0" y1="64.0" x2="620.0" y2="64.0" stroke="#2C2C2A" stroke-width="1.4" marker-start="url(#c4a)" marker-end="url(#c4a)"/>
+<text class="ts" x="360.5" y="58.0" text-anchor="middle" style="font-size:10px;font-weight:700;fill:#2C2C2A;paint-order:stroke;stroke:#fff;stroke-width:3px" >34 5/8 between the divider and the end panel; the rail is 34 1/2, 1/16 in short each end</text>
+<text class="ts" x="40.0" y="296.0" text-anchor="start" style="font-size:12px;font-weight:700;fill:#2C2C2A;paint-order:stroke;stroke:#fff;stroke-width:3px" >1  In place</text>
+<text class="ts" x="40.0" y="312.0" text-anchor="start" style="font-size:10px;font-weight:400;fill:#5A5851;paint-order:stroke;stroke:#fff;stroke-width:3px" >Sits on its two screw-head pins;</text>
+<text class="ts" x="40.0" y="324.0" text-anchor="start" style="font-size:10px;font-weight:400;fill:#5A5851;paint-order:stroke;stroke:#fff;stroke-width:3px" >the deck rests on it.</text>
+<rect x="40.0" y="386.6" width="88.0" height="33.0" fill="#8A6B4D" fill-opacity="0.9" stroke="#3E230B" stroke-width="1"/>
+<rect x="40.0" y="353.6" width="88.0" height="33.0" fill="#B07A2A" fill-opacity="0.85" stroke="#5A3A00" stroke-width="1"/>
+<rect x="95.0" y="496.6" width="33.0" height="37.4" fill="#E3C48F" fill-opacity="1" stroke="#2C2C2A" stroke-width="1.2"/>
+<rect x="62.0" y="485.6" width="66.0" height="5.5" fill="#7C8088" fill-opacity="1" stroke="#2C2C2A" stroke-width="1.2"/>
+<rect x="107.9" y="485.6" width="7.2" height="22.0" fill="#3E3E3A" fill-opacity="1" stroke="#2C2C2A" stroke-width="1"/>
+<rect x="104.0" y="491.1" width="15.0" height="7.5" fill="#3E3E3A" fill-opacity="1" stroke="#2C2C2A" stroke-width="1"/>
+<rect x="104.2" y="480.5" width="14.5" height="5.1" fill="#3E3E3A" fill-opacity="1" stroke="#2C2C2A" stroke-width="1"/>
+<rect x="95.0" y="419.6" width="33.0" height="66.0" fill="#B9BCC2" fill-opacity="1" stroke="#2C2C2A" stroke-width="1.6"/>
+<rect x="98.3" y="422.9" width="26.4" height="59.4" fill="#E3C48F" fill-opacity="1" stroke="#8A5A00" stroke-width="1"/>
+<rect x="103.2" y="477.7" width="16.5" height="7.9" fill="#fff" fill-opacity="1" stroke="#8A5A00" stroke-width="1" stroke-dasharray="3 2"/>
+<text class="ts" x="141.2" y="442.4" text-anchor="start" style="font-size:9.5px;font-weight:400;fill:#2C2C2A;paint-order:stroke;stroke:#fff;stroke-width:3px" >steel tube, 14 gauge</text>
+<text class="ts" x="141.2" y="466.6" text-anchor="start" style="font-size:9.5px;font-weight:400;fill:#2C2C2A;paint-order:stroke;stroke:#fff;stroke-width:3px" >hardwood plug (epoxied)</text>
+<text class="ts" x="141.2" y="490.8" text-anchor="start" style="font-size:9.5px;font-weight:400;fill:#2C2C2A;paint-order:stroke;stroke:#fff;stroke-width:3px" >3/8 hole, 3/16 deep in the plug</text>
+<text class="ts" x="141.2" y="510.6" text-anchor="start" style="font-size:9.5px;font-weight:400;fill:#2C2C2A;paint-order:stroke;stroke:#fff;stroke-width:3px" >ledge: steel angle</text>
+<text class="ts" x="141.2" y="528.2" text-anchor="start" style="font-size:9.5px;font-weight:400;fill:#2C2C2A;paint-order:stroke;stroke:#fff;stroke-width:3px" >screw head = pin, nut under it</text>
+<text class="ts" x="141.2" y="545.8" text-anchor="start" style="font-size:9.5px;font-weight:400;fill:#2C2C2A;paint-order:stroke;stroke:#fff;stroke-width:3px" >shelf face, top at 14 1/4</text>
+<text class="ts" x="300.0" y="296.0" text-anchor="start" style="font-size:12px;font-weight:700;fill:#2C2C2A;paint-order:stroke;stroke:#fff;stroke-width:3px" >2  Lift 1/8 in</text>
+<text class="ts" x="300.0" y="312.0" text-anchor="start" style="font-size:10px;font-weight:400;fill:#5A5851;paint-order:stroke;stroke:#fff;stroke-width:3px" >The screw head clears the 3/16 in hole.</text>
+<text class="ts" x="300.0" y="324.0" text-anchor="start" style="font-size:10px;font-weight:400;fill:#5A5851;paint-order:stroke;stroke:#fff;stroke-width:3px" >The deck only rests on it, so its</text>
+<text class="ts" x="300.0" y="336.0" text-anchor="start" style="font-size:10px;font-weight:400;fill:#5A5851;paint-order:stroke;stroke:#fff;stroke-width:3px" >edge rises 1/8 in too.</text>
+<rect x="300.0" y="381.1" width="88.0" height="33.0" fill="#8A6B4D" fill-opacity="0.9" stroke="#3E230B" stroke-width="1"/>
+<rect x="300.0" y="348.1" width="88.0" height="33.0" fill="#B07A2A" fill-opacity="0.85" stroke="#5A3A00" stroke-width="1"/>
+<rect x="355.0" y="496.6" width="33.0" height="37.4" fill="#E3C48F" fill-opacity="1" stroke="#2C2C2A" stroke-width="1.2"/>
+<rect x="322.0" y="485.6" width="66.0" height="5.5" fill="#7C8088" fill-opacity="1" stroke="#2C2C2A" stroke-width="1.2"/>
+<rect x="367.9" y="485.6" width="7.2" height="22.0" fill="#3E3E3A" fill-opacity="1" stroke="#2C2C2A" stroke-width="1"/>
+<rect x="364.0" y="491.1" width="15.0" height="7.5" fill="#3E3E3A" fill-opacity="1" stroke="#2C2C2A" stroke-width="1"/>
+<rect x="364.2" y="480.5" width="14.5" height="5.1" fill="#3E3E3A" fill-opacity="1" stroke="#2C2C2A" stroke-width="1"/>
+<rect x="355.0" y="414.1" width="33.0" height="66.0" fill="#B9BCC2" fill-opacity="1" stroke="#2C2C2A" stroke-width="1.6"/>
+<rect x="358.3" y="417.4" width="26.4" height="59.4" fill="#E3C48F" fill-opacity="1" stroke="#8A5A00" stroke-width="1"/>
+<rect x="363.2" y="472.2" width="16.5" height="7.9" fill="#fff" fill-opacity="1" stroke="#8A5A00" stroke-width="1" stroke-dasharray="3 2"/>
+<rect x="355.0" y="419.6" width="33.0" height="66.0" fill="none" fill-opacity="1" stroke="#A32D2D" stroke-width="1.2" stroke-dasharray="3 3"/>
+<line x1="330.8" y1="481.2" x2="330.8" y2="446.0" stroke="#A32D2D" stroke-width="2.2" marker-start="url(#c4a)" marker-end="url(#c4a)"/>
+<text class="ts" x="325.8" y="466.6" text-anchor="end" style="font-size:10px;font-weight:700;fill:#A32D2D;paint-order:stroke;stroke:#fff;stroke-width:3px" >up 1/8 in</text>
+<text class="ts" x="560.0" y="296.0" text-anchor="start" style="font-size:12px;font-weight:700;fill:#2C2C2A;paint-order:stroke;stroke:#fff;stroke-width:3px" >3  Pull it toward you</text>
+<text class="ts" x="560.0" y="312.0" text-anchor="start" style="font-size:10px;font-weight:400;fill:#5A5851;paint-order:stroke;stroke:#fff;stroke-width:3px" >Set it on the seat, then pull the</text>
+<text class="ts" x="560.0" y="324.0" text-anchor="start" style="font-size:10px;font-weight:400;fill:#5A5851;paint-order:stroke;stroke:#fff;stroke-width:3px" >shelf by its face.</text>
+<rect x="560.0" y="386.6" width="88.0" height="33.0" fill="#8A6B4D" fill-opacity="0.9" stroke="#3E230B" stroke-width="1"/>
+<rect x="560.0" y="353.6" width="88.0" height="33.0" fill="#B07A2A" fill-opacity="0.85" stroke="#5A3A00" stroke-width="1"/>
+<rect x="615.0" y="496.6" width="33.0" height="37.4" fill="#E3C48F" fill-opacity="1" stroke="#2C2C2A" stroke-width="1.2"/>
+<rect x="582.0" y="485.6" width="66.0" height="5.5" fill="#7C8088" fill-opacity="1" stroke="#2C2C2A" stroke-width="1.2"/>
+<rect x="627.9" y="485.6" width="7.2" height="22.0" fill="#3E3E3A" fill-opacity="1" stroke="#2C2C2A" stroke-width="1"/>
+<rect x="624.0" y="491.1" width="15.0" height="7.5" fill="#3E3E3A" fill-opacity="1" stroke="#2C2C2A" stroke-width="1"/>
+<rect x="624.2" y="480.5" width="14.5" height="5.1" fill="#3E3E3A" fill-opacity="1" stroke="#2C2C2A" stroke-width="1"/>
+<rect x="703.0" y="419.6" width="33.0" height="66.0" fill="#B9BCC2" fill-opacity="1" stroke="#2C2C2A" stroke-width="1.6"/>
+<rect x="706.3" y="422.9" width="26.4" height="59.4" fill="#E3C48F" fill-opacity="1" stroke="#8A5A00" stroke-width="1"/>
+<rect x="711.2" y="477.7" width="16.5" height="7.9" fill="#fff" fill-opacity="1" stroke="#8A5A00" stroke-width="1" stroke-dasharray="3 2"/>
+<line x1="656.8" y1="452.6" x2="700.8" y2="452.6" stroke="#A32D2D" stroke-width="2.2" marker-start="url(#c4a)" marker-end="url(#c4a)"/>
+<text class="ts" x="678.8" y="444.6" text-anchor="middle" style="font-size:10px;font-weight:700;fill:#A32D2D;paint-order:stroke;stroke:#fff;stroke-width:3px" >toward the aisle</text>
+<g><rect x="-3" y="3" width="38" height="26" rx="13" fill="#2C2C2A"/><text x="16" y="22" text-anchor="middle" style="font-size:15px;font-weight:700;fill:#fff">C5</text></g></svg></div>
+<p>The units on the gear shelf are 14 7/8 to 15 1/2 in tall once they stand on the tray, and the couch's front rail has only 14 1/2 in under it, so across the 34 5/8 in opening between the divider and the couch end panel the rail has to come out whenever the shelf is pulled. It still has to carry the deck's front edge when it is in (two adults sitting on that edge), so it is a 3/4 x 1 1/2 in steel tube, not a wood rail: 1 1/2 in is all the height there is, and wood that size would sag about 1/4 in. It rests on two small angle ledges, held forward and back by two screw heads that fit holes in its end plugs, and the deck rests on top of it. It lifts out 1/8 in and comes toward you.</p>
+<p><b>Parts</b> (marks A to D are on the drawing, E is the felt):</p>
+<table><tr><th>Mark</th><th>Part</th><th>Material</th><th>Size</th><th>Qty</th><th>Notes</th></tr><tr><td>A</td><td>Rail</td><td>3/4 x 1 1/2 in steel rectangular tube, 14 gauge (0.075 in wall)</td><td>34 1/2 long</td><td>1</td><td>about 3 lb; hacksaw or chop saw, deburr, prime and paint to match the couch front</td></tr><tr><td>B</td><td>End plugs</td><td>hardwood, 5/8 x 1 5/16 in</td><td>1 in long</td><td>2</td><td>epoxied 1 in into each end of the tube, flush with the ends; the pin holes go in them</td></tr><tr><td>C</td><td>Pins</td><td>#8-32 x 1/2 in pan head machine screws, with a nut and lock washer</td><td></td><td>2</td><td>one in each ledge, head up (head 0.115 in tall, 0.33 in across), nut under the ledge</td></tr><tr><td>D</td><td>Ledges</td><td>steel angle 1 1/4 x 1 1/4 x 1/8 in</td><td>2 in long</td><td>2</td><td>vertical leg screwed to the divider and to the couch end panel (#10 x 5/8 in screws, 3 each, plus construction adhesive); horizontal leg under the rail, its top at 14 1/2 in up</td></tr><tr><td>E</td><td>Felt</td><td>1/16 in adhesive felt, 3/4 in wide</td><td>34 1/2</td><td>1</td><td>along the top of the tube if the deck does not touch it</td></tr></table>
+<p><b>How to build it, in order:</b></p>
+<ol><li><b>Measure first.</b> The divider and the couch end panel must both be 26 in deep and plumb, and the distance between the divider's east face and the end panel at the rail height should be 34 5/8 in. If it is not, cut the tube 1/8 in shorter than what you measure (1/16 in each end).</li><li><b>Cut and finish the tube</b> to 34 1/2 in, deburr both ends and prime it. A wood rail would sag about 1/4 in over this span with two adults on the front edge (rough hand calculation, 175 lb on the front); this tube sags about 0.04 in and weighs about 3 lb.</li><li><b>Plug the ends.</b> Cut two hardwood plugs 5/8 x 1 5/16 x 1 in (a snug fit in the 0.6 x 1.35 in opening), epoxy them in 1 in, flush with the ends, and let the epoxy cure.</li><li><b>Drill the pin holes.</b> From the bottom, 0.8 in in from each end and centered front to back, drill a 3/8 in hole up through the tube wall and 3/16 in into the plug (a drill-press stop or tape on the bit).</li><li><b>Fit the ledges.</b> Drill a 3/16 in hole through the middle of each angle's horizontal leg, 0.8 in out from the vertical leg, and bolt the pin screw through it, head up, nut underneath. Clamp each ledge so the top of its horizontal leg is 14 1/2 in up, with the vertical leg flat on the panel and its front edge flush with the couch front (26 in out); screw it on with three #10 x 5/8 in screws (5/8 in so they stop short of the other face of the 3/4 in plywood) and a bead of adhesive. The units on the shelf start 0.4 in past the end of the west ledge, so check that the ledge does not touch the shore charger.</li><li><b>Drop the rail on.</b> Set it over the two screw heads. It should sit level with 1/16 in at each end and the deck resting on its top; if there is a gap under the deck, stick the felt on the top of the tube, and if it is tight, file the underside of the deck edge or the top of the tube (not the pin holes).</li><li><b>To use it:</b> push the rail up 1/8 in (the deck edge rises with it), pull it toward you off the pins, set it on the seat, and pull the shelf by its face. To put it back, push the shelf home first, then set the rail on the pins and let it down. Sit on the front edge of the couch only with the rail in; with it out, the deck edge is held up only by the plywood.</li><li>Add a latch or a turn button on the shelf face (not on the rail) before driving, so the shelf cannot slide out on a hard stop; the rail itself stays put because the deck rests on it and the pins hold it forward and back.</li></ol>
+<p><b>Not settled:</b> the couch end panel next to the closet is 26 in deep only if you make it so (the closet itself is 25 in deep, so its side panel needs a 1 in strip on the front edge, or the couch needs its own end panel there); the tube's real wall thickness (14 gauge is 0.075 in; 11 gauge is 0.12 in, which is heavier and stiffer); whether the deck edge needs a stiffener on the leaf side; and a latch for the shelf face.</p>
+
+<div class="gp"><a href="11-gear-shelf.html">&larr; 11. Gear shelf</a><a href="13-bath.html">13. Wet bath &rarr;</a></div><script>
+(function () {
+  document.querySelectorAll('svg').forEach(function (svg) {
+    var groups = Array.prototype.slice.call(svg.querySelectorAll('g.tg'));
+    if (!groups.length) return;
+    var wrap = svg.closest('.wide') || svg.parentNode;
+    var bar = document.createElement('div');
+    bar.className = 'tgbar';
+    var hint = document.createElement('p');
+    hint.className = 'hint';
+    hint.textContent = 'Click a part of the drawing to hide it, or use the buttons. A crossed-out button is hidden; click it to bring the part back.';
+    bar.appendChild(hint);
+    var chips = {};
+    function set(g, show) {
+      g.classList.toggle('off', !show);
+      chips[g.dataset.g].setAttribute('aria-pressed', show ? 'true' : 'false');
+    }
+    function mkBtn(text, cls) {
+      var b = document.createElement('button');
+      b.type = 'button'; b.className = cls; b.textContent = text;
+      return b;
+    }
+    var showAll = mkBtn('Show all', 'all'), hideAll = mkBtn('Hide all', 'all');
+    showAll.onclick = function () { groups.forEach(function (g) { set(g, true); }); };
+    hideAll.onclick = function () { groups.forEach(function (g) { set(g, false); }); };
+    bar.appendChild(showAll); bar.appendChild(hideAll);
+    groups.forEach(function (g) {
+      var b = mkBtn(g.dataset.label, 'chip');
+      var colored = g.querySelector('[stroke]:not([stroke="none"])');
+      if (colored) b.style.setProperty('--c', colored.getAttribute('stroke'));
+      b.setAttribute('aria-pressed', 'true');
+      b.onclick = function () { set(g, g.classList.contains('off')); };
+      b.onmouseenter = function () { g.classList.add('hl'); };
+      b.onmouseleave = function () { g.classList.remove('hl'); };
+      chips[g.dataset.g] = b;
+      bar.appendChild(b);
+      g.addEventListener('click', function (e) { e.stopPropagation(); set(g, false); g.classList.remove('hl'); });
+    });
+    wrap.parentNode.insertBefore(bar, wrap);
+  });
+})();
+</script><script>
+/* zoom and pan for the diagrams: + / - / reset buttons in the corner, Ctrl (or Cmd) + scroll, pinch on a touch screen, drag to move once zoomed */
+(function () {
+  var CSS = '.zvp{position:relative;overflow:hidden}.zvp>svg{transform-origin:0 0}.zvp.zoomed{cursor:grab;touch-action:none}.zvp.zdrag{cursor:grabbing}' +
+    '.zbar{position:absolute;top:6px;right:6px;z-index:5;display:flex;gap:4px}' +
+    '.zbar button{font:inherit;font-size:15px;line-height:1;min-width:30px;height:30px;padding:0 9px;border:1px solid #B4B2A9;border-radius:6px;background:rgba(255,255,255,.93);color:#2C2C2A;cursor:pointer}' +
+    '.zbar button:hover{border-color:#2C2C2A}.zbar button[disabled]{opacity:.4;cursor:default}';
+  var st = document.createElement('style'); st.textContent = CSS; document.head.appendChild(st);
+  var MAX = 8;
+  function make(svg) {
+    if (svg.__zoom || !svg.parentNode) return;
+    var vp = document.createElement('div'); vp.className = 'zvp';
+    svg.parentNode.insertBefore(vp, svg); vp.appendChild(svg);
+    var k = 1, x = 0, y = 0, ptrs = {}, last = null, dragged = false, down = null;
+    var bar = document.createElement('div'); bar.className = 'zbar';
+    function btn(t, label, f) { var b = document.createElement('button'); b.type = 'button'; b.textContent = t; b.title = label; b.setAttribute('aria-label', label); b.onclick = function (e) { e.stopPropagation(); f(); }; bar.appendChild(b); return b; }
+    var bIn = btn('+', 'Zoom in', function () { zoomAt(vp.clientWidth / 2, vp.clientHeight / 2, 1.5); });
+    var bOut = btn('−', 'Zoom out', function () { zoomAt(vp.clientWidth / 2, vp.clientHeight / 2, 1 / 1.5); });
+    var bReset = btn('Reset', 'Reset the zoom', reset);
+    vp.appendChild(bar);
+    function apply() {
+      var cs = getComputedStyle(svg), sw = parseFloat(cs.width) || vp.clientWidth, sh = parseFloat(cs.height) || vp.clientHeight;
+      x = Math.max(Math.min(0, vp.clientWidth - sw * k), Math.min(0, x));
+      y = Math.max(Math.min(0, vp.clientHeight - sh * k), Math.min(0, y));
+      if (k <= 1.001) { k = 1; x = 0; y = 0; }
+      svg.style.transform = k === 1 ? '' : 'translate(' + x + 'px,' + y + 'px) scale(' + k + ')';
+      vp.classList.toggle('zoomed', k > 1);
+      if (k > 1) vp.scrollLeft = 0;
+      bIn.disabled = k >= MAX - .01; bOut.disabled = bReset.disabled = k === 1;
+    }
+    function zoomAt(cx, cy, f) {
+      var nk = Math.min(MAX, Math.max(1, k * f)); f = nk / k;
+      x = cx - (cx - x) * f; y = cy - (cy - y) * f; k = nk; apply();
+    }
+    function reset() { k = 1; x = 0; y = 0; apply(); }
+    svg.__zoom = true; svg.__zoomReset = reset;
+    vp.addEventListener('wheel', function (e) {
+      if (!(e.ctrlKey || e.metaKey)) return;
+      e.preventDefault();
+      var r = vp.getBoundingClientRect();
+      zoomAt(e.clientX - r.left, e.clientY - r.top, Math.exp(-e.deltaY * (e.deltaMode === 1 ? .05 : .0025)));
+    }, { passive: false });
+    function dist() { var a = Object.keys(ptrs).map(function (i) { return ptrs[i]; }); return Math.hypot(a[0].x - a[1].x, a[0].y - a[1].y); }
+    function mid() { var a = Object.keys(ptrs).map(function (i) { return ptrs[i]; }); return { x: (a[0].x + a[1].x) / 2, y: (a[0].y + a[1].y) / 2 }; }
+    var listening = false;
+    function mv(ev) {
+      var p = ptrs[ev.pointerId]; if (!p) return;
+      var n = Object.keys(ptrs).length, r = vp.getBoundingClientRect();
+      if (n === 2 && last) {
+        p.x = ev.clientX; p.y = ev.clientY;
+        var d = dist(), m = mid();
+        x += m.x - last.m.x; y += m.y - last.m.y;
+        zoomAt(m.x - r.left, m.y - r.top, d / last.d); last = { d: d, m: m }; dragged = true;
+      } else if (n === 1 && k > 1) {
+        if (Math.hypot(ev.clientX - down.x, ev.clientY - down.y) > 4) { dragged = true; vp.classList.add('zdrag'); }
+        if (dragged) { x += ev.clientX - p.x; y += ev.clientY - p.y; apply(); }
+        p.x = ev.clientX; p.y = ev.clientY;
+      } else { p.x = ev.clientX; p.y = ev.clientY; }
+    }
+    function up(ev) {
+      delete ptrs[ev.pointerId]; last = null; vp.classList.remove('zdrag');
+      if (!Object.keys(ptrs).length) { listening = false; window.removeEventListener('pointermove', mv); window.removeEventListener('pointerup', up); window.removeEventListener('pointercancel', up); }
+    }
+    vp.addEventListener('pointerdown', function (e) {
+      if (e.target.closest('.zbar') || e.target.closest('[data-drag]')) return;
+      if (!Object.keys(ptrs).length) dragged = false;
+      ptrs[e.pointerId] = { x: e.clientX, y: e.clientY }; down = { x: e.clientX, y: e.clientY };
+      last = Object.keys(ptrs).length === 2 ? { d: dist(), m: mid() } : null;
+      if (!listening) { listening = true; window.addEventListener('pointermove', mv); window.addEventListener('pointerup', up); window.addEventListener('pointercancel', up); }
+    });
+    // a drag is not a click: keep it from toggling or opening whatever is under the pointer
+    vp.addEventListener('click', function (e) { if (dragged) { e.stopPropagation(); e.preventDefault(); dragged = false; } }, true);
+    window.addEventListener('resize', apply);
+  }
+  window.makeZoomable = make;
+  window.zoomAll = function () { document.querySelectorAll('svg[role="img"]').forEach(make); };
+})();
+zoomAll();
+</script></body></html>

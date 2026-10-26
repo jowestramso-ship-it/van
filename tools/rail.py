@@ -13,9 +13,9 @@ def _front5():
     # deck, leaf folded back
     a(_r(X(36),Z(DECK_T),S*(GAP_E-36),S*.75,BRN,'#3E230B',1,'',.9)); a(_r(X(36),Z(PLAT),S*(GAP_E-36),S*.75,'#B07A2A','#5A3A00',1,'',.85))
     a(_t(X(36.3),Z(PLAT+.6)-1,f'deck {fr8(DECK_U)} to {fr8(DECK_T)} up, folded leaf above it',9.5,INK,'start'))
-    # the shelf face and its louvers
+    # the shelf face
     a(_r(X(SH_X0),Z(FACE_Z1),S*(SH_X1-SH_X0),S*(FACE_Z1-FACE_Z0),PLY,INK,1.3,'',1))
-    for k in range(1,6): a(_l(X(SH_X0+1),Z(FACE_Z0+k*(FACE_Z1-FACE_Z0)/6),X(SH_X1-1),Z(FACE_Z0+k*(FACE_Z1-FACE_Z0)/6),'#B79A62',1))
+    a(_r(X(55),Z(FACE_Z1-.6),S*6,S*.35,'#5A3A00',INK,1,'',.8))
     a(_t(X(57),Z(12.2)+4,'shelf face, 10 1/4 to 14 1/4 up',9.5,INK))
     # the units behind (dashed): they are taller than the rail's underside
     for u,nm in ((INV,'inverter'),(DC,'DC-DC'),(CHG,'charger')):

@@ -70,16 +70,16 @@ The passenger strips stop at the sliding door opening (104 in); only S8 carries 
 - Everything: **2140 1/4 in (178 ft), 40 pieces**. Packed onto 8 ft sticks with a 1/8 in saw kerf that is **26 sticks**; buy about 30 (some spare for bad boards and cutting mistakes).
 - The wall diagrams say about 100 ft for the driver side alone; this list agrees (1198 in is 99.8 ft).
 
-## Also cut: spacer blocks (not strips)
+## Also cut: spacer blocks (not strips), and what holds them
 
 The wood blocks are the spacers that hold S4, S5, S6 (and the nook frames V1 to V3) off the steel so every strip's back sits on the same line, 3 3/4 in off the body.
 
-- **Size: 3 5/8 in long x 1 1/2 x 1 1/2 in.** Cut them from **2x2 stock** (it is really 1 1/2 x 1 1/2). The 3 5/8 in is the standoff: 3 3/4 in to the common line minus the 1/8 in the steel already stands off the body at the ribs and the thin strips.
-- **How they go on:** one 1 1/2 x 1 1/2 in end is glued (structural adhesive or VHB) to the steel at a dot, on solid steel, away from the holes; the strip is screwed to the other end with a #8 x 1 1/2 in screw through the strip into the block. Block length is the dimension that points out from the wall.
-- **How many:** 34 on the driver side (S4 12, S5 10, S6 12) and 29 on the passenger side (S4 8, S5 4 in the middle piece only, S6 8, and 3 each under V1, V2 and V3), so **63**. A 2x2x8 ft stick gives 25 blocks with a 1/8 in kerf, so **3 sticks** (75 blocks, a few spare).
+- **Size and stock: cut 1 1/2 in pieces off a 2x4** (a 2x4 is really 1 1/2 x 3 1/2 in) and stand each on its 3 1/2 in side, so the block is 1 1/2 x 1 1/2 in on the steel and 3 1/2 in out. The 1/8 in glue line under it makes the 3 5/8 in standoff, and the grain runs across the block, so the strip's screw goes into side grain (a block cut 3 5/8 long from 2x2 would take that screw in end grain, which holds about half as well).
+- **Block to the steel: adhesive, not screws.** Nothing is drilled into the van's body. Use a polyurethane construction adhesive (the kind van builders use is Sikaflex 252 or a similar one; check the label for steel and for a bond line of about 1/8 in) or 3M VHB tape (a thicker, rougher-surface grade). Clean the steel with isopropyl alcohol, scuff it lightly, press the block on for a minute, and hold it (tape or a prop) until the adhesive has cured, usually a day. Put it only on solid steel, away from the holes. Test one block on a scrap of your own steel (pull it off after a day) before you do the wall.
+- **Strip to the block:** wood glue or construction adhesive plus one #8 x 1 1/2 in screw through the strip into the block.
+- **How many:** 34 on the driver side (S4 12, S5 10, S6 12) and 29 on the passenger side (S4 8, S5 4 in the middle piece only, S6 8, and 3 each under V1, V2 and V3), so **63**. A 2x4x8 ft stick gives about 59 blocks with a 1/8 in kerf, so **2 sticks** (some spare).
 - **Where each one goes:** one at every dot of those strips, drawn as a dark square on the furring maps (diagram A for the driver side, diagram D for the passenger side) with the count printed on each strip.
-- **S7 and S8** only need thin shims at their dots: 1/4 in thick for S7 and 5/8 in for S8 (1 1/2 x 1 1/2 in, cut from plywood): 37 in all (driver S7 10 and S8 10, passenger S7 7 and S8 10), drawn as light dashed squares.
-- If you would rather use 1x2 (3/4 x 1 1/2), cut the same 3 5/8 in lengths and stand them on their 3/4 x 1 1/2 end; the glue face is half as big, so use a 2x2.
+- **S7 and S8** only need thin shims at their dots: 1/4 in thick for S7 and 5/8 in for S8 (1 1/2 x 1 1/2 in, cut from plywood), glued the same way: 37 in all (driver S7 10 and S8 10, passenger S7 7 and S8 10), drawn as light dashed squares.
 
 ## Things to check before you cut
 

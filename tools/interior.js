@@ -25,7 +25,7 @@ const fs = require('fs');
         fan: {x: L.fan.x, y: L.fan.y, w: L.fan.w}, ac: {x: L.ac.x, y: L.ac.y, w: L.ac.w},
         hook: L.hook ? {x: f(L.hook.x), z: f(L.hook.z), z0: f(L.hook.z0)} : null,
         split: f(L.split), cloDr: L.cloDr.map(d => ({z0: f(d.z0), z1: f(d.z1)})), hangBot: f(L.hangBot),
-        toilet: L.toilet, sn: L.sn,
+        toilet: L.toilet, sn: L.sn, batt: L.batt.map(f), chairs: L.chairs ? { x0: f(L.chairs.x0), x1: f(L.chairs.x1), d0: f(L.chairs.d0), d1: f(L.chairs.d1), z0: f(L.chairs.z0), z1: f(L.chairs.z1) } : null, gear: L.gear ? JSON.parse(JSON.stringify(L.gear, (k, v) => typeof v === 'number' ? f(v) : v)) : null,
         walls: L.walls.map(w => ({id: w.id, side: w.side, x0: f(w.x0), x1: f(w.x1), d: f(w.d)})),
       },
     };
@@ -42,12 +42,14 @@ const fs = require('fs');
   .bar{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
   button{font:inherit;font-size:14px;padding:6px 12px;border:1px solid var(--line);border-radius:18px;background:var(--card);color:var(--ink);cursor:pointer}
   button[aria-pressed=true]{background:var(--ink);color:var(--bg)}
-  .note{color:var(--mute);font-size:14px;margin:8px 0}`;
+  .note{color:var(--mute);font-size:14px;margin:8px 0}.sl{display:flex;gap:10px;align-items:center;font-size:14px;flex:1 1 320px}.sl input{flex:1;min-width:120px}`;
   const body = `<div class="wrap"><h1>Inside the van, in 3D</h1>
-  <p class="lead">A 3D model built from the plan's own sizes: the walls and the cabinets in a light wood stain, the countertop medium grey, a light grey plywood ceiling under light wood planks. Drag to look around, scroll or pinch to zoom, and use the buttons to jump to a viewpoint or to step along the van.</p>
+  <p class="lead">A 3D model built from the plan's own sizes: the walls and the cabinets in a light wood stain, the countertop medium grey, a light grey plywood ceiling under light wood planks. Drag to look around, scroll or pinch to zoom, and use the buttons to jump to a viewpoint or to step along the van. Under the couch, the inverter and the two chargers sit on one pull-out shelf over the battery: press Play (or drag the slider) to see the lift-out front rail come off and the shelf slide out into the aisle.</p>
   <div class="stage"><canvas id="c" width="1280" height="720"></canvas></div>
   <div class="bar" id="views"></div>
   <div class="bar"><button id="back" type="button">Step back</button><button id="fwd" type="button">Step forward</button></div>
+  <div class="bar" id="railbar"><button id="rplay" type="button">Play</button><label class="sl">The lift-out rail and the gear shelf <input type="range" id="rs" min="0" max="100" value="0"></label></div>
+  <p class="note" id="cap"></p>
   <p class="note">This is a rendering of a model, not a photograph. The positions and sizes come from the plan. The finishes are placeholders where you have not chosen: the fabric (oatmeal), the floor (a mid grey-brown plank), the fridge (white), the pulls (black), and the cab seen through the open end. The sliding door is drawn open with daylight coming in.</p></div>`;
   const mk = three => `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Van interior in 3D</title><style>${css}</style></head><body>${body}<script src="${three}"></script><script>const D=${JSON.stringify(D)};</script><script>${scene}</script></body></html>`;
   fs.writeFileSync(__dirname + '/../interior.html', mk('https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js'));

@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Van build guide</title>
+<style>
+  body { font-family: -apple-system, "Segoe UI", sans-serif; margin: 24px auto; max-width: 760px; padding: 0 16px; color: #2C2C2A; background: #fff; }
+  h1 { font-size: 22px; font-weight: 500; }
+  h2 { font-size: 18px; font-weight: 500; margin-top: 36px; }
+  p, li { line-height: 1.6; font-size: 15px; }
+  svg { width: 100%; height: auto; display: block; }
+  svg text { font-family: -apple-system, "Segoe UI", sans-serif; fill: #2C2C2A; }
+  svg .th { font-size: 14px; font-weight: 500; }
+  svg .ts { font-size: 12px; fill: #5F5E5A; }
+  svg .box { fill: #FAF9F5; stroke: #5F5E5A; }
+  svg .arr { stroke: #5F5E5A; stroke-width: 0.75; fill: none; }
+  svg .c-purple > rect { fill: #EEEDFE; stroke: #534AB7; }
+  svg .c-purple .th { fill: #3C3489; } svg .c-purple .ts { fill: #534AB7; }
+  svg .c-teal > rect { fill: #E1F5EE; stroke: #0F6E56; }
+  svg .c-teal .th { fill: #085041; } svg .c-teal .ts { fill: #0F6E56; }
+  svg .c-coral > rect { fill: #FAECE7; stroke: #993C1D; }
+  svg .c-coral .th { fill: #712B13; } svg .c-coral .ts { fill: #993C1D; }
+  svg .c-pink > rect { fill: #FBEAF0; stroke: #993556; }
+  svg .c-pink .th { fill: #72243E; } svg .c-pink .ts { fill: #993556; }
+  svg .c-gray > rect { fill: #F1EFE8; stroke: #5F5E5A; }
+  svg .c-gray .th { fill: #444441; } svg .c-gray .ts { fill: #5F5E5A; }
+  svg .c-amber > rect { fill: #FAEEDA; stroke: #854F0B; }
+  svg .c-amber .th { fill: #633806; } svg .c-amber .ts { fill: #854F0B; }
+  svg .c-purple > rect, svg .c-teal > rect, svg .c-coral > rect, svg .c-pink > rect, svg .c-gray > rect, svg .c-amber > rect { stroke-width: 0.75; }
+</style><style>
+  body { max-width: 1100px; }
+  figure { margin: 0; } figure img { width: 100%; height: auto; border-radius: 4px; display: block; }
+  figcaption { font-size: 12px; color: #5F5E5A; margin-top: 4px; }
+  .photos { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+  .legend span { display: inline-block; margin-right: 16px; font-size: 13px; }
+  .sw { display: inline-block; width: 14px; height: 12px; vertical-align: -1px; margin-right: 5px; border: 1px solid #5F5E5A; }
+  table { border-collapse: collapse; font-size: 14px; } td, th { border-bottom: 1px solid #D3D1C7; padding: 3px 14px 3px 0; text-align: left; }
+  .wide { overflow-x: auto; }
+</style>
+
+<style>
+  .tgbar { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin: 4px 0 10px; }
+  .tgbar .hint { flex: 1 1 100%; margin: 0 0 2px; font-size: 13px; line-height: 1.4; color: #5F5E5A; }
+  .tgbar button { font: inherit; font-size: 13px; line-height: 1.3; padding: 4px 10px; border: 1px solid #B4B2A9; border-radius: 14px; background: #fff; color: #2C2C2A; cursor: pointer; }
+  .tgbar button:hover { border-color: #2C2C2A; }
+  .tgbar button.chip::before { content: ""; display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 6px; background: var(--c, #888780); }
+  .tgbar button.chip[aria-pressed="false"] { background: #F1EFE8; color: #888780; text-decoration: line-through; }
+  .tgbar button.chip[aria-pressed="false"]::before { opacity: .35; }
+  .tgbar button.all { background: #2C2C2A; border-color: #2C2C2A; color: #fff; }
+  svg g.tg { cursor: pointer; }
+  svg g.tg.off { display: none; }
+  svg g.tg.hl, svg g.tg:hover { filter: drop-shadow(0 0 3px rgba(186, 117, 23, .95)); }
+</style>
+<style>.gk{color:#5F5E5A;margin:-4px 0 14px}.steps{padding-left:22px}.steps li{margin:0 0 9px}.sug{color:#5F5E5A;font-size:14px;border-left:3px solid #D3D1C7;padding:2px 12px;margin:10px 0}.rt td,.rt th{vertical-align:top;padding:5px 12px 5px 0;font-size:13px}.rt td:last-child{min-width:260px}.gp{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;margin:28px 0 8px}.gp a{padding:8px 14px;border:1px solid #B4B2A9;border-radius:18px;text-decoration:none;color:#185FA5}.gp a:hover{border-color:#2C2C2A}h1 .gn{color:#5F5E5A;font-weight:400}</style><style>.vannav{display:flex;flex-wrap:wrap;gap:4px 6px;align-items:center;margin:0;padding:8px max(12px,env(safe-area-inset-left,0px));font:14px/1.3 -apple-system,"Segoe UI",system-ui,sans-serif;background:#f3f1ea;border-bottom:1px solid #cfcbbd;color:#26241f}.vannav a{color:#185FA5;text-decoration:none;padding:4px 9px;border-radius:14px;white-space:nowrap}.vannav a:hover{background:#e3e0d4}.vannav a[aria-current=page]{background:#26241f;color:#fff;font-weight:600}@media (prefers-color-scheme:dark){.vannav{background:#26241f;border-bottom-color:#4a473e;color:#ece9e0}.vannav a{color:#8fc2f0}.vannav a:hover{background:#3a372f}.vannav a[aria-current=page]{background:#ece9e0;color:#1b1a17}}</style><style>.guidenav{display:flex;flex-wrap:wrap;gap:3px 5px;align-items:center;margin:0;padding:6px max(12px,env(safe-area-inset-left,0px));font:13px/1.3 -apple-system,"Segoe UI",system-ui,sans-serif;background:#fff;border-bottom:1px solid #cfcbbd;color:#26241f}.guidenav b{margin-right:4px;color:#5F5E5A;font-weight:600}.guidenav a{color:#185FA5;text-decoration:none;padding:3px 8px;border-radius:12px;white-space:nowrap}.guidenav a:hover{background:#e3e0d4}.guidenav a[aria-current=page]{background:#185FA5;color:#fff;font-weight:600}@media (prefers-color-scheme:dark){.guidenav{background:#1b1a17;border-bottom-color:#4a473e;color:#ece9e0}.guidenav a{color:#8fc2f0}.guidenav a[aria-current=page]{background:#8fc2f0;color:#1b1a17}}</style></head>
+<body><nav class="vannav" aria-label="All pages"><a href="../index.html">Home</a><a href="../build/index.html" aria-current="page">Build guide</a><a href="../interactive.html">Plan</a><a href="../diagrams.html">Diagrams</a><a href="../interior.html">3D view</a><a href="../wall-map.html">Wall map</a><a href="../electric.html">Electrical</a><a href="../install.html">Fan and A/C</a><a href="../window.html">Side window</a><a href="../window-template.html">Window template</a></nav><nav class="guidenav" aria-label="Build guide, in order"><b>Build order:</b><a href="index.html" aria-current="page">All</a><a href="01-before.html">1 Before you cut</a><a href="../install.html">2 Fan and A/C</a><a href="../window.html">3 Side window</a><a href="04-wiring.html">4 Wiring rough-in</a><a href="05-insulate.html">5 Insulation and floor</a><a href="06-furring.html">6 Furring strips</a><a href="07-ceiling.html">7 Ceiling</a><a href="08-walls.html">8 Walls</a><a href="09-heavy.html">9 Battery and tanks</a><a href="10-couch.html">10 Couch and bed</a><a href="11-gear-shelf.html">11 Gear shelf</a><a href="12-lift-out-rail.html">12 Lift-out rail</a><a href="13-bath.html">13 Wet bath</a><a href="14-kitchen.html">14 Kitchen side</a><a href="15-closet-dinette.html">15 Closet and dinette</a><a href="16-cabinets.html">16 Wall cabinets</a><a href="17-finish.html">17 Finish and test</a></nav><h1>Van build guide</h1><p>Every part of the build on its own page, from the first thing to do to the last. Use the numbered bar under the main bar to jump to a part, or the links at the bottom of each page to go to the next. The order is a suggestion made from the plan (the same nine steps as the Build order on the interactive plan, with the parts that came later put in their place); the numbers on each page come from the plan's own sizes.</p><ol class="steps"><li><a href="01-before.html"><b>Before you cut: manuals, measurements and decisions</b></a><br><span class="gk">Do this first. Nothing here needs a tool, but every later step depends on it.</span></li><li><a href="../install.html"><b>Roof fan and air conditioner</b></a><br><span class="gk">Cut the roof first: it is dirty, and everything under it is still open.</span></li><li><a href="../window.html"><b>Side window</b></a><br><span class="gk">Another steel cut, so it also comes before the insulation and the wiring.</span></li><li><a href="04-wiring.html"><b>Wiring rough-in</b></a><br><span class="gk">Everything that will be hidden gets wired before it is covered.</span></li><li><a href="05-insulate.html"><b>Insulation and subfloor</b></a><br><span class="gk">After the roof and the window are cut and the wiring is in, before anything covers the walls.</span></li><li><a href="06-furring.html"><b>Furring strips, spacer blocks and shims</b></a><br><span class="gk">Eight strips on each wall, so every plank is held at least every 14 in.</span></li><li><a href="07-ceiling.html"><b>Ceiling covering</b></a><br><span class="gk">Ceiling before walls, so the wall sheets finish against it.</span></li><li><a href="08-walls.html"><b>Wall planks and floor-to-ceiling walls</b></a><br><span class="gk">After the ceiling, so the sheets finish against it.</span></li><li><a href="09-heavy.html"><b>The heavy low things: battery, tanks, couch base</b></a><br><span class="gk">Heavy things go in before the cabinets that would block the way.</span></li><li><a href="10-couch.html"><b>Couch, deck and the bed leaf</b></a><br><span class="gk">After the battery is in; the shelf goes into this frame.</span></li><li><a href="11-gear-shelf.html"><b>The pull-out gear shelf over the battery</b></a><br><span class="gk">The couch frame and the divider have to be in first.</span></li><li><a href="12-lift-out-rail.html"><b>The lift-out front rail</b></a><br><span class="gk">After the shelf slides are on the divider and the couch end panel.</span></li><li><a href="13-bath.html"><b>Wet bath: stall, toilet and nook</b></a><br><span class="gk">Passenger side, at the rear end; it needs the passenger-side strips and the walls first.</span></li><li><a href="14-kitchen.html"><b>Counter, sink, fridge and the rest of the passenger side</b></a><br><span class="gk">After the heavy tanks, before the wall cabinets.</span></li><li><a href="15-closet-dinette.html"><b>Closet and dinette</b></a><br><span class="gk">Driver side, cab end of the couch.</span></li><li><a href="16-cabinets.html"><b>Wall cabinets, doors and the fold-out table</b></a><br><span class="gk">Last of the big pieces: they are the ones most likely to need small adjustments.</span></li><li><a href="17-finish.html"><b>Finishing and checking</b></a><br><span class="gk">The last things, and the checks that tell you it works.</span></li></ol><p class="sug">To put this online: upload everything in this folder (the files and the folders next to this one) to any web host, keeping the folder structure. There is nothing to install; open <b>index.html</b>. Every page asks search engines not to list it.</p></body></html>

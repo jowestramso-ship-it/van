@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>The heavy low things: battery, tanks, couch base - Van build guide</title>
+<style>
+  body { font-family: -apple-system, "Segoe UI", sans-serif; margin: 24px auto; max-width: 760px; padding: 0 16px; color: #2C2C2A; background: #fff; }
+  h1 { font-size: 22px; font-weight: 500; }
+  h2 { font-size: 18px; font-weight: 500; margin-top: 36px; }
+  p, li { line-height: 1.6; font-size: 15px; }
+  svg { width: 100%; height: auto; display: block; }
+  svg text { font-family: -apple-system, "Segoe UI", sans-serif; fill: #2C2C2A; }
+  svg .th { font-size: 14px; font-weight: 500; }
+  svg .ts { font-size: 12px; fill: #5F5E5A; }
+  svg .box { fill: #FAF9F5; stroke: #5F5E5A; }
+  svg .arr { stroke: #5F5E5A; stroke-width: 0.75; fill: none; }
+  svg .c-purple > rect { fill: #EEEDFE; stroke: #534AB7; }
+  svg .c-purple .th { fill: #3C3489; } svg .c-purple .ts { fill: #534AB7; }
+  svg .c-teal > rect { fill: #E1F5EE; stroke: #0F6E56; }
+  svg .c-teal .th { fill: #085041; } svg .c-teal .ts { fill: #0F6E56; }
+  svg .c-coral > rect { fill: #FAECE7; stroke: #993C1D; }
+  svg .c-coral .th { fill: #712B13; } svg .c-coral .ts { fill: #993C1D; }
+  svg .c-pink > rect { fill: #FBEAF0; stroke: #993556; }
+  svg .c-pink .th { fill: #72243E; } svg .c-pink .ts { fill: #993556; }
+  svg .c-gray > rect { fill: #F1EFE8; stroke: #5F5E5A; }
+  svg .c-gray .th { fill: #444441; } svg .c-gray .ts { fill: #5F5E5A; }
+  svg .c-amber > rect { fill: #FAEEDA; stroke: #854F0B; }
+  svg .c-amber .th { fill: #633806; } svg .c-amber .ts { fill: #854F0B; }
+  svg .c-purple > rect, svg .c-teal > rect, svg .c-coral > rect, svg .c-pink > rect, svg .c-gray > rect, svg .c-amber > rect { stroke-width: 0.75; }
+</style><style>
+  body { max-width: 1100px; }
+  figure { margin: 0; } figure img { width: 100%; height: auto; border-radius: 4px; display: block; }
+  figcaption { font-size: 12px; color: #5F5E5A; margin-top: 4px; }
+  .photos { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+  .legend span { display: inline-block; margin-right: 16px; font-size: 13px; }
+  .sw { display: inline-block; width: 14px; height: 12px; vertical-align: -1px; margin-right: 5px; border: 1px solid #5F5E5A; }
+  table { border-collapse: collapse; font-size: 14px; } td, th { border-bottom: 1px solid #D3D1C7; padding: 3px 14px 3px 0; text-align: left; }
+  .wide { overflow-x: auto; }
+</style>
+
+<style>
+  .tgbar { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin: 4px 0 10px; }
+  .tgbar .hint { flex: 1 1 100%; margin: 0 0 2px; font-size: 13px; line-height: 1.4; color: #5F5E5A; }
+  .tgbar button { font: inherit; font-size: 13px; line-height: 1.3; padding: 4px 10px; border: 1px solid #B4B2A9; border-radius: 14px; background: #fff; color: #2C2C2A; cursor: pointer; }
+  .tgbar button:hover { border-color: #2C2C2A; }
+  .tgbar button.chip::before { content: ""; display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 6px; background: var(--c, #888780); }
+  .tgbar button.chip[aria-pressed="false"] { background: #F1EFE8; color: #888780; text-decoration: line-through; }
+  .tgbar button.chip[aria-pressed="false"]::before { opacity: .35; }
+  .tgbar button.all { background: #2C2C2A; border-color: #2C2C2A; color: #fff; }
+  svg g.tg { cursor: pointer; }
+  svg g.tg.off { display: none; }
+  svg g.tg.hl, svg g.tg:hover { filter: drop-shadow(0 0 3px rgba(186, 117, 23, .95)); }
+</style>
+<style>.gk{color:#5F5E5A;margin:-4px 0 14px}.steps{padding-left:22px}.steps li{margin:0 0 9px}.sug{color:#5F5E5A;font-size:14px;border-left:3px solid #D3D1C7;padding:2px 12px;margin:10px 0}.rt td,.rt th{vertical-align:top;padding:5px 12px 5px 0;font-size:13px}.rt td:last-child{min-width:260px}.gp{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;margin:28px 0 8px}.gp a{padding:8px 14px;border:1px solid #B4B2A9;border-radius:18px;text-decoration:none;color:#185FA5}.gp a:hover{border-color:#2C2C2A}h1 .gn{color:#5F5E5A;font-weight:400}</style><style>.vannav{display:flex;flex-wrap:wrap;gap:4px 6px;align-items:center;margin:0;padding:8px max(12px,env(safe-area-inset-left,0px));font:14px/1.3 -apple-system,"Segoe UI",system-ui,sans-serif;background:#f3f1ea;border-bottom:1px solid #cfcbbd;color:#26241f}.vannav a{color:#185FA5;text-decoration:none;padding:4px 9px;border-radius:14px;white-space:nowrap}.vannav a:hover{background:#e3e0d4}.vannav a[aria-current=page]{background:#26241f;color:#fff;font-weight:600}@media (prefers-color-scheme:dark){.vannav{background:#26241f;border-bottom-color:#4a473e;color:#ece9e0}.vannav a{color:#8fc2f0}.vannav a:hover{background:#3a372f}.vannav a[aria-current=page]{background:#ece9e0;color:#1b1a17}}</style><style>.guidenav{display:flex;flex-wrap:wrap;gap:3px 5px;align-items:center;margin:0;padding:6px max(12px,env(safe-area-inset-left,0px));font:13px/1.3 -apple-system,"Segoe UI",system-ui,sans-serif;background:#fff;border-bottom:1px solid #cfcbbd;color:#26241f}.guidenav b{margin-right:4px;color:#5F5E5A;font-weight:600}.guidenav a{color:#185FA5;text-decoration:none;padding:3px 8px;border-radius:12px;white-space:nowrap}.guidenav a:hover{background:#e3e0d4}.guidenav a[aria-current=page]{background:#185FA5;color:#fff;font-weight:600}@media (prefers-color-scheme:dark){.guidenav{background:#1b1a17;border-bottom-color:#4a473e;color:#ece9e0}.guidenav a{color:#8fc2f0}.guidenav a[aria-current=page]{background:#8fc2f0;color:#1b1a17}}</style></head>
+<body><nav class="vannav" aria-label="All pages"><a href="../index.html">Home</a><a href="../build/index.html" aria-current="page">Build guide</a><a href="../interactive.html">Plan</a><a href="../diagrams.html">Diagrams</a><a href="../interior.html">3D view</a><a href="../wall-map.html">Wall map</a><a href="../electric.html">Electrical</a><a href="../install.html">Fan and A/C</a><a href="../window.html">Side window</a><a href="../window-template.html">Window template</a></nav><nav class="guidenav" aria-label="Build guide, in order"><b>Build order:</b><a href="index.html">All</a><a href="01-before.html">1 Before you cut</a><a href="../install.html">2 Fan and A/C</a><a href="../window.html">3 Side window</a><a href="04-wiring.html">4 Wiring rough-in</a><a href="05-insulate.html">5 Insulation and floor</a><a href="06-furring.html">6 Furring strips</a><a href="07-ceiling.html">7 Ceiling</a><a href="08-walls.html">8 Walls</a><a href="09-heavy.html" aria-current="page">9 Battery and tanks</a><a href="10-couch.html">10 Couch and bed</a><a href="11-gear-shelf.html">11 Gear shelf</a><a href="12-lift-out-rail.html">12 Lift-out rail</a><a href="13-bath.html">13 Wet bath</a><a href="14-kitchen.html">14 Kitchen side</a><a href="15-closet-dinette.html">15 Closet and dinette</a><a href="16-cabinets.html">16 Wall cabinets</a><a href="17-finish.html">17 Finish and test</a></nav><h1><span class="gn">Step 9 of 17</span><br>The heavy low things: battery, tanks, couch base</h1><p class="gk">Heavy things go in before the cabinets that would block the way.</p>
+<p>The battery (21 x 10 in, 52 to 73 in from the back), the hot water tank (87 1/4 to 101 1/4 in) and the fresh water tank (87 1/4 to 122 1/4 in), then the couch base, the counter and the drawers under it.</p><div class="wide"><table class="rt"><tr><th>Item</th><th>In from the back</th><th>Size</th><th>Up from the floor</th><th>Notes</th></tr><tr><td><b>Wheel well</b></td><td>42 to 76</td><td>34 x 7</td><td>7.5 tall</td><td>measured; flat top 15.5 long</td></tr><tr><td><b>Battery</b></td><td>52 to 73</td><td>21 x 10</td><td>9.5 tall</td><td>next to the well, 17 in total depth; 1 in from the closet</td></tr><tr><td><b>Fresh water tank</b></td><td>87.25 to 122.25</td><td>35 x 16</td><td>10 tall, lying flat on the floor (0 to 10), about 24 gal (about 202 lb full)</td><td>at the sink end against the cab-side end panel (122.25), partly in the sink cabinet (103 to 123) and partly in the open area beside it; the new tank (10 tall, 16 deep; it was 41 long, but the cab-side column under the counter needs the floor for the trash can, so it starts at 87 1/4, where the hot water tank on its shelf starts); it fits the sink end, which is 17 deep (16 1/4 in clear inside the 3/4 in door), with 1/4 in to spare in front of it (there is no sink pipe: the sink drains into the 5 gallon bottle standing on the tank under the sink, see the next row); clear of the wheel well (ends at 76); the part from 104 to 122 stands in front of the sliding door opening (104 to 155), as the sink cabinet does</td></tr><tr><td><b>Hot water tank</b></td><td>87.25 to 101.25</td><td>14 x 14</td><td>13 tall, on a 3/4 in shelf over the fresh water tank (16.75 to 29.75, 6 in over the tank top at 10)</td><td>at the end of the drawers (87.25) and short of the sink cabinet (103), so it clears the sink bowl; the hot and cold fittings and the relief valve are at its back, so it needs a 1 5/8 in gap to the wall and its front is 15 5/8 in from the wall, which fits the 16 3/4 in the angled front leaves clear inside the door at its sink end, with about 1 in to spare; 6 3/4 in under the counter for its fittings and relief valve; the shelf is carried by the cabinet sides, not by the tank; the paper towel recess is just above it; holds about 4 gal (33 lb of water); the heater itself weighs 2 lb, so about 35 lb full; 14 x 14 x 13 is its outside size; electric, so no vent or combustion air; 120 V AC, 1,440 W (12 A: a 20 A circuit on 12 AWG, or a 15 A circuit on 14 AWG right at its limit, and about 133 A at 12 V through an inverter of 2,000 W or more from the 280 Ah battery, which is close: the battery is at 52 to 73); fittings, access, the relief valve and the drain are not set yet</td></tr><tr><td><b>Wheel well</b></td><td>42 to 76</td><td>34 x 7</td><td>7.5 tall</td><td>same as the driver side (flat top 15.5 long)</td></tr><tr><td><b>Grey water tank</b></td><td>not set</td><td>30 x 17 x 8 space (was 24 x 17 x 8)</td><td></td><td>shower and sink (grey water only); both drains run down through the floor; no off-the-shelf tank found that fits; size to be chosen; toilet waste (black water) is not covered</td></tr></table></div>
+<h2>Steps, in order</h2><ol class="steps"><li><b>Battery</b> on the floor next to the driver-side wheel well, on its aisle side, 1 in from the closet (52 to 73 in from the back), with room over it for the gear shelf (the battery top at 9 1/2 in).</li><li><b>The hot water tank and the fresh water tank</b> on the floor at their places on the passenger side (see the table), before the counter and the sink cabinet go up.</li><li><b>Then the couch base</b> (next page), then the gear shelf and the lift-out rail, then the counter and the drawers.</li></ol>
+<div class="gp"><a href="08-walls.html">&larr; 8. Walls</a><a href="10-couch.html">10. Couch and bed &rarr;</a></div><script>
+(function () {
+  document.querySelectorAll('svg').forEach(function (svg) {
+    var groups = Array.prototype.slice.call(svg.querySelectorAll('g.tg'));
+    if (!groups.length) return;
+    var wrap = svg.closest('.wide') || svg.parentNode;
+    var bar = document.createElement('div');
+    bar.className = 'tgbar';
+    var hint = document.createElement('p');
+    hint.className = 'hint';
+    hint.textContent = 'Click a part of the drawing to hide it, or use the buttons. A crossed-out button is hidden; click it to bring the part back.';
+    bar.appendChild(hint);
+    var chips = {};
+    function set(g, show) {
+      g.classList.toggle('off', !show);
+      chips[g.dataset.g].setAttribute('aria-pressed', show ? 'true' : 'false');
+    }
+    function mkBtn(text, cls) {
+      var b = document.createElement('button');
+      b.type = 'button'; b.className = cls; b.textContent = text;
+      return b;
+    }
+    var showAll = mkBtn('Show all', 'all'), hideAll = mkBtn('Hide all', 'all');
+    showAll.onclick = function () { groups.forEach(function (g) { set(g, true); }); };
+    hideAll.onclick = function () { groups.forEach(function (g) { set(g, false); }); };
+    bar.appendChild(showAll); bar.appendChild(hideAll);
+    groups.forEach(function (g) {
+      var b = mkBtn(g.dataset.label, 'chip');
+      var colored = g.querySelector('[stroke]:not([stroke="none"])');
+      if (colored) b.style.setProperty('--c', colored.getAttribute('stroke'));
+      b.setAttribute('aria-pressed', 'true');
+      b.onclick = function () { set(g, g.classList.contains('off')); };
+      b.onmouseenter = function () { g.classList.add('hl'); };
+      b.onmouseleave = function () { g.classList.remove('hl'); };
+      chips[g.dataset.g] = b;
+      bar.appendChild(b);
+      g.addEventListener('click', function (e) { e.stopPropagation(); set(g, false); g.classList.remove('hl'); });
+    });
+    wrap.parentNode.insertBefore(bar, wrap);
+  });
+})();
+</script><script>
+/* zoom and pan for the diagrams: + / - / reset buttons in the corner, Ctrl (or Cmd) + scroll, pinch on a touch screen, drag to move once zoomed */
+(function () {
+  var CSS = '.zvp{position:relative;overflow:hidden}.zvp>svg{transform-origin:0 0}.zvp.zoomed{cursor:grab;touch-action:none}.zvp.zdrag{cursor:grabbing}' +
+    '.zbar{position:absolute;top:6px;right:6px;z-index:5;display:flex;gap:4px}' +
+    '.zbar button{font:inherit;font-size:15px;line-height:1;min-width:30px;height:30px;padding:0 9px;border:1px solid #B4B2A9;border-radius:6px;background:rgba(255,255,255,.93);color:#2C2C2A;cursor:pointer}' +
+    '.zbar button:hover{border-color:#2C2C2A}.zbar button[disabled]{opacity:.4;cursor:default}';
+  var st = document.createElement('style'); st.textContent = CSS; document.head.appendChild(st);
+  var MAX = 8;
+  function make(svg) {
+    if (svg.__zoom || !svg.parentNode) return;
+    var vp = document.createElement('div'); vp.className = 'zvp';
+    svg.parentNode.insertBefore(vp, svg); vp.appendChild(svg);
+    var k = 1, x = 0, y = 0, ptrs = {}, last = null, dragged = false, down = null;
+    var bar = document.createElement('div'); bar.className = 'zbar';
+    function btn(t, label, f) { var b = document.createElement('button'); b.type = 'button'; b.textContent = t; b.title = label; b.setAttribute('aria-label', label); b.onclick = function (e) { e.stopPropagation(); f(); }; bar.appendChild(b); return b; }
+    var bIn = btn('+', 'Zoom in', function () { zoomAt(vp.clientWidth / 2, vp.clientHeight / 2, 1.5); });
+    var bOut = btn('−', 'Zoom out', function () { zoomAt(vp.clientWidth / 2, vp.clientHeight / 2, 1 / 1.5); });
+    var bReset = btn('Reset', 'Reset the zoom', reset);
+    vp.appendChild(bar);
+    function apply() {
+      var cs = getComputedStyle(svg), sw = parseFloat(cs.width) || vp.clientWidth, sh = parseFloat(cs.height) || vp.clientHeight;
+      x = Math.max(Math.min(0, vp.clientWidth - sw * k), Math.min(0, x));
+      y = Math.max(Math.min(0, vp.clientHeight - sh * k), Math.min(0, y));
+      if (k <= 1.001) { k = 1; x = 0; y = 0; }
+      svg.style.transform = k === 1 ? '' : 'translate(' + x + 'px,' + y + 'px) scale(' + k + ')';
+      vp.classList.toggle('zoomed', k > 1);
+      if (k > 1) vp.scrollLeft = 0;
+      bIn.disabled = k >= MAX - .01; bOut.disabled = bReset.disabled = k === 1;
+    }
+    function zoomAt(cx, cy, f) {
+      var nk = Math.min(MAX, Math.max(1, k * f)); f = nk / k;
+      x = cx - (cx - x) * f; y = cy - (cy - y) * f; k = nk; apply();
+    }
+    function reset() { k = 1; x = 0; y = 0; apply(); }
+    svg.__zoom = true; svg.__zoomReset = reset;
+    vp.addEventListener('wheel', function (e) {
+      if (!(e.ctrlKey || e.metaKey)) return;
+      e.preventDefault();
+      var r = vp.getBoundingClientRect();
+      zoomAt(e.clientX - r.left, e.clientY - r.top, Math.exp(-e.deltaY * (e.deltaMode === 1 ? .05 : .0025)));
+    }, { passive: false });
+    function dist() { var a = Object.keys(ptrs).map(function (i) { return ptrs[i]; }); return Math.hypot(a[0].x - a[1].x, a[0].y - a[1].y); }
+    function mid() { var a = Object.keys(ptrs).map(function (i) { return ptrs[i]; }); return { x: (a[0].x + a[1].x) / 2, y: (a[0].y + a[1].y) / 2 }; }
+    var listening = false;
+    function mv(ev) {
+      var p = ptrs[ev.pointerId]; if (!p) return;
+      var n = Object.keys(ptrs).length, r = vp.getBoundingClientRect();
+      if (n === 2 && last) {
+        p.x = ev.clientX; p.y = ev.clientY;
+        var d = dist(), m = mid();
+        x += m.x - last.m.x; y += m.y - last.m.y;
+        zoomAt(m.x - r.left, m.y - r.top, d / last.d); last = { d: d, m: m }; dragged = true;
+      } else if (n === 1 && k > 1) {
+        if (Math.hypot(ev.clientX - down.x, ev.clientY - down.y) > 4) { dragged = true; vp.classList.add('zdrag'); }
+        if (dragged) { x += ev.clientX - p.x; y += ev.clientY - p.y; apply(); }
+        p.x = ev.clientX; p.y = ev.clientY;
+      } else { p.x = ev.clientX; p.y = ev.clientY; }
+    }
+    function up(ev) {
+      delete ptrs[ev.pointerId]; last = null; vp.classList.remove('zdrag');
+      if (!Object.keys(ptrs).length) { listening = false; window.removeEventListener('pointermove', mv); window.removeEventListener('pointerup', up); window.removeEventListener('pointercancel', up); }
+    }
+    vp.addEventListener('pointerdown', function (e) {
+      if (e.target.closest('.zbar') || e.target.closest('[data-drag]')) return;
+      if (!Object.keys(ptrs).length) dragged = false;
+      ptrs[e.pointerId] = { x: e.clientX, y: e.clientY }; down = { x: e.clientX, y: e.clientY };
+      last = Object.keys(ptrs).length === 2 ? { d: dist(), m: mid() } : null;
+      if (!listening) { listening = true; window.addEventListener('pointermove', mv); window.addEventListener('pointerup', up); window.addEventListener('pointercancel', up); }
+    });
+    // a drag is not a click: keep it from toggling or opening whatever is under the pointer
+    vp.addEventListener('click', function (e) { if (dragged) { e.stopPropagation(); e.preventDefault(); dragged = false; } }, true);
+    window.addEventListener('resize', apply);
+  }
+  window.makeZoomable = make;
+  window.zoomAll = function () { document.querySelectorAll('svg[role="img"]').forEach(make); };
+})();
+zoomAll();
+</script></body></html>

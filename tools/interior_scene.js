@@ -141,10 +141,66 @@
   // wall cabinets (front faces the aisle at z = depth); doors with gaps and pulls
   L.cabs.forEach(c => bx(c[0], c[1], P.cabBot, hw - .05, 0, P.cabDepth, MT.wood, 36));
   L.doors.forEach(d => { const dz = P.cabDepth, y0 = L.doorZ[0], y1 = L.doorZ[1]; bx(d.x0 - .2, d.x1 + .2, y0 - .2, y1 + .2, dz - .05, dz + .12, MT.gap, 8, { cast: false }); bx(d.x0, d.x1, y0, y1, dz + .1, dz + .75, MT.woodH, 36); handle((d.x0 + d.x1) / 2, y0 + 1.6, dz + .75, 4, false, 1); });
-  // couch: base, cushions
-  bx(0, P.bedLen, 0, P.platform, 0, P.bedD, MT.wood, 36); bx(.3, P.bedLen - .3, P.platform, P.platform + P.mattress, .6, P.bedD - .3, MT.fabric, 24);
+  // couch: base, cushions. With the gear shelf the base is an open frame (deck, ledger, a divider, the front) so the shelf can slide out; without it, a solid box
+  const G = L.gear, SH = G && G.sh, DU = P.platform - 1.5, DT = P.platform - .75, HY = P.bedD - .75;
+  if (G) {
+    bx(0, P.bedLen, DU, DT, 0, P.bedD, MT.wood, 36);                         // the deck
+    bx(0, P.bedLen, DU - 1.5, DU, 0, 1.5, MT.wood, 36);                      // the wall ledger
+    bx(L.c0, L.c0 + .75, 0, DU, P.closetD, P.bedD, MT.wood, 36);             // a 1 in strip: the couch's end panel next to the closet is 26 deep, the closet 25
+    bx(SH.div, SH.div + .75, 0, DU, 0, P.bedD, MT.wood, 36);                 // the slide divider, west of the wheel well
+    bx(0, SH.div, DU - 1.5, DU, HY, P.bedD, MT.wood, 36);                   // the front rail west of the divider: nothing else covers the front under the deck
+    bx(.3, P.bedLen - .3, DT, P.platform, P.bedD - P.bedBack, P.bedD - .3, MT.woodH, 36);   // the leaf, folded back on the deck
+  } else bx(0, P.bedLen, 0, P.platform, 0, P.bedD, MT.wood, 36);
+  bx(.3, P.bedLen - .3, P.platform, P.platform + P.mattress, .6, P.bedD - .3, MT.fabric, 24);
   bx(.3, P.bedLen - .3, P.platform + P.mattress, P.platform + P.mattress + P.bedBack, .3, .3 + P.mattress, MT.fabric, 24);
   [[12, 18, MT.pillow, .3], [60, 17, MT.pillow2, -.25]].forEach(p => { const m = bx(p[0] - 8, p[0] + 8, P.platform + P.mattress, P.platform + P.mattress + 15, 8, 12.5, p[2], 12); m.position.set(p[0], P.platform + P.mattress + 7.7, 9.2); m.rotation.set(-.18, p[3], .0); });
+  /* ---------- under the couch: wheel well, battery, the gear shelf and the lift-out rail ---------- */
+  const shG = new THREE.Group(), railG = new THREE.Group(); scene.add(shG, railG);
+  const toG = (g, m) => { scene.remove(m); g.add(m); return m; };
+  const bxg = (g, ...a) => toG(g, bx(...a));
+  const ink = o => std(Object.assign({ roughness: .5 }, o));
+  const MU = { rail: ink({ color: 0x8d8f94, metalness: .55, roughness: .4 }), dc: ink({ color: 0x3a4a5e, metalness: .5 }), inv: ink({ color: 0x2c2f33, metalness: .4 }), chg: ink({ color: 0x4a5547, metalness: .3 }), batt: ink({ color: 0x20364f, roughness: .7 }), well: ink({ color: 0x77736b, roughness: .85 }), led: new THREE.MeshBasicMaterial({ color: 0x5be37d }), red: ink({ color: 0xb02a2a }) };
+  let cR = null, RL = 0;
+  if (G) {
+    // the wheel well: the profile extruded 7 in out from the wall
+    { const sp = new THREE.Shape(); [[42, 0], [76, 0], [76, 2], [66.75, 7.5], [51.25, 7.5], [42, 2]].forEach((p, i) => i ? sp.lineTo(p[0], p[1]) : sp.moveTo(p[0], p[1])); sp.closePath();
+      const m = new THREE.Mesh(new THREE.ExtrudeGeometry(sp, { depth: 7, bevelEnabled: false }), MU.well); m.castShadow = true; m.receiveShadow = true; add(m); }
+    if (L.chairs) { const c = L.chairs; bx(c.x0, c.x1, c.z0, c.z1, c.d0, c.d1, std({ color: 0x4f7c5a, roughness: .8 }), 12); bx(c.x0 + .5, c.x1 - .5, c.z0 + 2.6, c.z0 + 2.9, c.d0 + .5, c.d1 - .5, MT.black, 6, { cast: false }); }
+    if (P.battOn) { bx(L.batt[0], L.batt[1], 0, 9.5, 7, 17, MU.batt, 20); [[L.batt[0] + 3, MU.red], [L.batt[0] + 5.5, MU.black]].forEach(p => { const c = new THREE.Mesh(new THREE.CylinderGeometry(.5, .5, .7, 14), p[1]); c.position.set(p[0], 9.85, 15.8); add(c); }); }
+    // fixed slide members on the divider and on the closet end panel, and the rail's ledges and pins
+    const GW = SH.div + .75, GE = L.c0, zc = SH.z0 + 1.25, sl = (x0, x1, g) => (g ? bxg.bind(null, g) : bx)(x0, x1, zc - .875, zc + .875, SH.y1 - 18, SH.y1, MU.rail, 6);
+    sl(GW, GW + .25); sl(GE - .25, GE); bxg(shG, SH.x0 - .4, SH.x0, zc - .875, zc + .875, SH.y1 - 18, SH.y1, MU.rail, 6); bxg(shG, SH.x1, SH.x1 + .4, zc - .875, zc + .875, SH.y1 - 18, SH.y1, MU.rail, 6);
+    const rz0 = DU - 1.5, ly = rz0 - .125;
+    [[GW, GW + 1.25, GW, GW + .125], [GE - 1.25, GE, GE - .125, GE]].forEach(l => { bx(l[0], l[1], ly, rz0, HY - .75, P.bedD, MU.rail, 6); bx(l[2], l[3], ly, ly + 1.25, HY - .75, P.bedD, MU.rail, 6); });
+    [GW + .8, GE - .8].forEach(px => { const c = new THREE.Mesh(new THREE.CylinderGeometry(.165, .165, .115, 14), MU.black); c.position.set(px, rz0 + .0575, HY + .375); add(c); });
+    // the shelf: tray, end rails, rear lip, the face with louvers and a finger slot, slide members, the three units
+    bxg(shG, SH.x0 + .75, SH.x1 - .75, SH.z0, SH.z1, SH.y0, SH.y1, MT.woodH, 24);
+    bxg(shG, SH.x0, SH.x0 + .75, SH.z0, SH.z0 + 2.5, SH.y0, SH.y1, MT.wood, 24); bxg(shG, SH.x1 - .75, SH.x1, SH.z0, SH.z0 + 2.5, SH.y0, SH.y1, MT.wood, 24);
+    bxg(shG, SH.x0 + .75, SH.x1 - .75, SH.z1, SH.z1 + .75, SH.y0, SH.y0 + .75, MT.wood, 24);
+    const fz0 = SH.z0 - .25, fz1 = DU - 1.5 - .25;
+    bxg(shG, SH.x0, SH.x1, fz0, fz1, SH.y1, SH.y1 + .75, MT.wood, 36);
+    bxg(shG, (SH.x0 + SH.x1) / 2 - 3, (SH.x0 + SH.x1) / 2 + 3, fz1 - 1, fz1 - .6, SH.y1 + .74, SH.y1 + .8, MT.black, 4, { cast: false });
+    const U = u => [u.x0, u.x1, u.z0, u.z1, u.y0, u.y1];
+    bxg(shG, ...U(G.dc), MU.dc, 12); for (let i = 0; i < 12; i++) bxg(shG, G.dc.x0 + .6 + i * 1.28, G.dc.x0 + .8 + i * 1.28, G.dc.z1, G.dc.z1 + .3, G.dc.y0 + .4, G.dc.y1 - .4, MT.black, 4, { cast: false });
+    bxg(shG, ...U(G.inv), MU.inv, 12); { const cx = (G.inv.x0 + G.inv.x1) / 2, f = new THREE.Mesh(new THREE.CylinderGeometry(2.6, 2.6, .12, 24), MT.black); f.rotation.x = Math.PI / 2; f.position.set(cx, (G.inv.z0 + G.inv.z1) / 2, G.inv.y1 + .02); toG(shG, f); bxg(shG, G.inv.x1 - 2.4, G.inv.x1 - 1.4, G.inv.z1 - 1.3, G.inv.z1 - .9, G.inv.y1, G.inv.y1 + .05, MU.led, 4, { cast: false }); }
+    bxg(shG, ...U(G.ch), MU.chg, 12); bxg(shG, G.ch.x0 + .8, G.ch.x0 + 1.6, G.ch.z1 - 1, G.ch.z1 - .6, G.ch.y1, G.ch.y1 + .05, MU.led, 4, { cast: false });
+    // the rail: a 3/4 x 1 1/2 in steel tube under the deck's front edge, lying on the two ledges
+    RL = GE - GW - .125; cR = [(GW + GE) / 2, rz0 + .75, HY + .375];
+    const rm = new THREE.Mesh(new THREE.BoxGeometry(RL, 1.5, .75), MU.rail); rm.castShadow = true; rm.receiveShadow = true; railG.add(rm); railG.position.set(...cR);
+    { const l = new THREE.PointLight(0xfff0d8, .35, 55, 2); l.position.set((SH.x0 + SH.x1) / 2, 13, 12); scene.add(l); }
+  }
+  const ease = t => t * t * (3 - 2 * t), cl = v => Math.max(0, Math.min(1, v));
+  const CAPS = [[.12, '1. The rail sits on its two screw-head pins, under the deck.'], [.30, '2. Lift it 1/8 in (the deck edge rises with it), then pull it toward you off the pins.'], [.58, '3. Carry it away and set it on the seat.'], [.999, '4. Pull the shelf by its face: 18 in of travel puts the whole tray in the aisle.'], [2, 'The shelf is out: the inverter, the DC-DC charger and the shore charger are open from above, and the battery is under it.']];
+  function applyStep(s) {
+    if (!G) return;
+    const e1 = ease(cl(s / .12)), e2 = ease(cl((s - .12) / .18)), e3 = ease(cl((s - .30) / .28)), e4 = ease(cl((s - .58) / .42));
+    const A = [cR[0], cR[1] + .125, cR[2] + 5], seatY = P.platform + P.mattress + .375, B = [cR[0], seatY, 13];
+    if (e3 <= 0) railG.position.set(cR[0], cR[1] + .125 * e1, cR[2] + 5 * e2); else railG.position.set(cR[0], A[1] + (B[1] - A[1]) * e3 + Math.sin(Math.PI * e3) * 14, A[2] + (B[2] - A[2]) * e3);
+    railG.rotation.x = (Math.PI / 2) * e3; shG.position.z = P.shPull * e4;
+    const cap = document.getElementById('cap'); if (cap) cap.textContent = (CAPS.find(c => s < c[0]) || CAPS[CAPS.length - 1])[1];
+    const rs = document.getElementById('rs'); if (rs && +rs.value !== Math.round(s * 100)) rs.value = Math.round(s * 100);
+    draw();
+  }
   // closet
   const cEnd = L.c1 - (L.walls.some(w => w.id === 'W1') ? P.fwT : 0);   // the closet's cab-side panel is the wall the rear bench leans on
   bx(L.c0, cEnd, 0, L.ceilF, 0, P.closetD, MT.wood, 36);
@@ -259,6 +315,7 @@
     closet: { n: 'Closet', p: [83, 34, 45], t: [82, 30, 0], fov: 95 },
     bath: { n: 'Wet bath', p: [8, 56, 30], t: [24, 36, 68] },
     fridge: { n: 'Fridge and microwave', p: [47, 50, 20], t: [47, 46, 68] },
+    rail: { n: 'Gear shelf and lift-out rail', p: [12, 36, 39], t: [58, 14, 24], fov: 66 },
   };
   let yaw = 0, pitch = 0, fov = 72, cur = 'rear';
   function setView(k) { cur = k; const v = VIEWS[k], p = V(...v.p), t = V(...v.t), d = t.clone().sub(p); camera.position.copy(p); yaw = Math.atan2(d.z, d.x); pitch = Math.atan2(d.y, Math.hypot(d.x, d.z)); fov = v.fov || 72; draw(); document.querySelectorAll('[data-v]').forEach(b => b.setAttribute('aria-pressed', b.dataset.v === k)); }
@@ -271,6 +328,13 @@
   const bar = document.getElementById('views'); Object.keys(VIEWS).forEach(k => { const b = document.createElement('button'); b.textContent = VIEWS[k].n; b.dataset.v = k; b.onclick = () => setView(k); bar.appendChild(b); });
   const mv = (dx) => { const f = V(Math.cos(yaw), 0, Math.sin(yaw)); camera.position.addScaledVector(f, dx); camera.position.x = Math.max(-4, Math.min(152, camera.position.x)); camera.position.z = Math.max(4, Math.min(VW - 4, camera.position.z)); draw(); };
   document.getElementById('fwd').onclick = () => mv(14); document.getElementById('back').onclick = () => mv(-14);
-  window.addEventListener('resize', size); window.__setView = setView; window.__ready = true;
-  size(); setView((location.hash || '').slice(1) in VIEWS ? location.hash.slice(1) : 'rear');
+  { const rs = document.getElementById('rs'), pb = document.getElementById('rplay'); let playing = false, ps = 0;
+    if (!G) { const b = document.getElementById('railbar'); if (b) b.style.display = 'none'; }
+    else {
+      rs.oninput = () => { ps = rs.value / 100; applyStep(ps); };
+      pb.onclick = () => { if (playing) { playing = false; pb.textContent = 'Play'; return; } if (ps >= 1) ps = 0; playing = true; pb.textContent = 'Pause'; setView('rail'); const from = ps, t0 = performance.now(), dur = 9000 * (1 - from);
+        (function tick(now) { if (!playing) return; ps = Math.min(1, from + (1 - from) * ((now - t0) / dur)); applyStep(ps); if (ps >= 1) { playing = false; pb.textContent = 'Play again'; return; } requestAnimationFrame(tick); })(t0); };
+    } }
+  window.addEventListener('resize', size); window.__setView = setView; window.__step = applyStep; window.__ready = true;
+  size(); applyStep(0); setView((location.hash || '').slice(1) in VIEWS ? location.hash.slice(1) : 'rear');
 })();

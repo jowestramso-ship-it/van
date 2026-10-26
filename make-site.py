@@ -59,8 +59,11 @@ for f in sorted(glob.glob(os.path.join(HERE, 'photos', 'driver', '*.jpg'))):
     data = strip(open(f, 'rb').read())
     assert b'GPS' not in data, f
     open(os.path.join(SITE, 'photos', 'driver', os.path.basename(f)), 'wb').write(data)
-import re
+import re, sys
+sys.path.insert(0, os.path.join(HERE, 'tools'))
+import buildguide
 PAGES = [('index.html', 'Home', 'Start here: every page in one place.'),
+         ('build/index.html', 'Build guide', 'Every part of the build on its own page, from the first thing to do to the last, with the drawings, the numbers and the steps.'),
          ('interactive.html', 'Plan', 'The adjustable plan: drag things around, open the doors, and see right away what does not fit.'),
          ('diagrams.html', 'Diagrams', 'The static diagrams of both walls, the bed, the ceiling and the roof, the photos and every measurement.'),
          ('interior.html', '3D view', 'Walk around the inside of the van in 3D: light wood stain walls and cabinets, a medium grey countertop, and a light grey plywood ceiling under light wood planks.'),
@@ -77,26 +80,35 @@ NAV_CSS = ('<style>.vannav{display:flex;flex-wrap:wrap;gap:4px 6px;align-items:c
            '.vannav a[aria-current=page]{background:#ece9e0;color:#1b1a17}}</style>')
 
 
-def navbar(cur):
+def navbar(cur, up=''):
     return '<nav class="vannav" aria-label="All pages">' + ''.join(
-        f'<a href="{f}"' + (' aria-current="page"' if f == cur else '') + f'>{t}</a>' for f, t, d in PAGES) + '</nav>'
+        f'<a href="{up}{f}"' + (' aria-current="page"' if f == cur else '') + f'>{t}</a>' for f, t, d in PAGES) + '</nav>'
 
 
-def put(name, html, cur=None):
-    """write a page into site/: links to sides.html go to diagrams.html, noindex, the nav bar under <body>"""
-    html = html.replace('href="sides.html"', 'href="diagrams.html"')
+def put(name, html, cur=None, guide=None):
+    """write a page into site/: links to sides.html go to diagrams.html, noindex, the nav bar under <body>; guide = the slug of its part of the build guide (adds the numbered bar), or 'index'"""
+    up = '../' if '/' in name else ''
+    html = html.replace('href="sides.html"', f'href="{up}diagrams.html"')
     if 'name="robots"' not in html:
         html = html.replace('</head>', '<meta name="robots" content="noindex, nofollow"></head>', 1)
-    html = html.replace('</head>', NAV_CSS + '</head>', 1)
-    html, n = re.subn(r'(<body[^>]*>)', lambda m: m.group(1) + navbar(cur or name), html, count=1)
+    html = html.replace('</head>', NAV_CSS + (buildguide.GUIDE_CSS if guide else '') + '</head>', 1)
+    bars = navbar(cur or name, up) + (buildguide.guide_nav(GUIDE, guide, bool(up)) if guide else '')
+    html = html.replace('<!--NAVS-->', '')
+    html, n = re.subn(r'(<body[^>]*>)', lambda m: m.group(1) + bars, html, count=1)
     assert n == 1, name
+    os.makedirs(os.path.dirname(os.path.join(SITE, name)) or SITE, exist_ok=True)
     open(os.path.join(SITE, name), 'w').write(html)
 
 
+GUIDE, BUILD_PAGES = buildguide.pages(HERE)
+GUIDE_OF = {g['file']: g['slug'] for g in GUIDE if g['ext']}
 for name, src in (('diagrams.html', 'sides.html'), ('interactive.html', 'interactive.html'), ('install.html', 'install.html'), ('window.html', 'window.html'),
                   ('window-template.html', 'window-template.html'), ('wall-map.html', 'wall-map.html'), ('electric.html', 'electric.html'), ('interior.html', 'interior.html')):
     if os.path.exists(os.path.join(HERE, src)):
-        put(name, open(os.path.join(HERE, src)).read())
+        put(name, open(os.path.join(HERE, src)).read(), guide=GUIDE_OF.get(name) or ('window' if name == 'window-template.html' else None))
+for name, doc in BUILD_PAGES.items():
+    slug = 'index' if name == 'index.html' else next(g['slug'] for g in GUIDE if g['file'] == name)
+    put('build/' + name, doc, 'build/index.html', guide=slug)
 
 cards = ''.join(f'<a class="card" href="{f}"><b>{t}</b><span>{d}</span></a>' for f, t, d in PAGES[1:])
 home = ('<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Ford Transit van build</title>'
