@@ -160,32 +160,71 @@
   // wall cabinets (front faces the aisle at z = depth); doors with gaps and pulls
   L.cabs.forEach(c => bx(c[0], c[1], P.cabBot, hw - .05, 0, P.cabDepth, MT.wood, 36));
   L.doors.forEach(d => { const dz = P.cabDepth, y0 = L.doorZ[0], y1 = L.doorZ[1]; bx(d.x0 - .2, d.x1 + .2, y0 - .2, y1 + .2, dz - .05, dz + .12, MT.gap, 8, { cast: false }); bx(d.x0, d.x1, y0, y1, dz + .1, dz + .75, MT.woodH, 36); handle((d.x0 + d.x1) / 2, y0 + 1.6, dz + .75, 4, false, 1); });
-  // couch: base, cushions. With the gear shelf the base is an open frame (deck, ledger, a divider, the front) so the shelf can slide out; without it, a solid box
-  const G = L.gear, SH = G && G.sh, DU = P.platform - 1.5, DT = P.platform - .75, HY = P.bedD - .75;
+  // couch: the deck lid (with its leaf, legs and cushions) lifts off the frame (lidG); the frame (back rail on the wall blocks, front rail and posts) is frameG.
+  // With the gear shelf but no cabinet the base is the old open frame; without the shelf, a solid box.
+  const G = L.gear, SH = G && G.sh, DU = P.platform - 1.5, DT = P.platform - .75, HY = P.bedD - .75, HZ = P.bedD, LWd = P.bedBack;
+  const lidG = new THREE.Group(), frameG = new THREE.Group(); scene.add(lidG, frameG);
+  const into = (g, m) => { scene.remove(m); g.add(m); return m; };
+  const bxIn = (g, ...a) => into(g, bx(...a));
   if (L.gcab) {
     // the gear cabinet (two floor-mounted side panels, no front, back or top) and the removable couch: a deck lid, a back rail on the wall blocks, a front rail on two posts west of the cabinet, an end rail and a cross rail
     const cb = L.gcab, cm = L.cmod, BH = 3.5;
-    bx(0, P.bedLen, DU, DT, 0, P.bedD, MT.wood, 36);                         // the deck lid
-    bx(0, P.bedLen, DU - BH, DU, 0, .75, MT.wood, 36);                       // the back rail, full length, on the wall blocks
-    bx(0, cm.west, DU - BH, DU, P.bedD - .75, P.bedD, MT.wood, 36);          // the front rail, west of the cabinet only
-    bx(0, .75, DU - BH, DU, .75, P.bedD - .75, MT.wood, 36); bx(cm.west / 2, cm.west / 2 + .75, DU - BH, DU, .75, P.bedD - .75, MT.wood, 36);   // the end rail and the cross rail
-    cm.posts.forEach(px => { bx(px, px + 1.5, .6, DU - BH, P.bedD - 1.5, P.bedD, MT.wood, 36); bx(px + .15, px + 1.35, 0, .6, P.bedD - 1.35, P.bedD - .15, MT.black, 6); });   // the posts with their screw-out feet
-    bx(cb.x0, cb.x0 + .75, 0, DU, 0, P.bedD, MT.wood, 36);                   // the cabinet's west panel
-    bx(cb.x0 - 1.5, cb.x0, 0, .75, 0, P.bedD, MT.wood, 36);                  // its floor cleat
-    bx(cb.x1, cb.x1 + .75, 0, DU, P.closetD, P.bedD, MT.wood, 36);           // the east panel is the closet's side, with a 1 in strip so it is 26 deep (the closet 25)
-    L.cblk.forEach(b => bx(b.x0, b.x1, b.z0, b.z1, 0, b.y1, MT.gap, 12));    // the wall blocks the back rail rests on
-    bx(.3, P.bedLen - .3, DT, P.platform, P.bedD - P.bedBack, P.bedD - .3, MT.woodH, 36);   // the leaf, folded back on the deck
+    bxIn(lidG, 0, P.bedLen, DU, DT, 0, P.bedD, MT.wood, 36);                  // the deck lid
+    bxIn(frameG, 0, P.bedLen, DU - BH, DU, 0, .75, MT.wood, 36);              // the back rail, full length, on the wall blocks
+    bxIn(frameG, 0, cm.west, DU - BH, DU, P.bedD - .75, P.bedD, MT.wood, 36); // the front rail, west of the cabinet only
+    bxIn(frameG, 0, .75, DU - BH, DU, .75, P.bedD - .75, MT.wood, 36); bxIn(frameG, cm.west / 2, cm.west / 2 + .75, DU - BH, DU, .75, P.bedD - .75, MT.wood, 36);   // the end rail and the cross rail
+    cm.posts.forEach(px => { bxIn(frameG, px, px + 1.5, .6, DU - BH, P.bedD - 1.5, P.bedD, MT.wood, 36); bxIn(frameG, px + .15, px + 1.35, 0, .6, P.bedD - 1.35, P.bedD - .15, MT.black, 6); });   // the posts with their screw-out feet
+    bxIn(frameG, cb.x0 + .75, cb.x1, DU - BH, DU, .75, 1.5, MT.wood, 36);     // the back rail doubled over the cabinet
+    bx(cb.x0 + .75, cb.x0 + 1.5, DU - BH - 1.5, DU - BH, 0, 3, MT.wood, 36); bx(cb.x1 - .75, cb.x1, DU - BH - 1.5, DU - BH, 0, 3, MT.wood, 36);   // a ledger on each panel under the doubled part
+    bx(cb.x0, cb.x0 + .75, 0, DU, 0, P.bedD, MT.wood, 36);                    // the cabinet's west panel
+    bx(cb.x0 - 1.5, cb.x0, 0, .75, 0, P.bedD, MT.wood, 36);                   // its floor cleat
+    bx(cb.x1, cb.x1 + .75, 0, DU, P.closetD, P.bedD, MT.wood, 36);            // the east panel is the closet's side, with a 1 in strip so it is 26 deep (the closet 25)
+    L.cblk.forEach(b => bx(b.x0, b.x1, b.z0, b.z1, 0, b.y1, MT.gap, 12));     // the wall blocks the back rail rests on
   } else if (G) {
     bx(0, P.bedLen, DU, DT, 0, P.bedD, MT.wood, 36);                         // the deck
     bx(0, P.bedLen, DU - 1.5, DU, 0, 1.5, MT.wood, 36);                      // the wall ledger
     bx(L.c0, L.c0 + .75, 0, DU, P.closetD, P.bedD, MT.wood, 36);             // a 1 in strip: the couch's end panel next to the closet is 26 deep, the closet 25
     bx(SH.div, SH.div + .75, 0, DU, 0, P.bedD, MT.wood, 36);                 // the slide divider, west of the wheel well
     bx(0, SH.div, DU - 1.5, DU, HY, P.bedD, MT.wood, 36);                   // the front rail west of the divider: nothing else covers the front under the deck
-    bx(.3, P.bedLen - .3, DT, P.platform, P.bedD - P.bedBack, P.bedD - .3, MT.woodH, 36);   // the leaf, folded back on the deck
   } else bx(0, P.bedLen, 0, P.platform, 0, P.bedD, MT.wood, 36);
-  bx(.3, P.bedLen - .3, P.platform, P.platform + P.mattress, .6, P.bedD - .3, MT.fabric, 24);
-  bx(.3, P.bedLen - .3, P.platform + P.mattress, P.platform + P.mattress + P.bedBack, .3, .3 + P.mattress, MT.fabric, 24);
-  [[12, 18, MT.pillow, .3], [60, 17, MT.pillow2, -.25]].forEach(p => { const m = bx(p[0] - 8, p[0] + 8, P.platform + P.mattress, P.platform + P.mattress + 15, 8, 12.5, p[2], 12); m.position.set(p[0], P.platform + P.mattress + 7.7, 9.2); m.rotation.set(-.18, p[3], .0); });
+  // the leaf: hinged on the top faces of the deck's front edge; folded back on the deck face down by day (x), flipped over the edge level with the deck at night
+  const leafG = new THREE.Group(); leafG.position.set(0, DT, HZ); lidG.add(leafG);
+  { const m = bx(.3, P.bedLen - .3, DT, P.platform, HZ - LWd, HZ - .3, MT.woodH, 36); scene.remove(m); m.position.sub(leafG.position); leafG.add(m); }
+  const legs = (() => { const k = (P.bedLen - 3.25) / 3, xs = [1, 1 + k, 1 + 2 * k, P.bedLen - 2.25];
+    return xs.map(lx => { const g = new THREE.Group(); g.position.set(lx + .625, .375, -(LWd - 3)); leafG.add(g);
+      const bar = new THREE.Mesh(new THREE.BoxGeometry(1.25, .375, 12.625), MT.steel); bar.position.set(0, 0, 6.3125); bar.castShadow = true; g.add(bar);
+      const foot = new THREE.Mesh(new THREE.CylinderGeometry(.5, .5, 3.7, 14), MT.black); foot.rotation.x = Math.PI / 2; foot.position.set(0, 0, 12.625 + 1.85); foot.visible = false; g.add(foot);
+      return { g, foot }; }); })();
+  // the cushions: they come off for the night, and go back in their night places (the seat cushion on the deck, the back cushion lying on the leaf)
+  const seatMat = MT.fabric.clone(), backMat = MT.fabric.clone(); seatMat.transparent = backMat.transparent = true;
+  const seatG = new THREE.Group(), backG = new THREE.Group(), pilG = new THREE.Group(); lidG.add(seatG, backG, pilG);
+  const yb = P.platform + P.mattress;
+  bxIn(seatG, .3, P.bedLen - .3, P.platform, yb, .6, P.bedD - .3, seatMat, 24);
+  { const m = bx(.3, P.bedLen - .3, yb, yb + P.bedBack, .3, .3 + P.mattress, backMat, 24); scene.remove(m); m.position.sub(new THREE.Vector3(0, yb, .3)); backG.add(m); backG.position.set(0, yb, .3); }
+  [[12, 18, MT.pillow, .3], [60, 17, MT.pillow2, -.25]].forEach(p => { const m = bx(p[0] - 8, p[0] + 8, yb, yb + 15, 8, 12.5, p[2], 12); m.position.set(p[0], yb + 7.7, 9.2); m.rotation.set(-.18, p[3], .0); into(pilG, m); });
+  const ease3 = t => t * t * (3 - 2 * t), cl3 = v => Math.max(0, Math.min(1, v));
+  // the bed makes up in four moves: the cushions come off, the leaf flips over the front edge, the legs fold down, the cushions go back (seat on the deck, back lying on the leaf: 26 + 20 = 46 in wide)
+  const BEDCAPS = [[.2, '1. The seat cushion and the back cushion come off.'], [.62, '2. The leaf flips forward over the deck\'s front edge, level with the deck.'], [.82, '3. The four legs fold down out of their slots in the leaf and their feet screw out to the floor.'], [1.01, '4. The seat cushion goes back on the deck and the back cushion lies on the leaf: a 46 in wide bed.']];
+  function applyBed(s) {
+    const c1 = cl3(s / .2), c2 = cl3((s - .8) / .2), ph = Math.PI * ease3(cl3((s - .2) / .45)), psi = (Math.PI / 2) * ease3(cl3((s - .6) / .22)), night = s >= .8, op = night ? c2 : 1 - c1;
+    leafG.rotation.x = ph; legs.forEach(l => { l.g.rotation.x = -psi; l.foot.visible = psi > 1.3; });
+    seatMat.opacity = backMat.opacity = Math.max(0, op); seatG.visible = backG.visible = op > .01; pilG.visible = s < .14; pilG.position.y = 10 * c1;
+    seatG.position.y = night ? -.75 : 10 * c1;
+    if (night) { backG.position.set(0, DT + 5.05, HZ + .2); backG.rotation.x = Math.PI / 2; } else { backG.position.set(0, yb + 10 * c1, .3); backG.rotation.x = 0; }
+    const cap = document.getElementById('bcap'); if (cap) cap.textContent = (BEDCAPS.find(c => s < c[0]) || BEDCAPS[BEDCAPS.length - 1])[1];
+    const bs = document.getElementById('bs'); if (bs && +bs.value !== Math.round(s * 100)) bs.value = Math.round(s * 100);
+    draw();
+  }
+  // the couch comes out in two lifts: the cushions off, the deck lid (with its leaf folded) up and away, then the frame off its wall blocks
+  const LIFTCAPS = [[.25, '1. Cushions off, leaf folded back, the deck lid\'s screws out.'], [.6, '2. The deck lid lifts off the frame and the cabinet panels (about 45 lb: two people).'], [1.01, '3. The six rail screws are out: the frame lifts off its three wall blocks (about 40 lb). The cabinet, the shelf and the battery stay.']];
+  function applyLift(s) {
+    applyBed(0); const c = cl3(s / .25), lid = ease3(cl3((s - .25) / .35)), fr = ease3(cl3((s - .6) / .4));
+    seatMat.opacity = backMat.opacity = 1 - c; seatG.visible = backG.visible = c < .99; pilG.visible = c < .01;
+    lidG.position.y = 32 * lid; frameG.position.y = 20 * fr;
+    const cap = document.getElementById('lcap'); if (cap) cap.textContent = (LIFTCAPS.find(x => s < x[0]) || LIFTCAPS[LIFTCAPS.length - 1])[1];
+    const ls = document.getElementById('ls'); if (ls && +ls.value !== Math.round(s * 100)) ls.value = Math.round(s * 100);
+    draw();
+  }
   /* ---------- under the couch: wheel well, battery and the gear shelf ---------- */
   const shG = new THREE.Group(); scene.add(shG);
   const toG = (g, m) => { scene.remove(m); g.add(m); return m; };
@@ -339,6 +378,8 @@
     bath: { n: 'Wet bath', p: [8, 56, 30], t: [24, 36, 68] },
     fridge: { n: 'Fridge and microwave', p: [47, 50, 20], t: [47, 46, 68] },
     rail: { n: 'Gear cabinet and shelf', p: [12, 36, 39], t: [58, 14, 24], fov: 66 },
+    under: { n: 'Under the couch', p: [26, 6, 46], t: [24, 9, 4], fov: 80 },
+    bed: { n: 'Couch and bed', p: [-2, 46, 40], t: [44, 14, 14], fov: 70 },
   };
   let yaw = 0, pitch = 0, fov = 72, cur = 'rear';
   function setView(k) { cur = k; const v = VIEWS[k], p = V(...v.p), t = V(...v.t), d = t.clone().sub(p); camera.position.copy(p); yaw = Math.atan2(d.z, d.x); pitch = Math.atan2(d.y, Math.hypot(d.x, d.z)); fov = v.fov || 72; draw(); document.querySelectorAll('[data-v]').forEach(b => b.setAttribute('aria-pressed', b.dataset.v === k)); }
@@ -358,6 +399,12 @@
       pb.onclick = () => { if (playing) { playing = false; pb.textContent = 'Play'; return; } if (ps >= 1) ps = 0; playing = true; pb.textContent = 'Pause'; setView('rail'); const from = ps, t0 = performance.now(), dur = 9000 * (1 - from);
         (function tick(now) { if (!playing) return; ps = Math.min(1, from + (1 - from) * ((now - t0) / dur)); applyStep(ps); if (ps >= 1) { playing = false; pb.textContent = 'Play again'; return; } requestAnimationFrame(tick); })(t0); };
     } }
-  window.addEventListener('resize', size); window.__setView = setView; window.__step = applyStep; window.__ready = true;
+  // the same Play and slider pair for the bed and for lifting the couch out
+  const player = (sl, pb, fn, view, secs) => { const rs = document.getElementById(sl), b = document.getElementById(pb); let playing = false, ps = 0; if (!rs || !b) return;
+    rs.oninput = () => { ps = rs.value / 100; fn(ps); };
+    b.onclick = () => { if (playing) { playing = false; b.textContent = 'Play'; return; } if (ps >= 1) ps = 0; playing = true; b.textContent = 'Pause'; setView(view); const from = ps, t0 = performance.now(), dur = secs * 1000 * (1 - from);
+      (function tick(now) { if (!playing) return; ps = Math.min(1, from + (1 - from) * ((now - t0) / dur)); fn(ps); if (ps >= 1) { playing = false; b.textContent = 'Play again'; return; } requestAnimationFrame(tick); })(t0); }; };
+  player('bs', 'bplay', applyBed, 'bed', 10); player('ls', 'lplay', applyLift, 'bed', 9);
+  window.addEventListener('resize', size); window.__setView = setView; window.__step = applyStep; window.__bed = applyBed; window.__lift = applyLift; window.__ready = true;
   size(); applyStep(0); setView((location.hash || '').slice(1) in VIEWS ? location.hash.slice(1) : 'rear');
 })();

@@ -164,7 +164,7 @@ function drawDriver(L, V) {
     o.push(GB('cblk', 'Wall blocks for the couch frame'));
     L.cblk.forEach((b, i) => {
       o.push(box(b.x0, b.x1, b.z0, b.z1, { fill: '#5A2E0A', fo: .75, stroke: '#3E230B', sw: 1.2 }));
-      o.push(LBL(X(b.x), Y(b.z0 + 1.75), 'Wall block ' + fmt(b.x), `3 wide x 1 1/2 out x 3 1/2 tall (a 3 in cut of 2x4 stood on its 3 1/2 in edge), ${fmt(b.z0)} to ${fmt(b.z1)} up, ${fmt(b.x)} in from the back (centered), screwed through the planks into the furring strip S2 behind it; the couch frame's back rail sits on its top and is screwed down into it from above${i === 1 && P.blkBOn ? ' (the middle one is "if needed")' : ''}`, { size: 10.5, fill: '#5A2E0A', dy: 13 }));
+      o.push(LBL(X(b.x), Y(5.5), 'Wall block ' + fmt(b.x), `a 2x2 post, 1 1/2 x 1 1/2 in and ${fmt(b.z1)} tall, standing on the floor against the wall at ${fmt(b.x)} in from the back (centered) and screwed through the planks into the furring strips S1 (3 up) and S2 (12 up) behind it; the couch frame's back rail sits on its top and is screwed down into it from above${i === 1 && P.blkBOn ? ' (the middle one is "if needed")' : ''}`, { size: 10.5, fill: '#5A2E0A', dy: 13 }));
     });
     o.push(GE());
   }

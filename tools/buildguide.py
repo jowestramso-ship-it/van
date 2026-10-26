@@ -53,6 +53,7 @@ WALL_TRIM = '''<h3>Covering the corners and the edges of 3/8 in plywood</h3>
 
 
 def pages(root):
+    TR = {}; exec(_read(os.path.join(root, 'tools', 'trim.py')), TR)   # the seven drawings of the trim details
     FD = {}
     exec(_read(os.path.join(root, 'tools', 'shelfdata.py')), FD); exec(_read(os.path.join(root, 'tools', 'furring.py')), FD)   # the window's place and the furring counts
     fr16, fr8 = FD['fr16'], FD['fr8']
@@ -152,7 +153,7 @@ def pages(root):
                '<b>Hang the sheets floor to ceiling,</b> glued to every strip, with a screw and a finish washer about every 8 in and 1/16 in between sheets; the joints fall at 42, 90 and 138 in.',
                '<b>Stand the four 3/4 in floor-to-ceiling walls</b> (W1 closet end, W2 behind the driver seat, W3 shower and fridge, W4 fridge and counter) on the finished floor and fix them to the framing; the dinette backs lean on W1 and W2.',
                '<b>Then cover the corners and edges</b> (the table below): after the sheets are up and before the cabinets, so the cabinets and the trim meet cleanly.'],
-        blocks=[WALL_TRIM]))
+        blocks=['<h3>The seven finishes, drawn to scale</h3>' + TR['trim_html'](), WALL_TRIM]))
     P.append(dict(slug='heavy', nav='Battery and tanks', title='The heavy low things: battery and tanks',
         kick='Heavy things go in before the cabinets that would block the way.',
         intro=f'<p>{H.escape(body("heavy"))}</p>' + table(['^Battery$', 'Wheel well', 'Fresh water tank', 'Hot water tank', 'Grey water tank']),

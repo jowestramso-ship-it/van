@@ -39,7 +39,7 @@ async function grab(page, side) {
       if (L.gcab) {
         const c = L.gcab;
         add('Gear cabinet (floor-mounted, two side panels)', c.x0, c.x1 + .75, 0, c.z1, `3/4 in plywood panels at ${F(c.x0)} and ${F(c.x1)} in from the back, ${F(c.y1)} deep, floor to the deck (${F(c.z1)} up); the gear shelf is its sliding top, the battery stays on the floor under it; each panel stands on a floor cleat`);
-        L.cblk.forEach(b => add('Couch wall block at ' + F(b.x), b.x0, b.x1, b.z0, b.z1, `${F(b.x1 - b.x0)} wide x ${F(b.y1)} out x ${F(b.z1 - b.z0)} tall, ${F(b.z0)} to ${F(b.z1)} up, centered ${F(b.x)} in from the back; screw it through the planks into the furring strip S2; the couch frame's back rail rests on it${b.x === P.blkB ? ' (if needed)' : ''}`));
+        L.cblk.forEach(b => add('Couch wall block at ' + F(b.x), b.x0, b.x1, b.z0, b.z1, `a 2x2 post ${F(b.x1 - b.x0)} wide x ${F(b.y1)} out x ${F(b.z1 - b.z0)} tall, standing on the floor, centered ${F(b.x)} in from the back; screw it through the planks into the furring strips S1 and S2; the couch frame's back rail rests on it${b.x === P.blkB ? ' (if needed)' : ''}`));
       }
       if (L.chairs) add('Lawn chairs, folded flat', L.chairs.x0, L.chairs.x1, L.chairs.z0, L.chairs.z1, `${P.chairN} stacked`);
       if (P.closetOn) {

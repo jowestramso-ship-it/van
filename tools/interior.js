@@ -25,7 +25,7 @@ const fs = require('fs');
         fan: {x: L.fan.x, y: L.fan.y, w: L.fan.w}, ac: {x: L.ac.x, y: L.ac.y, w: L.ac.w},
         hook: L.hook ? {x: f(L.hook.x), z: f(L.hook.z), z0: f(L.hook.z0)} : null,
         split: f(L.split), cloDr: L.cloDr.map(d => ({z0: f(d.z0), z1: f(d.z1)})), hangBot: f(L.hangBot),
-        toilet: L.toilet, sn: L.sn, batt: L.batt.map(f), win: L.win ? JSON.parse(JSON.stringify(L.win, (k, v) => typeof v === 'number' ? f(v) : v)) : null, chairs: L.chairs ? { x0: f(L.chairs.x0), x1: f(L.chairs.x1), d0: f(L.chairs.d0), d1: f(L.chairs.d1), z0: f(L.chairs.z0), z1: f(L.chairs.z1) } : null, gear: L.gear ? JSON.parse(JSON.stringify(L.gear, (k, v) => typeof v === 'number' ? f(v) : v)) : null,
+        toilet: L.toilet, sn: L.sn, gcab: L.gcab, cblk: L.cblk, cmod: L.cmod, batt: L.batt.map(f), win: L.win ? JSON.parse(JSON.stringify(L.win, (k, v) => typeof v === 'number' ? f(v) : v)) : null, chairs: L.chairs ? { x0: f(L.chairs.x0), x1: f(L.chairs.x1), d0: f(L.chairs.d0), d1: f(L.chairs.d1), z0: f(L.chairs.z0), z1: f(L.chairs.z1) } : null, gear: L.gear ? JSON.parse(JSON.stringify(L.gear, (k, v) => typeof v === 'number' ? f(v) : v)) : null,
         walls: L.walls.map(w => ({id: w.id, side: w.side, x0: f(w.x0), x1: f(w.x1), d: f(w.d)})),
       },
     };
@@ -50,6 +50,10 @@ const fs = require('fs');
   <div class="bar"><button id="back" type="button">Step back</button><button id="fwd" type="button">Step forward</button></div>
   <div class="bar" id="railbar"><button id="rplay" type="button">Play</button><label class="sl">The gear shelf sliding out of its cabinet <input type="range" id="rs" min="0" max="100" value="0"></label></div>
   <p class="note" id="cap"></p>
+  <div class="bar" id="bedbar"><button id="bplay" type="button">Play</button><label class="sl">The couch becomes a bed <input type="range" id="bs" min="0" max="100" value="0"></label></div>
+  <p class="note" id="bcap"></p>
+  <div class="bar" id="liftbar"><button id="lplay" type="button">Play</button><label class="sl">The couch lifts out (deck lid, then frame) <input type="range" id="ls" min="0" max="100" value="0"></label></div>
+  <p class="note" id="lcap"></p>
   <p class="note">This is a rendering of a model, not a photograph. The positions and sizes come from the plan. The finishes are placeholders where you have not chosen: the fabric (oatmeal), the floor (a mid grey-brown plank), the fridge (white), the pulls (black), and the cab seen through the open end. The sliding door is drawn open with daylight coming in.</p></div>`;
   const mk = three => `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Van interior in 3D</title><style>${css}</style></head><body>${body}<script src="${three}"></script><script>const D=${JSON.stringify(D)};</script><script>${scene}</script></body></html>`;
   fs.writeFileSync(__dirname + '/../interior.html', mk('https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js'));

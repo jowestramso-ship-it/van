@@ -219,7 +219,7 @@ const PD = [
   PD.push({ k: 'dx' + k, g: 'Drawers and shelves', l: nm + ': moved along the wall (+ toward the cab, - toward the rear)', d: 0, s: .25, a: -60, b: 60 });
   PD.push({ k: 'dz' + k, g: 'Drawers and shelves', l: nm + ': moved up (+) or down (-)', d: 0, s: .25, a: -40, b: 40 });
 });
-PD.push({ k: 'dyChairs', g: 'Drawers and shelves', l: 'Lawn chairs under the couch: moved out from the driver wall (+) or toward it (-)', d: 0, s: .25, a: -30, b: 30 });
+PD.push({ k: 'dyChairs', g: 'Drawers and shelves', l: 'Lawn chairs under the couch: moved out from the driver wall (+) or toward it (-); 1 1/2 clears the wall posts of the couch frame', d: 1.5, s: .25, a: -30, b: 30 });
 PD.push({ k: 'dyCan', g: 'Drawers and shelves', l: 'Trash can on its pull-out: moved out from the wall (+) or toward it (-)', d: 0, s: .25, a: -12, b: 12 });
 PD.push({ k: 'dyJug', g: 'Drawers and shelves', l: 'Drain jug (the 5 gallon bottle under the sink): moved out from the wall (+) or toward it (-)', d: 0, s: .25, a: -12, b: 12 });
 const DEF = {}; PD.forEach(p => DEF[p.k] = p.d);
@@ -500,11 +500,11 @@ function layout(P0) {
     const sh = { x0: sx0, x1: sx1, y0: ty0, y1: hy, z0: sz0, z1: sz1, div: sx0 - .65 - .75 };
     L.gear = P.gearOn ? { inv, dc, ch, sh, hatchY: hy } : null;
     // the gear cabinet: two 3/4 in plywood side panels standing on the floor, as deep as the couch (the west one is the shelf's slide divider, the east one the closet's end panel), from the floor to the underside of the deck.
-    // The couch is a separate removable frame: a 3/4 x 3 1/2 in back rail hung on wooden blocks screwed to the wall (blkA, blkB, blkC along the wall: a 3 in cut of 2x4 stood on its 3 1/2 in edge, 3 wide x 1 1/2 out x 3 1/2 tall, tops at the rail's underside), a front rail and posts west of the cabinet, and the deck resting on the cabinet's panels.
+    // The couch is a separate removable frame: a 3/4 x 3 1/2 in back rail hung on wooden blocks screwed to the wall (blkA, blkB, blkC along the wall: each a 2x2 post 1 1/2 x 1 1/2 standing on the floor, tops at the rail's underside), a front rail and posts west of the cabinet, and the deck resting on the cabinet's panels.
     const du = P.platform - 1.5, bz1 = du - 3.5, bz0 = bz1 - 3.5;
     L.gcab = P.gcabOn ? { x0: sx0 - .65 - .75, x1: L.c0, y1: P.bedD, z1: du } : null;
-    L.cblk = P.gcabOn ? [[P.blkA, 1], [P.blkB, P.blkBOn ? 1 : 0], [P.blkC, 1]].filter(b => b[1]).map(b => ({ x: b[0], x0: b[0] - 1.5, x1: b[0] + 1.5, y0: 0, y1: 1.5, z0: bz0, z1: bz1 })) : [];
-    L.cmod = P.gcabOn ? { du, rz0: bz1, west: sx0 - .65 - .75, posts: [0, sx0 - .65 - .75 - 1.5] } : null; }
+    L.cblk = P.gcabOn ? [[P.blkA, 1], [P.blkB, P.blkBOn ? 1 : 0], [P.blkC, 1]].filter(b => b[1]).map(b => ({ x: b[0], x0: b[0] - .75, x1: b[0] + .75, y0: 0, y1: 1.5, z0: 0, z1: bz1 })) : [];
+    L.cmod = P.gcabOn ? { du, rz0: bz1, beamX0: sx0 - .65 - .75 + .75, beamX1: L.c0, west: sx0 - .65 - .75, posts: [0, sx0 - .65 - .75 - 1.5] } : null; }
   // the side window over the dinette: the cutout (the slider frame's outline, what goes through the steel) and the glass (outside, glued over the stamping)
   { const cx0 = P.winX, cx1 = cx0 + P.winCW, cz0 = P.winZ, cz1 = cz0 + P.winCH, gx0 = cx0 - P.winOL, gz0 = cz0 - P.winOB;
     L.win = P.winOn ? { cx0, cx1, cz0, cz1, gx0, gx1: gx0 + P.winGW, gz0, gz1: gz0 + P.winGH, div: gx0 + 28.625 } : null; }
