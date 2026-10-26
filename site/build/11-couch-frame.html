@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>The removable couch: frame, wall blocks and deck lid - Van build guide</title>
+<style>
+  body { font-family: -apple-system, "Segoe UI", sans-serif; margin: 24px auto; max-width: 760px; padding: 0 16px; color: #2C2C2A; background: #fff; }
+  h1 { font-size: 22px; font-weight: 500; }
+  h2 { font-size: 18px; font-weight: 500; margin-top: 36px; }
+  p, li { line-height: 1.6; font-size: 15px; }
+  svg { width: 100%; height: auto; display: block; }
+  svg text { font-family: -apple-system, "Segoe UI", sans-serif; fill: #2C2C2A; }
+  svg .th { font-size: 14px; font-weight: 500; }
+  svg .ts { font-size: 12px; fill: #5F5E5A; }
+  svg .box { fill: #FAF9F5; stroke: #5F5E5A; }
+  svg .arr { stroke: #5F5E5A; stroke-width: 0.75; fill: none; }
+  svg .c-purple > rect { fill: #EEEDFE; stroke: #534AB7; }
+  svg .c-purple .th { fill: #3C3489; } svg .c-purple .ts { fill: #534AB7; }
+  svg .c-teal > rect { fill: #E1F5EE; stroke: #0F6E56; }
+  svg .c-teal .th { fill: #085041; } svg .c-teal .ts { fill: #0F6E56; }
+  svg .c-coral > rect { fill: #FAECE7; stroke: #993C1D; }
+  svg .c-coral .th { fill: #712B13; } svg .c-coral .ts { fill: #993C1D; }
+  svg .c-pink > rect { fill: #FBEAF0; stroke: #993556; }
+  svg .c-pink .th { fill: #72243E; } svg .c-pink .ts { fill: #993556; }
+  svg .c-gray > rect { fill: #F1EFE8; stroke: #5F5E5A; }
+  svg .c-gray .th { fill: #444441; } svg .c-gray .ts { fill: #5F5E5A; }
+  svg .c-amber > rect { fill: #FAEEDA; stroke: #854F0B; }
+  svg .c-amber .th { fill: #633806; } svg .c-amber .ts { fill: #854F0B; }
+  svg .c-purple > rect, svg .c-teal > rect, svg .c-coral > rect, svg .c-pink > rect, svg .c-gray > rect, svg .c-amber > rect { stroke-width: 0.75; }
+</style><style>
+  body { max-width: 1100px; }
+  figure { margin: 0; } figure img { width: 100%; height: auto; border-radius: 4px; display: block; }
+  figcaption { font-size: 12px; color: #5F5E5A; margin-top: 4px; }
+  .photos { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+  .legend span { display: inline-block; margin-right: 16px; font-size: 13px; }
+  .sw { display: inline-block; width: 14px; height: 12px; vertical-align: -1px; margin-right: 5px; border: 1px solid #5F5E5A; }
+  table { border-collapse: collapse; font-size: 14px; } td, th { border-bottom: 1px solid #D3D1C7; padding: 3px 14px 3px 0; text-align: left; }
+  .wide { overflow-x: auto; }
+</style>
+
+<style>
+  .tgbar { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin: 4px 0 10px; }
+  .tgbar .hint { flex: 1 1 100%; margin: 0 0 2px; font-size: 13px; line-height: 1.4; color: #5F5E5A; }
+  .tgbar button { font: inherit; font-size: 13px; line-height: 1.3; padding: 4px 10px; border: 1px solid #B4B2A9; border-radius: 14px; background: #fff; color: #2C2C2A; cursor: pointer; }
+  .tgbar button:hover { border-color: #2C2C2A; }
+  .tgbar button.chip::before { content: ""; display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 6px; background: var(--c, #888780); }
+  .tgbar button.chip[aria-pressed="false"] { background: #F1EFE8; color: #888780; text-decoration: line-through; }
+  .tgbar button.chip[aria-pressed="false"]::before { opacity: .35; }
+  .tgbar button.all { background: #2C2C2A; border-color: #2C2C2A; color: #fff; }
+  svg g.tg { cursor: pointer; }
+  svg g.tg.off { display: none; }
+  svg g.tg.hl, svg g.tg:hover { filter: drop-shadow(0 0 3px rgba(186, 117, 23, .95)); }
+</style>
+<style>.gk{color:#5F5E5A;margin:-4px 0 14px}.steps{padding-left:22px}.steps li{margin:0 0 9px}.sug{color:#5F5E5A;font-size:14px;border-left:3px solid #D3D1C7;padding:2px 12px;margin:10px 0}.rt td,.rt th{vertical-align:top;padding:5px 12px 5px 0;font-size:13px}.rt td:last-child{min-width:260px}.gp{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;margin:28px 0 8px}.gp a{padding:8px 14px;border:1px solid #B4B2A9;border-radius:18px;text-decoration:none;color:#185FA5}.gp a:hover{border-color:#2C2C2A}h1 .gn{color:#5F5E5A;font-weight:400}</style><style>.vannav{display:flex;flex-wrap:wrap;gap:4px 6px;align-items:center;margin:0;padding:8px max(12px,env(safe-area-inset-left,0px));font:14px/1.3 -apple-system,"Segoe UI",system-ui,sans-serif;background:#f3f1ea;border-bottom:1px solid #cfcbbd;color:#26241f}.vannav a{color:#185FA5;text-decoration:none;padding:4px 9px;border-radius:14px;white-space:nowrap}.vannav a:hover{background:#e3e0d4}.vannav a[aria-current=page]{background:#26241f;color:#fff;font-weight:600}@media (prefers-color-scheme:dark){.vannav{background:#26241f;border-bottom-color:#4a473e;color:#ece9e0}.vannav a{color:#8fc2f0}.vannav a:hover{background:#3a372f}.vannav a[aria-current=page]{background:#ece9e0;color:#1b1a17}}</style><style>.guidenav{display:flex;flex-wrap:wrap;gap:3px 5px;align-items:center;margin:0;padding:6px max(12px,env(safe-area-inset-left,0px));font:13px/1.3 -apple-system,"Segoe UI",system-ui,sans-serif;background:#fff;border-bottom:1px solid #cfcbbd;color:#26241f}.guidenav b{margin-right:4px;color:#5F5E5A;font-weight:600}.guidenav a{color:#185FA5;text-decoration:none;padding:3px 8px;border-radius:12px;white-space:nowrap}.guidenav a:hover{background:#e3e0d4}.guidenav a[aria-current=page]{background:#185FA5;color:#fff;font-weight:600}@media (prefers-color-scheme:dark){.guidenav{background:#1b1a17;border-bottom-color:#4a473e;color:#ece9e0}.guidenav a{color:#8fc2f0}.guidenav a[aria-current=page]{background:#8fc2f0;color:#1b1a17}}</style></head>
+<body><nav class="vannav" aria-label="All pages"><a href="../index.html">Home</a><a href="../build/index.html" aria-current="page">Build guide</a><a href="../interactive.html">Plan</a><a href="../diagrams.html">Diagrams</a><a href="../interior.html">3D view</a><a href="../wall-map.html">Wall map</a><a href="../electric.html">Electrical</a><a href="../install.html">Fan and A/C</a><a href="../window.html">Side window</a><a href="../window-template.html">Window template</a></nav><nav class="guidenav" aria-label="Build guide, in order"><b>Build order:</b><a href="index.html">All</a><a href="01-before.html">1 Before you cut</a><a href="../install.html">2 Fan and A/C</a><a href="../window.html">3 Side window</a><a href="04-wiring.html">4 Wiring rough-in</a><a href="05-insulate.html">5 Insulation and floor</a><a href="06-furring.html">6 Furring strips</a><a href="07-ceiling.html">7 Ceiling</a><a href="08-walls.html">8 Walls</a><a href="09-heavy.html">9 Battery and tanks</a><a href="10-gear-cabinet.html">10 Gear cabinet</a><a href="11-couch-frame.html" aria-current="page">11 Couch frame</a><a href="12-couch.html">12 Couch bed</a><a href="13-bath.html">13 Wet bath</a><a href="14-kitchen.html">14 Kitchen side</a><a href="15-closet-dinette.html">15 Closet and dinette</a><a href="16-cabinets.html">16 Wall cabinets</a><a href="17-finish.html">17 Finish and test</a></nav><h1><span class="gn">Step 11 of 17</span><br>The removable couch: frame, wall blocks and deck lid</h1><p class="gk">After the cabinet, because the deck rests on its panels.</p>
+<p>The couch is a separate piece: a frame that hangs on three wall blocks (3, 20 if needed, and 41 in from the back) and a deck lid on top, so it can be lifted out. The next page has the leaf, legs and cushions that go on the lid.</p>
+
+<h3>C5. Driver side: the removable couch (frame, wall blocks and deck lid), how to make it</h3>
+<div class="wide"><svg viewBox="0 0 1000 740" role="img"><title>The removable couch: the frame, the wall blocks, the deck lid and the gear cabinet</title>
+<defs><marker id="c4a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+<text class="ts" x="40.0" y="24.0" text-anchor="start" style="font-size:13px;font-weight:700;fill:#2C2C2A;paint-order:stroke;stroke:#fff;stroke-width:3px" >1  Seen from the aisle: the frame (grey), the wall blocks (dark) and the cabinet panels, deck lid shown over them</text>
+<line x1="28.5" y1="300.0" x2="960.0" y2="300.0" stroke="#2C2C2A" stroke-width="2.5" />
+<polygon points="523.0,300.0 914.0,300.0 914.0,277.0 807.6,213.8 629.4,213.8 523.0,277.0" fill="#D8B79A" fill-opacity=".45" stroke="#8A6B4D" stroke-width="1" stroke-dasharray="4 3"/>
+<rect x="638.0" y="190.8" width="241.5" height="109.2" fill="#F2B84B" fill-opacity="0.3" stroke="#B45309" stroke-width="1.2" stroke-dasharray="4 3"/>
+<rect x="40.0" y="235.3" width="396.8" height="64.7" fill="#7FB08F" fill-opacity="0.35" stroke="#2F5E3F" stroke-width="1.2" stroke-dasharray="4 3"/>
+<text class="ts" x="235.5" y="270.8" text-anchor="middle" style="font-size:9.5px;font-weight:400;fill:#2F5E3F;paint-order:stroke;stroke:#fff;stroke-width:3px" >lawn chairs (slide in between the posts)</text>
+<rect x="484.5" y="116.0" width="8.6" height="184.0" fill="#E3C48F" fill-opacity="0.9" stroke="#2C2C2A" stroke-width="1.2"/>
+<rect x="891.0" y="116.0" width="8.6" height="184.0" fill="#E3C48F" fill-opacity="0.9" stroke="#2C2C2A" stroke-width="1.2"/>
+<rect x="500.6" y="173.5" width="382.9" height="5.8" fill="#E3C48F" fill-opacity="0.9" stroke="#2C2C2A" stroke-width="1.1"/>
+<rect x="512.1" y="121.8" width="184.0" height="51.8" fill="#F6C28B" fill-opacity="0.55" stroke="#B45309" stroke-width="1.2" stroke-dasharray="3 2"/>
+<rect x="701.8" y="128.7" width="170.2" height="44.9" fill="#F6C28B" fill-opacity="0.55" stroke="#B45309" stroke-width="1.2" stroke-dasharray="3 2"/>
+<text class="ts" x="687.7" y="236.8" text-anchor="middle" style="font-size:10px;font-weight:700;fill:#5A3A00;paint-order:stroke;stroke:#fff;stroke-width:3px" >gear cabinet: the shelf slides out of the front</text>
+<rect x="40.0" y="116.0" width="851.0" height="40.2" fill="none" fill-opacity="1" stroke="#2C2C2A" stroke-width="1.1" stroke-dasharray="5 3"/>
+<rect x="40.0" y="116.0" width="444.5" height="40.2" fill="#B9BCC2" fill-opacity="0.9" stroke="#2C2C2A" stroke-width="1.4"/>
+<rect x="40.0" y="156.2" width="17.2" height="143.8" fill="#B9BCC2" fill-opacity="0.9" stroke="#2C2C2A" stroke-width="1.4"/>
+<rect x="467.2" y="156.2" width="17.2" height="143.8" fill="#B9BCC2" fill-opacity="0.9" stroke="#2C2C2A" stroke-width="1.4"/>
+<text class="ts" x="262.2" y="139.1" text-anchor="middle" style="font-size:10px;font-weight:700;fill:#2C2C2A;paint-order:stroke;stroke:#fff;stroke-width:3px" >front rail 3/4 x 3 1/2 on edge</text>
+<text class="ts" x="678.2" y="139.1" text-anchor="middle" style="font-size:10px;font-weight:700;fill:#2C2C2A;paint-order:stroke;stroke:#fff;stroke-width:3px" >back rail behind (dashed), 74 long</text>
+<rect x="40.0" y="107.4" width="851.0" height="8.6" fill="#8A6B4D" fill-opacity="0.95" stroke="#3E230B" stroke-width="1"/>
+<text class="ts" x="51.5" y="103.4" text-anchor="start" style="font-size:9.5px;font-weight:400;fill:#2C2C2A;paint-order:stroke;stroke:#fff;stroke-width:3px" >deck lid 16 to 16 3/4 up (the leaf folds onto it)</text>
+<rect x="486.6" y="110.2" width="4.4" height="11.5" fill="#C9A263" fill-opacity="1" stroke="#2C2C2A" stroke-width="1"/>
+<rect x="893.1" y="110.2" width="4.4" height="11.5" fill="#C9A263" fill-opacity="1" stroke="#2C2C2A" stroke-width="1"/>
+<rect x="57.2" y="156.2" width="34.5" height="40.2" fill="#5A2E0A" fill-opacity="0.95" stroke="#fff" stroke-width="1"/>
+<line x1="74.5" y1="310.0" x2="74.5" y2="196.5" stroke="#5A2E0A" stroke-width="1" stroke-dasharray="3 2" />
+<text class="ts" x="74.5" y="322.0" text-anchor="middle" style="font-size:9.5px;font-weight:700;fill:#5A2E0A;paint-order:stroke;stroke:#fff;stroke-width:3px" >3 in</text>
+<rect x="252.8" y="156.2" width="34.5" height="40.2" fill="#5A2E0A" fill-opacity="0.95" stroke="#fff" stroke-width="1"/>
+<line x1="270.0" y1="310.0" x2="270.0" y2="196.5" stroke="#5A2E0A" stroke-width="1" stroke-dasharray="3 2" />
+<text class="ts" x="270.0" y="322.0" text-anchor="middle" style="font-size:9.5px;font-weight:700;fill:#5A2E0A;paint-order:stroke;stroke:#fff;stroke-width:3px" >20 in (if needed)</text>
+<rect x="494.2" y="156.2" width="34.5" height="40.2" fill="#5A2E0A" fill-opacity="0.95" stroke="#fff" stroke-width="1"/>
+<line x1="511.5" y1="310.0" x2="511.5" y2="196.5" stroke="#5A2E0A" stroke-width="1" stroke-dasharray="3 2" />
+<text class="ts" x="511.5" y="322.0" text-anchor="middle" style="font-size:9.5px;font-weight:700;fill:#5A2E0A;paint-order:stroke;stroke:#fff;stroke-width:3px" >41 in</text>
+<circle cx="74.5" cy="136.1" r="8" fill="#fff" stroke="#2C2C2A" stroke-width="1.2"/><text class="ts" x="74.5" y="139.6" text-anchor="middle" style="font-size:10px;font-weight:700;fill:#2C2C2A;paint-order:stroke;stroke:#fff;stroke-width:0px" >1</text>
+<circle cx="467.2" cy="202.2" r="8" fill="#fff" stroke="#2C2C2A" stroke-width="1.2"/><text class="ts" x="467.2" y="205.8" text-anchor="middle" style="font-size:10px;font-weight:700;fill:#2C2C2A;paint-order:stroke;stroke:#fff;stroke-width:0px" >2</text>
+<text class="ts" x="496.0" y="64.2" text-anchor="start" style="font-size:9.5px;font-weight:400;fill:#2C2C2A;paint-order:stroke;stroke:#fff;stroke-width:3px" >tops of the panels carry the lid; 2 dowels in each</text>
+<line x1="542.0" y1="68.8" x2="488.8" y2="99.9" stroke="#2C2C2A" stroke-width="1" stroke-dasharray="3 2" />
+<text class="ts" x="50.0" y="376.0" text-anchor="start" style="font-size:13px;font-weight:700;fill:#2C2C2A;paint-order:stroke;stroke:#fff;stroke-width:3px" >2  Section at a wall block (wall on the left, aisle on the right)</text>
+<line x1="46.0" y1="700.0" x2="452.0" y2="700.0" stroke="#2C2C2A" stroke-width="2.5" />
+<line x1="60.0" y1="700.0" x2="60.0" y2="392.0" stroke="#2C2C2A" stroke-width="4" />
+<text class="ts" x="65.6" y="400.4" text-anchor="start" style="font-size:9.5px;font-weight:400;fill:#2C2C2A;paint-order:stroke;stroke:#fff;stroke-width:3px" >wall (finished face)</text>
+<rect x="39.0" y="521.5" width="21.0" height="21.0" fill="#7A4A1E" fill-opacity="0.9" stroke="#3E230B" stroke-width="1.1"/>
+<text class="ts" x="54.4" y="511.2" text-anchor="end" style="font-size:9px;font-weight:400;fill:#3E230B;paint-order:stroke;stroke:#fff;stroke-width:3px" >S2</text>
+<rect x="60.0" y="525.0" width="21.0" height="49.0" fill="#5A2E0A" fill-opacity="0.95" stroke="#fff" stroke-width="1"/>
+<text class="ts" x="85.2" y="585.4" text-anchor="start" style="font-size:9.5px;font-weight:700;fill:#5A2E0A;paint-order:stroke;stroke:#fff;stroke-width:3px" >wall block</text>
+<rect x="60.0" y="476.0" width="10.5" height="49.0" fill="#C9A263" fill-opacity="1" stroke="#2C2C2A" stroke-width="1.3"/>
+<text class="ts" x="76.8" y="494.4" text-anchor="start" style="font-size:9.5px;font-weight:700;fill:#2C2C2A;paint-order:stroke;stroke:#fff;stroke-width:3px" >back rail</text>
+<rect x="60.0" y="465.5" width="364.0" height="10.5" fill="#8A6B4D" fill-opacity="0.95" stroke="#3E230B" stroke-width="1"/>
+<rect x="144.0" y="455.0" width="280.0" height="10.5" fill="#B07A2A" fill-opacity="0.85" stroke="#5A3A00" stroke-width="1"/>
+<rect x="60.0" y="385.0" width="364.0" height="70.0" fill="#534AB7" fill-opacity="0.16" stroke="#534AB7" stroke-width="1"/>
+<text class="ts" x="242.0" y="423.0" text-anchor="middle" style="font-size:9.5px;font-weight:400;fill:#534AB7;paint-order:stroke;stroke:#fff;stroke-width:3px" >seat cushion</text>
+<line x1="89.4" y1="537.6" x2="43.2" y2="537.6" stroke="#A32D2D" stroke-width="2.2" />
+<text class="ts" x="92.2" y="532.6" text-anchor="start" style="font-size:9.5px;font-weight:700;fill:#A32D2D;paint-order:stroke;stroke:#fff;stroke-width:3px" >3 screws #8 x 3</text>
+<line x1="65.2" y1="476.0" x2="65.2" y2="539.0" stroke="#A32D2D" stroke-width="2.2" />
+<text class="ts" x="76.8" y="515.4" text-anchor="start" style="font-size:9.5px;font-weight:700;fill:#A32D2D;paint-order:stroke;stroke:#fff;stroke-width:3px" >4 1/2 in screws, down from the top (lid off)</text>
+<rect x="413.5" y="476.0" width="10.5" height="49.0" fill="#C9A263" fill-opacity="0.6" stroke="#2C2C2A" stroke-width="1.1"/>
+<text class="ts" x="413.5" y="538.0" text-anchor="end" style="font-size:9.5px;font-weight:400;fill:#2C2C2A;paint-order:stroke;stroke:#fff;stroke-width:3px" >front rail</text>
+<line x1="60.0" y1="712.0" x2="81.0" y2="712.0" stroke="#2C2C2A" stroke-width="1.2" marker-start="url(#c4a)" marker-end="url(#c4a)"/>
+<text class="ts" x="71.2" y="724.0" text-anchor="middle" style="font-size:9.5px;font-weight:700;fill:#2C2C2A;paint-order:stroke;stroke:#fff;stroke-width:3px" >1 1/2</text>
+<text class="ts" x="428.0" y="557.2" text-anchor="end" style="font-size:9.5px;font-weight:400;fill:#2C2C2A;paint-order:stroke;stroke:#fff;stroke-width:3px" >west of the cabinet only,</text>
+<text class="ts" x="428.0" y="568.2" text-anchor="end" style="font-size:9.5px;font-weight:400;fill:#2C2C2A;paint-order:stroke;stroke:#fff;stroke-width:3px" >none across the cabinet</text>
+<text class="ts" x="470.0" y="376.0" text-anchor="start" style="font-size:13px;font-weight:700;fill:#2C2C2A;paint-order:stroke;stroke:#fff;stroke-width:3px" >3  From above, driver wall at the top (deck lid off)</text>
+<line x1="463.5" y1="410.0" x2="990.0" y2="410.0" stroke="#2C2C2A" stroke-width="4" />
+<rect x="743.0" y="410.0" width="221.0" height="45.5" fill="#D8B79A" fill-opacity="0.6" stroke="#8A6B4D" stroke-width="1.1"/>
+<rect x="808.0" y="455.5" width="136.5" height="65.0" fill="#F2B84B" fill-opacity="0.35" stroke="#B45309" stroke-width="1.2" stroke-dasharray="4 3"/>
+<rect x="470.0" y="423.0" width="224.2" height="136.5" fill="#7FB08F" fill-opacity="0.2" stroke="#2F5E3F" stroke-width="1.2" stroke-dasharray="4 3"/>
+<text class="ts" x="580.5" y="494.5" text-anchor="middle" style="font-size:9.5px;font-weight:400;fill:#2F5E3F;paint-order:stroke;stroke:#fff;stroke-width:3px" >lawn chairs</text>
+<rect x="721.2" y="410.0" width="4.9" height="169.0" fill="#E3C48F" fill-opacity="0.95" stroke="#2C2C2A" stroke-width="1.2"/>
+<rect x="951.0" y="410.0" width="4.9" height="169.0" fill="#E3C48F" fill-opacity="0.95" stroke="#2C2C2A" stroke-width="1.2"/>
+<rect x="730.3" y="460.4" width="216.4" height="113.8" fill="#E3C48F" fill-opacity="0.5" stroke="#2C2C2A" stroke-width="1.1"/>
+<rect x="470.0" y="410.0" width="481.0" height="4.9" fill="#C9A263" fill-opacity="0.95" stroke="#2C2C2A" stroke-width="1.2"/>
+<rect x="470.0" y="410.0" width="4.9" height="169.0" fill="#C9A263" fill-opacity="0.95" stroke="#2C2C2A" stroke-width="1.2"/>
+<rect x="595.6" y="410.0" width="4.9" height="169.0" fill="#C9A263" fill-opacity="0.95" stroke="#2C2C2A" stroke-width="1.2"/>
+<rect x="470.0" y="574.1" width="251.2" height="4.9" fill="#C9A263" fill-opacity="0.95" stroke="#2C2C2A" stroke-width="1.2"/>
+<rect x="470.0" y="569.2" width="9.8" height="9.8" fill="#B9BCC2" fill-opacity="1" stroke="#2C2C2A" stroke-width="1.4"/>
+<rect x="711.5" y="569.2" width="9.8" height="9.8" fill="#B9BCC2" fill-opacity="1" stroke="#2C2C2A" stroke-width="1.4"/>
+<rect x="479.8" y="410.0" width="19.5" height="9.8" fill="#5A2E0A" fill-opacity="0.95" stroke="#fff" stroke-width="1"/>
+<rect x="590.2" y="410.0" width="19.5" height="9.8" fill="#5A2E0A" fill-opacity="0.95" stroke="#fff" stroke-width="1"/>
+<rect x="726.8" y="410.0" width="19.5" height="9.8" fill="#5A2E0A" fill-opacity="0.95" stroke="#fff" stroke-width="1"/>
+<text class="ts" x="621.6" y="593.0" text-anchor="middle" style="font-size:9.5px;font-weight:700;fill:#2C2C2A;paint-order:stroke;stroke:#fff;stroke-width:3px" >frame: back, end, cross and front rails; 2 posts</text>
+<text class="ts" x="743.0" y="593.0" text-anchor="start" style="font-size:9.5px;font-weight:700;fill:#5A3A00;paint-order:stroke;stroke:#fff;stroke-width:3px" >cabinet panels</text>
+<line x1="470.0" y1="609.0" x2="489.5" y2="609.0" stroke="#5A2E0A" stroke-width="1" marker-start="url(#c4a)" marker-end="url(#c4a)"/>
+<text class="ts" x="493.5" y="613.0" text-anchor="start" style="font-size:9.5px;font-weight:700;fill:#5A2E0A;paint-order:stroke;stroke:#fff;stroke-width:3px" >blocks at 3, 20 (if needed) and 41 in from the back mark</text>
+<g><rect x="-3" y="3" width="38" height="26" rx="13" fill="#2C2C2A"/><text x="16" y="22" text-anchor="middle" style="font-size:15px;font-weight:700;fill:#fff">C5</text></g></svg></div>
+<p>The couch is a separate piece that sits over the gear cabinet (diagram C4) and lifts out in two lifts. <b>The frame</b> has a full-length back rail (74 in, 3/4 x 3 1/2 on edge) that rests on three wall blocks at 3, 20 (if needed) and 41 in from the back mark and is screwed down into them from above; west of the cabinet (0 to 38 5/8 in) a front rail, an end rail and a cross rail make a ladder carried by two posts with screw-out feet, with the lawn chairs between them. Over the cabinet there is no front rail: the deck simply rests on the tops of the two panels, because the units on the shelf are taller than the room under a rail. <b>The deck lid</b> (3/4 in plywood, 74 x 26, with the leaf and cushions of diagrams C, C2 and C3) sits on the frame and on two dowels in each panel top and is screwed to the rails from above. Nothing is fixed to the floor except the cabinet, and nothing is fixed to the cabinet except by its dowels.</p>
+<p><b>Parts</b> (the numbers 1 and 2 on the drawing are the wall blocks and the cabinet panels):</p>
+<table><tr><th>#</th><th>Part</th><th>Material</th><th>Size (in)</th><th>Qty</th><th>Notes</th></tr><tr><td>1</td><td>Back rail</td><td>3/4 x 3 1/2 in hardwood or 3/4 in plywood ripped to 3 1/2</td><td>74 long</td><td>1</td><td>full length, 12 1/2 to 16 in up, against the wall on the wall blocks; over the cabinet it lies behind the shelf (the shelf starts 7 3/4 in out from the wall) and ties the two panel tops together</td></tr><tr><td>2</td><td>Front rail</td><td>3/4 x 3 1/2 in, on edge</td><td>38 5/8 long</td><td>1</td><td>under the deck's front edge from the west end to the west panel; no rail crosses the cabinet (the units are taller than the 1 1/2 in under the deck would leave)</td></tr><tr><td>3</td><td>End rail and cross rail</td><td>3/4 x 3 1/2 in, on edge</td><td>24 1/2 long</td><td>2</td><td>at the west end (x = 0) and in the middle (about 19 3/8 in from the back), between the back and front rails; glue and two #8 x 2 1/2 in screws at each end (or pocket screws)</td></tr><tr><td>4</td><td>Posts</td><td>1 1/2 x 1 1/2 in hardwood</td><td>11 1/2 long</td><td>2</td><td>at the front corners (0 and 37 1/8 in from the back), glued and screwed to the inside of the front rail; each with a T-nut and a 1/4-20 leveling foot that adds about 1 in (so the post and foot reach the floor from the rail underside at 12 1/2 in up) and screws out a little more to level; only two, so the 34 1/2 in lawn chairs still slide in between them</td></tr><tr><td>5</td><td>Wall blocks</td><td>2x4, cut 3 in long, stood on the 3 1/2 in edge</td><td>3 x 1 1/2 x 3 1/2</td><td>3 (the middle one if needed)</td><td>at 3, 20 and 41 in from the back mark (centers), 9 to 12 1/2 in up, so their tops are the rail's underside; #8 x 3 in screws, 3 each, through the block and the planks into the furring strip S2 behind (11 1/4 to 12 3/4 in up); the block at 41 clears the west panel (39 3/8) by 1/8 in</td></tr><tr><td>6</td><td>Rail screws</td><td>1/4 x 4 1/2 in structural screws (or #10 x 4 in)</td><td></td><td>6</td><td>two per block, down through the top edge of the back rail into the block, with 3/16 in pilot holes and the deck lid off; these hold the frame to the wall</td></tr><tr><td>7</td><td>Deck lid</td><td>3/4 in plywood, 74 x 26 (with its leaf and hinge, diagrams C2 and C3)</td><td>74 x 26</td><td>1</td><td>rests on the rails and on the tops of the two panels (a 3/8 in dowel in each panel top fits a hole in the lid's underside); screwed down to the back, front and end rails from above (#8 x 1 1/4 in every 8 in), so the lid and the frame come apart in two lifts</td></tr><tr><td>8</td><td>Dowels</td><td>3/8 x 1 in</td><td></td><td>4</td><td>two in the top of each cabinet panel, glued in, 1/2 in standing proud</td></tr></table>
+<p><b>How to build it, in order:</b></p>
+<ol><li><b>Make the three blocks.</b> Cut a 2x4 into 3 in pieces (a stop block on the saw keeps them identical), check they are square, and seal the faces. The block at 20 in is the one you said "maybe, if needed": cut it, but fit it only if the frame feels springy.</li><li><b>Mark them on the wall.</b> Centers at 3, 20 and 41 in from the back mark, all with the bottom at 9 in up (the top at 12 1/2 in up): draw one level line along the wall, because the back rail rests on all three tops. The strip S2 sits at 11 1/4 to 12 3/4 in up behind the planks, so each block overlaps it by 1 1/4 in; put the screws at about 12 in up.</li><li><b>Screw each block on:</b> a bead of construction adhesive on its back, then three #8 x 3 in screws through the block and the 3/8 in planks into S2 (pilot holes). S2 is glued to the steel only at its attachment dots (15, 30 3/4, 40, 54 in): the block at 41 is next to a dot, the one at 20 is 5 in from one, but the block at 3 is 12 in from the nearest, so add an adhesive pad on solid steel behind it when the strips go up (or move the block to a dot).</li><li><b>Build the frame on the bench:</b> the back rail (74 long), the front rail (38 5/8), the end rail and the cross rail (24 1/2), all 3/4 x 3 1/2 on edge, glued and screwed into a ladder, with the tops flush. Check the diagonal of the west rectangle. Glue and screw the two posts to the front rail's inside face, fit the T-nuts and feet, and screw the feet in so each post and foot is about 12 1/2 in to start.</li><li><b>Lift the frame in:</b> the back rail goes onto the three blocks, the posts on the floor, the east end of the back rail resting against the east panel and the back of the cabinet. Adjust the two feet until the tops of the rails are level (use a level on the front rail and a straightedge from the front rail over the west panel top to the east panel top); the panel tops are at 16 in, and so are the rails.</li><li><b>Screw the rail down</b> to each block, two 1/4 x 4 1/2 in structural screws through its top edge (3/16 in pilot holes, 1 in into the block). Do not fix the frame to the cabinet or the floor: it hangs on the wall and stands on its posts.</li><li><b>Set the deck lid</b> on the frame and on the panel dowels and screw it to the rails from above. Pull the gear shelf out and push it home: it must clear the lid by 1 3/4 in at the face. Then put a person on the front edge of the lid over the cabinet (34 5/8 in unsupported between the panels) before the cushions go on; if it sags, a stiff front beam that lifts out is the fix (the rail that was dropped), because anything fixed under the deck there is in the way of the units.</li><li><b>To take the couch out:</b> cushions and leaf off, the lid's screws out and the lid lifted off (about 45 lb, two people), then the six rail screws, and the frame lifts off the blocks (about 40 lb). Everything else, the cabinet, the shelf and the battery, stays.</li></ol>
+<p><b>Not settled:</b> the deck's front edge over the cabinet (34 5/8 in with nothing under it: test it, and keep the old lift-out rail in mind as the fix), whether the block at 3 in has an S2 attachment dot behind it, the weight of the whole couch (about 85 lb with the cushions is an estimate), and how the rail screws find solid wood in the blocks (use a drill stop and pilot holes).</p>
+
+<div class="gp"><a href="10-gear-cabinet.html">&larr; 10. Gear cabinet</a><a href="12-couch.html">12. Couch bed &rarr;</a></div><script>
+(function () {
+  document.querySelectorAll('svg').forEach(function (svg) {
+    var groups = Array.prototype.slice.call(svg.querySelectorAll('g.tg'));
+    if (!groups.length) return;
+    var wrap = svg.closest('.wide') || svg.parentNode;
+    var bar = document.createElement('div');
+    bar.className = 'tgbar';
+    var hint = document.createElement('p');
+    hint.className = 'hint';
+    hint.textContent = 'Click a part of the drawing to hide it, or use the buttons. A crossed-out button is hidden; click it to bring the part back.';
+    bar.appendChild(hint);
+    var chips = {};
+    function set(g, show) {
+      g.classList.toggle('off', !show);
+      chips[g.dataset.g].setAttribute('aria-pressed', show ? 'true' : 'false');
+    }
+    function mkBtn(text, cls) {
+      var b = document.createElement('button');
+      b.type = 'button'; b.className = cls; b.textContent = text;
+      return b;
+    }
+    var showAll = mkBtn('Show all', 'all'), hideAll = mkBtn('Hide all', 'all');
+    showAll.onclick = function () { groups.forEach(function (g) { set(g, true); }); };
+    hideAll.onclick = function () { groups.forEach(function (g) { set(g, false); }); };
+    bar.appendChild(showAll); bar.appendChild(hideAll);
+    groups.forEach(function (g) {
+      var b = mkBtn(g.dataset.label, 'chip');
+      var colored = g.querySelector('[stroke]:not([stroke="none"])');
+      if (colored) b.style.setProperty('--c', colored.getAttribute('stroke'));
+      b.setAttribute('aria-pressed', 'true');
+      b.onclick = function () { set(g, g.classList.contains('off')); };
+      b.onmouseenter = function () { g.classList.add('hl'); };
+      b.onmouseleave = function () { g.classList.remove('hl'); };
+      chips[g.dataset.g] = b;
+      bar.appendChild(b);
+      g.addEventListener('click', function (e) { e.stopPropagation(); set(g, false); g.classList.remove('hl'); });
+    });
+    wrap.parentNode.insertBefore(bar, wrap);
+  });
+})();
+</script><script>
+/* zoom and pan for the diagrams: + / - / reset buttons in the corner, Ctrl (or Cmd) + scroll, pinch on a touch screen, drag to move once zoomed */
+(function () {
+  var CSS = '.zvp{position:relative;overflow:hidden}.zvp>svg{transform-origin:0 0}.zvp.zoomed{cursor:grab;touch-action:none}.zvp.zdrag{cursor:grabbing}' +
+    '.zbar{position:absolute;top:6px;right:6px;z-index:5;display:flex;gap:4px}' +
+    '.zbar button{font:inherit;font-size:15px;line-height:1;min-width:30px;height:30px;padding:0 9px;border:1px solid #B4B2A9;border-radius:6px;background:rgba(255,255,255,.93);color:#2C2C2A;cursor:pointer}' +
+    '.zbar button:hover{border-color:#2C2C2A}.zbar button[disabled]{opacity:.4;cursor:default}';
+  var st = document.createElement('style'); st.textContent = CSS; document.head.appendChild(st);
+  var MAX = 8;
+  function make(svg) {
+    if (svg.__zoom || !svg.parentNode) return;
+    var vp = document.createElement('div'); vp.className = 'zvp';
+    svg.parentNode.insertBefore(vp, svg); vp.appendChild(svg);
+    var k = 1, x = 0, y = 0, ptrs = {}, last = null, dragged = false, down = null;
+    var bar = document.createElement('div'); bar.className = 'zbar';
+    function btn(t, label, f) { var b = document.createElement('button'); b.type = 'button'; b.textContent = t; b.title = label; b.setAttribute('aria-label', label); b.onclick = function (e) { e.stopPropagation(); f(); }; bar.appendChild(b); return b; }
+    var bIn = btn('+', 'Zoom in', function () { zoomAt(vp.clientWidth / 2, vp.clientHeight / 2, 1.5); });
+    var bOut = btn('−', 'Zoom out', function () { zoomAt(vp.clientWidth / 2, vp.clientHeight / 2, 1 / 1.5); });
+    var bReset = btn('Reset', 'Reset the zoom', reset);
+    vp.appendChild(bar);
+    function apply() {
+      var cs = getComputedStyle(svg), sw = parseFloat(cs.width) || vp.clientWidth, sh = parseFloat(cs.height) || vp.clientHeight;
+      x = Math.max(Math.min(0, vp.clientWidth - sw * k), Math.min(0, x));
+      y = Math.max(Math.min(0, vp.clientHeight - sh * k), Math.min(0, y));
+      if (k <= 1.001) { k = 1; x = 0; y = 0; }
+      svg.style.transform = k === 1 ? '' : 'translate(' + x + 'px,' + y + 'px) scale(' + k + ')';
+      vp.classList.toggle('zoomed', k > 1);
+      if (k > 1) vp.scrollLeft = 0;
+      bIn.disabled = k >= MAX - .01; bOut.disabled = bReset.disabled = k === 1;
+    }
+    function zoomAt(cx, cy, f) {
+      var nk = Math.min(MAX, Math.max(1, k * f)); f = nk / k;
+      x = cx - (cx - x) * f; y = cy - (cy - y) * f; k = nk; apply();
+    }
+    function reset() { k = 1; x = 0; y = 0; apply(); }
+    svg.__zoom = true; svg.__zoomReset = reset;
+    vp.addEventListener('wheel', function (e) {
+      if (!(e.ctrlKey || e.metaKey)) return;
+      e.preventDefault();
+      var r = vp.getBoundingClientRect();
+      zoomAt(e.clientX - r.left, e.clientY - r.top, Math.exp(-e.deltaY * (e.deltaMode === 1 ? .05 : .0025)));
+    }, { passive: false });
+    function dist() { var a = Object.keys(ptrs).map(function (i) { return ptrs[i]; }); return Math.hypot(a[0].x - a[1].x, a[0].y - a[1].y); }
+    function mid() { var a = Object.keys(ptrs).map(function (i) { return ptrs[i]; }); return { x: (a[0].x + a[1].x) / 2, y: (a[0].y + a[1].y) / 2 }; }
+    var listening = false;
+    function mv(ev) {
+      var p = ptrs[ev.pointerId]; if (!p) return;
+      var n = Object.keys(ptrs).length, r = vp.getBoundingClientRect();
+      if (n === 2 && last) {
+        p.x = ev.clientX; p.y = ev.clientY;
+        var d = dist(), m = mid();
+        x += m.x - last.m.x; y += m.y - last.m.y;
+        zoomAt(m.x - r.left, m.y - r.top, d / last.d); last = { d: d, m: m }; dragged = true;
+      } else if (n === 1 && k > 1) {
+        if (Math.hypot(ev.clientX - down.x, ev.clientY - down.y) > 4) { dragged = true; vp.classList.add('zdrag'); }
+        if (dragged) { x += ev.clientX - p.x; y += ev.clientY - p.y; apply(); }
+        p.x = ev.clientX; p.y = ev.clientY;
+      } else { p.x = ev.clientX; p.y = ev.clientY; }
+    }
+    function up(ev) {
+      delete ptrs[ev.pointerId]; last = null; vp.classList.remove('zdrag');
+      if (!Object.keys(ptrs).length) { listening = false; window.removeEventListener('pointermove', mv); window.removeEventListener('pointerup', up); window.removeEventListener('pointercancel', up); }
+    }
+    vp.addEventListener('pointerdown', function (e) {
+      if (e.target.closest('.zbar') || e.target.closest('[data-drag]')) return;
+      if (!Object.keys(ptrs).length) dragged = false;
+      ptrs[e.pointerId] = { x: e.clientX, y: e.clientY }; down = { x: e.clientX, y: e.clientY };
+      last = Object.keys(ptrs).length === 2 ? { d: dist(), m: mid() } : null;
+      if (!listening) { listening = true; window.addEventListener('pointermove', mv); window.addEventListener('pointerup', up); window.addEventListener('pointercancel', up); }
+    });
+    // a drag is not a click: keep it from toggling or opening whatever is under the pointer
+    vp.addEventListener('click', function (e) { if (dragged) { e.stopPropagation(); e.preventDefault(); dragged = false; } }, true);
+    window.addEventListener('resize', apply);
+  }
+  window.makeZoomable = make;
+  window.zoomAll = function () { document.querySelectorAll('svg[role="img"]').forEach(make); };
+})();
+zoomAll();
+</script></body></html>

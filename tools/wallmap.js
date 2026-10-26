@@ -15,7 +15,7 @@ const CAT = [
   [/couch|cushion|bench|dinette|fold-out|foot ledge/i, 'c2'],
   [/tank|jug|drain|paper towel|trash/i, 'c3'],
   [/fridge|microwave|\btv\b|nook|jar/i, 'c4'],
-  [/wheel well|battery|inverter|charger|sliding door|wet bath|hook|lawn chair|side window/i, 'c5'],
+  [/wheel well|battery|inverter|charger|sliding door|wet bath|hook|lawn chair|side window|gear cabinet|gear shelf/i, 'c5'],
 ];
 const colorOf = n => (CAT.find(c => c[0].test(n)) || [,'c6'])[1];
 
@@ -26,7 +26,7 @@ async function grab(page, side) {
     const add = (name, x0, x1, z0, z1, dims, zv) => items.push({ name, dims: dims || '', x0: f(x0), x1: f(x1), z0: f(z0), z1: f(z1), zv: zv == null ? null : f(zv) });
     const F = fmt;
     if (side === 'driver') {
-      add('Couch base', 0, P.bedLen, 0, P.platform, `${F(P.bedLen)} long x ${F(P.bedD)} deep`);
+      add('Couch frame and deck (removable)', 0, P.bedLen, 0, P.platform, `${F(P.bedLen)} long x ${F(P.bedD)} deep; rails ${F(P.platform - 1.5 - 3.5)} to ${F(P.platform - 1.5)} up, deck ${F(P.platform - 1.5)} to ${F(P.platform - .75)}; it lifts out (see the wall blocks and the gear cabinet)`);
       add('Seat cushion', 0, P.bedLen, P.platform, P.platform + P.mattress, `top at ${F(P.platform + P.mattress)}`);
       add('Back cushion, upright', 0, P.bedLen, P.platform + P.mattress, P.platform + P.mattress + P.bedBack, `${F(P.bedBack)} tall`);
       add('Wheel well', 42, 76, 0, 7.5, 'sticks out 7 in');
@@ -35,6 +35,11 @@ async function grab(page, side) {
         const sh = L.gear.sh;
         add('Gear shelf (pull-out, over the battery)', sh.x0, sh.x1, sh.z0, sh.z1, `${F(sh.x1 - sh.x0)} x ${F(sh.y1 - sh.y0)} in with its rails, ${F(sh.z0)} up (1 in over the battery top), ${F(sh.y0)} to ${F(sh.y1)} out from the wall, on two ${F(P.shPull)} in slides: one on the closet end panel, one on a divider at ${F(sh.div)} to ${F(sh.div + .75)}`);
         [['Inverter, BELTTT 2000 W', L.gear.inv], ['DC-DC charger, LiTime 60 A', L.gear.dc], ['Shore charger, VEVOR 80 A', L.gear.ch]].forEach(r => add(r[0], r[1].x0, r[1].x1, r[1].z0, r[1].z1, `${F(r[1].x1 - r[1].x0)} x ${F(r[1].y1 - r[1].y0)} x ${F(r[1].z1 - r[1].z0)}, on the gear shelf (${F(r[1].z0)} up), ${F(r[1].y0)} to ${F(r[1].y1)} out from the wall`));
+      }
+      if (L.gcab) {
+        const c = L.gcab;
+        add('Gear cabinet (floor-mounted, two side panels)', c.x0, c.x1 + .75, 0, c.z1, `3/4 in plywood panels at ${F(c.x0)} and ${F(c.x1)} in from the back, ${F(c.y1)} deep, floor to the deck (${F(c.z1)} up); the gear shelf is its sliding top, the battery stays on the floor under it; each panel stands on a floor cleat`);
+        L.cblk.forEach(b => add('Couch wall block at ' + F(b.x), b.x0, b.x1, b.z0, b.z1, `${F(b.x1 - b.x0)} wide x ${F(b.y1)} out x ${F(b.z1 - b.z0)} tall, ${F(b.z0)} to ${F(b.z1)} up, centered ${F(b.x)} in from the back; screw it through the planks into the furring strip S2; the couch frame's back rail rests on it${b.x === P.blkB ? ' (if needed)' : ''}`));
       }
       if (L.chairs) add('Lawn chairs, folded flat', L.chairs.x0, L.chairs.x1, L.chairs.z0, L.chairs.z1, `${P.chairN} stacked`);
       if (P.closetOn) {

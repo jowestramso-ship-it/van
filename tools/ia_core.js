@@ -19,6 +19,8 @@ const PD = [
   { k: 'snItemsOn', g: 'Take items out', l: 'Towel bar, toilet paper and bottles in the shower nook', d: true, t: 'c' },
   { k: 'winOn', g: 'Take items out', l: 'Side window over the dinette (Van Windows Direct TL201-SE, driver side forward slider)', d: true, t: 'c' },
   { k: 'gearOn', g: 'Take items out', l: 'Charging gear on a pull-out shelf over the battery under the couch: the BELTTT inverter, the LiTime DC-DC charger and the VEVOR shore charger', d: true, t: 'c' },
+  { k: 'gcabOn', g: 'Take items out', l: 'Gear cabinet under the east end of the couch (floor-mounted, two side panels, the shelf is its sliding top) and the removable couch frame with its wall blocks', d: true, t: 'c' },
+  { k: 'blkBOn', g: 'Take items out', l: 'The middle wall block for the couch frame (20 in; you said "maybe, if needed")', d: true, t: 'c' },
   { k: 'wallsOn', g: 'Take items out', l: 'Floor-to-ceiling walls: behind the dinette backs (at the closet end and behind the driver seat) and one on each side of the fridge', d: true, t: 'c' },
   { k: 'bedLen', g: 'Bed / couch', l: 'Length', d: 74, s: .5, a: 40, b: 120 },
   { k: 'bedD', g: 'Bed / couch', l: 'Depth, closed (the couch on its base)', d: 26, s: .5, a: 15, b: 40 },
@@ -55,6 +57,9 @@ const PD = [
   { k: 'winGH', g: 'Side window', l: 'Window glass, overall: height (29.12)', d: 29.12, s: .05, a: 20, b: 40 },
   { k: 'winOL', g: 'Side window', l: 'Glass edge to cutout: the glass starts this far left of the cutout (9 11/16)', d: 9.6875, s: .0625, a: 0, b: 20 },
   { k: 'winOB', g: 'Side window', l: 'Glass edge to cutout: the glass starts this far below the cutout (2 3/4)', d: 2.75, s: .125, a: 0, b: 8 },
+  { k: 'blkA', g: 'Couch frame blocks', l: 'Wall block at the back end: its center, along the wall from the back mark (you said 3)', d: 3, s: .25, a: 1.5, b: 70 },
+  { k: 'blkB', g: 'Couch frame blocks', l: 'Wall block in the middle (you said 20, if needed)', d: 20, s: .25, a: 1.5, b: 70 },
+  { k: 'blkC', g: 'Couch frame blocks', l: 'Wall block at the cabinet end (you said 41)', d: 41, s: .25, a: 1.5, b: 70 },
   { k: 'shPull', g: 'Charging gear', l: 'Gear shelf: how far it pulls out (18 in full-extension slides; the shelf is 17 1/2 deep)', d: 18, s: 1, a: 10, b: 40 },
   { k: 'fwT', g: 'Floor-to-ceiling walls', l: 'Wall thickness (the walls are inside the closet, the shower and the counter cabinet, so nothing else moves)', d: .75, s: .125, a: .25, b: 3 },
   { k: 'benchLen', g: 'Dinette', l: 'Bench length', d: 19.5, s: .5, a: 10, b: 40 },
@@ -165,9 +170,9 @@ const PD = [
   { k: 'leanW2', g: 'Walls', l: 'Lean: inside width at that height', d: 64, s: .25, a: 40, b: 80 },
   { k: 'roofWallH', g: 'Walls', l: 'Roof: height from the floor to the rib along the wall', d: 75.5, s: .25, a: 60, b: 90 },
   { k: 'roofMidH', g: 'Walls', l: 'Roof: height from the floor to the rib in the middle', d: 80, s: .25, a: 60, b: 95 },
-  { k: 'wallOn', g: 'Walls', l: 'Cover the walls (birch plywood on the furring)', d: true, t: 'c' },
+  { k: 'wallOn', g: 'Walls', l: 'Cover the walls (3/8 in birch plywood on the furring)', d: true, t: 'c' },
   { k: 'wallSub', g: 'Walls', l: 'Take the covering thickness off the inside width (leave off if the width was measured to the covered wall)', d: false, t: 'c' },
-  { k: 'wallT', g: 'Walls', l: 'Covering thickness', d: .125, s: .125, a: .125, b: .75 },
+  { k: 'wallT', g: 'Walls', l: 'Covering thickness (3/8 in plywood, you said; it was 1/8)', d: .375, s: .125, a: .125, b: .75 },
   { k: 'wallDens', g: 'Walls', l: 'Wood density (lb per cu ft; birch about 41, cedar about 23)', d: 41, s: 1, a: 15, b: 60 },
   { k: 'sheetW', g: 'Walls', l: 'Sheet width (runs floor to ceiling)', d: 48, s: 1, a: 12, b: 60 },
   { k: 'sheetH', g: 'Walls', l: 'Sheet height', d: 96, s: 1, a: 24, b: 120 },
@@ -296,7 +301,7 @@ const HITR = (x, y, w, h) => `<rect x="${f1(x)}" y="${f1(y)}" width="${f1(Math.m
 const GB = (id, label) => `<g class="hg" data-grp="${id}" data-label="${label}">`;
 const GE = () => '</g>';
 // items that were taken out (their tick box in Sizes is off): cut their groups and drag handles out of a finished drawing
-const REMOVED = () => [['showerOn', 'shower'], ['microOn', 'Micro'], ['tvOn', 'tv'], ['towelOn', 'towels'], ['fridgeOn', 'fridge'], ['drawersOn', 'drawers'], ['battOn', 'batt'], ['closetOn', 'closet'], ['wallsOn', 'fwalls'], ['toiletOn', 'toilet'], ['snItemsOn', 'snitems'], ['gearOn', 'gear'], ['winOn', 'win']].filter(r => !P[r[0]]).map(r => r[1]);
+const REMOVED = () => [['showerOn', 'shower'], ['microOn', 'Micro'], ['tvOn', 'tv'], ['towelOn', 'towels'], ['fridgeOn', 'fridge'], ['drawersOn', 'drawers'], ['battOn', 'batt'], ['closetOn', 'closet'], ['wallsOn', 'fwalls'], ['toiletOn', 'toilet'], ['snItemsOn', 'snitems'], ['gearOn', 'gear'], ['gcabOn', 'gcab'], ['winOn', 'win']].filter(r => !P[r[0]]).map(r => r[1]);
 function stripGroups(html, ids) {
   ids.forEach(id => {
     const open = `<g class="hg" data-grp="${id}"`;
@@ -493,7 +498,13 @@ function layout(P0) {
     const inv = { x0: dc.x1 + .5, x1: dc.x1 + .5 + P.invL, y0: ty0 + .75, y1: ty0 + .75 + P.invW, z0: sz1, z1: sz1 + P.invH, n: 'the inverter', id: 'G1' };
     const ch = { x0: dc.x0, x1: dc.x0 + P.chL, y0: ty0 + .75 + dd + .5, y1: ty0 + .75 + dd + .5 + P.chW, z0: sz1, z1: sz1 + P.chH, n: 'the shore charger', id: 'G3' };
     const sh = { x0: sx0, x1: sx1, y0: ty0, y1: hy, z0: sz0, z1: sz1, div: sx0 - .65 - .75 };
-    L.gear = P.gearOn ? { inv, dc, ch, sh, hatchY: hy } : null; }
+    L.gear = P.gearOn ? { inv, dc, ch, sh, hatchY: hy } : null;
+    // the gear cabinet: two 3/4 in plywood side panels standing on the floor, as deep as the couch (the west one is the shelf's slide divider, the east one the closet's end panel), from the floor to the underside of the deck.
+    // The couch is a separate removable frame: a 3/4 x 3 1/2 in back rail hung on wooden blocks screwed to the wall (blkA, blkB, blkC along the wall: a 3 in cut of 2x4 stood on its 3 1/2 in edge, 3 wide x 1 1/2 out x 3 1/2 tall, tops at the rail's underside), a front rail and posts west of the cabinet, and the deck resting on the cabinet's panels.
+    const du = P.platform - 1.5, bz1 = du - 3.5, bz0 = bz1 - 3.5;
+    L.gcab = P.gcabOn ? { x0: sx0 - .65 - .75, x1: L.c0, y1: P.bedD, z1: du } : null;
+    L.cblk = P.gcabOn ? [[P.blkA, 1], [P.blkB, P.blkBOn ? 1 : 0], [P.blkC, 1]].filter(b => b[1]).map(b => ({ x: b[0], x0: b[0] - 1.5, x1: b[0] + 1.5, y0: 0, y1: 1.5, z0: bz0, z1: bz1 })) : [];
+    L.cmod = P.gcabOn ? { du, rz0: bz1, west: sx0 - .65 - .75, posts: [0, sx0 - .65 - .75 - 1.5] } : null; }
   // the side window over the dinette: the cutout (the slider frame's outline, what goes through the steel) and the glass (outside, glued over the stamping)
   { const cx0 = P.winX, cx1 = cx0 + P.winCW, cz0 = P.winZ, cz1 = cz0 + P.winCH, gx0 = cx0 - P.winOL, gz0 = cz0 - P.winOB;
     L.win = P.winOn ? { cx0, cx1, cz0, cz1, gx0, gx1: gx0 + P.winGW, gz0, gz1: gz0 + P.winGH, div: gx0 + 28.625 } : null; }

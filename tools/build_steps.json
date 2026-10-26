@@ -27,7 +27,7 @@
  {
   "id": "floor",
   "title": "Lay the subfloor",
-  "body": "Everything else stands on it: the bed and couch base, the counter, the tanks and the battery."
+  "body": "Everything else stands on it: the gear cabinet, the couch frame, the counter, the tanks and the battery."
  },
  {
   "id": "furring",
@@ -37,12 +37,12 @@
  {
   "id": "cover",
   "title": "Cover the ceiling, then the walls",
-  "body": "Ceiling: 3 sheets of 3/16 in plywood and 15 cedar slats 3 x 3/4 in, the lights on the slats. Walls: 1/8 in birch plywood standing floor to ceiling, joints at 42, 90 and 138 in. Seal both faces and finish before hanging (clear water-based finish or hardwax oil), glue to every strip, a screw with a finish washer about every 8 in, 1/16 in between sheets."
+  "body": "Ceiling: 3 sheets of 3/16 in plywood and 15 cedar slats 3 x 3/4 in, the lights on the slats. Walls: 3/8 in birch plywood standing floor to ceiling, joints at 42, 90 and 138 in. Seal both faces and finish before hanging (clear water-based finish or hardwax oil), glue to every strip, a screw with a finish washer about every 8 in, 1/16 in between sheets; then cover the corners and the cut edges with trim and edge banding (the Walls page of the build guide)."
  },
  {
   "id": "heavy",
   "title": "Build the heavy low things first",
-  "body": "The battery (21 x 10 in, 52 to 73 in from the back), the hot water tank (87 1/4 to 101 1/4 in) and the fresh water tank (87 1/4 to 122 1/4 in), then the couch base, the counter and the drawers under it."
+  "body": "The battery (21 x 10 in, 52 to 73 in from the back), the hot water tank (87 1/4 to 101 1/4 in) and the fresh water tank (87 1/4 to 122 1/4 in), then the gear cabinet (two floor-mounted panels, the shelf as its sliding top), the removable couch frame on its wall blocks and the deck lid, the counter and the drawers under it."
  },
  {
   "id": "cabinets",

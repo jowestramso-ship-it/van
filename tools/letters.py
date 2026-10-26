@@ -16,8 +16,8 @@ for _a,_b in [('<h3>Driver side wall: depth color map and furring layout</h3>','
  ('<h3>Driver side: bed and couch, side section</h3>','<h3>C. Driver side: bed and couch, side section</h3>'),
  ('<h3>Driver side: the bed with a hinged leaf, day and night</h3>','<h3>C2. Driver side: the bed with a hinged leaf, day and night</h3>'),
  ('<h3>Driver side: building the leaf, slots and legs</h3>','<h3>C3. Driver side: building the leaf, slots and legs</h3>'),
- ('<h3>Driver side: the gear shelf over the battery, how to make it</h3>','<h3>C4. Driver side: the gear shelf over the battery, how to make it</h3>'),
- ('<h3>Driver side: the lift-out front rail, how to make it</h3>','<h3>C5. Driver side: the lift-out front rail, how to make it</h3>'),
+ ('<h3>Driver side: the gear cabinet and its sliding shelf, how to make it</h3>','<h3>C4. Driver side: the gear cabinet and its sliding shelf, how to make it</h3>'),
+ ('<h3>Driver side: the removable couch (frame, wall blocks and deck lid), how to make it</h3>','<h3>C5. Driver side: the removable couch (frame, wall blocks and deck lid), how to make it</h3>'),
  ('<h3>Passenger side wall: depth color map','<h3>D. Passenger side wall: depth color map'),
  ('<h3>Passenger side: built items</h3>','<h3>E. Passenger side: built items</h3>'),
  ('<h2>3. Looking down into the van, both sides</h2>','<h2>3. Looking down into the van, both sides (diagram F)</h2>')]:

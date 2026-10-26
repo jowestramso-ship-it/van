@@ -137,6 +137,16 @@ function drawPlan(L, V) {
     o.push(MV('gear_sh', gg, HITR(xx(sh.x0), yy(sh.y1 + off + .75), S * (sh.x1 - sh.x0), S * (sh.y1 - sh.y0 + .75))));
     o.push(GE());
   }
+  if (L.gcab) {
+    const c = L.gcab, m = L.cmod, W = .75;
+    o.push(GB('gcab', 'Gear cabinet, couch frame and wall blocks'));
+    o.push(it(c.x0, c.x0 + W, 0, c.y1, '#8A6B4D', '', null, { fo: .85 }));
+    o.push(it(c.x1, c.x1 + W, 0, c.y1, '#8A6B4D', '', null, { fo: .85 }));
+    m.posts.forEach(px => o.push(it(px, px + 1.5, c.y1 - 1.5, c.y1, COL.G, '', null, { fo: .85 })));
+    L.cblk.forEach(b => o.push(it(b.x0, b.x1, b.y0, b.y1, '#5A2E0A', '', null, { fo: .85 })));
+    o.push(T(xx(c.x0 - .6), yy(c.y1 + 2.6), 'gear cabinet panels, posts, wall blocks', { anchor: 'end', size: 9, fill: '#5A3A00' }));
+    o.push(GE());
+  }
   if (L.chairs) {
     // the lawn chairs stacked flat on the floor under the couch (the outline shows the footprint)
     const c = L.chairs, cc = L.coll.ids.has('Chairs') ? '#A32D2D' : '#2F5E3F';

@@ -37,6 +37,21 @@ def _md(text):
     return '\n'.join(out)
 
 
+WALL_TRIM = '''<h3>Covering the corners and the edges of 3/8 in plywood</h3>
+<p>The 3/8 in plywood shows its layers on every cut edge, and the van flexes and the wood moves with the weather, so the rule is: <b>hide the edges behind wood trim or banding, leave a 1/16 to 1/8 in gap that the trim covers, and never fill a corner with hard filler or tight caulk that will crack.</b> Fix the trim with wood glue and 1 in (18 gauge) brads or #6 x 1 in finish-washer screws; the 3/8 in sheet itself is glued to every strip and screwed (#6 x 1 in) with a finish washer about every 8 in. Finish every trim piece on all faces before it goes on (the same clear water-based finish or hardwax oil as the sheets).</p>
+<div class="wide"><table class="rt"><tr><th>Where it is in this van</th><th>What to use</th><th>How</th></tr>
+<tr><td><b>Sheet joints</b> (driver side at 42, 90 and 138 in from the back; the passenger side the same way)</td><td>Nothing, or a 1/4 x 1 1/2 in batten</td><td>Leave the 1/16 in gap and ease both edges with a 1/16 in chamfer (a block plane or a chamfer bit), so each joint reads as a clean V line like a plank wall; to hide the joints instead, glue a 1/4 x 1 1/2 in hardwood batten over each, centered on the gap.</td></tr>
+<tr><td><b>Inside corners</b>, where a sheet meets a floor-to-ceiling wall (W1 to W4), the rear door frame and the cab end</td><td>A 3/4 x 3/4 in hardwood corner strip (or a 1/2 in cove), or a color-matched flexible sealant line</td><td>Stop the sheet 1/16 in short of the corner and glue the strip into the corner, pinned to the wall it butts; the van flexes, so use flexible sealant (polyurethane or MS polymer), not hard filler, if you would rather have no strip.</td></tr>
+<tr><td><b>Outside corners</b>: the wheel well box, the ends of the closet, shower and counter walls, the nook edges</td><td>A solid hardwood corner: a 3/4 x 3/4 in L, or a 1 1/2 x 1 1/2 in square post, with the exposed edges rounded 1/8 in</td><td>Let one sheet run past, cover its end edge with the corner piece, glue and pin it; rounding the edges stops the finish chipping and the corner catching clothes.</td></tr>
+<tr><td><b>Plywood edges that stay in view</b> (the sliding door opening, shelf and nook edges, the top of the half walls)</td><td>1/2 in iron-on birch veneer tape for 3/8 in plywood, or a 1/4 x 1/2 in solid strip</td><td>Iron on the tape (a household iron on cotton, firm pressure), trim it flush with an edge trimmer or a sharp chisel, sand with 220 grit and finish. A solid strip is glued and clamped; it is stronger where a hand rubs.</td></tr>
+<tr><td><b>The side window</b> (driver side, the cutout is framed with J1 to J4 behind the sheet)</td><td>1/4 in plywood or hardwood strips for the reveal, and a 3/4 x 1 1/2 in picture-frame trim around it</td><td>Line the four faces of the reveal (the inside of the J frame, about 3 5/8 in deep), then mitre the trim in a picture frame over the sheet's cut edge; leave a 1/8 in gap to the window frame and seal it with sealant that is paintable or color matched.</td></tr>
+<tr><td><b>The top edge at the ceiling</b> (both walls; the ceiling slats stop 1 1/2 in from the walls)</td><td>A 3/4 x 1 1/2 in hardwood trim strip, with the soft LED strip in a small aluminum channel behind its lower edge</td><td>The walls lean in about 5 degrees above 41 5/16 in, so rip the trim's back edge to that angle (or use a flexible 3/4 in cove); fix it to the ceiling blocking, not to the sheet, and let it cover the sheet's top edge and the gap.</td></tr>
+<tr><td><b>The bottom edge at the floor</b></td><td>A 3/4 in quarter round or a 1/2 x 2 in baseboard</td><td>Keep the sheet 1/4 in off the floor so it never wicks water, and fix the trim to the wall, not the floor, so the floor can move under it.</td></tr>
+<tr><td><b>Cabinet backs</b> (the wall cabinets, the couch, the dinette)</td><td>A scribed back or a 1/4 round</td><td>The sheet is vertical but the wall leans above 41 5/16 in, so scribe the cabinet back to the wall or fill the wedge with a strip, as the Wall cabinets page says.</td></tr>
+</table></div>
+<p>The wall sheet is now 3/8 in thick (it was 1/8), so each sheet weighs about three times as much (about 180 lb for both walls instead of about 60) and the finished wall stands 1/4 in further into the van, so the width between the finished walls is 1/2 in less unless the strip line is pulled back 1/4 in. Check the length of every screw: #6 x 1 in goes through the 3/8 in sheet and 5/8 in into the 3/4 in strip.</p>'''
+
+
 def pages(root):
     FD = {}
     exec(_read(os.path.join(root, 'tools', 'shelfdata.py')), FD); exec(_read(os.path.join(root, 'tools', 'furring.py')), FD)   # the window's place and the furring counts
@@ -84,7 +99,7 @@ def pages(root):
                '<b>Re-measure what the plan still marks as an estimate:</b> the cab-end numbers (the wheel well\'s front, the end of pan P11 and the cab wall itself can each be 2 to 4 in off), the depth of the driver wall at 41 to 56 in up (not measured), the width of the flat part of the roof (assumed 68 in), and the real sizes of the units you own: the battery, the LiTime and VEVOR chargers, the BELTTT inverter and its lugs, and the slides you buy.',
                '<b>Settle the electrics the other steps depend on:</b> the battery (280 Ah lithium is assumed), the inverter and its transfer switch (the BELTTT has none, so a 30 A transfer switch is needed), where the starter-battery cable leaves the cab, and where the grey water tank goes (not set yet).',
                '<b>Open the interactive plan and read "Does it fit?".</b> Anything red or amber is a decision to make before building; for example, seated headroom under the wall cabinets is 1 1/2 in with the 5 in cushions.',
-               '<b>Buy the long-lead parts first:</b> the fan and the air conditioner, the side window, the 18 in full-extension slides (75 lb or more), the steel tube for the lift-out rail, and the 2/0 and 2 AWG cable (the electrical page lists how much).'],
+               '<b>Buy the long-lead parts first:</b> the fan and the air conditioner, the side window, the 18 in full-extension slides (75 lb or more), the 3/4 plywood and hardwood for the cabinet and the couch frame, and the 2/0 and 2 AWG cable (the electrical page lists how much).'],
         blocks=[]))
     P.append(dict(slug='fan-ac', nav='Fan and A/C', title='Roof fan and air conditioner', ext='install.html',
         kick='Cut the roof first: it is dirty, and everything under it is still open.', desc='Step by step with drawings: cutting, framing and mounting the roof fan and the air conditioner.', intro='', steps=[], blocks=[]))
@@ -106,7 +121,7 @@ def pages(root):
         kick='After the roof and the window are cut and the wiring is in, before anything covers the walls.',
         intro=f'<p>{H.escape(body("insulate"))}</p><p>{H.escape(body("floor"))}</p><p class="sug">The plan does not choose the insulation material or the subfloor thickness yet, so there are no numbers for them here; the plan only fixes the depths and the order.</p>',
         steps=['<b>Insulate between the ribs and in the walls,</b> keeping the insulation clear of the opening frames and the wiring, and not past the ceiling plane.',
-               '<b>Lay the subfloor.</b> Everything else stands on it: the couch base, the counter, the tanks and the battery. Check it is flat before the heavy things go on.'],
+               '<b>Lay the subfloor.</b> Everything else stands on it: the gear cabinet, the couch frame, the counter, the tanks and the battery. Check it is flat before the heavy things go on.'],
         blocks=[]))
     P.append(dict(slug='furring', nav='Furring strips', title='Furring strips, spacer blocks and shims',
         kick='Eight strips on each wall, so every plank is held at least every 14 in.',
@@ -135,31 +150,31 @@ def pages(root):
         intro=f'<p>{H.escape("Walls: " + body("cover").split("Walls:")[1].strip()) if "Walls:" in body("cover") else ""}</p>' + table(['Floor-to-ceiling wall']),
         steps=['<b>Seal and finish both faces of every sheet first</b> (a clear water-based finish or hardwax oil), before you hang it.',
                '<b>Hang the sheets floor to ceiling,</b> glued to every strip, with a screw and a finish washer about every 8 in and 1/16 in between sheets; the joints fall at 42, 90 and 138 in.',
-               '<b>Stand the four 3/4 in floor-to-ceiling walls</b> (W1 closet end, W2 behind the driver seat, W3 shower and fridge, W4 fridge and counter) on the finished floor and fix them to the framing; the dinette backs lean on W1 and W2.'],
-        blocks=[]))
-    P.append(dict(slug='heavy', nav='Battery and tanks', title='The heavy low things: battery, tanks, couch base',
+               '<b>Stand the four 3/4 in floor-to-ceiling walls</b> (W1 closet end, W2 behind the driver seat, W3 shower and fridge, W4 fridge and counter) on the finished floor and fix them to the framing; the dinette backs lean on W1 and W2.',
+               '<b>Then cover the corners and edges</b> (the table below): after the sheets are up and before the cabinets, so the cabinets and the trim meet cleanly.'],
+        blocks=[WALL_TRIM]))
+    P.append(dict(slug='heavy', nav='Battery and tanks', title='The heavy low things: battery and tanks',
         kick='Heavy things go in before the cabinets that would block the way.',
         intro=f'<p>{H.escape(body("heavy"))}</p>' + table(['^Battery$', 'Wheel well', 'Fresh water tank', 'Hot water tank', 'Grey water tank']),
-        steps=['<b>Battery</b> on the floor next to the driver-side wheel well, on its aisle side, 1 in from the closet (52 to 73 in from the back), with room over it for the gear shelf (the battery top at 9 1/2 in).',
+        steps=['<b>Battery</b> on the floor next to the driver-side wheel well, on its aisle side, 1 in from the closet (52 to 73 in from the back), with room over it for the gear shelf (the battery top at 9 1/2 in); the two side panels of the gear cabinet stand on the floor either side of it.',
                '<b>The hot water tank and the fresh water tank</b> on the floor at their places on the passenger side (see the table), before the counter and the sink cabinet go up.',
-               '<b>Then the couch base</b> (next page), then the gear shelf and the lift-out rail, then the counter and the drawers.'],
+               '<b>Then the gear cabinet</b> (next page), then the couch frame that sits on it, then the couch bed and cushions, then the counter and the drawers.'],
         blocks=[]))
-    P.append(dict(slug='couch', nav='Couch and bed', title='Couch, deck and the bed leaf',
-        kick='After the battery is in; the shelf goes into this frame.',
-        intro='<p>The couch is 74 x 26 in and sits on a base 3 1/2 in higher than the old plan, so the gear shelf fits over the battery. The front under the deck is open (nothing covers it). The bed makes up with a hinged leaf and four fold-down legs.</p>' + table(['Bed / couch', 'Wheel well']),
-        steps=['<b>Build the base:</b> two end panels (the one next to the closet is 26 in deep), a ledger on the wall and a front rail, so the deck is 16 to 16 3/4 in up. Add the slide divider at 38 5/8 in (next page) while the frame is open.',
-               '<b>Leave the front under the deck open:</b> only the front rail carries the deck edge (a steel tube lifts out across the gear shelf opening).',
-               '<b>Deck:</b> 3/4 in plywood, 74 x 26 in. <b>Leaf:</b> 3/4 in birch plywood, 20 x 73 3/4 in, a plain slab; hinge it with a 74 in continuous hinge on the top faces (#8 x 5/8 in screws every 3 to 4 in, a 1/8 to 3/16 in gap).',
+    P.append(dict(slug='gear-cabinet', nav='Gear cabinet', title='The gear cabinet and its sliding shelf',
+        kick='Floor-mounted, after the battery is in; the couch frame rests on it afterwards.',
+        intro='<p>You asked for a cabinet for the battery and the three units, fixed to the floor, with the top part sliding out. It is two plywood side panels on the floor and the gear shelf as the sliding top; the front below the shelf stays open.</p>', steps=[], blocks=[C4]))
+    P.append(dict(slug='couch-frame', nav='Couch frame', title='The removable couch: frame, wall blocks and deck lid',
+        kick='After the cabinet, because the deck rests on its panels.',
+        intro='<p>The couch is a separate piece: a frame that hangs on three wall blocks (3, 20 if needed, and 41 in from the back) and a deck lid on top, so it can be lifted out. The next page has the leaf, legs and cushions that go on the lid.</p>', steps=[], blocks=[C5]))
+    P.append(dict(slug='couch', nav='Couch bed', title='The couch bed: leaf, legs and cushions',
+        kick='Last of the couch: it goes on the deck lid of the frame.',
+        intro='<p>The couch is 74 x 26 in, with the deck 16 to 16 3/4 in up (3 1/2 in higher than the old plan, so the gear shelf fits over the battery). It sits on the removable frame of the last page, over the gear cabinet. The bed makes up with a hinged leaf and four fold-down legs.</p>' + table(['Bed / couch', 'Wheel well']),
+        steps=['<b>Deck lid:</b> 3/4 in plywood, 74 x 26 in, on the frame and the two cabinet panels (the last page), 16 to 16 3/4 in up; check its front edge over the cabinet carries a person before the cushions go on.',
+               '<b>Deck details:</b> the deck is the lid above, 74 x 26 in. <b>Leaf:</b> 3/4 in birch plywood, 20 x 73 3/4 in, a plain slab; hinge it with a 74 in continuous hinge on the top faces (#8 x 5/8 in screws every 3 to 4 in, a 1/8 to 3/16 in gap).',
                '<b>Legs:</b> cut four through-slots (1 1/2 x 13 in) in the leaf, 3 in from the free edge, about 24 in apart; each leg is a 3/8 x 1 1/4 in bar, 12 5/8 in long, on a 1/4 in pin, with a threaded foot that screws out about 3 1/2 in.',
                '<b>Latches:</b> two turn buttons or magnetic catches hold the leaf folded back while driving.',
-               '<b>Cushions:</b> the seat cushion 5 in thick, and the back cushion 5 in thick and 20 in tall in one piece, leaning back 12 degrees; check the seated headroom (1 1/2 in).'],
+               '<b>Cushions:</b> the seat cushion 5 in thick, and the back cushion 5 in thick and 20 in tall in one piece, leaning back 12 degrees; check the seated headroom (3 1/2 in under the wall cabinets, which are at 63 in up).'],
         blocks=[C, Bd]))
-    P.append(dict(slug='gear-shelf', nav='Gear shelf', title='The pull-out gear shelf over the battery',
-        kick='The couch frame and the divider have to be in first.',
-        intro='', steps=[], blocks=[C4]))
-    P.append(dict(slug='lift-out-rail', nav='Lift-out rail', title='The lift-out front rail',
-        kick='After the shelf slides are on the divider and the couch end panel.',
-        intro='', steps=[], blocks=[C5]))
     P.append(dict(slug='bath', nav='Wet bath', title='Wet bath: stall, toilet and nook',
         kick='Passenger side, at the rear end; it needs the passenger-side strips and the walls first.',
         intro=table(['Shower', 'Toilet', 'Floor-to-ceiling wall W3']),
@@ -199,7 +214,7 @@ def pages(root):
         kick='The last things, and the checks that tell you it works.',
         intro='<p>This is a checklist more than a build step: the work is done when each line is true.</p>',
         steps=['Cushions on, the leaf folded back, legs in their slots and the turn buttons shut.',
-               'The gear shelf slides out smoothly with the lift-out rail off, the cable loops follow it without catching, and it goes back home.',
+               'The gear shelf slides out smoothly, the cable loops follow it without catching, and it goes back home; the couch lid and frame lift out and go back on the wall blocks.',
                'Every circuit tested with a meter, the GFCI outlets tested, the 120 V side inspected.',
                'The roof fan and the air conditioner run, the seals around them hold water, the window is sealed.',
                'Open every door and drawer in turn: the closet door and drawers, the trash can, the fridge door, the fold-out table; check the walkway they leave.',

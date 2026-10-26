@@ -20,14 +20,22 @@ INV = dict(x0=DC['x1'] + .5, x1=DC['x1'] + .5 + 14.8, y0=SH_Y0 + .75, y1=SH_Y0 +
 CHG = dict(x0=DC['x0'], x1=DC['x0'] + 9.5, y0=SH_Y0 + .75 + DD + .5, y1=SH_Y0 + .75 + DD + .5 + 7, h=4)
 SH_DIV = SH_X0 - .65 - .75       # the slide divider's west face
 SH_PULL = 18                     # 18 in full-extension slides
-# the lift-out front rail across the opening: a 3/4 x 1 1/2 in steel tube under the deck's front edge, on two angle ledges
-FACE_Z0, FACE_Z1 = 10.25, 14.25  # the shelf's louvered face (1/4 in under the rail's ledges)
-RAIL_Z0, RAIL_Z1 = DECK_U - 1.5, DECK_U   # 14 1/2 to 16
-RAIL_Y0, RAIL_Y1 = HATCH_Y, HATCH_Y + .75  # 25 1/4 to 26: directly over the face
-GAP_W = SH_DIV + .75             # the divider's east face (39 3/8)
-GAP_E = C0                       # the couch's end panel next to the closet (74)
-RAIL_L = GAP_E - GAP_W - .125    # 1/16 in each end
-LEDGE = 1.25                     # angle legs 1 1/4 x 1 1/4 x 1/8
+# the shelf's plain face: 1/4 in under the deck's rails is no longer needed (the lift-out rail is dropped), but it stays 1 3/4 in under the deck so air reaches the units
+FACE_Z0, FACE_Z1 = 10.25, 14.25
+# the gear cabinet (user: 'I will need to build a cabinet for 7, 8, 10, 11. It will attach to the floor of the van. The top part will slide out'): two 3/4 in plywood side panels standing on the floor,
+# as deep as the couch, floor to the deck's underside; the west one is the slide divider, the east one the couch's end panel next to the closet. No front, back or top of its own.
+CB_X0, CB_X1, CB_T = SH_DIV, C0, .75
+CB_Y1 = HATCH_Y + .75            # 26: the couch front
+CB_H = DECK_U                    # 16
+# the removable couch frame (user: 'the couch/bed item to fit on top and will be removable ... blocks along the back wall by 3in and 41in, maybe even 20in'):
+# a full-length back rail hung on three wall blocks, a front rail, an end rail and a cross rail west of the cabinet on three posts, and a separate deck lid on top
+BR_H = 3.5                       # the rails are 3/4 x 3 1/2 on edge
+BR_Z0 = DECK_U - BR_H            # 12 1/2
+BLK_X = (3, 20, 41)              # centers along the wall; the middle one 'if needed'
+BLK_W, BLK_D, BLK_H = 3, 1.5, 3.5    # a 3 in cut of 2x4 stood on its 3 1/2 in edge: 3 along the wall, 1 1/2 out, 3 1/2 tall
+BLK_Z1 = BR_Z0; BLK_Z0 = BLK_Z1 - BLK_H   # tops at the rail's underside: 9 to 12 1/2
+POST = 1.5
+POST_X = (0, SH_DIV - POST)      # two posts, so the lawn chairs (34 1/2 long) can still slide in between them
 # the wall cabinets: the bottom was 61, raised 2 in to 63 (user: 'make the wall cabinets be 2 in higher'); the top stays at the finished ceiling at the wall
 CAB_BOT = 63; CAB_TOP = 74.5625; DOOR_H = 10; DOOR_Z0 = CAB_BOT + .5; DOOR_Z1 = DOOR_Z0 + DOOR_H
 # the side window over the dinette: Van Windows Direct TL201-SE, driver side forward slider (the numbers of window.py and wtemplate.py)

@@ -146,6 +146,28 @@ function drawDriver(L, V) {
     o.push(MV('gear_sh', gg, HITR(Math.min(X(sh.x0), X(sh.x1)), Y(sh.z1 + 8), S * (sh.x1 - sh.x0), S * (sh.z1 - sh.z0 + 8))));
     o.push(GE());
   }
+  // the gear cabinet (two floor-mounted side panels), the removable couch frame (rails and posts west of the cabinet) and its wall blocks
+  if (L.gcab) {
+    const c = L.gcab, m = L.cmod, W = .75, wood = { fill: '#8A6B4D', fo: .55, stroke: '#5A3A00', sw: 1.2 }, rz0 = m.rz0, du = m.du;
+    o.push(GB('gcab', 'Gear cabinet and couch frame'));
+    o.push(box(c.x0, c.x0 + W, 0, du, wood)); o.push(box(c.x1, c.x1 + W, 0, du, wood));
+    o.push(LBL(X(c.x0 + W / 2), Y(du - 2.2), 'Gear cabinet', `floor-mounted: two 3/4 in plywood side panels ${fmt(c.x0)} and ${fmt(c.x1)} in from the back, ${fmt(c.x1 - c.x0 - W)} in apart, ${fmt(c.y1)} deep, floor to the deck (${fmt(du)} up); the shelf is its sliding top; the front below the shelf is open`, { size: 11, fill: '#5A3A00' }));
+    // the couch frame: the front rail (3/4 x 3 1/2 on edge under the deck edge) and three posts; the back rail and the end rail are behind
+    o.push(box(0, m.west, rz0, du, { fill: COL.G, fo: .3, stroke: COL.G, sw: 1.2 }));
+    m.posts.forEach(px => o.push(box(px, px + 1.5, 0, rz0, { fill: COL.G, fo: .35, stroke: COL.G, sw: 1.2 })));
+    o.push(box(0, c.x1, rz0, du, { stroke: COL.G, sw: .9, dash: '4 3', so: .6 }));
+    o.push(LBL(X(m.west / 2), Y(rz0 + 1.8), 'Couch frame (removable)', `front rail 3/4 x 3 1/2 in on edge, ${fmt(m.west)} long, on two 1 1/2 in posts with screw-out feet (the lawn chairs slide in between them); behind it a full-length back rail (dashed), a west end rail and a middle cross rail; the deck is a separate lid that rests on the cabinet's side panels east of ${fmt(c.x0)} in`, { size: 11, fill: COL.G }));
+    o.push(GE());
+  }
+  if (L.cblk.length) {
+    const m = L.cmod;
+    o.push(GB('cblk', 'Wall blocks for the couch frame'));
+    L.cblk.forEach((b, i) => {
+      o.push(box(b.x0, b.x1, b.z0, b.z1, { fill: '#5A2E0A', fo: .75, stroke: '#3E230B', sw: 1.2 }));
+      o.push(LBL(X(b.x), Y(b.z0 + 1.75), 'Wall block ' + fmt(b.x), `3 wide x 1 1/2 out x 3 1/2 tall (a 3 in cut of 2x4 stood on its 3 1/2 in edge), ${fmt(b.z0)} to ${fmt(b.z1)} up, ${fmt(b.x)} in from the back (centered), screwed through the planks into the furring strip S2 behind it; the couch frame's back rail sits on its top and is screwed down into it from above${i === 1 && P.blkBOn ? ' (the middle one is "if needed")' : ''}`, { size: 10.5, fill: '#5A2E0A', dy: 13 }));
+    });
+    o.push(GE());
+  }
   // closet
   o.push(GB('closet', 'Closet and its doors'));
   o.push(box(L.c0, L.c1, 0, L.ceilF, { fill: COL.G, fo: .12, stroke: COL.G, sw: 1.4, rx: 3 }));
