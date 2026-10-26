@@ -20,6 +20,14 @@ INV = dict(x0=DC['x1'] + .5, x1=DC['x1'] + .5 + 14.8, y0=SH_Y0 + .75, y1=SH_Y0 +
 CHG = dict(x0=DC['x0'], x1=DC['x0'] + 9.5, y0=SH_Y0 + .75 + DD + .5, y1=SH_Y0 + .75 + DD + .5 + 7, h=4)
 SH_DIV = SH_X0 - .65 - .75       # the slide divider's west face
 SH_PULL = 18                     # 18 in full-extension slides
+# the lift-out front rail across the opening: a 3/4 x 1 1/2 in steel tube under the deck's front edge, on two angle ledges
+FACE_Z0, FACE_Z1 = 10.25, 14.25  # the shelf's louvered face (1/4 in under the rail's ledges)
+RAIL_Z0, RAIL_Z1 = DECK_U - 1.5, DECK_U   # 14 1/2 to 16
+RAIL_Y0, RAIL_Y1 = HATCH_Y, HATCH_Y + .75  # 25 1/4 to 26: directly over the face
+GAP_W = SH_DIV + .75             # the divider's east face (39 3/8)
+GAP_E = C0                       # the couch's end panel next to the closet (74)
+RAIL_L = GAP_E - GAP_W - .125    # 1/16 in each end
+LEDGE = 1.25                     # angle legs 1 1/4 x 1 1/4 x 1/8
 AIR = DECK_U - (SH_Z1 + max(DC['h'], INV['h'], CHG['h']))   # air above the tallest unit
 def fr8(v):
     """inches as a whole number and eighths: 41.6 -> '41 5/8'"""
