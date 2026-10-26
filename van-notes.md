@@ -12,6 +12,7 @@ Interior: 160 in long, 68 in wide, 76 in tall. Open `sides.html` (the scaled dia
 - Still open: roof width (assumed 68 in), fan and A/C models, electrical details; to be discussed later.
 
 ## VHB tape: temperature and steel prep (latest)
+FOLLOW-UP ('like what? sand paper 420 grit?'): yes, 400 to 420 grit sandpaper or a gray (ultra fine) or maroon (very fine) Scotch-Brite pad both do it; the aim is to dull the gloss evenly, not to cut through the paint, and to wipe the dust off before the alcohol wipe; furring-cut-list.md and page 6 say so. The grit equivalents of the pad colors are approximate; not from 3M's VHB data sheets.
 User: 'What temp and how do i prep the steel before attaching with VHB tape'. From 3M's VHB data sheets (checked by a web search, not from memory): apply at 70 to 100 F (21 to 38 C) ideally, not below about 50 F (10 C) (some grades 60 F); clean most surfaces with a 70/30 isopropyl alcohol and water mix (my first recollection of 50/50 was wrong), degrease first if oily, abrade or prime where the sheet says, seal porous materials; about 15 psi of pressure for good contact. NOT confirmed from the data sheets I found: the build-up time (commonly quoted as most of the strength in a day and full strength in about 72 hours); I wrote 'a day or more'. Added to furring-cut-list.md and so to the furring page of the build guide (page 6), with a note to read the data sheet of the exact tape. Not tested on the user's steel: test one block first.
 
 ## Build guide pages, 3D lift-out rail
