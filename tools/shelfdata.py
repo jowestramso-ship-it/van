@@ -28,6 +28,8 @@ GAP_W = SH_DIV + .75             # the divider's east face (39 3/8)
 GAP_E = C0                       # the couch's end panel next to the closet (74)
 RAIL_L = GAP_E - GAP_W - .125    # 1/16 in each end
 LEDGE = 1.25                     # angle legs 1 1/4 x 1 1/4 x 1/8
+# the wall cabinets: the bottom was 61, raised 2 in to 63 (user: 'make the wall cabinets be 2 in higher'); the top stays at the finished ceiling at the wall
+CAB_BOT = 63; CAB_TOP = 74.5625; DOOR_H = 10; DOOR_Z0 = CAB_BOT + .5; DOOR_Z1 = DOOR_Z0 + DOOR_H
 AIR = DECK_U - (SH_Z1 + max(DC['h'], INV['h'], CHG['h']))   # air above the tallest unit
 def fr8(v):
     """inches as a whole number and eighths: 41.6 -> '41 5/8'"""

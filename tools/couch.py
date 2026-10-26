@@ -59,7 +59,7 @@ for _u in (DC,CHG):
     a(f'<rect x="{xx(4.5+_u["y0"]):.1f}" y="{yy(SH_Z1+_u["h"]):.1f}" width="{SC*(_u["y1"]-_u["y0"]):.1f}" height="{SC*_u["h"]:.1f}" fill="#B45309" fill-opacity="0.18" stroke="#B45309" stroke-width="1.4" stroke-dasharray="4 3"/>')
 a(f'<text class="ts" x="{xx(4.5+13):.1f}" y="{yy(SH_Z1+2.2):.1f}" text-anchor="middle" style="font-size:9px;fill:#7A3B07">DC-DC (behind)</text><text class="ts" x="{xx(4.5+21.5):.1f}" y="{yy(SH_Z1+2.2):.1f}" text-anchor="middle" style="font-size:9px;fill:#7A3B07">charger</text><text class="ts" x="{xx(front)+8:.1f}" y="{yy(SH_Z0+.3)+3:.1f}" style="font-size:10px;fill:#5A3A00">gear shelf (C4)</text>')
 # overhead cabinet
-a(f'<rect x="{xx(4.5):.1f}" y="{yy(75.0625):.1f}" width="{SC*14:.1f}" height="{SC*14.0625:.1f}" fill="#534AB7" fill-opacity="0.06" stroke="#534AB7" stroke-dasharray="5 3"/><text class="ts" x="{xx(11.5):.1f}" y="{yy(70)}" text-anchor="middle" style="font-size:9px;fill:#534AB7">overhead cabinet, bottom 61</text>')
+a(f'<rect x="{xx(4.5):.1f}" y="{yy(CAB_TOP):.1f}" width="{SC*14:.1f}" height="{SC*(CAB_TOP-CAB_BOT):.1f}" fill="#534AB7" fill-opacity="0.06" stroke="#534AB7" stroke-dasharray="5 3"/><text class="ts" x="{xx(11.5):.1f}" y="{yy((CAB_BOT+CAB_TOP)/2)}" text-anchor="middle" style="font-size:9px;fill:#534AB7">overhead cabinet, bottom 63</text>')
 a('</svg>')
 svg='\n'.join(o)
 html=open((ROOT+'/sides.html')).read()
