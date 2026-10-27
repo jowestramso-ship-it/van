@@ -1,8 +1,8 @@
 """The shower pan page of the build guide: how to set the bought 36 x 24 pan, drain it and line the stall with a thin waterproof (FRP) liner over the 3/8 in plywood.
 Six drawings made from the plan's numbers (the pan, W3, the nook, the head and the valve, the drain hole), a parts table and the steps in order.
 Used by buildguide.py (the Shower pan page); run on its own it writes ../pan.html for a quick look.
-The drain hole is ASSUMED to be at the middle of the rear-door end (the user said 'rear-door end'; the exact distance is not measured), the pan's lip height against the wall is a guess,
-and FRP is my choice from the user's 'a thin sheet of a waterproof liner': change them here, in ia_core.js (pdrX, pdrY, linerT, linerTop, linerGap) and in plan.py together."""
+The drain hole is at the middle of the rear-door end, 5 in from the rear end (the user's measurement; the 12 in out from the wall is the middle of the depth, assumed), the pan's lip height against the wall is a guess,
+and FRP is the user's choice ('I'll use FRP paneling'): change them here, in ia_core.js (pdrX, pdrY, linerT, linerTop, linerGap) and in plan.py together."""
 import os
 
 INK = '#2C2C2A'; PLY = '#E8CF9C'; PLYD = '#B8975A'; HARD = '#C9A263'; STEEL = '#9AA0A8'; FURR = '#7A4A1E'; SEAL = '#4F8C74'; TEAL = '#2A9D8F'; TEALD = '#1F7A70'
@@ -18,7 +18,7 @@ H = ZT - ZB                     # 69 15/16
 LT = .09                        # the liner's thickness
 NOOK = (12.5, 29.75, 38, 54)    # the shower nook: x0, x1, z0, z1 (4 1/2 in deep, in the wall)
 HEAD = (9, 70); VALVE = (33, 44)
-DRAIN = (4, 12)                 # ASSUMED: the middle of the rear-door end, measure it
+DRAIN = (5, 12)                 # 5 in from the rear end (the user), 12 out = the middle of the depth (assumed)
 TOILET = (20.75, 35.25, 4.75, 19.25)
 
 def fr(v):
@@ -73,7 +73,7 @@ def fig_top():
     a(f'<circle cx="{X(HEAD[0]):.1f}" cy="{Y(6):.1f}" r="7" fill="#fff" stroke="{BLU}" stroke-width="1.6"/>' + _t(X(HEAD[0]) + 11, Y(6) + 4, 'shower head', 10.5, 'start', BLU))
     dx, dy = DRAIN
     a(f'<circle cx="{X(dx):.1f}" cy="{Y(dy):.1f}" r="{S * 1.1:.1f}" fill="{INK}"/>')
-    a(_t(X(dx) + 22, Y(dy) - 32, 'drain hole', 12, 'start', INK, 700)); a(_t(X(dx) + 22, Y(dy) - 18, f'{fr(dx)} in along, {fr(dy)} out', 11, 'start', INK)); a(_t(X(dx) + 22, Y(dy) - 4, '(assumed: measure it)', 11, 'start', RED, 600))
+    a(_t(X(dx) + 22, Y(dy) - 32, 'drain hole', 12, 'start', INK, 700)); a(_t(X(dx) + 22, Y(dy) - 18, f'{fr(dx)} in along, {fr(dy)} out', 11, 'start', INK)); a(_t(X(dx) + 22, Y(dy) - 4, '(12 out: check it)', 11, 'start', RED, 600))
     a(_arrow(X(14), Y(17), X(6.6), Y(13.3), BLU, 1.6)); a(_arrow(X(14), Y(13.8), X(6.5), Y(12.7), BLU, 1.6)); a(_arrow(X(2.2), Y(21), X(3.4), Y(14.4), BLU, 1.6))
     a(_t(X(9), Y(21) + 2, 'floor falls to the drain', 10.5, 'start', BLU))
     a(_t(X(0) - 8, Y(18), 'rear-door end', 11, 'end', '#5F5E5A', 600)); a(_t(X(0) - 8, Y(18) + 13, '(the curtain)', 10.5, 'end', '#5F5E5A'))
@@ -218,7 +218,7 @@ def fig_corner():
     return _svg(760, 410, ''.join(o), 'The inside corner at W3')
 
 FIGS = [
-    ('A', 'The pan from above', fig_top, 'The bought pan sits against the plywood wall with W3 at its cab end. The drain hole is at the middle of the rear-door end, about 4 in along and 12 out (you said the rear-door end; the 4 in is my guess, so measure it). The floor falls to it. The liner runs along the wall and across the face of W3.'),
+    ('A', 'The pan from above', fig_top, 'The bought pan sits against the plywood wall with W3 at its cab end. The drain hole is at the middle of the rear-door end, 5 in from the rear end (you said) and 12 out (the middle of the depth: check it on the pan). The floor falls to it. The liner runs along the wall and across the face of W3.'),
     ('B', 'The pan edge and the sealed gap', fig_edge, 'A stiff panel cannot lap over the pan lip, so it stops 1/4 in above the pan edge and the gap is filled with flexible sealant: the water runs down the liner, over the sealant and into the pan. The plywood edge below it is sealed and hidden behind the lip.'),
     ('C', 'The drain through the floor', fig_drain, 'The flange is bedded in neutral silicone on the pan, the body goes through the subfloor and the steel, a gasket and a lock nut hold it from below, and the bare steel edge of the hole is primed against rust. A P-trap and a hose take it to the grey tank, which must be vented (its place is not set).'),
     ('D', 'The liner on the wall', fig_wall, 'One panel for the wall (35 1/4 wide, 69 15/16 tall) with the nook cut out; the panel on W3 is separate, with an inside corner moulding between them. The head and the valve are hole-sawed through it and sealed behind their flanges.'),
@@ -228,7 +228,8 @@ FIGS = [
 PARTS = [
     ('Shower pan', '36 x 24 in, 3 in curb (bought)', '1', 'measure the drain hole (its distance from the rear end and the wall, its size) and the height of the lip against the wall, and change the plan\'s sizes to match'),
     ('FRP panel', '4 x 8 ft, 0.09 in, white, smooth or pebbled', '2', 'the wall panel and the nook sides from one, W3 from the other; about 16 lb of liner in all (a rough weight)'),
-    ('FRP adhesive', 'the panel maker\'s (water-based or urethane), 1 gal with a notched roller or trowel', '1', 'spread on the plywood, never on the panel; follow the can for open time'),
+    ('FRP adhesive', 'the panel maker\'s FRP adhesive (for example Crane\'s Glasbond or Marlite\'s, or a similar water-based or urethane panel adhesive), 1 gal', '1', 'spread on the plywood with the trowel or roller the can names, never on the panel; follow the can for open time and temperature'),
+    ('Liner tools and safety', 'notched trowel or roller (as the can says), 3 in hand roller, masking tape, 1/8 in and 1/4 in spacers, fine-tooth saw or utility knife, hole saws, dust mask, gloves and glasses', '1 set', 'FRP dust and cut edges irritate skin and eyes; wear the mask and glasses when you cut'),
     ('FRP inside corner moulding', '8 ft piece in the panel\'s color', '1', 'at W3 (69 15/16 in) and to join the nook pieces if you want; the nook corners can be sealant only'),
     ('FRP edge (end) trim', '8 ft piece', '1', 'the free rear edge of the liner, and the top edge if it is not under the trim strip'),
     ('Flexible sealant', 'neutral-cure silicone or MS polymer, mold-resistant, white or clear', '4 tubes', 'drain flange, the pan joint, the pan lip, corners, valve and head flanges, the nook; never a hard caulk'),
@@ -239,7 +240,7 @@ PARTS = [
     ('Epoxy and rust primer', 'thin epoxy for the plywood edges and cut-outs; rust converter and epoxy primer for the steel edge of the drain hole', '1 each', 'two coats of epoxy on every cut edge of the plywood in the stall'),
 ]
 STEPS = [
-    '<b>Measure the pan before anything is cut.</b> Write down its length and depth (36 x 24), the height of its curb and of its lip against the wall, the size of the drain hole and how far it is from the rear end and from the wall (you said the middle of the rear-door end; the plan has it at 4 in along and 12 out, which is my guess). Put the real numbers into the plan\'s sizes (Shower drain hole, Liner), so the drawings and checks follow.',
+    '<b>Measure the pan before anything is cut.</b> Write down its length and depth (36 x 24), the height of its curb and of its lip against the wall, the size of the drain hole and how far it is from the rear end and from the wall (you said the middle of the rear-door end, 5 in from the rear end; the plan has it at 5 in along and 12 out, the middle of the depth, which is my guess). Put the real numbers into the plan\'s sizes (Shower drain hole, Liner), so the drawings and checks follow.',
     '<b>Look under the floor where the hole goes.</b> Cross-members, wires, brake or fuel lines and the grey tank\'s place all matter before you drill. The hole at the middle of the rear-door end is near the rear bumper area: check it clears the frame.',
     '<b>Check and prepare the floor.</b> The subfloor under the pan must be flat to 1/8 in over the 36 x 24 in (a 4 ft level or a straightedge). Fill any dip with a flexible leveling filler or shim it; the pan\'s floor is thin and a fiberglass or acrylic pan must be supported all over, or it cracks where you stand.',
     '<b>Drill the drain hole.</b> Dry-fit the pan, mark the center of its drain hole on the floor, take the pan out, drill a pilot hole through the subfloor and the steel, then cut with a hole saw 1/4 in bigger than the drain body. Deburr the steel edge, treat it with rust converter and epoxy primer, and seal the cut edge of the subfloor with epoxy. Vacuum all the chips out of the van.',
@@ -247,9 +248,9 @@ STEPS = [
     '<b>Connect the drain from below:</b> gasket and lock nut on the body, then the tailpiece, the P-trap and the hose to the grey tank, with a vent on the tank. Keep the hose falling all the way to the tank.',
     '<b>Seal the pan to the wall.</b> A bead of flexible sealant where the pan lip meets the plywood, and the plywood edge below the liner sealed with epoxy (drawing B).',
     '<b>Fill test.</b> Plug the drain, fill the pan to just under the curb, mark the water line and leave it for a day. Check the line has not dropped and look under the floor for any drip. Then open the drain, check it flows freely and leaks nowhere at the nut or the trap.',
-    '<b>Seal the plywood before the liner goes on.</b> Two coats of thin epoxy on every cut edge and on the bare plywood of the nook and the valve and head cut-outs; the face under the liner needs only the adhesive, but the edges must be epoxied (water gets in from the edges).',
+    '<b>Prepare the plywood before the liner goes on.</b> (1) Two coats of thin epoxy on every cut edge and on the bare plywood of the nook and of the valve and head cut-outs: water gets in from the edges. (2) Make the face flat. The screws that hold the plywood have finish washers, and a washer would show through a 0.09 in panel as a bump and stop it sticking: in the stall, countersink each screw (or refit it with a flat head) and fill the dimple with epoxy filler, then sand it flush; sand off raised grain, fill any gouge, and check with a straightedge that nothing stands more than about 1/32 in proud, because FRP shows every bump. (3) Vacuum the dust and wipe the face with a damp cloth: it must be clean, dry and free of oil where the adhesive goes (scuff-sand any epoxy that reached the face).',
     '<b>Cut the liner</b> (drawing E): the wall panel (35 1/4 x 69 15/16, with the nook cut out), W3\'s face (24 x 69 15/16) and the four nook sides, each 1/8 in short at a free edge and 1/4 in above the pan. Hole-saw the head and the valve holes.',
-    '<b>Glue the wall panel</b> with the FRP adhesive, rolled on the plywood and pressed on from the middle out with a hand roller; keep it 1/4 in above the pan lip and 1/8 in off W3, the rear edge and the ceiling. Then the nook (back, then sides), then W3\'s face, then clip the inside corner moulding over the corner with sealant behind each flange (drawing F).',
+    '<b>Glue the wall panel</b> with the panel maker\'s adhesive (read its can for the trowel, the open time and the temperature). (1) Let the panels sit in the van for at least 24 hours first, so they match its temperature and humidity, and glue at room temperature (about 60 F or more, or what the can says). (2) Dry-fit it: rest the bottom edge on 1/4 in spacers at the pan and keep 1/8 in off W3, the rear edge and the ceiling. (3) Spread the adhesive on the plywood, never on the panel, with the notched trowel or roller the can names, only as far as you can cover within the open time, and keep it about 1 in back from the edges so none squeezes out at the gaps. (4) Set the panel on its spacers, tip the top in, press it flat from the middle outward and roll the whole face with a hand roller, edges last. (5) Hold the top with a few strips of masking tape for the first hour, and leave it alone for the cure time on the can. No screws go through the face: they leak and stop the panel from moving, and the mouldings and the sealant hold the edges. (6) Then the nook (back, then sides), then W3\'s face, then the inside corner moulding with sealant behind each flange (drawing F).',
     '<b>Seal and trim.</b> Fill the 1/4 in gap at the pan with flexible sealant and tool it; seal the rear edge under its edge trim, the top under the trim strip, every nook corner, and behind the head and valve flanges; wipe the excess off straight away. Let it cure a day.',
     '<b>Finish and test.</b> Fit the head and valve, hang the curtain and the nook cord, then run the shower for ten minutes with the curtain closed and check under the floor and along the bottom of W3 for any wet.',
 ]
