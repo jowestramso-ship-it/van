@@ -25,7 +25,7 @@ const PD = [
   { k: 'bedLen', g: 'Bed / couch', l: 'Length', d: 74, s: .5, a: 40, b: 120 },
   { k: 'bedD', g: 'Bed / couch', l: 'Depth, closed (the couch on its base)', d: 26, s: .5, a: 15, b: 40 },
   { k: 'bedBack', g: 'Bed / couch', l: 'Leaf width (flips out in front; = back cushion length)', d: 20, s: .5, a: 0, b: 40 },
-  { k: 'platform', g: 'Bed / couch', l: 'Seat base (deck 3/4 in lower; the leaf folds onto it). Raised from 14 to 17 1/2 for the gear shelf', d: 17.5, s: .5, a: 6, b: 30 },
+  { k: 'platform', g: 'Bed / couch', l: 'Seat base (deck 3/4 in lower; the leaf folds onto it). Raised from 14 to 17 1/2 for the gear shelf, then to 18 1/2 so a 3/4 x 1 rail can run along the deck front over the cabinet', d: 18.5, s: .5, a: 6, b: 30 },
   { k: 'mattress', g: 'Bed / couch', l: 'Seat and back cushion thickness (5 since the couch was raised 3 1/2 in, to keep a seated head under the wall cabinets)', d: 5, s: .5, a: 2, b: 12 },
   { k: 'legIn', g: 'Bed / couch', l: 'Legs set in from the leaf free edge', d: 3, s: .5, a: 0, b: 10 },
   { k: 'closetW', g: 'Closet', l: 'Width', d: 15, s: .25, a: 8, b: 40 },
@@ -93,8 +93,9 @@ const PD = [
   { k: 'toiletH', g: 'Toilet', l: 'Toilet: height of the top of the seat (Fold-To-Go about 14 1/2, low)', d: 14.5, s: .25, a: 10, b: 24 },
   { k: 'tbarBay', g: 'Shower nook contents', l: 'Towel bar bay: width from the rear end of the nook (the rest of the nook holds the toilet paper and the bottles)', d: 6, s: .25, a: 3, b: 12 },
   { k: 'tbarDrop', g: 'Shower nook contents', l: 'Towel bar: how far below the top of the nook', d: 3.5, s: .25, a: 1, b: 8 },
+  { k: 'snCord', g: 'Shower nook contents', l: 'Bungee cord across the nook front: height above the shelf board (0 for none; it keeps the bottles from falling out)', d: 5.5, s: .25, a: 0, b: 9 },
   { k: 'snShelf', g: 'Shower nook contents', l: 'Shelf board: its top, up from the floor (toilet paper under it, bottles on it)', d: 43.75, s: .25, a: 38, b: 54 },
-  { k: 'snookLip', g: 'Passenger side', l: 'Shower nook front lip, to keep things in (0 for none)', d: 1.5, s: .25, a: 0, b: 4 },
+  { k: 'snookLip', g: 'Passenger side', l: 'Shower nook front lip (0 for none: a bungee cord across the front keeps things in instead)', d: 0, s: .25, a: 0, b: 4 },
   { k: 'fridgeW', g: 'Passenger side', l: 'Fridge width', d: 22, s: .5, a: 14, b: 30 },
   { k: 'fridgeD', g: 'Passenger side', l: 'Fridge depth', d: 19, s: .5, a: 12, b: 26 },
   { k: 'fridgeH', g: 'Passenger side', l: 'Fridge height', d: 48, s: .5, a: 20, b: 66 },
@@ -461,6 +462,7 @@ function layout(P0) {
     const nkx = Math.min(29.75, P.panW - 6.25), nk0 = nkx - P.snookLen, bot = P.snookTop - P.snookH, top = P.snookTop, lip = P.snookLip;
     const sn = { x0: nk0, x1: nkx, z0: bot, z1: top, bay: nk0 + P.tbarBay, shelfTop: Math.min(top - 1, P.snShelf) };
     sn.bar = { x0: nk0 + .5, x1: sn.bay - .5, z: top - P.tbarDrop };
+    sn.cord = P.snCord > 0 ? { x0: nk0 + .6, x1: nkx - .6, z: Math.min(top - .75, sn.shelfTop + P.snCord) } : null;   // a bungee cord stretched across the front of the nook between two screw eyes
     sn.rolls = [[nkx - 4.75, nkx - .25], [nkx - 9.5, nkx - 5]].map(r => ({ x0: r[0], x1: r[1], z0: bot, z1: bot + 4.5 }));
     let bx0 = sn.bay + .5; sn.bottles = [[2.6, 8.5], [3, 9], [2.6, 7.5]].map(b => { const o = { x0: bx0, x1: bx0 + b[0], z0: sn.shelfTop, z1: sn.shelfTop + b[1] }; bx0 += b[0] + .5; return o; });
     sn.bottlesEnd = bx0 - .5; sn.rollClear = sn.shelfTop - .75 - bot - 4.5; sn.bottleClear = top - sn.shelfTop;
@@ -504,7 +506,9 @@ function layout(P0) {
     const du = P.platform - 1.5, bz1 = du - 3.5, bz0 = bz1 - 3.5;
     L.gcab = P.gcabOn ? { x0: sx0 - .65 - .75, x1: L.c0, y1: P.bedD, z1: du } : null;
     L.cblk = P.gcabOn ? [[P.blkA, 1], [P.blkB, P.blkBOn ? 1 : 0], [P.blkC, 1]].filter(b => b[1]).map(b => ({ x: b[0], x0: b[0] - .75, x1: b[0] + .75, y0: 0, y1: 1.5, z0: 0, z1: bz1 })) : [];
-    L.cmod = P.gcabOn ? { du, rz0: bz1, beamX0: sx0 - .65 - .75 + .75, beamX1: L.c0, west: sx0 - .65 - .75, posts: [0, sx0 - .65 - .75 - 1.5] } : null; }
+    // the front rail across the cabinet: 3/4 x 1 on edge, glued and screwed to the deck's underside along the front edge between the panels (fh = its height; its bottom stays fz0 up, over the tallest unit)
+    const fh = 1, tall = L.gear ? Math.max(P.dcH, P.invH, P.chH) + sz1 : 0;
+    L.cmod = P.gcabOn ? { du, rz0: bz1, beamX0: sx0 - .65 - .75 + .75, beamX1: L.c0, west: sx0 - .65 - .75, posts: [0, sx0 - .65 - .75 - 1.5], fr: { x0: sx0 - .65 - .75 + .75, x1: L.c0, y0: P.bedD - .75, y1: P.bedD, z0: du - fh, z1: du, h: fh, tall } } : null; }
   // the side window over the dinette: the cutout (the slider frame's outline, what goes through the steel) and the glass (outside, glued over the stamping)
   { const cx0 = P.winX, cx1 = cx0 + P.winCW, cz0 = P.winZ, cz1 = cz0 + P.winCH, gx0 = cx0 - P.winOL, gz0 = cz0 - P.winOB;
     L.win = P.winOn ? { cx0, cx1, cz0, cz1, gx0, gx1: gx0 + P.winGW, gz0, gz1: gz0 + P.winGH, div: gx0 + 28.625 } : null; }

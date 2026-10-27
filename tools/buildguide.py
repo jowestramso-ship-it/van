@@ -169,10 +169,10 @@ def pages(root):
         intro='<p>The couch is a separate piece, built apart from the cabinet: a frame with its deck on top that rests on three wall blocks (3, 20 if needed, and 41 in from the back) and over the cabinet, with nothing screwed, so it lifts up and out of the van in one piece and just sits back over the cabinet. The next page has the leaf, legs and cushions that go on the deck.</p>', steps=[], blocks=[C5]))
     P.append(dict(slug='couch', nav='Couch bed', title='The couch bed: leaf, legs and cushions',
         kick='Last of the couch: it goes on the deck of the frame.',
-        intro='<p>The couch is 74 x 26 in, with the deck 16 to 16 3/4 in up (3 1/2 in higher than the old plan, so the gear shelf fits over the battery). It sits on the removable frame of the last page, over the gear cabinet. The bed makes up with a hinged leaf and four fold-down legs.</p>' + table(['Bed / couch', 'Wheel well']),
-        steps=['<b>Deck:</b> 3/4 in plywood, 74 x 26 in, on the frame and the two cabinet panels (the last page), 16 to 16 3/4 in up; check its front edge over the cabinet carries a person before the cushions go on.',
+        intro='<p>The couch is 74 x 26 in, with the deck 17 to 17 3/4 in up (4 1/2 in higher than the old plan: 3 1/2 in so the gear shelf fits over the battery and 1 in more so a hardwood rail runs under the deck front over the cabinet). It sits on the removable frame of the last page, over the gear cabinet. The bed makes up with a hinged leaf and four fold-down legs.</p>' + table(['Bed / couch', 'Wheel well']),
+        steps=['<b>Deck:</b> 3/4 in plywood, 74 x 26 in, on the frame and the two cabinet panels (the last page), 17 to 17 3/4 in up; check its front edge over the cabinet, with the 3/4 x 1 rail glued under it, carries a person before the cushions go on.',
                '<b>Deck details:</b> the deck is the lid above, 74 x 26 in. <b>Leaf:</b> 3/4 in birch plywood, 20 x 73 3/4 in, a plain slab; hinge it with a 74 in continuous hinge on the top faces (#8 x 5/8 in screws every 3 to 4 in, a 1/8 to 3/16 in gap).',
-               '<b>Legs:</b> cut four through-slots (1 1/2 x 13 in) in the leaf, 3 in from the free edge, about 24 in apart; each leg is a 3/8 x 1 1/4 in bar, 12 5/8 in long, on a 1/4 in pin, with a threaded foot that screws out about 3 1/2 in.',
+               '<b>Legs:</b> cut four through-slots (1 1/2 x 13 in) in the leaf, 3 in from the free edge, about 24 in apart; each leg is a 3/8 x 1 1/4 in bar, 12 5/8 in long, on a 1/4 in pin, with a threaded foot that screws out about 4 1/2 in.',
                '<b>Latches:</b> two turn buttons or magnetic catches hold the leaf folded back while driving.',
                '<b>Cushions:</b> the seat cushion 5 in thick, and the back cushion 5 in thick and 20 in tall in one piece, leaning back 12 degrees; check the seated headroom (3 1/2 in under the wall cabinets, which are at 63 in up).'],
         blocks=[C, Bd]))
@@ -185,7 +185,7 @@ def pages(root):
                '<b>Plumb it:</b> the shower head at 9 in from the back and the valve at 33 in; the drain runs to a tank under the van (the grey tank\'s place is not set).',
                '<b>Curtain on three sides</b> on a rod above (diagram E3), pulled to the rear end.',
                '<b>Toilet:</b> the Reliance Fold-To-Go stays set up on the pan at the cab end (20 3/4 to 35 1/4 in), sideways.',
-               '<b>Nook contents:</b> towel bar, a shelf, toilet paper and bottles (keep the paper out of the splash).'],
+               '<b>Nook contents:</b> towel bar, a shelf, toilet paper and bottles (keep the paper out of the splash). The nook has no front lip, so water runs out over the open edge: screw an eye into each end of the nook and stretch a bungee cord across the front, about 5 1/2 in above the shelf board, to keep the bottles from falling out.'],
         blocks=[E3]))
     P.append(dict(slug='kitchen', nav='Kitchen side', title='Counter, sink, fridge and the rest of the passenger side',
         kick='After the heavy tanks, before the wall cabinets.',

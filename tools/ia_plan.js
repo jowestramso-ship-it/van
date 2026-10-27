@@ -144,7 +144,8 @@ function drawPlan(L, V) {
     o.push(it(c.x1, c.x1 + W, 0, c.y1, '#8A6B4D', '', null, { fo: .85 }));
     m.posts.forEach(px => o.push(it(px, px + 1.5, c.y1 - 1.5, c.y1, COL.G, '', null, { fo: .85 })));
     L.cblk.forEach(b => o.push(it(b.x0, b.x1, b.y0, b.y1, '#5A2E0A', '', null, { fo: .85 })));
-    o.push(T(xx(c.x0 - .6), yy(c.y1 + 2.6), 'gear cabinet panels, posts, wall blocks', { anchor: 'end', size: 9, fill: '#5A3A00' }));
+    o.push(it(m.fr.x0, m.fr.x1, m.fr.y0, m.fr.y1, '#B5833C', '', null, { fo: .9 }));
+    o.push(T(xx(c.x0 - .6), yy(c.y1 + 2.6), 'gear cabinet panels, front rail, posts, wall blocks', { anchor: 'end', size: 9, fill: '#5A3A00' }));
     o.push(GE());
   }
   if (L.chairs) {

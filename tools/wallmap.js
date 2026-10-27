@@ -27,6 +27,7 @@ async function grab(page, side) {
     const F = fmt;
     if (side === 'driver') {
       add('Couch frame and deck (removable)', 0, P.bedLen, 0, P.platform, `${F(P.bedLen)} long x ${F(P.bedD)} deep; rails ${F(P.platform - 1.5 - 3.5)} to ${F(P.platform - 1.5)} up, deck ${F(P.platform - 1.5)} to ${F(P.platform - .75)}; it lifts out (see the wall blocks and the gear cabinet)`);
+      if (L.cmod) add('Front rail across the gear cabinet', L.cmod.fr.x0, L.cmod.fr.x1, L.cmod.fr.z0, L.cmod.fr.z1, `3/4 x ${F(L.cmod.fr.h)} hardwood, glued and screwed under the deck front, bottom ${F(L.cmod.fr.z0)} up`);
       add('Seat cushion', 0, P.bedLen, P.platform, P.platform + P.mattress, `top at ${F(P.platform + P.mattress)}`);
       add('Back cushion, upright', 0, P.bedLen, P.platform + P.mattress, P.platform + P.mattress + P.bedBack, `${F(P.bedBack)} tall`);
       add('Wheel well', 42, 76, 0, 7.5, 'sticks out 7 in');
@@ -67,6 +68,7 @@ async function grab(page, side) {
       if (L.toilet) add('Toilet', L.toilet.x0, L.toilet.x1, 3.8, 3.8 + L.toilet.z1, `${F(P.toiletD)} along the wall x ${F(P.toiletW)} out, ${F(L.toilet.z1)} high, back against the wall to the fridge, the Reliance Fold-To-Go, left set up in the stall`);
       if (L.sn) {
         add('Towel bar (in the shower nook)', L.sn.bar.x0, L.sn.bar.x1, L.sn.bar.z - .5, L.sn.bar.z + .5, `${F(L.sn.bar.z)} up, inside the nook`, L.sn.bar.z);
+        if (L.sn.cord) add('Bungee cord (across the shower nook front)', L.sn.cord.x0, L.sn.cord.x1, L.sn.cord.z - .25, L.sn.cord.z + .25, `${F(L.sn.cord.z)} up, between two screw eyes, keeps the bottles in`, L.sn.cord.z);
         add('Shelf board (in the shower nook)', L.sn.bay, L.sn.x1, L.sn.shelfTop - .75, L.sn.shelfTop, `top at ${F(L.sn.shelfTop)} up, toilet paper under it, bottles on it`, L.sn.shelfTop);
       }
       add('Counter cabinet', L.cabS, L.sinkS, 0, ch, `top at ${F(ch)}, ${F(P.cabD)} deep`);

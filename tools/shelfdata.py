@@ -1,11 +1,11 @@
 # The charging gear on ONE pull-out shelf over the battery, and the raised couch. The same numbers as layout() in ia_core.js (sizes: inverter 14.8 x 7.7 x 3.9, DC-DC 16 x 9 x 4.5, VEVOR 9.5 x 7 x 4).
 # Shared by gen2.py (diagram B), plan.py (F), couch.py (C), leaf.py (C2, C3) and shelf.py (C4) through exec, so the static drawings cannot drift from each other.
-PLAT = 17.5                      # seat base: deck 3/4 + the 3/4 leaf folded on it (was 14)
-DECK_T = PLAT - .75              # deck top 16 3/4
-DECK_U = PLAT - 1.5              # deck underside 16
+PLAT = 18.5                      # seat base: deck 3/4 + the 3/4 leaf folded on it (was 14, then 17 1/2; raised 1 in so a 3/4 x 1 rail can run across the cabinet front)
+DECK_T = PLAT - .75              # deck top 17 3/4
+DECK_U = PLAT - 1.5              # deck underside 17
 CUSH = 5                         # seat and back cushion thickness (was 6; 5 keeps a seated head under the wall cabinets after the raise)
-SEAT_T = PLAT + CUSH             # seat cushion top 22 1/2
-BACK_T = SEAT_T + 20             # back cushion top 42 1/2
+SEAT_T = PLAT + CUSH             # seat cushion top 23 1/2
+BACK_T = SEAT_T + 20             # back cushion top 43 1/2
 BAT = (52, 73); C0 = 74
 SH_G, SH_T = 1.0, .5             # gap over the battery (9 1/2) and the tray's plywood
 SH_Z0 = 9.5 + SH_G; SH_Z1 = SH_Z0 + SH_T
@@ -26,17 +26,23 @@ FACE_Z0, FACE_Z1 = 10.25, 14.25
 # as deep as the couch, floor to the deck's underside; the west one is the slide divider, the east one the couch's end panel next to the closet. No front, back or top of its own.
 CB_X0, CB_X1, CB_T = SH_DIV, C0, .75
 CB_Y1 = HATCH_Y + .75            # 26: the couch front
-CB_H = DECK_U                    # 16
+CB_H = DECK_U                    # 17
 # the removable couch frame (user: 'the couch/bed item to fit on top and will be removable ... blocks along the back wall by 3in and 41in, maybe even 20in'):
 # a full-length back rail hung on three wall blocks, a front rail, an end rail and a cross rail west of the cabinet on three posts, and a separate deck lid on top
 BR_H = 3.5                       # the rails are 3/4 x 3 1/2 on edge
-BR_Z0 = DECK_U - BR_H            # 12 1/2
+BR_Z0 = DECK_U - BR_H            # 13 1/2
 BLK_X = (3, 20, 41)              # centers along the wall; the middle one 'if needed'
 BLK_W, BLK_D = 1.5, 1.5          # a 2x2 (1 1/2 x 1 1/2 actual), standing on the floor against the wall (so they carry the back of the couch to the floor), tops at the rail's underside
-BLK_Z0, BLK_Z1 = 0, BR_Z0; BLK_H = BLK_Z1 - BLK_Z0   # 0 to 12 1/2: screwed through the planks into the furring strips S1 (3 up) and S2 (12 up)
+BLK_Z0, BLK_Z1 = 0, BR_Z0; BLK_H = BLK_Z1 - BLK_Z0   # 0 to 13 1/2: screwed through the planks into the furring strips S1 (3 up) and S2 (12 up)
 BEAM_T = 1.5                     # over the cabinet the back rail is doubled (two 3/4 x 3 1/2 on edge = 1 1/2 thick) and rests on a ledger on each panel
 LEDGE_L, LEDGE_H = 3, 1.5        # 3/4 x 1 1/2 x 3 in, top at the rail's underside
 POST = 1.5
+# the front rail across the cabinet (user: 'Can't we have that extend over the cabinet? I can make the couch higher if needed'): 3/4 x 1 hardwood on edge, glued AND screwed to the deck's underside along the front edge between the cabinet panels,
+# so rail and plywood work as one stiff T-beam; its bottom stays 1/2 in over the tallest unit (15 1/2). Without it the deck's free front edge (34 5/8 in) would sag 1/4 to 1 in under a person.
+RL_T, RL_H = .75, 1.0
+RL_Z0, RL_Z1 = DECK_U - RL_H, DECK_U          # 16 to 17
+RL_X0, RL_X1 = CB_X0 + CB_T, CB_X1          # between the panels
+RL_Y0, RL_Y1 = CB_Y1 - RL_T, CB_Y1
 POST_X = (0, SH_DIV - POST)      # two posts, so the lawn chairs (34 1/2 long) can still slide in between them
 # the wall cabinets: the bottom was 61, raised 2 in to 63 (user: 'make the wall cabinets be 2 in higher'); the top stays at the finished ceiling at the wall
 CAB_BOT = 63; CAB_TOP = 74.5625; DOOR_H = 10; DOOR_Z0 = CAB_BOT + .5; DOOR_Z1 = DOOR_Z0 + DOOR_H

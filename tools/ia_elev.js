@@ -156,6 +156,9 @@ function drawDriver(L, V) {
     o.push(box(0, m.west, rz0, du, { fill: COL.G, fo: .3, stroke: COL.G, sw: 1.2 }));
     m.posts.forEach(px => o.push(box(px, px + 1.5, 0, rz0, { fill: COL.G, fo: .35, stroke: COL.G, sw: 1.2 })));
     o.push(box(0, c.x1, rz0, du, { stroke: COL.G, sw: .9, dash: '4 3', so: .6 }));
+    // the front rail across the cabinet: 3/4 x 1 hardwood on edge, glued and screwed to the deck's underside, 1/2 in over the tallest unit
+    o.push(box(m.fr.x0, m.fr.x1, m.fr.z0, m.fr.z1, { fill: '#B5833C', fo: .85, stroke: '#5A3A00', sw: 1.2 }));
+    o.push(LBL(X((m.fr.x0 + m.fr.x1) / 2), Y(m.fr.z0 - .5), 'Front rail over the cabinet', `3/4 x ${fmt(m.fr.h)} in hardwood on edge, ${fmt(m.fr.x1 - m.fr.x0)} in long between the panels, glued and screwed to the underside of the deck so the rail and the plywood work as one stiff beam (a bare deck edge sags 1/4 to 1 in under a person); its bottom is ${fmt(m.fr.z0)} in up, ${m.fr.tall ? fmt(m.fr.z0 - m.fr.tall) + ' in over the tallest unit' : 'clear of the units'}`, { size: 10, fill: '#5A3A00', dy: 13 }));
     o.push(LBL(X(m.west / 2), Y(rz0 + 1.8), 'Couch frame (removable)', `front rail 3/4 x 3 1/2 in on edge, ${fmt(m.west)} long, on two 1 1/2 in posts with screw-out feet (the lawn chairs slide in between them); behind it a full-length back rail (dashed), a west end rail and a middle cross rail; the deck is part of the frame, which lifts out in one piece and rests on the cabinet's side panels east of ${fmt(c.x0)} in`, { size: 11, fill: COL.G }));
     o.push(GE());
   }
@@ -302,7 +305,7 @@ function drawPass(L, V) {
   const snTop = P.snookTop, snBot = snTop - P.snookH;
   o.push(box(nk0, nkx, snBot, snTop, { fill: '#7A4A1E', fo: .2, stroke: '#7A4A1E', sw: 1.5, rx: 3, dash: '5 3' }));
   if (P.snookLip > 0) o.push(box(nk0, nkx, snBot, snBot + P.snookLip, { fill: '#5A3510', fo: .9, stroke: '#3E230B', sw: 1 }));
-  o.push(LBL(X((nk0 + nkx) / 2), Y(snTop + 3.6), 'Shower nook', `${fmt(nkx - nk0)} wide x ${fmt(P.snookH)} tall, 4 1/2 deep`, { size: 12, fill: '#7A4A1E', keyMore: `${fmt(snBot)} to ${fmt(snTop)} up${P.snookLip > 0 ? `, ${fmt(P.snookLip)} in front lip to keep things in` : ''}` }));
+  o.push(LBL(X((nk0 + nkx) / 2), Y(snTop + 3.6), 'Shower nook', `${fmt(nkx - nk0)} wide x ${fmt(P.snookH)} tall, 4 1/2 deep`, { size: 12, fill: '#7A4A1E', keyMore: `${fmt(snBot)} to ${fmt(snTop)} up${P.snookLip > 0 ? `, ${fmt(P.snookLip)} in front lip to keep things in` : ', open at the front (no lip: it slopes out so water drains)'}` }));
 
   o.push(GE());
   o.push(GB('pan', 'Shower pan (fixed)'));
@@ -326,7 +329,8 @@ function drawPass(L, V) {
     n.rolls.forEach(r => o.push(box(r.x0, r.x1, r.z0, r.z1, { fill: '#F3E3B3', fo: .95, stroke: '#8A5A00', sw: 1.2, rx: 2 })));
     o.push(LBL(X((n.rolls[1].x0 + n.rolls[0].x1) / 2), Y(n.rolls[0].z0 + 2.25), 'Toilet paper', `a roll in use and a spare, 4 1/2 in across; ${fmt(n.rollClear)} in clear under the shelf`, { size: 10, fill: '#8A5A00' }));
     n.bottles.forEach((b, i) => o.push(box(b.x0, b.x1, b.z0, b.z1, { fill: ['#9EC9E8', '#C7B3E0', '#A9D3B4'][i], fo: .75, stroke: '#444441', sw: 1, rx: 2 })));
-    o.push(LBL(X((n.bottles[0].x0 + n.bottles[2].x1) / 2), Y(n.shelfTop + 4.5), 'Shelf and bottles', `shelf top ${fmt(n.shelfTop)} up, ${fmt(n.bottleClear)} in clear above it`, { size: 10, fill: '#444441' }));
+    if (n.cord) { o.push(Ln(X(n.cord.x0), Y(n.cord.z), X(n.cord.x1), Y(n.cord.z), { stroke: '#1E1E1C', sw: 2.4, cap: 'round' })); [n.cord.x0, n.cord.x1].forEach(cx => o.push(`<circle cx="${f1(X(cx))}" cy="${f1(Y(n.cord.z))}" r="3.2" fill="#B8BBC0" stroke="#444441" stroke-width="1"/>`)); }
+    o.push(LBL(X((n.bottles[0].x0 + n.bottles[2].x1) / 2), Y(n.shelfTop + 4.5), 'Shelf and bottles', `shelf top ${fmt(n.shelfTop)} up, ${fmt(n.bottleClear)} in clear above it${n.cord ? `; a bungee cord across the front ${fmt(n.cord.z - n.shelfTop)} above the shelf (${fmt(n.cord.z)} up) between two screw eyes keeps them in` : ''}`, { size: 10, fill: '#444441' }));
     o.push(GE());
   }
   // cabinets, counter
@@ -687,8 +691,10 @@ function drawBedEnd(L, V) {
   // the base: a front rail under the deck edge and the deck itself (the ends and the wall ledger are behind the cut)
   o.push(GB('base', 'Bed base and front rail'));
   o.push(bx(0, P.bedD, deck - lt, deck, { fill: COL.G, fo: .3, stroke: COL.G, sw: 1.2 }));
-  o.push(bx(P.bedD - .75, P.bedD, deck - lt - 1.5, deck - lt, { fill: COL.G, fo: .3, stroke: COL.G, sw: 1 }));
-  o.push(T(xx(P.bedD + 1.2), yy(deck - lt - .6), 'base front rail holds up the deck front', { anchor: 'start', size: 10, fill: COL.G, halo: false, op: bs.th < .2 ? 1 : 0 }));
+  o.push(bx(P.bedD - .75, P.bedD, deck - lt - 3.5, deck - lt, { fill: COL.G, fo: .2, stroke: COL.G, sw: 1, dash: '4 3' }));
+  if (L.cmod) o.push(bx(P.bedD - .75, P.bedD, deck - lt - L.cmod.fr.h, deck - lt, { fill: '#B5833C', fo: .85, stroke: '#5A3A00', sw: 1.2 }));
+  o.push(T(xx(P.bedD + 1.2), yy(deck - lt - 2.8), 'front rail under the deck edge: 3/4 x 3 1/2 west of the cabinet', { anchor: 'start', size: 10, fill: COL.G, halo: false, op: bs.th < .2 ? 1 : 0 }));
+  if (L.cmod) o.push(T(xx(P.bedD + 1.2), yy(deck - lt - .5), `(solid) 3/4 x ${fmt(L.cmod.fr.h)} glued to the deck over the cabinet`, { anchor: 'start', size: 10, fill: '#5A3A00', halo: false, op: bs.th < .2 ? 1 : 0 }));
   o.push(GE());
   // the leaf: hinged on the top faces at the deck front edge (y = bedD, z = deck); th: 0 folded back on the deck, pi flipped out level
   const th = bs.th, hy = P.bedD, d = [-Math.cos(th), Math.sin(th)], n = [Math.sin(th), Math.cos(th)];
