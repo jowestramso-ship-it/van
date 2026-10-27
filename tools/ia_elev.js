@@ -312,6 +312,13 @@ function drawPass(L, V) {
   o.push(box(0, P.panW, 0, panTop, { fill: '#D9ECF7', fo: .95, stroke: COL.BL, sw: 1.8 }));
   o.push(T(X(P.panW / 2), Y(1.2), 'fixed pan, 3 in curb', { size: 10, fill: COL.BL }));
   o.push(GE());
+  if (L.liner) {
+    const ln = L.liner;
+    o.push(GB('liner', 'Waterproof liner'));
+    o.push(box(ln.x0, ln.x1, ln.z0, ln.z1, { fill: '#2A9D8F', fo: .1, stroke: '#1F7A70', sw: 1.4, dash: '2 3' }));
+    o.push(LBL(X(ln.x0 + 5.4), Y(31.5), 'Liner', `a thin FRP panel (${(+P.linerT).toFixed(2)} in) over the plywood on the stall wall, ${fmt(ln.x0)} to ${fmt(ln.x1)} in along it and ${fmt(ln.z0)} to ${fmt(ln.z1)} up (it stops ${fmt(P.linerGap)} in above the pan edge, the gap filled with flexible sealant), with the nook cut out and lined and the same on W3's stall face; ${ln.sheets} sheets of 4 x 8 ft, about ${Math.round(ln.lbs)} lb`, { size: 10.5, fill: '#1F7A70' }));
+    o.push(GE());
+  }
   if (L.toilet) {
     const t = L.toilet;
     o.push(GB('toilet', 'Toilet'));

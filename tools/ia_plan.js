@@ -179,7 +179,9 @@ function drawPlan(L, V) {
   o.push(GB('pan', 'Shower'));
   o.push(ip(0, P.panW, 0, P.panD, COL.T, '', null, { fo: .08, dash: '6 4' }));
   { const cx = xx((L.toilet ? L.toilet.x0 : P.panW) / 2), cy = yp(P.panD / 2); o.push(T(cx, cy - 14, 'Shower', { size: 11, fill: COL.T, w: 500 })); o.push(T(cx, cy, `${fmt(P.panW)} x ${fmt(P.panD)}, fixed pan`, { size: 9.5, fill: COL.T })); o.push(T(cx, cy + 12, 'curtain on the aisle side', { size: 9, fill: COL.T })); }
+  o.push(ip(L.pdr.x - 1.2, L.pdr.x + 1.2, L.pdr.y - 1.2, L.pdr.y + 1.2, '#185FA5', '', null, { fo: .45 })); o.push(T(xx(L.pdr.x), yp(L.pdr.y) + 3, 'drain', { size: 8.5, fill: '#185FA5' }));
   o.push(GE());
+  if (L.liner) { const ln = L.liner; o.push(GB('liner', 'Waterproof liner')); o.push(ip(ln.x0, ln.x1, 0, .7, '#2A9D8F', '', null, { fo: .85 })); if (ln.w3) o.push(ip(ln.x1 - .7, ln.x1, 0, P.panD, '#2A9D8F', '', null, { fo: .85 })); o.push(GE()); }
   if (L.toilet) {
     o.push(GB('toilet', 'Toilet'));
     o.push(ip(L.toilet.x0, L.toilet.x1, L.toilet.y0, L.toilet.y1, '#993556', 'Toilet', `Fold-To-Go ${fmt(P.toiletD)} x ${fmt(P.toiletW)}`, { fo: .2, fs: 10 }));

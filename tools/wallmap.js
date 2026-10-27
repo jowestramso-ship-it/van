@@ -65,6 +65,7 @@ async function grab(page, side) {
       if (P.fridgeOn) add('Fridge', L.fr[0], L.fr[1], 8.25, 8.25 + P.fridgeH, `${F(P.fridgeW)} x ${F(P.fridgeD)} x ${F(P.fridgeH)}, on a platform`);
       if (P.microOn) add('Microwave', L.microX[0], L.microX[1], L.microZ[0], L.microZ[1], 'on its shelf');
       L.walls.filter(w => w.side === 'p').forEach(w => add('Floor-to-ceiling wall', w.x0, w.x1, 0, L.ceilF, `${w.id}: ${F(P.fwT)} thick, ${F(w.d)} out from the wall, ${w.id === 'W3' ? 'between the shower and the fridge' : 'between the fridge and the counter cabinet'}`));
+      if (L.liner) add('Waterproof liner (FRP, over the plywood)', L.liner.x0, L.liner.x1, L.liner.z0, L.liner.z1, `${(+P.linerT).toFixed(2)} in thick; stops ${F(P.linerGap)} in above the pan edge (sealant in the gap); the nook cut out and lined; also on W3's stall face`);
       if (L.toilet) add('Toilet', L.toilet.x0, L.toilet.x1, 3.8, 3.8 + L.toilet.z1, `${F(P.toiletD)} along the wall x ${F(P.toiletW)} out, ${F(L.toilet.z1)} high, back against the wall to the fridge, the Reliance Fold-To-Go, left set up in the stall`);
       if (L.sn) {
         add('Towel bar (in the shower nook)', L.sn.bar.x0, L.sn.bar.x1, L.sn.bar.z - .5, L.sn.bar.z + .5, `${F(L.sn.bar.z)} up, inside the nook`, L.sn.bar.z);

@@ -7,6 +7,7 @@ const PD = [
   { k: 'ceil', g: 'Van', l: 'Ceiling height at the wall (bare, to the rib)', d: 75.5, s: .5, a: 60, b: 90 },
   { k: 'numLbl', g: 'Take items out', l: 'Number the items in the side views and list their names and sizes under the drawing (untick to write them on the drawing)', d: true, t: 'c' },
   { k: 'showerOn', g: 'Take items out', l: 'Shower head and valve in the wet bath', d: true, t: 'c' },
+  { k: 'linerOn', g: 'Take items out', l: 'Waterproof liner (a thin FRP panel over the plywood) on the shower wall, the shower end wall W3 and inside the shower nook', d: true, t: 'c' },
   { k: 'microOn', g: 'Take items out', l: 'Microwave and its shelf (untick to take it out of the diagram and the checks)', d: true, t: 'c' },
   { k: 'tvOn', g: 'Take items out', l: 'TV over the nook', d: true, t: 'c' },
   { k: 'towelOn', g: 'Take items out', l: 'Paper towel roll in its recess in the angled front', d: true, t: 'c' },
@@ -95,6 +96,11 @@ const PD = [
   { k: 'tbarDrop', g: 'Shower nook contents', l: 'Towel bar: how far below the top of the nook', d: 3.5, s: .25, a: 1, b: 8 },
   { k: 'snCord', g: 'Shower nook contents', l: 'Bungee cord across the nook front: height above the shelf board (0 for none; it keeps the bottles from falling out)', d: 5.5, s: .25, a: 0, b: 9 },
   { k: 'snShelf', g: 'Shower nook contents', l: 'Shelf board: its top, up from the floor (toilet paper under it, bottles on it)', d: 43.75, s: .25, a: 38, b: 54 },
+  { k: 'linerT', g: 'Shower liner and drain', l: 'Liner thickness (FRP panel 0.09 in, which is a little under 3/32)', d: .09, s: .005, a: .03, b: .25 },
+  { k: 'linerTop', g: 'Shower liner and drain', l: 'Liner top, up from the floor (the finished ceiling at the wall is about 74 1/2; the head is at 70)', d: 74, s: .5, a: 40, b: 75 },
+  { k: 'linerGap', g: 'Shower liner and drain', l: 'Liner: the gap it leaves above the pan edge against the wall, filled with flexible sealant (the pan top is 3.8 up with the 3 in curb; a stiff panel cannot lap over the pan lip)', d: .25, s: .0625, a: 0, b: 1 },
+  { k: 'pdrX', g: 'Shower liner and drain', l: 'Shower drain hole: along the wall from the back (ASSUMED: you said the middle of the rear-door end; measure the pan and the hole)', d: 4, s: .25, a: 2, b: 34 },
+  { k: 'pdrY', g: 'Shower liner and drain', l: 'Shower drain hole: out from the passenger wall (12 is the middle of the 24 in depth)', d: 12, s: .25, a: 2, b: 22 },
   { k: 'snookLip', g: 'Passenger side', l: 'Shower nook front lip (0 for none: a bungee cord across the front keeps things in instead)', d: 0, s: .25, a: 0, b: 4 },
   { k: 'fridgeW', g: 'Passenger side', l: 'Fridge width', d: 22, s: .5, a: 14, b: 30 },
   { k: 'fridgeD', g: 'Passenger side', l: 'Fridge depth', d: 19, s: .5, a: 12, b: 26 },
@@ -302,7 +308,7 @@ const HITR = (x, y, w, h) => `<rect x="${f1(x)}" y="${f1(y)}" width="${f1(Math.m
 const GB = (id, label) => `<g class="hg" data-grp="${id}" data-label="${label}">`;
 const GE = () => '</g>';
 // items that were taken out (their tick box in Sizes is off): cut their groups and drag handles out of a finished drawing
-const REMOVED = () => [['showerOn', 'shower'], ['microOn', 'Micro'], ['tvOn', 'tv'], ['towelOn', 'towels'], ['fridgeOn', 'fridge'], ['drawersOn', 'drawers'], ['battOn', 'batt'], ['closetOn', 'closet'], ['wallsOn', 'fwalls'], ['toiletOn', 'toilet'], ['snItemsOn', 'snitems'], ['gearOn', 'gear'], ['gcabOn', 'gcab'], ['winOn', 'win']].filter(r => !P[r[0]]).map(r => r[1]);
+const REMOVED = () => [['showerOn', 'shower'], ['microOn', 'Micro'], ['tvOn', 'tv'], ['towelOn', 'towels'], ['fridgeOn', 'fridge'], ['drawersOn', 'drawers'], ['battOn', 'batt'], ['closetOn', 'closet'], ['wallsOn', 'fwalls'], ['linerOn', 'liner'], ['toiletOn', 'toilet'], ['snItemsOn', 'snitems'], ['gearOn', 'gear'], ['gcabOn', 'gcab'], ['winOn', 'win']].filter(r => !P[r[0]]).map(r => r[1]);
 function stripGroups(html, ids) {
   ids.forEach(id => {
     const open = `<g class="hg" data-grp="${id}"`;
@@ -468,6 +474,13 @@ function layout(P0) {
     sn.bottlesEnd = bx0 - .5; sn.rollClear = sn.shelfTop - .75 - bot - 4.5; sn.bottleClear = top - sn.shelfTop;
     L.sn = P.snItemsOn ? sn : null;
   }
+  // the waterproof liner: a thin FRP panel over the plywood on the stall's wall (0 to the face of W3), on W3's stall face, and inside the nook; it laps down over the pan edge
+  { const x1 = P.panW - (P.wallsOn ? P.fwT : 0), pz = 3.8, z0 = pz + P.linerGap, z1 = Math.min(P.linerTop, L.ceilF || P.linerTop), hh = z1 - z0;
+    const nkx = Math.min(29.75, P.panW - 6.25), nk0 = nkx - P.snookLen, nb = P.snookTop - P.snookH, nt = P.snookTop;
+    const pieces = x1 * hh + (P.wallsOn ? P.panD * hh : 0), nookSides = 2 * 4.5 * (nt - nb) + 2 * P.snookLen * 4.5;   // the wall panel's cut-out is the nook's back; its four sides come out of the offcuts
+    const sheets = hh <= 96 ? Math.ceil((x1 + (P.wallsOn ? P.panD : 0)) / 48) : 99;
+    L.liner = P.linerOn ? { x0: 0, x1, z0, z1, h: hh, t: P.linerT, w3: P.wallsOn, nook: { x0: nk0, x1: nkx, z0: nb, z1: nt }, sheets, left: sheets * 4608 - pieces, nookSides, lbs: (pieces + nookSides) / 144 * .5 } : null;
+    L.pdr = { x: P.pdrX, y: P.pdrY }; }
   // floor-to-ceiling walls. Driver side (y = out from the driver wall): the closet's cab-side panel carried out to the bench depth, which the back of the rear bench leans on,
   // and the wall behind the driver seat (face at the cab wall mark, body behind it), which the back of the cab-end bench leans on. Passenger side (y = out from the passenger wall):
   // one each side of the fridge, taken out of the shower and out of the counter cabinet so that no other position moves; the shower one is as deep as the pan, the counter one as deep as the cabinet
