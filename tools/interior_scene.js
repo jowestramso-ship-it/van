@@ -160,7 +160,7 @@
   // wall cabinets (front faces the aisle at z = depth); doors with gaps and pulls
   L.cabs.forEach(c => bx(c[0], c[1], P.cabBot, hw - .05, 0, P.cabDepth, MT.wood, 36));
   L.doors.forEach(d => { const dz = P.cabDepth, y0 = L.doorZ[0], y1 = L.doorZ[1]; bx(d.x0 - .2, d.x1 + .2, y0 - .2, y1 + .2, dz - .05, dz + .12, MT.gap, 8, { cast: false }); bx(d.x0, d.x1, y0, y1, dz + .1, dz + .75, MT.woodH, 36); handle((d.x0 + d.x1) / 2, y0 + 1.6, dz + .75, 4, false, 1); });
-  // couch: the deck lid (with its leaf, legs and cushions) lifts off the frame (lidG); the frame (back rail on the wall blocks, front rail and posts) is frameG.
+  // couch: the deck (with its leaf, legs and cushions) is lidG and the frame (back rail on the wall blocks, front rail and posts) is frameG; they are one piece and lift out together.
   // With the gear shelf but no cabinet the base is the old open frame; without the shelf, a solid box.
   const G = L.gear, SH = G && G.sh, DU = P.platform - 1.5, DT = P.platform - .75, HY = P.bedD - .75, HZ = P.bedD, LWd = P.bedBack;
   const lidG = new THREE.Group(), frameG = new THREE.Group(); scene.add(lidG, frameG);
@@ -215,12 +215,12 @@
     const bs = document.getElementById('bs'); if (bs && +bs.value !== Math.round(s * 100)) bs.value = Math.round(s * 100);
     draw();
   }
-  // the couch comes out in two lifts: the cushions off, the deck lid (with its leaf folded) up and away, then the frame off its wall blocks
-  const LIFTCAPS = [[.25, '1. Cushions off, leaf folded back, the deck lid\'s screws out.'], [.6, '2. The deck lid lifts off the frame and the cabinet panels (about 45 lb: two people).'], [1.01, '3. The six rail screws are out: the frame lifts off its three wall blocks (about 40 lb). The cabinet, the shelf and the battery stay.']];
+  // the couch/bed frame, deck included, lifts straight up and out in one piece; the cabinet, the shelf and the battery stay
+  const LIFTCAPS = [[.25, '1. The cushions come off and the leaf is folded back.'], [1.01, '2. Two people lift the whole frame, deck included, straight up off its dowels (about 80 lb) and carry it out end first through the rear doors. The cabinet, the shelf and the battery stay; setting it down is the same in reverse and it just sits over the cabinet.']];
   function applyLift(s) {
-    applyBed(0); const c = cl3(s / .25), lid = ease3(cl3((s - .25) / .35)), fr = ease3(cl3((s - .6) / .4));
+    applyBed(0); const c = cl3(s / .25), up = ease3(cl3((s - .25) / .75));
     seatMat.opacity = backMat.opacity = 1 - c; seatG.visible = backG.visible = c < .99; pilG.visible = c < .01;
-    lidG.position.y = 32 * lid; frameG.position.y = 20 * fr;
+    lidG.position.y = frameG.position.y = 34 * up;
     const cap = document.getElementById('lcap'); if (cap) cap.textContent = (LIFTCAPS.find(x => s < x[0]) || LIFTCAPS[LIFTCAPS.length - 1])[1];
     const ls = document.getElementById('ls'); if (ls && +ls.value !== Math.round(s * 100)) ls.value = Math.round(s * 100);
     draw();

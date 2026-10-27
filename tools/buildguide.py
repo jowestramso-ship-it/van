@@ -164,13 +164,13 @@ def pages(root):
     P.append(dict(slug='gear-cabinet', nav='Gear cabinet', title='The gear cabinet and its sliding shelf',
         kick='Floor-mounted, after the battery is in; the couch frame rests on it afterwards.',
         intro='<p>You asked for a cabinet for the battery and the three units, fixed to the floor, with the top part sliding out. It is two plywood side panels on the floor and the gear shelf as the sliding top; the front below the shelf stays open.</p>', steps=[], blocks=[C4]))
-    P.append(dict(slug='couch-frame', nav='Couch frame', title='The removable couch: frame, wall blocks and deck lid',
+    P.append(dict(slug='couch-frame', nav='Couch frame', title='The removable couch: frame, wall blocks and deck',
         kick='After the cabinet, because the deck rests on its panels.',
-        intro='<p>The couch is a separate piece: a frame that hangs on three wall blocks (3, 20 if needed, and 41 in from the back) and a deck lid on top, so it can be lifted out. The next page has the leaf, legs and cushions that go on the lid.</p>', steps=[], blocks=[C5]))
+        intro='<p>The couch is a separate piece, built apart from the cabinet: a frame with its deck on top that rests on three wall blocks (3, 20 if needed, and 41 in from the back) and over the cabinet, with nothing screwed, so it lifts up and out of the van in one piece and just sits back over the cabinet. The next page has the leaf, legs and cushions that go on the deck.</p>', steps=[], blocks=[C5]))
     P.append(dict(slug='couch', nav='Couch bed', title='The couch bed: leaf, legs and cushions',
-        kick='Last of the couch: it goes on the deck lid of the frame.',
+        kick='Last of the couch: it goes on the deck of the frame.',
         intro='<p>The couch is 74 x 26 in, with the deck 16 to 16 3/4 in up (3 1/2 in higher than the old plan, so the gear shelf fits over the battery). It sits on the removable frame of the last page, over the gear cabinet. The bed makes up with a hinged leaf and four fold-down legs.</p>' + table(['Bed / couch', 'Wheel well']),
-        steps=['<b>Deck lid:</b> 3/4 in plywood, 74 x 26 in, on the frame and the two cabinet panels (the last page), 16 to 16 3/4 in up; check its front edge over the cabinet carries a person before the cushions go on.',
+        steps=['<b>Deck:</b> 3/4 in plywood, 74 x 26 in, on the frame and the two cabinet panels (the last page), 16 to 16 3/4 in up; check its front edge over the cabinet carries a person before the cushions go on.',
                '<b>Deck details:</b> the deck is the lid above, 74 x 26 in. <b>Leaf:</b> 3/4 in birch plywood, 20 x 73 3/4 in, a plain slab; hinge it with a 74 in continuous hinge on the top faces (#8 x 5/8 in screws every 3 to 4 in, a 1/8 to 3/16 in gap).',
                '<b>Legs:</b> cut four through-slots (1 1/2 x 13 in) in the leaf, 3 in from the free edge, about 24 in apart; each leg is a 3/8 x 1 1/4 in bar, 12 5/8 in long, on a 1/4 in pin, with a threaded foot that screws out about 3 1/2 in.',
                '<b>Latches:</b> two turn buttons or magnetic catches hold the leaf folded back while driving.',
@@ -215,7 +215,7 @@ def pages(root):
         kick='The last things, and the checks that tell you it works.',
         intro='<p>This is a checklist more than a build step: the work is done when each line is true.</p>',
         steps=['Cushions on, the leaf folded back, legs in their slots and the turn buttons shut.',
-               'The gear shelf slides out smoothly, the cable loops follow it without catching, and it goes back home; the couch lid and frame lift out and go back on the wall blocks.',
+               'The gear shelf slides out smoothly, the cable loops follow it without catching, and it goes back home; the couch frame lifts out in one piece and sits back over the cabinet.',
                'Every circuit tested with a meter, the GFCI outlets tested, the 120 V side inspected.',
                'The roof fan and the air conditioner run, the seals around them hold water, the window is sealed.',
                'Open every door and drawer in turn: the closet door and drawers, the trash can, the fridge door, the fold-out table; check the walkway they leave.',

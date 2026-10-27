@@ -44,7 +44,7 @@ const fs = require('fs');
   button[aria-pressed=true]{background:var(--ink);color:var(--bg)}
   .note{color:var(--mute);font-size:14px;margin:8px 0}.sl{display:flex;gap:10px;align-items:center;font-size:14px;flex:1 1 320px}.sl input{flex:1;min-width:120px}`;
   const body = `<div class="wrap"><h1>Inside the van, in 3D</h1>
-  <p class="lead">A 3D model built from the plan's own sizes: the walls and the cabinets in a light wood stain, the countertop medium grey, a light grey plywood ceiling under light wood planks. Drag to look around, scroll or pinch to zoom, and use the buttons to jump to a viewpoint or to step along the van. Under the couch, the inverter and the two chargers sit on one pull-out shelf over the battery: the shelf is the sliding top of a gear cabinet (two floor-mounted panels, the battery on the floor under it): press Play (or drag the slider) to see it slide out into the aisle. The couch above is a removable frame on three wall blocks with a separate deck lid.</p>
+  <p class="lead">A 3D model built from the plan's own sizes: the walls and the cabinets in a light wood stain, the countertop medium grey, a light grey plywood ceiling under light wood planks. Drag to look around, scroll or pinch to zoom, and use the buttons to jump to a viewpoint or to step along the van. Under the couch, the inverter and the two chargers sit on one pull-out shelf over the battery: the shelf is the sliding top of a gear cabinet (two floor-mounted panels, the battery on the floor under it): press Play (or drag the slider) to see it slide out into the aisle. The couch above is a removable frame on three wall blocks with its deck on top, lifting out in one piece.</p>
   <div class="stage"><canvas id="c" width="1280" height="720"></canvas></div>
   <div class="bar" id="views"></div>
   <div class="bar"><button id="back" type="button">Step back</button><button id="fwd" type="button">Step forward</button></div>
@@ -52,7 +52,7 @@ const fs = require('fs');
   <p class="note" id="cap"></p>
   <div class="bar" id="bedbar"><button id="bplay" type="button">Play</button><label class="sl">The couch becomes a bed <input type="range" id="bs" min="0" max="100" value="0"></label></div>
   <p class="note" id="bcap"></p>
-  <div class="bar" id="liftbar"><button id="lplay" type="button">Play</button><label class="sl">The couch lifts out (deck lid, then frame) <input type="range" id="ls" min="0" max="100" value="0"></label></div>
+  <div class="bar" id="liftbar"><button id="lplay" type="button">Play</button><label class="sl">The couch/bed frame lifts out in one piece <input type="range" id="ls" min="0" max="100" value="0"></label></div>
   <p class="note" id="lcap"></p>
   <p class="note">This is a rendering of a model, not a photograph. The positions and sizes come from the plan. The finishes are placeholders where you have not chosen: the fabric (oatmeal), the floor (a mid grey-brown plank), the fridge (white), the pulls (black), and the cab seen through the open end. The sliding door is drawn open with daylight coming in.</p></div>`;
   const mk = three => `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Van interior in 3D</title><style>${css}</style></head><body>${body}<script src="${three}"></script><script>const D=${JSON.stringify(D)};</script><script>${scene}</script></body></html>`;

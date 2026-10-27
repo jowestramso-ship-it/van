@@ -1,4 +1,4 @@
-# C5: the removable couch: a frame (back rail on three wall blocks, front rail, end rail, cross rail, two posts) and a separate deck lid, over the gear cabinet.
+# C5: the removable couch: a frame (back rail on three wall blocks, front rail, end rail, cross rail, two posts) and a separate deck, over the gear cabinet.
 # Uses the helpers of shelf.py (_t, _r, _l, colors, _MK) and the numbers of shelfdata.py. Three drawings: from the aisle, a section through a wall block, and from above.
 BLKC='#5A2E0A'; RAILC='#C9A263'; GRN='#2F5E3F'
 def _tag5(x,y,k): return f'<circle cx="{x:.1f}" cy="{y:.1f}" r="8" fill="#fff" stroke="{INK}" stroke-width="1.2"/>'+_t(x,y+3.5,k,10,INK,'middle',700).replace('stroke-width:3px','stroke-width:0px')
@@ -6,7 +6,7 @@ def _aisle5():
     S=11.5; OX=40; FLY=300
     X=lambda x: OX+S*x; Z=lambda z: FLY-S*z
     o=[]; a=o.append
-    a(_t(OX,24,'1  Seen from the aisle: the frame (grey), the wall blocks (dark) and the cabinet panels, deck lid shown over them',13,INK,'start',700))
+    a(_t(OX,24,'1  Seen from the aisle: the frame (grey), the wall blocks (dark) and the cabinet panels, deck shown over it',13,INK,'start',700))
     a(_l(X(-1),Z(0),X(80),Z(0),INK,2.5))
     # wheel well, battery, chairs (dashed)
     pts=[(42,0),(76,0),(76,2),(66.75,7.5),(51.25,7.5),(42,2)]
@@ -24,8 +24,8 @@ def _aisle5():
     for px in POST_X: a(_r(X(px),Z(BR_Z0),S*POST,S*BR_Z0,'#B9BCC2',INK,1.4,'',.9))
     a(_t(X(SH_DIV/2),Z(14.25)+3,'front rail 3/4 x 3 1/2 on edge',10,INK,'middle',700))
     a(_t(X(55.5),Z(14.25)+3,'back rail behind (dashed), 74 long',10,INK,'middle',700))
-    # the deck lid on top
-    a(_r(X(0),Z(DECK_T),S*C0,S*.75,BRN,'#3E230B',1,'',.95)); a(_t(X(1),Z(DECK_T)-4,f'deck lid {fr8(DECK_U)} to {fr8(DECK_T)} up (the leaf folds onto it)',9.5,INK,'start'))
+    # the deck on top
+    a(_r(X(0),Z(DECK_T),S*C0,S*.75,BRN,'#3E230B',1,'',.95)); a(_t(X(1),Z(DECK_T)-4,f'deck {fr8(DECK_U)} to {fr8(DECK_T)} up (the leaf folds onto it)',9.5,INK,'start'))
     # dowels in the panel tops
     for px in (CB_X0+CB_T/2,CB_X1+CB_T/2): a(_r(X(px)-S*.19,Z(DECK_U+.5),S*.38,S*1,'#C9A263',INK,1,'',1))
     # wall blocks
@@ -35,7 +35,7 @@ def _aisle5():
     a(_r(X(CB_X0+CB_T),Z(DECK_U),S*(C0-CB_X0-CB_T),S*BR_H,'none',INK,1.6,''))   # the back rail, doubled over the cabinet, on a ledger at each panel
     for lx in (CB_X0+CB_T,C0-.75): a(_r(X(lx),Z(BR_Z0),S*.75,S*LEDGE_H,'#C9A263',INK,1.1,'',1))
     a(_tag5(X(3),Z(14.25),'1')); a(_tag5(X(CB_X0-1.5),Z(8.5),'2'))
-    a(_t(X(CB_X0+1),Z(20.5),'tops of the panels carry the lid; 2 dowels in each',9.5,INK,'start'))
+    a(_t(X(CB_X0+1),Z(20.5),'tops of the panels carry the deck; 2 dowels in each',9.5,INK,'start'))
     a(_l(X(CB_X0+5),Z(20.1),X(CB_X0+CB_T/2),Z(DECK_U+1.4),INK,1,'3 2'))
     return '\n'.join(o)
 def _section5():
@@ -55,7 +55,7 @@ def _section5():
     # the screws: the wall screws (horizontal, through the block and the planks into S2) and the rail screws (down through the top edge into the block)
     for zz in (12.0,3.0): a(_l(Y(BLK_D+.6),Z(zz),Y(-1.2),Z(zz),RED,2.2))
     a(_t(Y(BLK_D+.8),Z(11.0)-5,'2 screws #8 x 3 into S2',9.5,RED,'start',700)); a(_t(Y(BLK_D+.8),Z(3.0)-5,'2 screws #8 x 3 into S1',9.5,RED,'start',700))
-    a(_l(Y(.375),Z(DECK_U),Y(.375),Z(BLK_Z1-1.0),RED,2.2)); a(_t(Y(1.2),Z(13.4)+3,'4 1/2 in screws, down from the top (lid off)',9.5,RED,'start',700))
+    a(_l(Y(.375),Z(DECK_U),Y(.375),Z(BLK_Z1-1.0),RED,2.2)); a(_t(Y(1.2),Z(13.4)+3,'dowel in the post top: nothing is screwed',9.5,RED,'start',700))
     # front rail west of the cabinet
     a(_r(Y(CB_Y1-.75),Z(DECK_U),S*.75,S*BR_H,RAILC,INK,1.1,'',.6)); a(_t(Y(CB_Y1-.75),Z(DECK_U-BR_H)+13,'front rail',9.5,INK,'end'))
     a(_l(Y(0),Z(0)+12,Y(BLK_D),Z(0)+12,INK,1.2,'',_MK)); a(_t(Y(0.8),Z(0)+24,'1 1/2',9.5,INK,'middle',700))
@@ -65,7 +65,7 @@ def _plan5():
     S=6.5; OX=470; OY=410
     X=lambda x: OX+S*x; Y=lambda y: OY+S*y
     o=[]; a=o.append
-    a(_t(OX,376,'3  From above, driver wall at the top (deck lid off)',13,INK,'start',700))
+    a(_t(OX,376,'3  From above, driver wall at the top (deck off)',13,INK,'start',700))
     a(_l(X(-1),Y(0),X(80),Y(0),INK,4))
     a(_r(X(42),Y(0),S*34,S*7,'#D8B79A',BRN,1.1,'',.6)); a(_r(X(BAT[0]),Y(7),S*21,S*10,'#F2B84B',AMB,1.2,'4 3',.35))
     a(_r(X(0),Y(2),S*34.5,S*21,'#7FB08F',GRN,1.2,'4 3',.2)); a(_t(X(17),Y(13),'lawn chairs',9.5,GRN))
@@ -85,7 +85,7 @@ def _sag5():
     o = []; a = o.append
     EX = 3.0; SAG = 0.5           # the exaggeration, and a middle guess for the sag in inches (between about 1/4 in and 1 in)
     ARR = 'marker-end="url(#c4a)"'
-    a(_t(40, 800, '4  The lid over the cabinet: its front edge has nothing under it (the sag is drawn about 3 times too big)', 13, INK, 'start', 700))
+    a(_t(40, 800, '4  The deck over the cabinet: its front edge has nothing under it (the sag is drawn about 3 times too big)', 13, INK, 'start', 700))
     # --- (a) from the aisle ---
     S = 9.0; OX = 50; FLY = 1075
     X = lambda x: OX + S * (x - CB_X0); Z = lambda z: FLY - S * z
@@ -97,7 +97,7 @@ def _sag5():
     top, bot = Z(DECK_T), Z(DECK_U); mx = (x0 + x1) / 2
     a(f'<path d="M {x0:.1f} {top:.1f} Q {mx:.1f} {top+2*sg:.1f} {x1:.1f} {top:.1f} L {x1:.1f} {bot:.1f} Q {mx:.1f} {bot+2*sg:.1f} {x0:.1f} {bot:.1f} Z" fill="{BRN}" fill-opacity=".9" stroke="#3E230B" stroke-width="1.2"/>')
     a(f'<path d="M {mx:.1f} {top-90:.1f} L {mx:.1f} {top+sg-8:.1f}" stroke="{INK}" stroke-width="3" fill="none" {ARR}/>')
-    a(_t(mx + 12, top - 70, 'someone sits on the front edge', 11.5, INK, 'start', 700)); a(_t(mx + 12, top - 55, 'and the lid sags in the middle', 11.5, RED, 'start', 700))
+    a(_t(mx + 12, top - 70, 'someone sits on the front edge', 11.5, INK, 'start', 700)); a(_t(mx + 12, top - 55, 'and the deck sags in the middle', 11.5, RED, 'start', 700))
     a(_l(x0, FLY + 22, x1, FLY + 22, RED, 1.6, '', _MK)); a(_t(mx, FLY + 40, f'{fr16(CB_X1-CB_X0-CB_T)} in between the panels, nothing under the front edge', 11.5, RED, 'middle', 700))
     a(_t(X(CB_X0), Z(CB_H) - 30, 'from the aisle', 12, '#5F5E5A', 'start'))
     # --- (b) from the side ---
@@ -124,7 +124,7 @@ def _sag5():
     a(_r(xa, Y3(0), xb - xa, S3 * CB_Y1, '#E9D9BC', INK, 1.2, '', .9))
     a(_l(xa, Y3(0), xb, Y3(0), '#2F5E3F', 5)); a(_l(xa, Y3(0), xa, Y3(CB_Y1), '#2F5E3F', 5)); a(_l(xb, Y3(0), xb, Y3(CB_Y1), '#2F5E3F', 5)); a(_l(xa, Y3(CB_Y1), xb, Y3(CB_Y1), RED, 5, '6 4'))
     a(f'<circle cx="{(xa+xb)/2:.1f}" cy="{Y3(CB_Y1-5):.1f}" r="20" fill="{RED}" fill-opacity=".18" stroke="{RED}" stroke-width="1.4"/>'); a(_t((xa + xb) / 2, Y3(CB_Y1 - 5) + 4, 'seated', 11, RED, 'middle', 700))
-    a(_t(xa, OY3 - 34, 'from above (the lid)', 12, '#5F5E5A', 'start'))
+    a(_t(xa, OY3 - 34, 'from above (the deck)', 12, '#5F5E5A', 'start'))
     a(_l(xa, Y3(CB_Y1) + 34, xa + 26, Y3(CB_Y1) + 34, '#2F5E3F', 5)); a(_t(xa + 32, Y3(CB_Y1) + 38, 'held: the back beam and the two panels', 10.5, '#2F5E3F', 'start', 700))
     a(_l(xa, Y3(CB_Y1) + 54, xa + 26, Y3(CB_Y1) + 54, RED, 5, '6 4')); a(_t(xa + 32, Y3(CB_Y1) + 58, 'free: the front edge, nothing under it', 10.5, RED, 'start', 700))
     return '\n'.join(o)
@@ -135,9 +135,9 @@ _PARTS5=[
  ('3','End rail and cross rail','3/4 x 3 1/2 in, on edge',f'{fr16(CB_Y1-1.5)} long','2',f'at the west end (x = 0) and in the middle (about {fr8(SH_DIV/2)} in from the back), between the back and front rails; glue and two #8 x 2 1/2 in screws at each end (or pocket screws)'),
  ('4','Posts','1 1/2 x 1 1/2 in hardwood',f'{fr8(BR_Z0-1)} long','2',f'at the front corners (0 and {fr16(POST_X[1])} in from the back), glued and screwed to the inside of the front rail; each with a T-nut and a 1/4-20 leveling foot that adds about 1 in (so the post and foot reach the floor from the rail underside at 12 1/2 in up) and screws out a little more to level; only two, so the 34 1/2 in lawn chairs still slide in between them'),
  ('5','Wall blocks (posts)','2x2 (1 1/2 x 1 1/2 in actual), 12 1/2 in long','1 1/2 x 1 1/2 x 12 1/2','3 (the middle one if needed)','stand on the floor against the wall at 3, 20 and 41 in from the back mark (centers), tops at the rail\'s underside (12 1/2 in up): they carry the back of the couch to the floor; two #8 x 3 in screws through each and the planks into S1 (3 up) and two into S2 (12 up) hold them upright; the one at 41 is 40 1/4 to 41 3/4 in, clear of the west panel (39 3/8) and the wheel well (42); the lawn chairs sit 1 1/2 in off the wall to clear them'),
- ('6','Rail screws','1/4 x 4 1/2 in structural screws (or #10 x 4 in)','','6','two per block, down through the top edge of the back rail into the block, with 3/16 in pilot holes and the deck lid off (the top of a 2x2 is end grain, so a T-nut and a 1/4-20 bolt is better if you can reach it); these hold the frame to the posts and stop it lifting'),
- ('7','Deck lid','3/4 in plywood, 74 x 26 (with its leaf and hinge, diagrams C2 and C3)','74 x 26','1','rests on the rails and on the tops of the two panels (a 3/8 in dowel in each panel top fits a hole in the lid\'s underside); screwed down to the back, front and end rails from above (#8 x 1 1/4 in every 8 in), so the lid and the frame come apart in two lifts'),
- ('8','Dowels','3/8 x 1 in','','4','two in the top of each cabinet panel, glued in, 1/2 in standing proud'),
+ ('6','Dowels','3/8 x 1 in','','7','one glued into the top of each wall post (3) and two into the top of each cabinet panel (4), standing 1/2 in proud; each fits a 3/8 in hole, 3/4 in deep, in the underside of the frame (the back rail over a post, the deck over a panel) so the frame cannot slide sideways; nothing is screwed'),
+ ('7','Deck','3/4 in plywood, 74 x 26 (with its leaf and hinge, diagrams C2 and C3)','74 x 26','1','glued and screwed down to the back, front, end and cross rails (#8 x 1 1/4 in every 8 in): the deck and the frame are ONE piece, so the whole frame lifts out together (about 80 lb without cushions: two people); over the cabinet it also rests on the tops of the two panels'),
+ ('8','Hold-down for driving','two turn-buttons, or a strap and two floor eye bolts','','2','the frame only sits, so it could slide or lift when the van brakes or hits a bump: two turn-buttons on the cabinet panels that swing over the deck, or a strap to two floor anchors, hold it down while you drive and take a minute to undo'),
 ]
 _STEPS5=[
  '<b>Make the three blocks.</b> Cut a 2x2 into three 12 1/2 in posts (a stop block on the saw keeps them identical; the floor is level but check each post is square), and seal them. The one at 20 in is the one you said "maybe, if needed": cut it, but fit it only if the frame feels springy.',
@@ -145,19 +145,19 @@ _STEPS5=[
  '<b>Screw each block on:</b> a bead of construction adhesive on its back, then two #8 x 3 in screws into S1 and two into S2 through the 3/8 in planks (pilot holes). The posts stand on the floor, so the strips only keep them upright and stop the couch sliding sideways; the strips are glued to the steel only at their dots (S2: 15, 30 3/4, 40), but that is enough for that job.',
  f'<b>Build the frame on the bench:</b> the back rail ({fr8(C0)} long), the front rail ({fr16(SH_DIV)}), the end rail and the cross rail ({fr16(CB_Y1-1.5)}), all 3/4 x 3 1/2 on edge, glued and screwed into a ladder, with the tops flush; glue the doubler ({fr16(CB_X1-CB_X0-CB_T)} long) to the front of the back rail over the cabinet. Check the diagonal of the west rectangle. Glue and screw the two posts to the front rail\'s inside face, fit the T-nuts and feet, and screw the feet in so each post and foot is about 12 1/2 in to start.',
  '<b>Screw the two ledgers</b> (3/4 x 1 1/2 x 3 in, tops at 12 1/2 in up) to the inner faces of the cabinet panels at the wall end, one on each. <b>Lift the frame in:</b> the back rail goes onto the three blocks, the front posts on the floor, and the ends of the doubled part rest on the two ledgers. Adjust the two feet until the tops of the rails are level (use a level on the front rail and a straightedge from the front rail over the west panel top to the east panel top); the panel tops are at 16 in, and so are the rails.',
- '<b>Screw the rail down</b> to each block, two 1/4 x 4 1/2 in structural screws through its top edge (3/16 in pilot holes, 1 in into the block). Do not fix the frame to the cabinet or the floor: the back stands on the three wall posts, the front on its two posts, and the ends of the doubled part on the two ledgers.',
- '<b>Set the deck lid</b> on the frame and on the panel dowels and screw it to the rails from above. Pull the gear shelf out and push it home: it must clear the lid by 1 3/4 in at the face. Then put a person on the front edge of the lid over the cabinet (34 5/8 in unsupported between the panels) before the cushions go on; if it sags, a stiff front beam that lifts out is the fix (the rail that was dropped), because anything fixed under the deck there is in the way of the units.',
- '<b>To take the couch out:</b> cushions and leaf off, the lid\'s screws out and the lid lifted off (about 45 lb, two people), then the six rail screws, and the frame lifts off the blocks (about 40 lb). Everything else, the cabinet, the shelf and the battery, stays.',
+ '<b>Fit the dowels:</b> glue a 3/8 x 1 in dowel into the top of each wall post and two into the top of each cabinet panel, and drill matching 3/8 in holes, 3/4 in deep, in the underside of the back rail over each post and in the deck over each panel. Nothing is screwed: the back stands on the three wall posts, the front on its two posts, and the ends of the doubled part on the two ledgers.',
+ '<b>Try it in place:</b> pull the gear shelf out and push it home: it must clear the deck by 1 3/4 in at the face. Then put a person on the front edge of the deck over the cabinet (34 5/8 in unsupported between the panels) before the cushions go on; if it sags, a removable post or a stiff front beam that lifts out is the fix, because anything fixed under the deck there is in the way of the units.',
+ '<b>To take the couch out:</b> take the hold-downs off, the cushions off and the leaf folded back, then two people lift the whole frame straight up off its dowels (about 80 lb) and carry it out end first through the rear doors (its cross-section is only about 26 x 17 in). Everything else, the cabinet, the shelf and the battery, stays. To put it back, lower it over the cabinet and the dowels find their holes.',
 ]
 def _c5_html():
     pt='<table><tr><th>#</th><th>Part</th><th>Material</th><th>Size (in)</th><th>Qty</th><th>Notes</th></tr>'+''.join(f'<tr><td>{a}</td><td>{b}</td><td>{c}</td><td>{d}</td><td>{e}</td><td>{f}</td></tr>' for a,b,c,d,e,f in _PARTS5)+'</table>'
     st='<ol>'+''.join(f'<li>{x}</li>' for x in _STEPS5)+'</ol>'
-    svg=['<svg viewBox="0 0 1000 1130" role="img"><title>The removable couch: the frame, the wall blocks, the deck lid and the gear cabinet</title>','<defs><marker id="c4a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>',_aisle5(),_section5(),_plan5(),_sag5(),'</svg>']
-    return ('<h3>Driver side: the removable couch (frame, wall blocks and deck lid), how to make it</h3>\n<div class="wide">'+'\n'.join(svg)+'</div>\n'
-     f'<p>The couch is a separate piece that sits over the gear cabinet (diagram C4) and lifts out in two lifts. <b>The frame</b> has a full-length back rail ({fr8(C0)} in, 3/4 x 3 1/2 on edge) that rests on three wall blocks, which are 2x2 posts standing on the floor against the wall at {BLK_X[0]}, {BLK_X[1]} (if needed) and {BLK_X[2]} in from the back mark, and is screwed down into them from above; west of the cabinet (0 to {fr16(SH_DIV)} in) a front rail, an end rail and a cross rail make a ladder carried at the front by two posts with screw-out feet, with the lawn chairs between them. <b>What holds it up:</b> at the back the three wall posts, at the front the two front posts west of the cabinet, and over the cabinet the two panels, with the back rail doubled and resting on a ledger on each panel; the wall itself carries none of the weight. Over the cabinet there is no front rail: the front edge of the deck is free, because the units on the shelf are taller than the room under a rail. <b>The deck lid</b> (3/4 in plywood, 74 x 26, with the leaf and cushions of diagrams C, C2 and C3) sits on the frame and on two dowels in each panel top and is screwed to the rails from above. Nothing is fixed to the floor except the cabinet, and nothing is fixed to the cabinet except by its dowels.</p>\n'
-     f'<p><b>The lid\'s front edge over the cabinet (drawing 4).</b> The lid is held along the back (the doubled back rail on its two ledgers) and at both ends (the panel tops), but its front edge is free for {fr16(CB_X1-CB_X0-CB_T)} in and nothing can go under it: the units reach 15 1/2 in up and the lid is at {fr8(DECK_U)}. A rough hand calculation (3/4 in plywood, about 100 lb reaching a 12 in wide strip in the middle of the front edge, plywood stiffness 1.2 million psi) gives about 1/4 in of sag if that strip acts like a beam between the two panels and about 1 in if it acts like a cantilever off the back beam. The real figure lies between the two, so expect around 1/2 in under a seated adult, which you would see and feel. The fixes are a removable post under the middle of the edge (taken out before the shelf is pulled) or two narrower trays with a fixed post between them.</p>\n'
+    svg=['<svg viewBox="0 0 1000 1130" role="img"><title>The removable couch: the frame, the wall blocks, the deck and the gear cabinet</title>','<defs><marker id="c4a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>',_aisle5(),_section5(),_plan5(),_sag5(),'</svg>']
+    return ('<h3>Driver side: the removable couch (frame, wall blocks and deck), how to make it</h3>\n<div class="wide">'+'\n'.join(svg)+'</div>\n'
+     f'<p>The couch is a separate piece, built apart from the gear cabinet (diagram C4). The cabinet, with the battery under it and the shelf on top, is permanent. The couch frame, with its deck on top, lifts up and out of the van in one piece, and when it is set down it just sits over the cabinet: nothing is screwed to the van or the cabinet, and dowels in the post tops and the panel tops fit holes in its underside so it cannot slide. <b>The frame</b> has a full-length back rail ({fr8(C0)} in, 3/4 x 3 1/2 on edge) that just rests on three wall blocks, which are 2x2 posts standing on the floor against the wall at {BLK_X[0]}, {BLK_X[1]} (if needed) and {BLK_X[2]} in from the back mark; west of the cabinet (0 to {fr16(SH_DIV)} in) a front rail, an end rail and a cross rail make a ladder carried at the front by two posts with screw-out feet, with the lawn chairs between them. <b>What holds it up:</b> at the back the three wall posts, at the front the two front posts west of the cabinet, and over the cabinet the two panels, with the back rail doubled and resting on a ledger on each panel; the wall itself carries none of the weight. Over the cabinet there is no front rail: the front edge of the deck is free, because the units on the shelf are taller than the room under a rail. <b>The deck</b> (3/4 in plywood, 74 x 26, with the leaf and cushions of diagrams C, C2 and C3) is glued and screwed to the rails, so deck and frame are one piece of about 80 lb that two people can lift. Because it only sits, add two turn-buttons or a strap to hold it down when you drive. Nothing is fixed to the floor except the cabinet.</p>\n'
+     f'<p><b>The deck\'s front edge over the cabinet (drawing 4).</b> The deck is held along the back (the doubled back rail on its two ledgers) and at both ends (the panel tops), but its front edge is free for {fr16(CB_X1-CB_X0-CB_T)} in and nothing can go under it: the units reach 15 1/2 in up and the deck is at {fr8(DECK_U)}. A rough hand calculation (3/4 in plywood, about 100 lb reaching a 12 in wide strip in the middle of the front edge, plywood stiffness 1.2 million psi) gives about 1/4 in of sag if that strip acts like a beam between the two panels and about 1 in if it acts like a cantilever off the back beam. The real figure lies between the two, so expect around 1/2 in under a seated adult, which you would see and feel. The fixes are a removable post under the middle of the edge (taken out before the shelf is pulled) or two narrower trays with a fixed post between them.</p>\n'
      '<p><b>Parts</b> (the numbers 1 and 2 on the drawing are the wall blocks and the cabinet panels):</p>\n'+pt+'\n<p><b>How to build it, in order:</b></p>\n'+st+
-     '\n<p><b>Not settled:</b> the deck\'s front edge over the cabinet (34 5/8 in with nothing under it: test it, and keep the old lift-out rail in mind as the fix), whether the block at 3 in has an S2 attachment dot behind it, the weight of the whole couch (about 85 lb with the cushions is an estimate), and how the rail screws find solid wood in the blocks (use a drill stop and pilot holes).</p>\n')
+     '\n<p><b>Not settled:</b> the deck\'s front edge over the cabinet (34 5/8 in with nothing under it: test it, and keep a removable post or a lift-out beam in mind as the fix), the weight of the whole frame (about 80 lb without cushions is an estimate), and whether you want the hold-downs (a frame that only sits can slide or lift in a hard stop).</p>\n')
 _h=open((ROOT+'/sides.html')).read()
 assert '<h2>2. Passenger side</h2>' in _h
 _h=_h.replace('<h2>2. Passenger side</h2>',_c5_html()+'<h2>2. Passenger side</h2>',1)

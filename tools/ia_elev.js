@@ -156,7 +156,7 @@ function drawDriver(L, V) {
     o.push(box(0, m.west, rz0, du, { fill: COL.G, fo: .3, stroke: COL.G, sw: 1.2 }));
     m.posts.forEach(px => o.push(box(px, px + 1.5, 0, rz0, { fill: COL.G, fo: .35, stroke: COL.G, sw: 1.2 })));
     o.push(box(0, c.x1, rz0, du, { stroke: COL.G, sw: .9, dash: '4 3', so: .6 }));
-    o.push(LBL(X(m.west / 2), Y(rz0 + 1.8), 'Couch frame (removable)', `front rail 3/4 x 3 1/2 in on edge, ${fmt(m.west)} long, on two 1 1/2 in posts with screw-out feet (the lawn chairs slide in between them); behind it a full-length back rail (dashed), a west end rail and a middle cross rail; the deck is a separate lid that rests on the cabinet's side panels east of ${fmt(c.x0)} in`, { size: 11, fill: COL.G }));
+    o.push(LBL(X(m.west / 2), Y(rz0 + 1.8), 'Couch frame (removable)', `front rail 3/4 x 3 1/2 in on edge, ${fmt(m.west)} long, on two 1 1/2 in posts with screw-out feet (the lawn chairs slide in between them); behind it a full-length back rail (dashed), a west end rail and a middle cross rail; the deck is part of the frame, which lifts out in one piece and rests on the cabinet's side panels east of ${fmt(c.x0)} in`, { size: 11, fill: COL.G }));
     o.push(GE());
   }
   if (L.cblk.length) {
@@ -164,7 +164,7 @@ function drawDriver(L, V) {
     o.push(GB('cblk', 'Wall blocks for the couch frame'));
     L.cblk.forEach((b, i) => {
       o.push(box(b.x0, b.x1, b.z0, b.z1, { fill: '#5A2E0A', fo: .75, stroke: '#3E230B', sw: 1.2 }));
-      o.push(LBL(X(b.x), Y(5.5), 'Wall block ' + fmt(b.x), `a 2x2 post, 1 1/2 x 1 1/2 in and ${fmt(b.z1)} tall, standing on the floor against the wall at ${fmt(b.x)} in from the back (centered) and screwed through the planks into the furring strips S1 (3 up) and S2 (12 up) behind it; the couch frame's back rail sits on its top and is screwed down into it from above${i === 1 && P.blkBOn ? ' (the middle one is "if needed")' : ''}`, { size: 10.5, fill: '#5A2E0A', dy: 13 }));
+      o.push(LBL(X(b.x), Y(5.5), 'Wall block ' + fmt(b.x), `a 2x2 post, 1 1/2 x 1 1/2 in and ${fmt(b.z1)} tall, standing on the floor against the wall at ${fmt(b.x)} in from the back (centered) and screwed through the planks into the furring strips S1 (3 up) and S2 (12 up) behind it; the couch frame's back rail just sits on its top (a dowel locates it)${i === 1 && P.blkBOn ? ' (the middle one is "if needed")' : ''}`, { size: 10.5, fill: '#5A2E0A', dy: 13 }));
     });
     o.push(GE());
   }
