@@ -1,5 +1,5 @@
 """The shower pan page of the build guide: how to set the bought 36 x 24 pan, drain it and line the stall with a thin waterproof (FRP) liner over the 3/8 in plywood.
-Seven drawings made from the plan's numbers (the pan, W3, the nook, the head and the valve, the drain hole), a parts table and the steps in order.
+Eight drawings made from the plan's numbers (the pan, W3, the nook, the head and the valve, the drain hole), a parts table and the steps in order.
 Used by buildguide.py (the Shower pan page); run on its own it writes ../pan.html for a quick look.
 The drain hole is at the middle of the rear-door end, 5 in from the rear end (the user's measurement; the 12 in out from the wall is the middle of the depth, assumed), the pan's lip height against the wall is a guess,
 and FRP is the user's choice ('I'll use FRP paneling'): change them here, in ia_core.js (pdrX, pdrY, linerT, linerTop, linerGap) and in plan.py together."""
@@ -18,6 +18,7 @@ H = ZT - ZB                     # 69 15/16
 LT = .09                        # the liner's thickness
 NOOK = (12.5, 29.75, 38, 54)    # the shower nook: x0, x1, z0, z1 (4 1/2 in deep, in the wall)
 HEAD = (9, 70); VALVE = (33, 44)
+HEADHOLE, VALVEHOLE = 1.125, 2.25    # the holes in the liner: the part that goes through + 1/4 in (a 1/2 in shower arm is 7/8 across; a single-handle valve cartridge is about 2 in: PLACEHOLDERS, measure the real parts)
 DRAIN = (5, 12)                 # 5 in from the rear end (the user), 12 out = the middle of the depth (assumed)
 TOILET = (20.75, 35.25, 4.75, 19.25)
 
@@ -260,6 +261,51 @@ def fig_nook():
     a(_t(cx0 - 12, cy0 + 232, 'The hole leaves a 1/4 in radius,', 11, 'start', INK)); a(_t(cx0 - 12, cy0 + 246, 'so the corner does not crack. The 1/4 in', 11, 'start', INK)); a(_t(cx0 - 12, cy0 + 260, 'of plywood corner it leaves is sealed.', 11, 'start', INK))
     return _svg(760, 620, ''.join(o), 'Cutting the nook opening')
 
+# ---- H  cutting the head and valve holes -----------------------------------------------------------------------------------------------
+def fig_holes():
+    S = 5.2; OX = 80; OY = 100
+    PWd = W3X - .125; PH = H
+    X = lambda x: OX + S * x; Y = lambda y: OY + S * y
+    hx, hy = HEAD[0] - .125, ZT - HEAD[1]; vx, vy = VALVE[0] - .125, ZT - VALVE[1]          # from the panel's rear edge and its top edge
+    nx0, nw, ny0, nh = NOOK[0] - .125, NOOK[1] - NOOK[0], ZT - NOOK[3], NOOK[3] - NOOK[2]
+    o = []; a = o.append
+    a(_t(20, 24, 'H  The head and valve holes: where to mark them, and how the hole is covered', 14, 'start', INK, 700))
+    a(_r(X(0), Y(0), S * PWd, S * PH, '#BFE5DF', TEALD, 1.6)); a(_t(X(PWd / 2), Y(PH) + 18, f'wall panel, face up (rear edge on the left)', 11.5, 'middle', TEALD, 700))
+    a(_r(X(nx0), Y(ny0), S * nw, S * nh, 'none', '#9AA0A8', 1.2, 'stroke-dasharray="4 3"')); a(_t(X(nx0 + nw / 2), Y(ny0 + nh / 2) + 4, 'nook opening', 10.5, 'middle', '#7A7F86'))
+    for (cx, cy, r, nm, dsz, col) in ((hx, hy, 8, 'head', HEADHOLE, BLU), (vx, vy, 11, 'valve', VALVEHOLE, BLU)):
+        a(f'<circle cx="{X(cx):.1f}" cy="{Y(cy):.1f}" r="{r}" fill="#fff" stroke="{col}" stroke-width="2"/>' + _l(X(cx) - r - 4, Y(cy), X(cx) + r + 4, Y(cy), col, 1) + _l(X(cx), Y(cy) - r - 4, X(cx), Y(cy) + r + 4, col, 1))
+    a(_t(X(hx) + 14, Y(hy) + 4, f'head hole {fr(HEADHOLE)}', 11, 'start', BLU, 700)); a(_t(X(vx), Y(vy) + 28, f'valve hole {fr(VALVEHOLE)}', 11, 'middle', BLU, 700))
+    a(_t(X(vx), Y(vy) + 41, '(circles drawn bigger than scale)', 10, 'middle', '#5F5E5A'))
+    # dimensions from the rear edge (along the top) and from the top edge (down the left)
+    yt = Y(0) - 10
+    a(_dim(X(0), yt, X(hx), yt, f'{fr(hx)}', 0, INK, 10.5)); a(_dim(X(0), yt - 18, X(vx), yt - 18, f'{fr(vx)}', 0, INK, 10.5))
+    xl = X(0) - 16
+    a(_arrow(xl, Y(hy / 2), xl, Y(0), INK, 1)); a(_arrow(xl, Y(hy / 2), xl, Y(hy), INK, 1)); a(_t(xl - 6, Y(hy / 2) + 4, f'{fr(hy)}', 10.5, 'end', INK, 600))
+    xl2 = X(0) - 48
+    a(_arrow(xl2, Y(vy / 2), xl2, Y(0), INK, 1)); a(_arrow(xl2, Y(vy / 2), xl2, Y(vy), INK, 1)); a(_t(xl2 - 6, Y(vy / 2) + 4, f'{fr(vy)}', 10.5, 'end', INK, 600))
+    a(_l(xl2, Y(vy), X(vx), Y(vy), '#B4B2A9', .8, '3 3')); a(_l(xl, Y(hy), X(hx), Y(hy), '#B4B2A9', .8, '3 3'))
+    # the section through one hole (the head's): the wall on the left, the stall on the right
+    T0 = 520; CY = 250; Sc = 60
+    a(_t(T0 - 90, 64, 'A hole in section (the wall on the left)', 12.5, 'start', INK, 700))
+    ply = Sc * .375; frp = Sc * LT; ph = Sc * .875; hh = Sc * 1.125; fh = Sc * 2.5; ft = Sc * .35
+    a(_r(T0 - ply, CY - 130, ply, 260, PLY, INK, 1.1)); a(_r(T0 - ply - 1, CY - Sc * .65, ply + 2, Sc * 1.3, '#fff', '#fff', .1))           # the plywood, with its hole
+    a(_r(T0, CY - 130, frp, 260, TEAL, TEALD, .8)); a(_r(T0 - 1, CY - hh / 2, frp + 2, hh, '#fff', '#fff', .1))                           # the FRP, with its hole
+    a(_r(T0 - 100, CY - ph / 2, 330, ph, '#B9BCC2', INK, 1.2))                                                                              # the shower arm
+    a(_r(T0 + frp, CY - fh / 2, ft, fh, '#D8D8D4', INK, 1.4)); a(_r(T0 + frp, CY - ph / 2, ft, ph, '#B9BCC2', INK, 1.2))                      # the flange
+    for yy in (CY - fh / 2 + 4, CY + fh / 2 - 12): a(_r(T0 + frp - 3, yy, 5, 9, SEAL, '#2E5B49', 1))                                       # the sealant ring on its back
+    RX = T0 + 90
+    a(_call(T0 + frp / 2, CY - 100, RX, CY - 150, 'FRP panel (0.09 in)', 'start', TEALD, 11.5))
+    a(_call(T0 + frp + ft / 2, CY - fh / 2 + 4, RX, CY - 128, 'flange hides the hole', 'start', INK, 11.5))
+    a(_call(T0 + frp - 1, CY - fh / 2 + 8, RX, CY - 106, 'sealant ring behind it', 'start', '#2E5B49', 11.5))
+    a(_arrow(T0 + 70, CY, T0 + 70, CY - fh / 2, INK, 1)); a(_arrow(T0 + 70, CY, T0 + 70, CY + fh / 2, INK, 1)); a(_t(T0 + 80, CY + 50, '2 1/2 in flange', 10.5, 'start', INK, 600)); a(_t(RX, CY + 66, 'the flange overlaps the hole', 10.5, 'start', '#5F5E5A')); a(_t(RX, CY + 79, 'by at least 1/2 in all round', 10.5, 'start', '#5F5E5A'))
+    a(_t(T0 + 150, CY - ph / 2 - 8, 'shower arm', 11, 'start', INK, 600))
+    LX = T0 - 60
+    a(_call(T0 - ply / 2, CY - 110, LX, CY - 140, 'plywood 3/8', 'end', '#5F5E5A', 11.5))
+    a(_call(T0 + frp / 2, CY + hh / 2 - 4, LX, CY + 95, 'hole 1/4 in bigger than the pipe:', 'end', RED, 11.5)); a(_t(LX - 8, CY + 109, '1/8 in clear all round', 11, 'end', RED))
+    a(_t(T0 + 30, 96, 'the stall side', 10.5, 'start', '#5F5E5A', 600)); a(_t(T0 - 40, 96, 'behind', 10.5, 'end', '#5F5E5A', 600))
+    a(_t(20, 520, 'Check the real pipe and valve before you cut: the stubs can sit a little off the plan\'s numbers.', 11.5, 'start', RED, 600))
+    return _svg(760, 545, ''.join(o), 'Cutting the head and valve holes')
+
 FIGS = [
     ('A', 'The pan from above', fig_top, 'The bought pan sits against the plywood wall with W3 at its cab end. The drain hole is at the middle of the rear-door end, 5 in from the rear end (you said) and 12 out (the middle of the depth: check it on the pan). The floor falls to it. The liner runs along the wall and across the face of W3.'),
     ('B', 'The pan edge and the sealed gap', fig_edge, 'A stiff panel cannot lap over the pan lip, so it stops 1/4 in above the pan edge and the gap is filled with flexible sealant: the water runs down the liner, over the sealant and into the pan. The plywood edge below it is sealed and hidden behind the lip.'),
@@ -267,7 +313,8 @@ FIGS = [
     ('D', 'The liner on the wall', fig_wall, 'One panel for the wall (35 1/4 wide, 69 15/16 tall) with the nook cut out; the panel on W3 is separate, with an inside corner moulding between them. The head and the valve are hole-sawed through it and sealed behind their flanges.'),
     ('E', 'Cutting the sheets', fig_cut, 'Two 4 x 8 ft sheets are enough: the wall panel and the nook sides from the first, W3 from the second, with spares.'),
     ('F', 'The inside corner', fig_corner, 'At W3 the two liners meet in a corner moulding clipped over both, with a bead of flexible sealant behind each flange; a stiff panel never takes a tight corner by itself.'),
-    ('G', 'Cutting the nook opening', fig_nook, 'Cut it flat on the bench before the panel goes on the wall: mark it from the panel\'s own rear and top edges, drill a 1/2 in hole in each corner, then cut from hole to hole with a fine-tooth jigsaw blade (the red numbers are the order). The cut-out is the nook back.')]
+    ('G', 'Cutting the nook opening', fig_nook, 'Cut it flat on the bench before the panel goes on the wall: mark it from the panel\'s own rear and top edges, drill a 1/2 in hole in each corner, then cut from hole to hole with a fine-tooth jigsaw blade (the red numbers are the order). The cut-out is the nook back.'),
+    ('H', 'The head and valve holes', fig_holes, 'Mark each hole from the panel\'s own rear and top edges (8 7/8 and 4 for the head, 32 7/8 and 30 for the valve), check it against the real pipe and valve, cut it with a hole saw 1/4 in bigger than the part that goes through, and hide it under the flange or trim plate with a ring of flexible sealant behind it.')]
 
 PARTS = [
     ('Shower pan', '36 x 24 in, 3 in curb (bought)', '1', 'measure the drain hole (its distance from the rear end and the wall, its size) and the height of the lip against the wall, and change the plan\'s sizes to match'),
@@ -280,7 +327,7 @@ PARTS = [
     ('Pan bedding', 'flexible polyurethane or MS-polymer construction adhesive, 28 oz tubes or 10 oz cartridges', 'about 3 cartridges', 'zig-zag beads every 3 in under the pan; not a rigid mortar (the van flexes and the mortar cracks)'),
     ('Shower drain', 'fits the pan\'s drain hole, with a gasket and a lock nut from below; 1 1/2 in tailpiece', '1', 'check whether the pan comes with one'),
     ('P-trap and hose', '1 1/2 in trap (or a waterless trap valve) and 1 1/2 in flexible hose', '1', 'to the grey tank, which needs a vent (the tank\'s place is not set)'),
-    ('Hole saws', 'drain body + 1/4 in; head; valve', '3', 'a hole saw for each, never a twist drill through the liner'),
+    ('Hole saws', 'bi-metal or carbide: the drain (body + 1/4 in), the head arm (1 1/8 in) and the valve (2 1/4 in), or 1/4 in bigger than your own parts', '3', 'a hole saw for each, never a twist drill through the liner'),
     ('Epoxy and rust primer', 'thin epoxy for the plywood edges and cut-outs; rust converter and epoxy primer for the steel edge of the drain hole', '1 each', 'two coats of epoxy on every cut edge of the plywood in the stall'),
 ]
 STEPS = [
@@ -293,8 +340,9 @@ STEPS = [
     '<b>Seal the pan to the wall.</b> A bead of flexible sealant where the pan lip meets the plywood, and the plywood edge below the liner sealed with epoxy (drawing B).',
     '<b>Fill test.</b> Plug the drain, fill the pan to just under the curb, mark the water line and leave it for a day. Check the line has not dropped and look under the floor for any drip. Then open the drain, check it flows freely and leaks nowhere at the nut or the trap.',
     '<b>Prepare the plywood before the liner goes on.</b> (1) Two coats of thin epoxy on every cut edge and on the bare plywood of the nook and of the valve and head cut-outs: water gets in from the edges. (2) Make the face flat. The screws that hold the plywood have finish washers, and a washer would show through a 0.09 in panel as a bump and stop it sticking: in the stall, countersink each screw (or refit it with a flat head) and fill the dimple with epoxy filler, then sand it flush; sand off raised grain, fill any gouge, and check with a straightedge that nothing stands more than about 1/32 in proud, because FRP shows every bump. (3) Vacuum the dust and wipe the face with a damp cloth: it must be clean, dry and free of oil where the adhesive goes (scuff-sand any epoxy that reached the face).',
-    '<b>Cut the liner</b> (drawing E): the wall panel (35 1/4 x 69 15/16, with the nook cut out), W3\'s face (24 x 69 15/16) and the four nook sides, each 1/8 in short at a free edge and 1/4 in above the pan. Hole-saw the head and the valve holes.',
+    '<b>Cut the liner</b> (drawing E): the wall panel (35 1/4 x 69 15/16, with the nook cut out), W3\'s face (24 x 69 15/16) and the four nook sides, each 1/8 in short at a free edge and 1/4 in above the pan. Cut the head and valve holes (drawing H) the same way.',
     '<b>Cut the nook opening</b> (drawing G), flat on the bench before the panel goes on the wall. (1) Lay the panel face up on a sheet of foam board or a sacrificial plywood sheet, so the cut is supported all round. (2) Measure from the panel\'s own trimmed edges, not from the wall: the opening starts 12 3/8 in from the rear edge (the nook is 12 1/2 in from the back mark, less the 1/8 in the panel is short) and 20 in down from the top edge (the nook top is at 54, the panel top at 74), and it is 17 1/4 wide by 16 tall. Mark it in pencil and check that both diagonals agree to 1/16 in. (3) Put painter\'s tape over the line (less chipping) and on the base plate of the saw (no scratches). (4) Drill a 1/2 in hole in each corner, centered 1/4 in in from both lines, so each corner becomes a 1/4 in radius that does not crack. (5) Cut from hole to hole with a jigsaw and a fine-tooth blade (about 10 to 12 teeth to the inch, or a reverse-tooth blade, which leaves the face cleaner), orbital action off, slow speed, in the order of the red numbers; hold the cut-out up for the last side so it cannot drop and tear the corner. (6) Take the saw marks off the edges with a fine file or 120-grit paper, because a rough edge starts a crack. (7) Save the cut-out: it is the nook back.',
+    '<b>Cut the head and valve holes</b> (drawing H), flat on the bench before gluing. (1) Mark them from the panel\'s own trimmed edges: the head hole\'s center is 8 7/8 in from the rear edge and 4 in down from the top edge (the head is 9 in along and 70 up), and the valve hole\'s is 32 7/8 in from the rear edge and 30 in down (the valve is 33 along and 44 up). (2) Check them against the real plumbing before you cut: the stubs move a little when they are roughed in, so the pipe\'s true position beats the plan. Dry-fit the panel on its spacers and compare, or tape a cardboard template to the wall, mark the centers through it and carry them to the panel. (3) Size each hole from your own parts, not from mine: 1/4 in bigger than the part that goes through (a 1/2 in shower arm is 7/8 in across, so 1 1/8 in; a single-handle valve cartridge is about 2 in, so 2 1/4 in), and small enough that the flange or trim plate that hides it overlaps the hole by at least 1/2 in all round (an arm flange is about 2 1/2 in; measure your valve plate). (4) Put painter\'s tape over the mark, lay the panel face up on foam board or scrap plywood, and drill from the face with a bi-metal or carbide hole saw at slow speed and light pressure, holding the saw square; stop and let it cool if it bites. Never use a twist bit, which cracks the panel. (5) Smooth the edge of each hole with a file. (6) After gluing, put a ring of flexible sealant on the back of each flange or plate, not in the gap around the pipe, so nothing can run behind it; the trim screws into its own body, never into the panel alone.',
     '<b>Glue the wall panel</b> with the panel maker\'s adhesive (read its can for the trowel, the open time and the temperature). (1) Let the panels sit in the van for at least 24 hours first, so they match its temperature and humidity, and glue at room temperature (about 60 F or more, or what the can says). (2) Dry-fit it: rest the bottom edge on 1/4 in spacers at the pan and keep 1/8 in off W3, the rear edge and the ceiling. (3) Spread the adhesive on the plywood, never on the panel, with the notched trowel or roller the can names, only as far as you can cover within the open time, and keep it about 1 in back from the edges so none squeezes out at the gaps. (4) Set the panel on its spacers, tip the top in, press it flat from the middle outward and roll the whole face with a hand roller, edges last. (5) Hold the top with a few strips of masking tape for the first hour, and leave it alone for the cure time on the can. No screws go through the face: they leak and stop the panel from moving, and the mouldings and the sealant hold the edges. (6) Then the nook (back, then sides), then W3\'s face, then the inside corner moulding with sealant behind each flange (drawing F).',
     '<b>Seal and trim.</b> Fill the 1/4 in gap at the pan with flexible sealant and tool it; seal the rear edge under its edge trim, the top under the trim strip, every nook corner, and behind the head and valve flanges; wipe the excess off straight away. Let it cure a day.',
     '<b>Finish and test.</b> Fit the head and valve, hang the curtain and the nook cord, then run the shower for ten minutes with the curtain closed and check under the floor and along the bottom of W3 for any wet.',

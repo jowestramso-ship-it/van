@@ -100,6 +100,8 @@ const PD = [
   { k: 'linerTop', g: 'Shower liner and drain', l: 'Liner top, up from the floor (the finished ceiling at the wall is about 74 1/2; the head is at 70)', d: 74, s: .5, a: 40, b: 75 },
   { k: 'linerGap', g: 'Shower liner and drain', l: 'Liner: the gap it leaves above the pan edge against the wall, filled with flexible sealant (the pan top is 3.8 up with the 3 in curb; a stiff panel cannot lap over the pan lip)', d: .25, s: .0625, a: 0, b: 1 },
   { k: 'pdrX', g: 'Shower liner and drain', l: 'Shower drain hole: along the wall from the back (5 in from the rear end of the pan, as you said)', d: 5, s: .25, a: 2, b: 34 },
+  { k: 'headHole', g: 'Shower liner and drain', l: 'Hole in the liner for the shower arm (the pipe + 1/4 in; a 1/2 in arm is 7/8 across: measure yours)', d: 1.125, s: .125, a: .5, b: 3 },
+  { k: 'valveHole', g: 'Shower liner and drain', l: 'Hole in the liner for the shower valve (the part that goes through + 1/4 in; a single-handle cartridge is about 2 in: measure yours)', d: 2.25, s: .125, a: 1, b: 4 },
   { k: 'pdrY', g: 'Shower liner and drain', l: 'Shower drain hole: out from the passenger wall (12 is the middle of the 24 in depth: assumed, check it on the pan)', d: 12, s: .25, a: 2, b: 22 },
   { k: 'snookLip', g: 'Passenger side', l: 'Shower nook front lip (0 for none: a bungee cord across the front keeps things in instead)', d: 0, s: .25, a: 0, b: 4 },
   { k: 'fridgeW', g: 'Passenger side', l: 'Fridge width', d: 22, s: .5, a: 14, b: 30 },
