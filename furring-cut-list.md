@@ -1,6 +1,6 @@
 # Furring strips to cut
 
-All strips are **1x2 furring: 3/4 x 1 1/2 in actual**. Positions are inches along the wall from the back mark (6 in in from the rear-door edge), the same numbers as the furring drawings on the wall diagrams. "Height" is the center of the strip above the floor, so the strip runs 3/4 in below to 3/4 in above that. Nothing here needs a width cut, only cuts to length.
+The main strips S1 to S8 are **1x4 boards laid flat: 3/4 in thick x 3 1/2 in wide, actual**. The window frame and the nook frames and cross pieces are **1x2 furring: 3/4 x 1 1/2 in actual**. Positions are inches along the wall from the back mark (6 in in from the rear-door edge), the same numbers as the furring drawings on the wall diagrams. "Height" is the center of the strip above the floor, so a 1x4 strip runs 1 3/4 in below to 1 3/4 in above that. Nothing here needs a width cut, only cuts to length.
 
 A 154 in wall does not come in one stick, so a strip that is longer than 8 ft (96 in) is two pieces **butted at an attachment dot** (the joint then sits on a fixed point, with a pad or spacer under it). The pieces are listed as "a", "b" and "c", in order from the back.
 
@@ -31,7 +31,7 @@ S1 is in two pieces on purpose: it stops at the wheel well (42 to 76), which nee
 
 ### Side window frame, driver side (4 pieces)
 
-The window cutout is 39 11/16 x 22 5/8 in. Around it goes a frame of the same strip, 1 1/2 in wide, that stops S5 and S6 and gives the planks an edge: the two jambs stand against the strips' ends and the sill and the head fit between the jambs. Each piece sits on three 3 5/8 in spacer blocks.
+The window cutout is 39 11/16 x 22 5/8 in. Around it goes a frame of 1x2 strip (3/4 x 1 1/2 in), that stops S5 and S6 and gives the planks an edge: the two jambs stand against the strips' ends and the sill and the head fit between the jambs. Each piece sits on three spacer blocks (1 1/2 x 3 1/2 in on the steel, 3 5/8 in out; the horizontal pieces lay theirs on their side).
 
 | Cut | Piece | What it is | Length | Where |
 |---|---|---|---|---|
@@ -72,8 +72,8 @@ The passenger strips stop at the sliding door opening (104 in); only S8 carries 
 |---|---|---|---|---|
 | E01 | V1 | vertical, shower nook rear end | **16** | 11 to 12 1/2 in from the back, 38 to 54 in up |
 | E02 | V2 | vertical, shower nook front end | **16** | 29 3/4 to 31 1/4 in from the back, 38 to 54 in up |
-| E03 | V3 | vertical, counter nook rear end | **25 1/2** | 74 1/2 to 76 in from the back, 31 to 56 1/2 in up |
-| E04 | V4 | vertical, counter nook right end | **25 1/2** | 93 1/4 to 94 3/4 in from the back, 31 to 56 1/2 in up |
+| E03 | V3 | vertical, counter nook rear end | **23 1/2** | 74 1/2 to 76 in from the back, 32 to 55 1/2 in up |
+| E04 | V4 | vertical, counter nook right end | **23 1/2** | 93 1/4 to 94 3/4 in from the back, 32 to 55 1/2 in up |
 | E05 | X1 | cross piece, shower nook floor | **17 1/4** | between V1 and V2, top edge at 38 in up |
 | E06 | X2 | cross piece, shower nook top | **17 1/4** | between V1 and V2, bottom edge at 54 in up |
 | E07 | X3 | cross piece, counter nook top | **17 1/4** | between V3 and V4, bottom edge at 54 in up |
@@ -81,29 +81,31 @@ The passenger strips stop at the sliding door opening (104 in); only S8 carries 
 ## Totals
 
 - Driver side strips: 1112 5/8 in (92.7 ft), 18 pieces; window frame 130 5/8 in, 4 pieces.
-- Passenger side strips: 807 1/2 in (67.3 ft), 17 pieces; frames and cross pieces 134 3/4 in, 7 pieces.
-- Everything: **2185 1/2 in (182 ft), 46 pieces**. Packed onto 8 ft sticks with a 1/8 in saw kerf that is **26 sticks**; buy about 30 (some spare for bad boards and cutting mistakes).
+- Passenger side strips: 807 1/2 in (67.3 ft), 17 pieces; frames and cross pieces 130 3/4 in, 7 pieces.
+- Everything: **2181 1/2 in (182 ft), 46 pieces**. Packed onto 8 ft sticks with a 1/8 in saw kerf: the 35 strips S1 to S8 are **24 sticks of 1x4**, buy about 28; the 11 frame and cross pieces are **3 sticks of 1x2**, buy about 4 (some spare for bad boards and cutting mistakes).
 - The wall diagrams say about 104 ft for the driver side alone; this list agrees (1243 1/4 in is 103.6 ft).
 
 ## Also cut: spacer blocks (not strips), and what holds them
 
-The wood blocks are the spacers that hold S4, S5, S6, the window frame (J1 to J4) and the nook frames V1 to V3 off the steel so every strip's back sits on the same line, 3 3/4 in off the body.
+The wood blocks are the spacers that hold S4, S5, S6, the window frame (J1 to J4) and the nook frames V1 to V3 off the steel so every strip's back sits on the same line, 3 3/4 in off the body. Each is **1 1/2 x 3 1/2 in on the steel and 3 1/2 in out**: 1 1/2 along the wall, 3 1/2 up (as tall as a 1x4 strip is wide), so the strip rests on its whole width.
 
-- **Size and stock: cut 1 1/2 in pieces off a 2x4** (a 2x4 is really 1 1/2 x 3 1/2 in) and stand each on its 3 1/2 in side, so the block is 1 1/2 x 1 1/2 in on the steel and 3 1/2 in out. The 1/8 in glue line under it makes the 3 5/8 in standoff, and the grain runs across the block, so the strip's screw goes into side grain (a block cut 3 5/8 long from 2x2 would take that screw in end grain, which holds about half as well).
+- **Size and stock: cut 3 1/2 in pieces off a 2x4** (a 2x4 is really 1 1/2 x 3 1/2 in) and stand each on its 3 1/2 in side, so the block is 1 1/2 x 3 1/2 in on the steel (1 1/2 along the wall, 3 1/2 up) and 3 1/2 in out. The 1/8 in glue line under it makes the 3 5/8 in standoff, and the grain runs up the face of the block, so the strip's screw goes into side grain (a block with its grain pointing at the strip would take that screw in end grain, which holds about half as well). On the 1 1/2 in bands of steel under and over the pans (S4 and S6) the 3 1/2 in tall block spans the band and 1 in of pan above and below it; the pans are only 1/8 in lower, so the glue line takes up the difference.
 - **Block to the steel: adhesive, not screws.** Nothing is drilled into the van's body. Use a polyurethane construction adhesive (the kind van builders use is Sikaflex 252 or a similar one; check the label for steel and for a bond line of about 1/8 in) or 3M VHB tape. Put it only on solid steel, away from the holes, and test one block on a scrap of your own steel (pull it off after a day) before you do the wall.
 - **If you use polyurethane adhesive instead of tape (Sikaflex-252 is one):** Sika's data sheet gives an application range of 50 to 95 F (10 to 35 C), best at 59 to 77 F (15 to 25 C), a skin time of about 40 minutes and an open time of about 35 minutes at 73 F, so press each block on within half an hour and hold it (masking tape or a prop) until it has set; leave it a day or more before loading it. Painted steel may need Sika's primer or activator (see its pre-treatment chart, and test one block). The prep is the same as below: scuff, wipe off the dust, 70/30 isopropyl alcohol and water, dry. Do not use screws or rivnuts into the steel: at the dots it is the van's outer skin or a rib pressed from it, so a screw would go through the outside of the van.
 - **If you use VHB tape, temperature:** apply it when the steel, the block and the tape are all between 70 and 100 F (21 to 38 C); do not apply it below about 50 F (10 C), where the adhesive is too stiff to wet the surface (some grades say 60 F). Warm the steel with the van heater or a heat lamp if you have to, keep it out of direct sun that heats the steel well past 100 F, and make sure there is no condensation on it. Once the tape is on, it holds in the cold.
 - **If you use VHB tape, steel prep:** (1) remove loose paint, rust and dust, and make sure the factory paint under the tape is sound, because the tape is only as good as the paint it sticks to; (2) if the steel is oily or waxy, wipe it first with a degreaser or solvent; (3) scuff lightly to dull the gloss, with a gray (ultra fine) or maroon (very fine) Scotch-Brite pad or 400 to 420 grit sandpaper, only until the paint looks evenly dull and not through to bare steel (if you do hit bare steel, touch it up with a rust-inhibiting primer before taping), then wipe the dust off; (4) wipe with a 70/30 mix of isopropyl alcohol and water on a clean lint-free cloth, then wipe dry with another; (5) do not touch the cleaned spot. Seal the face of each wood block (a coat of polyurethane or similar, dry) or sand it smooth first, because raw wood is porous.
-- **If you use VHB tape, applying it:** put the tape on the block first, press it firmly, peel the liner, set the block in place (no sliding it around), then press hard, about 15 psi, which on a 1 1/2 x 1 1/2 in block is about 35 lb, for a minute, and hold or brace it. The bond keeps building for a day or more, so leave the strips off it until the next day. Choose a foam thickness near 1/8 in (110 mil) so the 3 1/2 in block plus the tape is the 3 5/8 in standoff. Read the data sheet of the exact tape you buy: the numbers above are the ones 3M gives for its VHB tapes in general.
+- **If you use VHB tape, applying it:** put the tape on the block first, press it firmly, peel the liner, set the block in place (no sliding it around), then press hard, about 15 psi, which on a 1 1/2 x 3 1/2 in block (5 1/4 sq in) is about 79 lb, for a minute, and hold or brace it. The bond keeps building for a day or more, so leave the strips off it until the next day. Choose a foam thickness near 1/8 in (110 mil) so the 3 1/2 in block plus the tape is the 3 5/8 in standoff. Read the data sheet of the exact tape you buy: the numbers above are the ones 3M gives for its VHB tapes in general.
 - **Strip to the block:** wood glue or construction adhesive plus one #8 x 1 1/2 in screw through the strip into the block.
-- **How many:** 41 on the driver side (S4 12, S5 8, S6 9, and 12 under the window frame, 3 under each of J1 to J4) and 29 on the passenger side (S4 8, S5 4 in the middle piece only, S6 8, and 3 each under V1, V2 and V3), so **70**. A 2x4x8 ft stick gives about 59 blocks with a 1/8 in kerf, so **2 sticks** (some spare).
+- **How many:** 41 on the driver side (S4 12, S5 8, S6 9, and 12 under the window frame, 3 under each of J1 to J4) and 29 on the passenger side (S4 8, S5 4 in the middle piece only, S6 8, and 3 each under V1, V2 and V3), so **70**. A 2x4x8 ft stick gives about 26 blocks of 3 1/2 in with a 1/8 in kerf, so **3 sticks of 2x4** (with 10 percent spare).
 - **Where each one goes:** one at every dot of those strips, drawn as a dark square on the furring maps (diagram A for the driver side, diagram D for the passenger side) with the count printed on each strip.
 - **S7 and S8** only need thin shims at their dots: 1/4 in thick for S7 and 5/8 in for S8 (1 1/2 x 1 1/2 in, cut from plywood), glued the same way: 37 in all (driver S7 10 and S8 10, passenger S7 7 and S8 10), drawn as light dashed squares.
 
 ## Things to check before you cut
 
-- **S8 (76 3/4 in up) is above the finished ceiling.** The ceiling covering ends at 74 9/16 in at the wall, so S8 (76 to 77 1/2 in) would sit above it, hidden in the roof curve. I did not change it; decide whether you still want it before cutting the two S8 pieces on each side.
+- **S8 (76 3/4 in up) is above the finished ceiling.** The ceiling covering ends at 74 9/16 in at the wall, so S8 (75 to 78 1/2 in as a 1x4) would sit above it, hidden in the roof curve. I did not change it; decide whether you still want it before cutting the two S8 pieces on each side.
 - **The side window position is an assumption, not a measurement.** The opening is already cut, but where it is on the wall is not in the plan: it is drawn 101 3/4 to 141 7/16 in from the back mark and 39 to 61 5/8 in up, centered over the dinette table. Measure the real hole's edges, put the numbers in the Side window sizes on the interactive page, rebuild, and cut S5, S6 and the four J pieces to what the real hole needs.
 - **The couch's wall blocks screw into S2** (12 in up) at 3, 20 (if needed) and 41 in from the back. S2's attachment dots are at 15, 30 3/4 and 40 in, so the block at 3 is 12 in from the nearest one: add a dot (an adhesive pad on solid steel, clear of the holes) behind it, or accept some flex.
+- **S3 is exactly as wide as its band of steel.** S3 sits on the 3 3/4 in band above the L holes (19 1/2 to 23 in up), which is 3 1/2 in tall, and a 1x4 fills it: its center is 21 3/8, so it runs 19 5/8 to 23 1/8; centered on the band (21 1/4) it would sit flush with both edges. Say if you want it moved.
+- **Clear gaps between the strips are now small** (5 1/4 to 10 1/4 in): electrical boxes, the conduit and the PEX lines run in those bands, so the boxes need blocking inside a gap, not across a strip.
 - The dot positions come from the steel map; if you move a shelf, cabinet, window or outlet, move the dots (and the joints) first.
 - Cut the pieces a hair long and trim to the wall at the rear door and the cab wall; the datum at 154 could be off by 2 to 4 in (the diagrams say so).
