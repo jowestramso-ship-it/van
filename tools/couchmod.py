@@ -80,6 +80,54 @@ def _plan5():
     a(_t(X(42),Y(CB_Y1)+14,'cabinet panels',9.5,'#5A3A00','start',700))
     a(_l(X(0),Y(CB_Y1)+30,X(3),Y(CB_Y1)+30,BLKC,1,'',_MK)); a(_t(X(3)+4,Y(CB_Y1)+34,'blocks at 3, 20 (if needed) and 41 in from the back mark',9.5,BLKC,'start',700))
     return '\n'.join(o)
+def _sag5():
+    """the lid's free front edge over the cabinet: from the aisle, from the side and from above, with the sag drawn about 3 times too big"""
+    o = []; a = o.append
+    EX = 3.0; SAG = 0.5           # the exaggeration, and a middle guess for the sag in inches (between about 1/4 in and 1 in)
+    ARR = 'marker-end="url(#c4a)"'
+    a(_t(40, 800, '4  The lid over the cabinet: its front edge has nothing under it (the sag is drawn about 3 times too big)', 13, INK, 'start', 700))
+    # --- (a) from the aisle ---
+    S = 9.0; OX = 50; FLY = 1075
+    X = lambda x: OX + S * (x - CB_X0); Z = lambda z: FLY - S * z
+    a(_l(X(CB_X0) - 20, Z(0), X(CB_X1 + CB_T) + 20, Z(0), INK, 2.5))
+    for px in (CB_X0, CB_X1): a(_r(X(px), Z(CB_H), S * CB_T, S * CB_H, PLY, INK, 1.2, '', .95))
+    a(_r(X(SH_X0), Z(FACE_Z1), S * (SH_X1 - SH_X0), S * (FACE_Z1 - FACE_Z0), PLY, INK, 1.1, '', 1)); a(_t(X(57), Z(12.2) + 4, 'shelf face', 10, INK, 'middle'))
+    a(_r(X(BAT[0]), Z(9.5), S * (BAT[1] - BAT[0]), S * 9.5, '#F2B84B', AMB, 1.2, '4 3', .3))
+    x0, x1 = X(CB_X0 + CB_T), X(CB_X1); sg = SAG * S * EX
+    top, bot = Z(DECK_T), Z(DECK_U); mx = (x0 + x1) / 2
+    a(f'<path d="M {x0:.1f} {top:.1f} Q {mx:.1f} {top+2*sg:.1f} {x1:.1f} {top:.1f} L {x1:.1f} {bot:.1f} Q {mx:.1f} {bot+2*sg:.1f} {x0:.1f} {bot:.1f} Z" fill="{BRN}" fill-opacity=".9" stroke="#3E230B" stroke-width="1.2"/>')
+    a(f'<path d="M {mx:.1f} {top-90:.1f} L {mx:.1f} {top+sg-8:.1f}" stroke="{INK}" stroke-width="3" fill="none" {ARR}/>')
+    a(_t(mx + 12, top - 70, 'someone sits on the front edge', 11.5, INK, 'start', 700)); a(_t(mx + 12, top - 55, 'and the lid sags in the middle', 11.5, RED, 'start', 700))
+    a(_l(x0, FLY + 22, x1, FLY + 22, RED, 1.6, '', _MK)); a(_t(mx, FLY + 40, f'{fr16(CB_X1-CB_X0-CB_T)} in between the panels, nothing under the front edge', 11.5, RED, 'middle', 700))
+    a(_t(X(CB_X0), Z(CB_H) - 30, 'from the aisle', 12, '#5F5E5A', 'start'))
+    # --- (b) from the side ---
+    S2 = 8.0; OY = 450
+    Y = lambda y: OY + S2 * y; Z2 = lambda z: FLY - S2 * z
+    a(_l(Y(-1), Z2(0), Y(29), Z2(0), INK, 2.5)); a(_l(Y(0), Z2(0), Y(0), Z2(24), INK, 4)); a(_t(Y(.5), Z2(23.2), 'wall', 11, INK, 'start'))
+    a(_r(Y(0), Z2(DECK_U), S2 * BEAM_T, S2 * BR_H, RAILC, INK, 1.3, '', 1)); a(_t(Y(.3), Z2(11.0) + 2, 'back beam', 10, INK, 'start', 700))
+    for u in (DC, INV, CHG): a(_r(Y(u['y0']), Z2(SH_Z1 + u['h']), S2 * (u['y1'] - u['y0']), S2 * u['h'], '#F6C28B', AMB, 1.1, '3 2', .5))
+    a(_r(Y(SH_Y0), Z2(SH_Z1), S2 * (SH_Y1 - SH_Y0), S2 * SH_T, PLY, INK, 1.1, '', 1)); a(_r(Y(CB_Y1 - .75), Z2(FACE_Z1), S2 * .75, S2 * (FACE_Z1 - FACE_Z0), PLY, INK, 1.1, '', 1))
+    pts_t = []; pts_b = []
+    for k in range(0, 27):
+        d = SAG * EX * S2 * (max(0, k - BEAM_T) / (CB_Y1 - BEAM_T)) ** 2
+        pts_t.append((Y(k), Z2(DECK_T) + d)); pts_b.append((Y(k), Z2(DECK_U) + d))
+    a('<polygon points="' + ' '.join(f'{x:.1f},{y:.1f}' for x, y in pts_t + pts_b[::-1]) + f'" fill="{BRN}" fill-opacity=".9" stroke="#3E230B" stroke-width="1.2"/>')
+    a(_r(Y(0), Z2(SEAT_T), S2 * CB_Y1, S2 * CUSH, PUR, PUR, 1, '', .12)); a(_t(Y(10), Z2(PLAT + 2.2) + 3, 'seat cushion', 10.5, PUR, 'middle'))
+    a(f'<path d="M {Y(23):.1f} {Z2(SEAT_T)-52:.1f} L {Y(23):.1f} {Z2(SEAT_T)-2:.1f}" stroke="{INK}" stroke-width="3" fill="none" {ARR}/>'); a(_t(Y(23) - 8, Z2(SEAT_T) - 40, 'weight', 11, INK, 'end', 700))
+    a(_l(Y(14), Z2(DECK_U) + 1, Y(14), Z2(15.5), RED, 1.6, '', _MK)); a(_t(Y(0), FLY + 24, 'only 1/2 in above the units: no room for a rail', 11, RED, 'start', 700)); a(_l(Y(14), Z2(15.5) + 2, Y(14), FLY + 10, RED, 1, '3 2'))
+    a(_t(Y(CB_Y1) + 4, Z2(DECK_T) + SAG * EX * S2 + 16, 'free edge', 11, RED, 'end', 700))
+    a(_t(Y(0), Z2(24) - 14, 'from the side (wall on the left)', 12, '#5F5E5A', 'start'))
+    # --- (c) from above ---
+    S3 = 5.5; OX3 = 740; OY3 = 905
+    X3 = lambda x: OX3 + S3 * (x - CB_X0); Y3 = lambda y: OY3 + S3 * y
+    xa, xb = X3(CB_X0), X3(CB_X1 + CB_T)
+    a(_r(xa, Y3(0), xb - xa, S3 * CB_Y1, '#E9D9BC', INK, 1.2, '', .9))
+    a(_l(xa, Y3(0), xb, Y3(0), '#2F5E3F', 5)); a(_l(xa, Y3(0), xa, Y3(CB_Y1), '#2F5E3F', 5)); a(_l(xb, Y3(0), xb, Y3(CB_Y1), '#2F5E3F', 5)); a(_l(xa, Y3(CB_Y1), xb, Y3(CB_Y1), RED, 5, '6 4'))
+    a(f'<circle cx="{(xa+xb)/2:.1f}" cy="{Y3(CB_Y1-5):.1f}" r="20" fill="{RED}" fill-opacity=".18" stroke="{RED}" stroke-width="1.4"/>'); a(_t((xa + xb) / 2, Y3(CB_Y1 - 5) + 4, 'seated', 11, RED, 'middle', 700))
+    a(_t(xa, OY3 - 34, 'from above (the lid)', 12, '#5F5E5A', 'start'))
+    a(_l(xa, Y3(CB_Y1) + 34, xa + 26, Y3(CB_Y1) + 34, '#2F5E3F', 5)); a(_t(xa + 32, Y3(CB_Y1) + 38, 'held: the back beam and the two panels', 10.5, '#2F5E3F', 'start', 700))
+    a(_l(xa, Y3(CB_Y1) + 54, xa + 26, Y3(CB_Y1) + 54, RED, 5, '6 4')); a(_t(xa + 32, Y3(CB_Y1) + 58, 'free: the front edge, nothing under it', 10.5, RED, 'start', 700))
+    return '\n'.join(o)
 _PARTS5=[
  ('1','Back rail','3/4 x 3 1/2 in hardwood or 3/4 in plywood ripped to 3 1/2',f'{fr8(C0)} long','1','full length, 12 1/2 to 16 in up, against the wall on the wall blocks; over the cabinet it lies behind the shelf (the shelf starts 7 3/4 in out from the wall)'),
  ('1b','Back beam (doubler) and ledgers','a second 3/4 x 3 1/2 in rail glued to the front of the back rail; two 3/4 x 1 1/2 x 3 in hardwood ledgers',f'{fr16(CB_X1-CB_X0-CB_T)} long (the beam)','1 and 2','over the cabinet only (between the panels, 39 3/8 to 74 in) the rail is 1 1/2 in thick, with each end resting on a ledger screwed to the inner face of its panel (top at 12 1/2 in up); this holds the back of the lid there, 34 5/8 in between the panels'),
@@ -104,9 +152,10 @@ _STEPS5=[
 def _c5_html():
     pt='<table><tr><th>#</th><th>Part</th><th>Material</th><th>Size (in)</th><th>Qty</th><th>Notes</th></tr>'+''.join(f'<tr><td>{a}</td><td>{b}</td><td>{c}</td><td>{d}</td><td>{e}</td><td>{f}</td></tr>' for a,b,c,d,e,f in _PARTS5)+'</table>'
     st='<ol>'+''.join(f'<li>{x}</li>' for x in _STEPS5)+'</ol>'
-    svg=['<svg viewBox="0 0 1000 740" role="img"><title>The removable couch: the frame, the wall blocks, the deck lid and the gear cabinet</title>','<defs><marker id="c4a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>',_aisle5(),_section5(),_plan5(),'</svg>']
+    svg=['<svg viewBox="0 0 1000 1130" role="img"><title>The removable couch: the frame, the wall blocks, the deck lid and the gear cabinet</title>','<defs><marker id="c4a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>',_aisle5(),_section5(),_plan5(),_sag5(),'</svg>']
     return ('<h3>Driver side: the removable couch (frame, wall blocks and deck lid), how to make it</h3>\n<div class="wide">'+'\n'.join(svg)+'</div>\n'
      f'<p>The couch is a separate piece that sits over the gear cabinet (diagram C4) and lifts out in two lifts. <b>The frame</b> has a full-length back rail ({fr8(C0)} in, 3/4 x 3 1/2 on edge) that rests on three wall blocks, which are 2x2 posts standing on the floor against the wall at {BLK_X[0]}, {BLK_X[1]} (if needed) and {BLK_X[2]} in from the back mark, and is screwed down into them from above; west of the cabinet (0 to {fr16(SH_DIV)} in) a front rail, an end rail and a cross rail make a ladder carried at the front by two posts with screw-out feet, with the lawn chairs between them. <b>What holds it up:</b> at the back the three wall posts, at the front the two front posts west of the cabinet, and over the cabinet the two panels, with the back rail doubled and resting on a ledger on each panel; the wall itself carries none of the weight. Over the cabinet there is no front rail: the front edge of the deck is free, because the units on the shelf are taller than the room under a rail. <b>The deck lid</b> (3/4 in plywood, 74 x 26, with the leaf and cushions of diagrams C, C2 and C3) sits on the frame and on two dowels in each panel top and is screwed to the rails from above. Nothing is fixed to the floor except the cabinet, and nothing is fixed to the cabinet except by its dowels.</p>\n'
+     f'<p><b>The lid\'s front edge over the cabinet (drawing 4).</b> The lid is held along the back (the doubled back rail on its two ledgers) and at both ends (the panel tops), but its front edge is free for {fr16(CB_X1-CB_X0-CB_T)} in and nothing can go under it: the units reach 15 1/2 in up and the lid is at {fr8(DECK_U)}. A rough hand calculation (3/4 in plywood, about 100 lb reaching a 12 in wide strip in the middle of the front edge, plywood stiffness 1.2 million psi) gives about 1/4 in of sag if that strip acts like a beam between the two panels and about 1 in if it acts like a cantilever off the back beam. The real figure lies between the two, so expect around 1/2 in under a seated adult, which you would see and feel. The fixes are a removable post under the middle of the edge (taken out before the shelf is pulled) or two narrower trays with a fixed post between them.</p>\n'
      '<p><b>Parts</b> (the numbers 1 and 2 on the drawing are the wall blocks and the cabinet panels):</p>\n'+pt+'\n<p><b>How to build it, in order:</b></p>\n'+st+
      '\n<p><b>Not settled:</b> the deck\'s front edge over the cabinet (34 5/8 in with nothing under it: test it, and keep the old lift-out rail in mind as the fix), whether the block at 3 in has an S2 attachment dot behind it, the weight of the whole couch (about 85 lb with the cushions is an estimate), and how the rail screws find solid wood in the blocks (use a drill stop and pilot holes).</p>\n')
 _h=open((ROOT+'/sides.html')).read()
