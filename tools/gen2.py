@@ -901,7 +901,7 @@ def furring_svg():
     return t
 rows=[('S1','3 in up','the flat lower wall (3 3/4 in deep); stops at the wheel well, which sticks out 7 in and has to be boxed out','0 (strip sits straight on the steel)'),
 ('S2','12 in up','the lower wall; it bridges the L, R and PO holes, so anchor it on the steel between them','0; 1 1/4 in at the back, before 15 in'),
-('S3','21 1/2 in up','the 3 3/4 in band above the L holes (19 1/2 to 23 in up), a solid line of steel the whole way','0; 2 1/4 in left of 15 in (the 1 1/2 in blue area)'),
+('S3','21 1/4 in up','the 3 3/4 in band above the L holes (19 1/2 to 23 in up), a solid line of steel the whole way: a 1x4 fills the band exactly','0; 2 1/4 in left of 15 in (the 1 1/2 in blue area)'),
 ('S4','30 1/4 in up','the 1/8 in strip under the pans (29 1/2 to 31 in up)','3 5/8 in'),
 ('S5','43 1/2 in up','the 3 in ribs between the pans (1/8 in); it bridges the pans between them','3 5/8 in'),
 ('S6','57 1/4 in up','the 1/8 in strip above the pans (56 1/2 to 58 in up)','3 5/8 in'),

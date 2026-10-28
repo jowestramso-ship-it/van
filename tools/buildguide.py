@@ -54,7 +54,8 @@ WALL_TRIM = '''<h3>Covering the corners and the edges of 3/8 in plywood</h3>
 
 def pages(root):
     TR = {}; exec(_read(os.path.join(root, 'tools', 'trim.py')), TR)   # the seven drawings of the trim details
-    PN = {}; exec(_read(os.path.join(root, 'tools', 'panpage.py')), PN)   # the Shower pan page: six drawings, the parts and the steps
+    PN = {}; exec(_read(os.path.join(root, 'tools', 'panpage.py')), PN)
+    BM = {}; exec(_read(os.path.join(root, 'tools', 'blockmap.py')), BM)   # the chart of where every spacer block goes   # the Shower pan page: six drawings, the parts and the steps
     FD = {}
     exec(_read(os.path.join(root, 'tools', 'shelfdata.py')), FD); exec(_read(os.path.join(root, 'tools', 'furring.py')), FD)   # the window's place and the furring counts
     fr16, fr8 = FD['fr16'], FD['fr8']
@@ -114,7 +115,7 @@ def pages(root):
         steps=['<b>Before the walls and ceiling are covered:</b> run the risers, the ceiling trunk and every branch, with grommets in all steel and the 12 V and 120 V in separate looms (at least 2 in apart, crossing at right angles).',
                '<b>Ceiling first (it is hidden first):</b> the two ceiling lights (16 AWG, each on one slat), the soft LED strip (14 AWG, its own 10 A circuit), the roof fan (14 AWG, 5 A) and the A/C feed (a 6 AWG pair, a 100 A fuse at the battery, about 12 ft).',
                '<b>The 12 V trunk</b> to the fuse block (12 AWG), the water pump circuit (14 AWG, 10 A, under the sink) and the control panel (18 AWG, 3 A).',
-               '<b>The 120 V circuits</b> in flexible conduit (12 AWG): the outlets (A), the microwave through the selector (B), the fridge (C) and the water heater through the selector (D). One shore inlet (30 A), at 80 in from the back and 21 in up, through the solid steel band at 19 1/2 to 23 in up.',
+               '<b>The 120 V circuits</b> in flexible conduit (12 AWG): the outlets (A), the microwave through the selector (B), the fridge (C) and the water heater through the selector (D). One shore inlet (30 A) in the middle of the cover plate CP (9 in from the back and 13 3/4 in up, the plate is cut for it); its 10 AWG cable runs inside the wall above S2 to the hub board at the closet.',
                '<b>With the furring strips:</b> fix the electrical boxes to blocking between the strips, and add blocking behind the hub board, the switch plates and the outlets before the planks go on. The dinette outlet goes at 34 in up, under the side window frame (not 36).',
                '<b>Last, after the covering is up:</b> the hub board (on the closet\'s rear panel, 72 to 74 in from the back, 1 to 11 in up) with its fuses, the inverter and the two chargers on the gear shelf, the transfer switch, the lights and the plates. Every cable to the gear shelf needs a loop about 24 in longer than a fixed run.',
                '<b>Test</b> every circuit with a meter before you connect the battery, test the GFCI outlets with their button, and have the 120 V side inspected before you use it.'],
@@ -137,7 +138,7 @@ def pages(root):
                '<b>Check the line:</b> every strip\'s back should sit on one line, 3 3/4 in off the body, so the planks lie flat 4 1/2 in off it.',
                '<b>Passenger side:</b> the strips stop at the sliding door opening (104 in) except S8; S5 is cut away at the two nooks; then add the nook frames V1 to V4 and the three cross pieces. No window on this side.',
                '<b>Blocking for the ceiling slats</b> goes in before the walls are covered.'],
-        blocks=[_md(cut), A, D]))
+        blocks=[BM['block_html'](FD), _md(cut), A, D]))
     P.append(dict(slug='ceiling', nav='Ceiling', title='Ceiling covering',
         kick='Ceiling before walls, so the wall sheets finish against it.',
         intro=f'<p>{H.escape(body("cover").split("Walls:")[0].strip())}</p>' + table(['^Covering$', 'Round lights', 'Roof fan cutout', 'Air conditioning cutout']),

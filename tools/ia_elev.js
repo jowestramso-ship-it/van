@@ -30,7 +30,7 @@ function elevFrame(E, L, title) {
   return o.join('');
 }
 // wall covering: the sheet joints (sheets run floor to ceiling from the rear edge, 6 in behind the 0 mark), left out below the top of the sliding door opening
-const FURR = [3, 12, 21.5, 30.25, 43.5, 57.25, 66, 76.75];   // center heights of the main furring strips S1 to S8
+const FURR = [3, 12, 21.25, 30.25, 43.5, 57.25, 66, 76.75];   // center heights of the main furring strips S1 to S8
 const STRIP_W = 3.5;                                           // they are 1x4 laid flat: 3 1/2 wide, 3/4 thick (the window and nook frames are 1x2)
 function wallSeams(E, L, pass) {
   const P = L.P, { xx, yy } = E, o = [];

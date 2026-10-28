@@ -12,8 +12,8 @@ A 154 in wall does not come in one stick, so a strip that is longer than 8 ft (9
 | D02 | S1b | 3 | 76 | 154 | **78** |  | 82.94, 98.9, 119.35, 139.95 |
 | D03 | S2a | 12 | 0 | 80 | **80** | joins its other half | 15, 30.75, 40, 54, 62, 72, 80 |
 | D04 | S2b | 12 | 80 | 154 | **74** | joins its other half | 96, 104, 119.35, 139.95 |
-| D05 | S3a | 21 3/8 | 0 | 78 | **78** | joins its other half | 22, 34, 46, 58, 70, 78 |
-| D06 | S3b | 21 3/8 | 78 | 154 | **76** | joins its other half | 99, 110, 122, 134, 146 |
+| D05 | S3a | 21 1/4 | 0 | 78 | **78** | joins its other half | 22, 34, 46, 58, 70, 78 |
+| D06 | S3b | 21 1/4 | 78 | 154 | **76** | joins its other half | 99, 110, 122, 134, 146 |
 | D07 | S4a | 30 1/4 | 0 | 71 1/4 | **71 1/4** | joins its other half | 10, 17.75, 31.25, 44.5, 58.6, 71.31 |
 | D08 | S4b | 30 1/4 | 71 1/4 | 154 | **82 3/4** | joins its other half | 82.94, 98.9, 114.94, 127.25, 139.75, 147 |
 | D09 | S5a | 43 1/2 | 0 | 71 1/4 | **71 1/4** | joins its other half | 17.75, 31.25, 44.5, 58.6, 71.31 |
@@ -50,8 +50,8 @@ The frame sits 1 1/2 in outside the cutout on every side, so the opening that is
 | P02 | S1b | 3 | 76 | 104 | **28** |  | 82.94, 98.9 |
 | P03 | S2a | 12 | 0 | 54 | **54** | joins its other half | 15, 30.75, 40, 54 |
 | P04 | S2b | 12 | 54 | 104 | **50** | joins its other half | 62, 72, 80, 96, 104 |
-| P05 | S3a | 21 3/8 | 0 | 46 | **46** | joins its other half | 22, 34, 46 |
-| P06 | S3b | 21 3/8 | 46 | 104 | **58** | joins its other half | 58, 70, 78, 99 |
+| P05 | S3a | 21 1/4 | 0 | 46 | **46** | joins its other half | 22, 34, 46 |
+| P06 | S3b | 21 1/4 | 46 | 104 | **58** | joins its other half | 58, 70, 78, 99 |
 | P07 | S4a | 30 1/4 | 0 | 58 5/8 | **58 5/8** | joins its other half | 10, 17.75, 31.25, 44.5, 58.6 |
 | P08 | S4b | 30 1/4 | 58 5/8 | 104 | **45 3/8** | joins its other half | 71.31, 82.94, 98.9 |
 | P09 | S5a | 43 1/2 | 0 | 11 | **11** |  | 2, 9 |
@@ -105,7 +105,7 @@ The wood blocks are the spacers that hold S4, S5, S6, the window frame (J1 to J4
 - **S8 (76 3/4 in up) is above the finished ceiling.** The ceiling covering ends at 74 9/16 in at the wall, so S8 (75 to 78 1/2 in as a 1x4) would sit above it, hidden in the roof curve. I did not change it; decide whether you still want it before cutting the two S8 pieces on each side.
 - **The side window position is an assumption, not a measurement.** The opening is already cut, but where it is on the wall is not in the plan: it is drawn 101 3/4 to 141 7/16 in from the back mark and 39 to 61 5/8 in up, centered over the dinette table. Measure the real hole's edges, put the numbers in the Side window sizes on the interactive page, rebuild, and cut S5, S6 and the four J pieces to what the real hole needs.
 - **The couch's wall blocks screw into S2** (12 in up) at 3, 20 (if needed) and 41 in from the back. S2's attachment dots are at 15, 30 3/4 and 40 in, so the block at 3 is 12 in from the nearest one: add a dot (an adhesive pad on solid steel, clear of the holes) behind it, or accept some flex.
-- **S3 is exactly as wide as its band of steel.** S3 sits on the 3 3/4 in band above the L holes (19 1/2 to 23 in up), which is 3 1/2 in tall, and a 1x4 fills it: its center is 21 3/8, so it runs 19 5/8 to 23 1/8; centered on the band (21 1/4) it would sit flush with both edges. Say if you want it moved.
+- **S3 fills its band of steel exactly.** S3 sits on the 3 3/4 in band above the L holes (19 1/2 to 23 in up), which is 3 1/2 in tall, and a 1x4 fills it: its center is 21 1/4, so it runs 19 1/2 to 23, flush with both edges of the band (you asked for it centered at 21 1/4).
 - **Clear gaps between the strips are now small** (5 1/4 to 10 1/4 in): electrical boxes, the conduit and the PEX lines run in those bands, so the boxes need blocking inside a gap, not across a strip.
 - The dot positions come from the steel map; if you move a shelf, cabinet, window or outlet, move the dots (and the joints) first.
 - Cut the pieces a hair long and trim to the wall at the rear door and the cab wall; the datum at 154 could be off by 2 to 4 in (the diagrams say so).

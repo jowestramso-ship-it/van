@@ -4,7 +4,7 @@
 STRIP_W, STRIP_T, FRAME_W = 3.5, .75, 1.5
 # a spacer block: a 3 1/2 in cut off a 2x4 stood on its 3 1/2 in side: 1 1/2 along the wall x 3 1/2 up (as tall as the strip is wide) on the steel and 3 1/2 out (3 5/8 with the glue); the grain runs up the face, so the strip's screw goes into side grain
 SPC_W, SPC_H, SPC_D = 1.5, 3.5, 3.5
-HT = {'S1': 3, 'S2': 12, 'S3': 21.4, 'S4': 30.25, 'S5': 43.5, 'S6': 57.25, 'S7': 66, 'S8': 76.75}   # center heights up from the floor (the strip is 3 1/2 in wide, so it runs 1 3/4 in either side of its center)
+HT = {'S1': 3, 'S2': 12, 'S3': 21.25, 'S4': 30.25, 'S5': 43.5, 'S6': 57.25, 'S7': 66, 'S8': 76.75}   # center heights up from the floor (the strip is 3 1/2 in wide, so it runs 1 3/4 in either side of its center)
 AP = {'S1': [6, 17.75, 31.25, 82.94, 98.9, 119.35, 139.95], 'S2': [15, 30.75, 40, 54, 62, 72, 80, 96, 104, 119.35, 139.95], 'S3': [22, 34, 46, 58, 70, 78, 99, 110, 122, 134, 146], 'S4': [10, 17.75, 31.25, 44.5, 58.6, 71.31, 82.94, 98.9, 114.94, 127.25, 139.75, 147], 'S5': [17.75, 31.25, 44.5, 58.6, 71.31, 82.94, 98.9, 114.94, 127.25, 139.75], 'S6': [10, 17.75, 31.25, 44.5, 58.6, 71.31, 82.94, 98.9, 114.94, 127.25, 139.75, 147], 'S7': [17.75, 31.25, 44.5, 58.6, 71.31, 82.94, 98.9, 114.94, 127.25, 139.75], 'S8': [10, 24, 36, 58.6, 76, 93, 98.9, 114, 127, 140]}
 JAMB = 1.5                                  # the window opening is framed with a sill, a head and two jambs of the same 3/4 x 1 1/2 in strip
 WL, WR = WIN_CX0 - JAMB, WIN_CX1 + JAMB     # the strips stop at the jambs
