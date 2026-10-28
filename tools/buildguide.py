@@ -138,7 +138,7 @@ def pages(root):
                '<b>Check the line:</b> every furring rail\'s back should sit on one line, 3 3/4 in off the body, so the planks lie flat 4 1/2 in off it.',
                '<b>Passenger side:</b> the furring rails stop at the sliding door opening (104 in) except S8; S5 is cut away at the two nooks; then add the nook frames V1 to V4 and the three cross pieces. No window on this side.',
                '<b>Blocking for the ceiling slats</b> goes in before the walls are covered.'],
-        blocks=[BM['block_html'](FD), BM['attach_html'](FD), _md(cut), A, D]))
+        blocks=[BM['flat_html'](FD), BM['block_html'](FD), BM['attach_html'](FD), _md(cut), A, D]))
     P.append(dict(slug='ceiling', nav='Ceiling', title='Ceiling covering',
         kick='Ceiling before walls, so the wall sheets finish against it.',
         intro=f'<p>{H.escape(body("cover").split("Walls:")[0].strip())}</p>' + table(['^Covering$', 'Round lights', 'Roof fan cutout', 'Air conditioning cutout']),

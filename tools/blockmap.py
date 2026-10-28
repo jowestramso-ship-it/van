@@ -189,9 +189,61 @@ def attach_html(FD):
             '<figure style="margin:0 0 12px;border:1px solid #d9d5ca;border-radius:8px;padding:8px;background:#fff;min-width:0">' + _att_svg() + '</figure>'
             '<ol class="steps">' + ''.join(f'<li>{x}</li>' for x in ATT_STEPS) + '</ol>')
 
+
+def _flat_svg():
+    RAIL = '#E9D3AA'; RS = '#B8975A'; GR = '#5F5E5A'
+    o = []; a = o.append
+    a(_t(10, 22, 'What "laid flat" means: the same 1x4 board four ways', 13.5, 'start', INK, 700))
+    a('<defs><pattern id="hst2" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="7" stroke="#9AA0A8" stroke-width="2"/></pattern></defs>')
+    for x, y in ((10, 44), (395, 44), (10, 360), (395, 360)): a(_r(x, y, 375, 300, '#fff', '#D9D5CA', 1, 'rx="8"'))
+    # 1. the board, cut across (50 px per inch)
+    a(_t(24, 66, 'The board, cut across (the end of it)', 12.5, 'start', INK, 700))
+    a(_r(100, 96, 37.5, 175, RAIL, INK, 1.6))
+    a(_arr(82, 96, 82, 271)); a(_t(76, 188, '3 1/2 in', 11, 'end', INK, 700))
+    a(_arr(100, 86, 137.5, 86)); a(_t(119, 80, '3/4 in', 11, 'middle', INK, 700))
+    a(_l(137.5, 190, 188, 190, INK, 1)); a(f'<circle cx="137.5" cy="190" r="2.4" fill="{INK}"/>')
+    a(_t(194, 186, 'wide face', 12, 'start', INK, 700)); a(_t(194, 201, 'the 3 1/2 in side', 11, 'start', GR))
+    a(_l(131, 96, 188, 118, INK, 1)); a(f'<circle cx="131" cy="96" r="2.4" fill="{INK}"/>')
+    a(_t(194, 126, 'edge', 12, 'start', INK, 700)); a(_t(194, 141, 'the 3/4 in side', 11, 'start', GR))
+    for k, ln in enumerate(['A board sold as 1x4 really measures', '3/4 x 3 1/2 in. This is the end of it,', 'as if it were cut across.']): a(_t(24, 304 + 16 * k, ln, 11.5, 'start', INK))
+    # 2. laid flat (32 px per inch): the section across the wall
+    a(_t(409, 66, 'Laid flat (how the furring rails are used)', 12.5, 'start', '#2E6B2E', 700))
+    a(_r(420, 80, 32, 170, 'url(#hst2)', '#9AA0A8', 1)); a(_r(451, 80, 2, 170, '#B45309', '#B45309', .5))
+    a(_r(453, 100, 4, 112, '#D4A017', '#8A6A00', .8)); a(_r(457, 100, 112, 112, '#C8A878', INK, 1.3))
+    a(_r(569, 100, 24, 112, RAIL, INK, 1.6)); a(_l(596, 80, 596, 230, GR, 1.2, '4 3'))
+    a(_t(606, 92, 'plywood goes here, later', 10.5, 'start', GR))
+    a(_t(436, 266, 'steel', 11, 'middle', GR, 600)); a(_t(513, 230, 'spacer', 11, 'middle', GR, 600))
+    a(_t(606, 128, 'wide face,', 12, 'start', INK, 700)); a(_t(606, 143, 'toward the room', 12, 'start', INK, 700))
+    a(_arr(668, 156, 598, 156, INK, 1.4)); a(_t(606, 172, 'furring rail:', 11.5, 'start', INK, 600)); a(_t(606, 186, '3/4 in out,', 11.5, 'start', INK)); a(_t(606, 200, '3 1/2 in up', 11.5, 'start', INK))
+    a(_arr(569, 226, 593, 226)); a(_t(606, 230, '3/4 in thick', 10.5, 'start', GR))
+    for k, ln in enumerate(['Laid flat: the wide face looks into the room and', 'the other wide face sits on the spacers, so the board', 'sticks out only 3/4 in from them.']): a(_t(409, 294 + 16 * k, ln, 11.5, 'start', INK))
+    # 3. on edge (not used)
+    a(_t(24, 382, 'On edge (NOT used)', 12.5, 'start', RED, 700))
+    a(_r(36, 396, 32, 170, 'url(#hst2)', '#9AA0A8', 1)); a(_r(67, 396, 2, 170, '#B45309', '#B45309', .5))
+    a(_r(69, 416, 4, 112, '#D4A017', '#8A6A00', .8)); a(_r(73, 416, 112, 112, '#C8A878', INK, 1.3))
+    a(_r(185, 460, 112, 24, RAIL, INK, 1.6)); a(_l(300, 396, 300, 566, GR, 1.2, '4 3'))
+    a(_t(183, 412, 'spacer', 11, 'middle', GR, 600)); a(_t(52, 579, 'steel', 11, 'middle', GR, 600))
+    a(_l(290, 460, 290, 446, INK, 1)); a(f'<circle cx="290" cy="460" r="2.4" fill="{INK}"/>')
+    a(_t(186, 427, 'only a 3/4 in edge', 11, 'start', INK, 600)); a(_t(186, 440, 'to screw to', 11, 'start', INK, 600))
+    a(_arr(69, 546, 297, 546)); a(_t(183, 540, '7 1/8 in from the steel, not 4 3/8 in', 11, 'middle', INK, 700))
+    for k, ln in enumerate(['On edge, the board sticks out 3 1/2 in, puts the wall', '2 3/4 in further into the room and gives the plywood', 'only a 3/4 in edge to screw to. It is not used this way.']): a(_t(24, 598 + 16 * k, ln, 11.5, 'start', INK))
+    # 4. from the room
+    a(_t(409, 382, 'Seen from inside the room (plywood off)', 12.5, 'start', INK, 700))
+    a(_r(462, 412, 290, 112, RAIL, INK, 1.6)); a(_t(607, 404, 'furring rail, the wide face toward you', 11, 'middle', GR, 600))
+    a(_arr(450, 412, 450, 524)); a(_t(444, 472, '3 1/2 in', 11, 'end', INK, 700))
+    for x in (478, 734): a(f'<circle cx="{x}" cy="468" r="4.5" fill="#fff" stroke="{INK}" stroke-width="1.4"/>')
+    a(_arr(478, 546, 734, 546)); a(_t(606, 540, 'screws about 8 in apart hold the plywood', 11, 'middle', INK, 700))
+    for k, ln in enumerate(['From the room, with the plywood off, you see the', 'wide face, 3 1/2 in tall. The plywood is screwed to', 'it, so each sheet lands on a wide board and not on', 'a thin edge.']): a(_t(409, 598 + 16 * k, ln, 11.5, 'start', INK))
+    return _svg(780, 676, ''.join(o), 'What laid flat means for a 1x4 furring rail')
+
+def flat_html(FD):
+    return ('<h3>What "laid flat" means</h3>'
+            '<p>The eight main furring rails are 1x4 boards. A 1x4 measures 3/4 in thick and 3 1/2 in wide. <b>Laid flat</b> means the 3 1/2 in wide face looks into the room, so the board sticks out only 3/4 in from the spacers behind it. The drawing shows the board cut across, the same board laid flat (how it is used), on edge (not used), and as you see it from inside the room.</p>'
+            '<figure style="margin:0 0 14px;border:1px solid #d9d5ca;border-radius:8px;padding:8px;background:#fff;min-width:0">' + _flat_svg() + '</figure>')
+
 if __name__ == '__main__':
     here = os.path.dirname(os.path.abspath(__file__)); FD = {}
     exec(open(os.path.join(here, 'shelfdata.py')).read(), FD); exec(open(os.path.join(here, 'furring.py')).read(), FD)
     out = os.path.join(os.path.dirname(here), 'blocks.html')
-    open(out, 'w', encoding='utf-8').write('<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Blocks</title><body style="font:16px/1.5 system-ui;max-width:1200px;margin:0 auto;padding:16px">' + block_html(FD) + attach_html(FD) + '</body>')
+    open(out, 'w', encoding='utf-8').write('<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Blocks</title><body style="font:16px/1.5 system-ui;max-width:1200px;margin:0 auto;padding:16px">' + flat_html(FD) + block_html(FD) + attach_html(FD) + '</body>')
     print('wrote', out)
