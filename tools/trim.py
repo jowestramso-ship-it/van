@@ -42,9 +42,9 @@ def fig_joint():
     half(20, True, False); half(330, False, True)
     a(_t(20, 28, 'A  V joint: 1/16 in gap, 1/16 in chamfer', 14, 'start', INK, 700)); a(_t(330, 28, 'B  batten over the joint', 14, 'start', INK, 700))
     a(_call(166, 122, 130, 80, '1/16 chamfer on both edges', 'start')); a(_call(164, 144, 108, 218, '1/16 gap', 'start'))
-    a(_call(60, 132, 30, 58, '3/8 plywood sheets', 'start')); a(_call(100, 168, 60, 250, 'furring strip 3/4 x 1 1/2, glue and screw', 'start'))
+    a(_call(60, 132, 30, 58, '3/8 plywood sheets', 'start')); a(_call(100, 168, 60, 250, 'furring rail 3/4 x 1 1/2, glue and screw', 'start'))
     a(_call(474, 106, 520, 70, 'batten 1/4 x 1 1/2', 'start')); a(_call(474, 144, 520, 218, '1/16 gap under it', 'start'))
-    a(_t(20, 276, 'aisle side at the top, the van wall at the bottom; the strips run sideways behind the joint', 11.5, 'start', '#5F5E5A'))
+    a(_t(20, 276, 'aisle side at the top, the van wall at the bottom; the furring rails run sideways behind the joint', 11.5, 'start', '#5F5E5A'))
     return _svg(760, 290, ''.join(o), 'Sheet joint: V joint and batten')
 
 # ---- 2  inside corner: a plan section where a sheet meets a floor-to-ceiling wall ----------------------------------------------

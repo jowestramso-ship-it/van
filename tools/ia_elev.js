@@ -30,7 +30,7 @@ function elevFrame(E, L, title) {
   return o.join('');
 }
 // wall covering: the sheet joints (sheets run floor to ceiling from the rear edge, 6 in behind the 0 mark), left out below the top of the sliding door opening
-const FURR = [3, 12, 21.25, 30.25, 43.5, 57.25, 66, 76.75];   // center heights of the main furring strips S1 to S8
+const FURR = [3, 12, 21.25, 30.25, 43.5, 57.25, 66, 76.75];   // center heights of the main furring rails S1 to S8
 const STRIP_W = 3.5;                                           // they are 1x4 laid flat: 3 1/2 wide, 3/4 thick (the window and nook frames are 1x2)
 function wallSeams(E, L, pass) {
   const P = L.P, { xx, yy } = E, o = [];
@@ -168,7 +168,7 @@ function drawDriver(L, V) {
     o.push(GB('cblk', 'Wall blocks for the couch frame'));
     L.cblk.forEach((b, i) => {
       o.push(box(b.x0, b.x1, b.z0, b.z1, { fill: '#5A2E0A', fo: .75, stroke: '#3E230B', sw: 1.2 }));
-      o.push(LBL(X(b.x), Y(5.5), 'Wall block ' + fmt(b.x), `a 2x2 post, 1 1/2 x 1 1/2 in and ${fmt(b.z1)} tall, standing on the floor against the wall at ${fmt(b.x)} in from the back (centered) and screwed through the planks into the furring strips S1 (3 up) and S2 (12 up) behind it; the couch frame's back rail just sits on its top (a dowel locates it)${i === 1 && P.blkBOn ? ' (the middle one is "if needed")' : ''}`, { size: 10.5, fill: '#5A2E0A', dy: 13 }));
+      o.push(LBL(X(b.x), Y(5.5), 'Wall block ' + fmt(b.x), `a 2x2 post, 1 1/2 x 1 1/2 in and ${fmt(b.z1)} tall, standing on the floor against the wall at ${fmt(b.x)} in from the back (centered) and screwed through the planks into the furring rails S1 (3 up) and S2 (12 up) behind it; the couch frame's back rail just sits on its top (a dowel locates it)${i === 1 && P.blkBOn ? ' (the middle one is "if needed")' : ''}`, { size: 10.5, fill: '#5A2E0A', dy: 13 }));
     });
     o.push(GE());
   }

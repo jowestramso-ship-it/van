@@ -40,7 +40,7 @@ async function grab(page, side) {
       if (L.gcab) {
         const c = L.gcab;
         add('Gear cabinet (floor-mounted, two side panels)', c.x0, c.x1 + .75, 0, c.z1, `3/4 in plywood panels at ${F(c.x0)} and ${F(c.x1)} in from the back, ${F(c.y1)} deep, floor to the deck (${F(c.z1)} up); the gear shelf is its sliding top, the battery stays on the floor under it; each panel stands on a floor cleat`);
-        L.cblk.forEach(b => add('Couch wall block at ' + F(b.x), b.x0, b.x1, b.z0, b.z1, `a 2x2 post ${F(b.x1 - b.x0)} wide x ${F(b.y1)} out x ${F(b.z1 - b.z0)} tall, standing on the floor, centered ${F(b.x)} in from the back; screw it through the planks into the furring strips S1 and S2; the couch frame's back rail rests on it${b.x === P.blkB ? ' (if needed)' : ''}`));
+        L.cblk.forEach(b => add('Couch wall block at ' + F(b.x), b.x0, b.x1, b.z0, b.z1, `a 2x2 post ${F(b.x1 - b.x0)} wide x ${F(b.y1)} out x ${F(b.z1 - b.z0)} tall, standing on the floor, centered ${F(b.x)} in from the back; screw it through the planks into the furring rails S1 and S2; the couch frame's back rail rests on it${b.x === P.blkB ? ' (if needed)' : ''}`));
       }
       if (L.chairs) add('Lawn chairs, folded flat', L.chairs.x0, L.chairs.x1, L.chairs.z0, L.chairs.z1, `${P.chairN} stacked`);
       if (P.closetOn) {
@@ -55,7 +55,7 @@ async function grab(page, side) {
         const w = L.win;
         add('Side window cutout (cut through the steel)', w.cx0, w.cx1, w.cz0, w.cz1, `${F(w.cx1 - w.cx0)} wide x ${F(w.cz1 - w.cz0)} tall, sill ${F(w.cz0)} up (the slider frame outline; mark it from the template, then cut)`);
         add('Side window glass outline (outside the van)', w.gx0, w.gx1, w.gz0, w.gz1, `${F(w.gx1 - w.gx0)} x ${F(w.gz1 - w.gz0)}, the glass is bigger than the hole: it ends ${F(w.cx0 - w.gx0)} in left of the cutout`);
-        add('Side window frame (furring: two jambs, sill and head)', w.cx0 - 1.5, w.cx1 + 1.5, w.cz0 - 1.5, w.cz1 + 1.5, `3/4 x 1 1/2 in strip all round the cutout; S5 and S6 stop at it`);
+        add('Side window frame (furring: two jambs, sill and head)', w.cx0 - 1.5, w.cx1 + 1.5, w.cz0 - 1.5, w.cz1 + 1.5, `3/4 x 1 1/2 in furring rail all round the cutout; S5 and S6 stop at it`);
       }
       L.walls.filter(w => w.side === 'd').forEach(w => add('Floor-to-ceiling wall', w.x0, w.x1, 0, L.ceilF, `${w.id}: ${F(P.fwT)} thick, ${F(w.d)} out from the wall, ${w.id === 'W1' ? 'the back of the rear bench leans on it' : 'behind the driver seat, the back of the cab-end bench leans on it'}`));
       L.cabs.forEach((c, i) => add('Wall cabinet', c[0], c[1], P.cabBot, L.ceilF, `${F(c[1] - c[0])} long x ${F(P.cabDepth)} deep, 3 doors ${F(L.doors[i * 3].w)} wide`));
@@ -96,7 +96,7 @@ async function grab(page, side) {
 }
 
 
-// the wall's own drawing (depth colours, pans, holes, furring strips and dots) comes from sides.html (diagrams A and D);
+// the wall's own drawing (depth colours, pans, holes, furring rails and dots) comes from sides.html (diagrams A and D);
 // the items are drawn on top of it, almost transparent, in the same coordinates
 async function grabBase(page, idx) {
   return page.evaluate((idx) => {
@@ -123,7 +123,7 @@ function wallSVG(d, side, base) {
     o.push(`<circle cx="${cx.toFixed(1)}" cy="${cy.toFixed(1)}" r="9" fill="#fff" fill-opacity=".92" stroke="#1b1a17" stroke-width="1.5"/><text x="${cx.toFixed(1)}" y="${(cy + 3.6).toFixed(1)}" text-anchor="middle" style="font-size:10px;font-weight:700;fill:#1b1a17">${it.n}</text>`);
   });
   const id = flip ? 'P' : 'D';
-  const svg = `<svg viewBox="0 0 1070 636" role="img" aria-label="${flip ? 'Passenger' : 'Driver'} wall: steel depth map, furring strips and the items, almost transparent, on top">${base.inner}<g id="wmItems${id}">${o.join('')}</g></svg>`;
+  const svg = `<svg viewBox="0 0 1070 636" role="img" aria-label="${flip ? 'Passenger' : 'Driver'} wall: steel depth map, furring rails and the items, almost transparent, on top">${base.inner}<g id="wmItems${id}">${o.join('')}</g></svg>`;
   const rows = items.map(it => `<tr><td><span class="kn">${it.n}</span></td><td>${esc(it.name)}${it.dims ? ` <span class="kd">${esc(it.dims)}</span>` : ''}</td><td>${fr(it.x0)} to ${fr(it.x1)}</td><td>${it.zv != null ? fr(it.zv) : fr(it.z0) + ' to ' + fr(it.z1)}</td></tr>`).join('');
   const table = `<div class="tw"><table><thead><tr><th></th><th>Item</th><th>From the back mark (in)</th><th>Up from the floor (in)</th></tr></thead><tbody>${rows}</tbody></table></div>`;
   return { svg, table, id, legend: base.legend };
@@ -168,12 +168,12 @@ function wallSVG(d, side, base) {
   ${W.legend}
   ${W.table}`;
   const body = `<div class="wrap">
-  <h1>Wall marking map: steel, furring strips and items</h1>
-  <p class="lead">Diagrams A and D from the static page (the colors are how far the steel stands off the body, the white dots are the furring strips' attachment points) with every built item drawn almost transparent on top, numbered. Each table says where an item sits: measure along the wall from the <b>back mark</b> (0 is <b>6 in in from the rear-door edge</b>, the same zero as the plan and the wall diagrams, so add 6 in to measure from the doors) and <b>up from the floor</b>. Positions come from the plan and change with its sizes; the steel and the strips are the measured drawing.</p>
-  <div class="note"><b>The three kinds of attachment mark.</b> Every white dot is a place where a furring strip is fixed to the van; what is glued to the steel there depends on the strip. <b>Adhesive pad</b> (S1, S2, S3, the S5 pieces and V4 that sit on flat steel): the strip lies straight on the steel with a patch of structural adhesive or VHB tape, no spacer. <b>Spacer block, 3 1/2 in</b> (S4, S5, S6, the window frame and the nook frames V1 to V3): a 3 1/2 in cut of 2x4, 1 1/2 along the wall by 3 1/2 up on the steel and 3 5/8 in out with the glue, glued to the steel and never screwed, and the strip is then glued and screwed to it. <b>Thin shim</b> (S7, S8, ordinary 1x4 strips like the rest; only what sits under them differs): a plywood square, 1 1/2 x 1 1/2 in, 1/4 in thick under S7 and 5/8 in under S8, glued to the steel, because the steel up there is already about 3 1/2 in deep. The Furring page of the build guide has the block chart (every block with its distance from the back mark) and how to attach a block to the steel.</div>
+  <h1>Wall marking map: steel, furring rails and items</h1>
+  <p class="lead">Diagrams A and D from the static page (the colors are how far the steel stands off the body, the white dots are the furring rails' attachment points) with every built item drawn almost transparent on top, numbered. Each table says where an item sits: measure along the wall from the <b>back mark</b> (0 is <b>6 in in from the rear-door edge</b>, the same zero as the plan and the wall diagrams, so add 6 in to measure from the doors) and <b>up from the floor</b>. Positions come from the plan and change with its sizes; the steel and the furring rails are the measured drawing.</p>
+  <div class="note"><b>The three kinds of attachment mark.</b> Every white dot is a place where a furring rail, one of the long 1x4 boards, is fixed to the van. What goes between the steel and the furring rail is a spacer, and there are three kinds. <b>Adhesive pad</b> (S1, S2, S3, the S5 pieces and V4 that sit on flat steel): the furring rail lies straight on the steel with a patch of structural adhesive or VHB tape, no spacer. <b>Spacer block, 3 1/2 in</b> (S4, S5, S6, the window frame and the nook frames V1 to V3): a 3 1/2 in cut of 2x4, 1 1/2 along the wall by 3 1/2 up on the steel and 3 5/8 in out with the glue, glued to the steel and never screwed, and the furring rail is then glued and screwed to it. <b>Thin shim</b> (S7, S8, ordinary 1x4 furring rails like the rest; only what sits under them differs): a plywood square, 1 1/2 x 1 1/2 in, 1/4 in thick under S7 and 5/8 in under S8, glued to the steel, because the steel up there is already about 3 1/2 in deep. The Furring page of the build guide has the block chart (every block with its distance from the back mark) and how to attach a block to the steel.</div>
   <div class="note">The driver wall is drawn with the back of the van on the left. The passenger wall is drawn as diagram D is, with the cab on the left and the back on the right. Dashed item boxes are things that only exist at one height (rods, table tops, the foot ledge): the table gives that one height. Out-from-the-wall depths are not in the tables.</div>
-  ${sec('Driver side wall', D, 'wmItemsD', 'furr', 'Show the furring strips (S1 to S8) and their attachment dots')}
-  ${sec('Passenger side wall', P, 'wmItemsP', 'furrP', 'Show the furring strips (S1 to S8) and the nook frames (V1 to V4)')}
+  ${sec('Driver side wall', D, 'wmItemsD', 'furr', 'Show the furring rails (S1 to S8) and their attachment dots')}
+  ${sec('Passenger side wall', P, 'wmItemsP', 'furrP', 'Show the furring rails (S1 to S8) and the nook frames (V1 to V4)')}
   <p class="lead" style="margin-top:14px"><a href="interactive.html">Back to the interactive plan</a></p>
   </div>`;
 

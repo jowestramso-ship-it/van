@@ -33,7 +33,7 @@ BR_H = 3.5                       # the rails are 3/4 x 3 1/2 on edge
 BR_Z0 = DECK_U - BR_H            # 13 1/2
 BLK_X = (3, 20, 41)              # centers along the wall; the middle one 'if needed'
 BLK_W, BLK_D = 1.5, 1.5          # a 2x2 (1 1/2 x 1 1/2 actual), standing on the floor against the wall (so they carry the back of the couch to the floor), tops at the rail's underside
-BLK_Z0, BLK_Z1 = 0, BR_Z0; BLK_H = BLK_Z1 - BLK_Z0   # 0 to 13 1/2: screwed through the planks into the furring strips S1 (3 up) and S2 (12 up)
+BLK_Z0, BLK_Z1 = 0, BR_Z0; BLK_H = BLK_Z1 - BLK_Z0   # 0 to 13 1/2: screwed through the planks into the furring rails S1 (3 up) and S2 (12 up)
 BEAM_T = 1.5                     # over the cabinet the back rail is doubled (two 3/4 x 3 1/2 on edge = 1 1/2 thick) and rests on a ledger on each panel
 LEDGE_L, LEDGE_H = 3, 1.5        # 3/4 x 1 1/2 x 3 in, top at the rail's underside
 POST = 1.5

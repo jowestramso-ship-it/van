@@ -185,7 +185,7 @@ const PD = [
   { k: 'wallDens', g: 'Walls', l: 'Wood density (lb per cu ft; birch about 41, cedar about 23)', d: 41, s: 1, a: 15, b: 60 },
   { k: 'sheetW', g: 'Walls', l: 'Sheet width (runs floor to ceiling)', d: 48, s: 1, a: 12, b: 60 },
   { k: 'sheetH', g: 'Walls', l: 'Sheet height', d: 96, s: 1, a: 24, b: 120 },
-  { k: 'wallSpan', g: 'Walls', l: 'Most the covering may span between furring strips', d: 16, s: 1, a: 6, b: 32 },
+  { k: 'wallSpan', g: 'Walls', l: 'Most the covering may span between furring rails', d: 16, s: 1, a: 6, b: 32 },
   { k: 'ribList', g: 'Roof ribs', l: 'Rib positions along the roof: inches from the back edge (rear doors), separated by commas', d: '21.75, 37.875, 58.375, 97.375, 126.375', t: 'x' },
   { k: 'ribDepth', g: 'Roof ribs', l: 'Rib depth (how far the ribs hang below the steel roof)', d: 2, s: .25, a: .5, b: 6 },
   { k: 'ribW', g: 'Roof ribs', l: 'Rib width (the flange along the van)', d: 2.75, s: .125, a: .5, b: 8 },
