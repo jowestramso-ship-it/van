@@ -4,7 +4,7 @@ The main furring rails S1 to S8 are **1x4 boards laid flat: 3/4 in thick x 3 1/2
 
 A 154 in wall does not come in one stick, so a furring rail that is longer than 8 ft (96 in) is two pieces **butted at an attachment dot** (the joint then sits on a fixed point, with a pad or spacer under it). The pieces are listed as "a", "b" and "c", in order from the back.
 
-## Driver side (18 furring rail pieces)
+## Driver side (17 furring rail pieces)
 
 | Cut | Furring rail | Height up | From (in) | To (in) | Length | Joint | Dots (attachment points) within the piece |
 |---|---|---|---|---|---|---|---|
@@ -16,18 +16,17 @@ A 154 in wall does not come in one stick, so a furring rail that is longer than 
 | D06 | S3b | 21 1/4 | 78 | 154 | **76** | joins its other half | 99, 110, 122, 134, 146 |
 | D07 | S4a | 30 1/4 | 0 | 71 1/4 | **71 1/4** | joins its other half | 10, 17.75, 31.25, 44.5, 58.6, 71.31 |
 | D08 | S4b | 30 1/4 | 71 1/4 | 154 | **82 3/4** | joins its other half | 82.94, 98.9, 114.94, 127.25, 139.75, 147 |
-| D09 | S5a | 43 1/2 | 0 | 71 1/4 | **71 1/4** | joins its other half | 17.75, 31.25, 44.5, 58.6, 71.31 |
-| D10 | S5b | 43 1/2 | 71 1/4 | 100 1/4 | **29** | joins its other half | 82.94, 98.9 |
-| D11 | S5c | 43 1/2 | 142 15/16 | 154 | **11 1/16** |  | 147 |
-| D12 | S6a | 57 1/4 | 0 | 71 1/4 | **71 1/4** | joins its other half | 10, 17.75, 31.25, 44.5, 58.6, 71.31 |
-| D13 | S6b | 57 1/4 | 71 1/4 | 100 1/4 | **29** | joins its other half | 82.94, 98.9 |
-| D14 | S6c | 57 1/4 | 142 15/16 | 154 | **11 1/16** |  | 147 |
-| D15 | S7a | 66 | 0 | 71 1/4 | **71 1/4** | joins its other half | 17.75, 31.25, 44.5, 58.6, 71.31 |
-| D16 | S7b | 66 | 71 1/4 | 154 | **82 3/4** | joins its other half | 82.94, 98.9, 114.94, 127.25, 139.75 |
-| D17 | S8a | 76 3/4 | 0 | 76 | **76** | joins its other half | 10, 24, 36, 58.6, 76 |
-| D18 | S8b | 76 3/4 | 76 | 154 | **78** | joins its other half | 93, 98.9, 114, 127, 140 |
+| D09 | S5a | 43 1/2 | 75 1/2 | 100 1/4 | **24 3/4** |  | 82.94, 98.9 |
+| D10 | S5b | 43 1/2 | 142 15/16 | 154 | **11 1/16** |  | 147 |
+| D11 | S6a | 57 1/4 | 0 | 71 1/4 | **71 1/4** | joins its other half | 10, 17.75, 31.25, 44.5, 58.6, 71.31 |
+| D12 | S6b | 57 1/4 | 71 1/4 | 100 1/4 | **29** | joins its other half | 82.94, 98.9 |
+| D13 | S6c | 57 1/4 | 142 15/16 | 154 | **11 1/16** |  | 147 |
+| D14 | S7a | 66 | 0 | 71 1/4 | **71 1/4** | joins its other half | 17.75, 31.25, 44.5, 58.6, 71.31 |
+| D15 | S7b | 66 | 71 1/4 | 154 | **82 3/4** | joins its other half | 82.94, 98.9, 114.94, 127.25, 139.75 |
+| D16 | S8a | 76 3/4 | 0 | 76 | **76** | joins its other half | 10, 24, 36, 58.6, 76 |
+| D17 | S8b | 76 3/4 | 76 | 154 | **78** | joins its other half | 93, 98.9, 114, 127, 140 |
 
-S1 is in two pieces on purpose: it stops at the wheel well (42 to 76), which needs its own box. S2 to S4, S7 and S8 run the whole 154 in. **S5 and S6 stop at the side window frame**: each is a piece from 0 to 100 1/4 in (cut in two at 71 1/4 so it fits on an 8 ft stick) and a short piece from 142 15/16 to 154 in.
+S1 is in two pieces on purpose: it stops at the wheel well (42 to 76), which needs its own box. S2 to S4, S7 and S8 run the whole 154 in. **S6 stops at the side window frame**: a piece from 0 to 100 1/4 in (cut in two at 71 1/4 so it fits on an 8 ft stick) and a short piece from 142 15/16 to 154 in. **S5 is cut away behind the couch** (the nook, 5 to 74 in): it starts at the nook's front frame V6 (75 1/2 in), runs to the window frame at 100 1/4 in, and has the same short piece from 142 15/16 to 154 in; there is no S5 from 0 to 75 1/2 in.
 
 ### Side window frame, driver side (4 pieces)
 
@@ -41,6 +40,15 @@ The window cutout is 39 11/16 x 22 5/8 in. Around it goes a frame of 1x2 furring
 | W04 | J4 head | horizontal, between the jambs | **39 11/16** | 101 3/4 to 141 7/16 in from the back, 61 5/8 to 63 1/8 in up |
 
 The frame sits 1 1/2 in outside the cutout on every side, so the opening that is left is exactly the cutout. Cut the four pieces after you have measured the real hole (the opening is already cut), not before.
+
+### Couch nook frames, driver side (2 pieces)
+
+The nook behind the couch is an opening in the wall covering, 5 to 74 in along the wall and 32 to 55 1/2 in up: S4 is its bottom edge and S6 its top edge, so it needs no cross pieces, only a frame of 1x2 at each end to finish the covering's edge. Each stands outside the opening, between S4 and S6, on three blocks.
+
+| Cut | Piece | What it is | Length | Where |
+|---|---|---|---|---|
+' + '
+'.join(dnk) + f'
 
 ## Passenger side (17 furring rail pieces)
 
@@ -80,14 +88,14 @@ The passenger furring rails stop at the sliding door opening (104 in); only S8 c
 
 ## Totals
 
-- Driver side furring rails: 1112 5/8 in (92.7 ft), 18 pieces; window frame 130 5/8 in, 4 pieces.
+- Driver side furring rails: 1037 1/8 in (86.4 ft), 17 pieces; window frame 130 5/8 in, 4 pieces; couch nook frames 47 in, 2 pieces.
 - Passenger side furring rails: 807 1/2 in (67.3 ft), 17 pieces; frames and cross pieces 130 3/4 in, 7 pieces.
-- Everything: **2181 1/2 in (182 ft), 46 pieces**. Packed onto 8 ft sticks with a 1/8 in saw kerf: the 35 furring rails S1 to S8 are **24 sticks of 1x4**, buy about 28; the 11 frame and cross pieces are **3 sticks of 1x2**, buy about 4 (some spare for bad boards and cutting mistakes).
-- The wall diagrams say about 104 ft for the driver side alone; this list agrees (1243 1/4 in is 103.6 ft).
+- Everything: **2153 in (179 ft), 47 pieces**. Packed onto 8 ft sticks with a 1/8 in saw kerf: the 34 furring rails S1 to S8 are **23 sticks of 1x4**, buy about 27; the 13 frame and cross pieces are **4 sticks of 1x2**, buy about 5 (some spare for bad boards and cutting mistakes).
+- The wall diagrams say about 97 ft for the driver side alone; this list agrees (1167 3/4 in is 97.3 ft).
 
 ## Also cut: spacer blocks (not furring rails), and what holds them
 
-The wood blocks are the spacers that hold S4, S5, S6, the window frame (J1 to J4) and the nook frames V1 to V3 off the steel so every furring rail's back sits on the same line, 3 3/4 in off the body. Each is **1 1/2 x 3 1/2 in on the steel and 3 1/2 in out**: 1 1/2 along the wall, 3 1/2 up (as tall as a 1x4 furring rail is wide), so the furring rail rests on its whole width.
+The wood blocks are the spacers that hold S4, S5, S6, the window frame (J1 to J4), the shower and counter nook frames V1 to V3 and the couch nook frames V5 and V6 off the steel so every furring rail's back sits on the same line, 3 3/4 in off the body. Each is **1 1/2 x 3 1/2 in on the steel and 3 1/2 in out**: 1 1/2 along the wall, 3 1/2 up (as tall as a 1x4 furring rail is wide), so the furring rail rests on its whole width.
 
 - **Size and stock: cut 3 1/2 in pieces off a 2x4** (a 2x4 is really 1 1/2 x 3 1/2 in) and stand each on its 3 1/2 in side, so the block is 1 1/2 x 3 1/2 in on the steel (1 1/2 along the wall, 3 1/2 up) and 3 1/2 in out. The 1/8 in glue line under it makes the 3 5/8 in standoff, and the grain runs up the face of the block, so the furring rail's screw goes into side grain (a block with its grain pointing at the furring rail would take that screw in end grain, which holds about half as well). On the 1 1/2 in bands of steel under and over the pans (S4 and S6) the 3 1/2 in tall block spans the band and 1 in of pan above and below it; the pans are only 1/8 in lower, so the glue line takes up the difference.
 - **Block to the steel: adhesive, not screws.** Nothing is drilled into the van's body. Use a polyurethane construction adhesive (the kind van builders use is Sikaflex 252 or a similar one; check the label for steel and for a bond line of about 1/8 in) or 3M VHB tape. Put it only on solid steel, away from the holes, and test one block on a scrap of your own steel (pull it off after a day) before you do the wall.
@@ -96,7 +104,7 @@ The wood blocks are the spacers that hold S4, S5, S6, the window frame (J1 to J4
 - **If you use VHB tape, steel prep:** (1) remove loose paint, rust and dust, and make sure the factory paint under the tape is sound, because the tape is only as good as the paint it sticks to; (2) if the steel is oily or waxy, wipe it first with a degreaser or solvent; (3) scuff lightly to dull the gloss, with a gray (ultra fine) or maroon (very fine) Scotch-Brite pad or 400 to 420 grit sandpaper, only until the paint looks evenly dull and not through to bare steel (if you do hit bare steel, touch it up with a rust-inhibiting primer before taping), then wipe the dust off; (4) wipe with a 70/30 mix of isopropyl alcohol and water on a clean lint-free cloth, then wipe dry with another; (5) do not touch the cleaned spot. Seal the face of each wood block (a coat of polyurethane or similar, dry) or sand it smooth first, because raw wood is porous.
 - **If you use VHB tape, applying it:** put the tape on the block first, press it firmly, peel the liner, set the block in place (no sliding it around), then press hard, about 15 psi, which on a 1 1/2 x 3 1/2 in block (5 1/4 sq in) is about 79 lb, for a minute, and hold or brace it. The bond keeps building for a day or more, so leave the furring rails off it until the next day. Choose a foam thickness near 1/8 in (110 mil) so the 3 1/2 in block plus the tape is the 3 5/8 in standoff. Read the data sheet of the exact tape you buy: the numbers above are the ones 3M gives for its VHB tapes in general.
 - **Furring rail to the block:** wood glue or construction adhesive plus one #8 x 1 1/2 in screw through the furring rail into the block.
-- **How many:** 41 on the driver side (S4 12, S5 8, S6 9, and 12 under the window frame, 3 under each of J1 to J4) and 29 on the passenger side (S4 8, S5 4 in the middle piece only, S6 8, and 3 each under V1, V2 and V3), so **70**. A 2x4x8 ft stick gives about 26 blocks of 3 1/2 in with a 1/8 in kerf, so **3 sticks of 2x4** (with 10 percent spare).
+- **How many:** 42 on the driver side (S4 12, S5 3, S6 9, 12 under the window frame, 3 under each of J1 to J4, and 6 under the couch nook frames V5 and V6) and 29 on the passenger side (S4 8, S5 4 in the middle piece only, S6 8, and 3 each under V1, V2 and V3), so **71**. A 2x4x8 ft stick gives about 26 blocks of 3 1/2 in with a 1/8 in kerf, so **4 sticks of 2x4** (with 10 percent spare).
 - **Where each one goes:** one at every dot of those furring rails, drawn as a dark square on the furring maps (diagram A for the driver side, diagram D for the passenger side) with the count printed on each furring rail.
 - **S7 and S8** only need thin shims at their dots: 1/4 in thick for S7 and 5/8 in for S8 (1 1/2 x 1 1/2 in, cut from plywood), glued the same way: 37 in all (driver S7 10 and S8 10, passenger S7 7 and S8 10), drawn as light dashed squares.
 
@@ -104,7 +112,7 @@ The wood blocks are the spacers that hold S4, S5, S6, the window frame (J1 to J4
 
 - **S8 (76 3/4 in up) is above the finished ceiling.** The ceiling covering ends at 74 9/16 in at the wall, so S8 (75 to 78 1/2 in as a 1x4) would sit above it, hidden in the roof curve. I did not change it; decide whether you still want it before cutting the two S8 pieces on each side.
 - **The side window position is an assumption, not a measurement.** The opening is already cut, but where it is on the wall is not in the plan: it is drawn 101 3/4 to 141 7/16 in from the back mark and 39 to 61 5/8 in up, centered over the dinette table. Measure the real hole's edges, put the numbers in the Side window sizes on the interactive page, rebuild, and cut S5, S6 and the four J pieces to what the real hole needs.
-- **The couch's wall blocks screw into S2** (12 in up) at 3, 20 (if needed) and 41 in from the back. S2's attachment dots are at 15, 30 3/4 and 40 in, so the block at 3 is 12 in from the nearest one: add a dot (an adhesive pad on solid steel, clear of the holes) behind it, or accept some flex.
+- **The couch's wall blocks screw into S2** (12 in up) at 8, 20 (if needed) and 41 in from the back. S2's attachment dots are at 15, 30 3/4 and 40 in, so the block at 8 is 7 in from the nearest one: add a dot (an adhesive pad on solid steel, clear of the holes) behind it, or accept some flex.
 - **S3 fills its band of steel exactly.** S3 sits on the 3 3/4 in band above the L holes (19 1/2 to 23 in up), which is 3 1/2 in tall, and a 1x4 fills it: its center is 21 1/4, so it runs 19 1/2 to 23, flush with both edges of the band (you asked for it centered at 21 1/4).
 - **Clear gaps between the furring rails are now small** (5 1/4 to 10 1/4 in): electrical boxes, the conduit and the PEX lines run in those bands, so the boxes need blocking inside a gap, not across a furring rail.
 - The dot positions come from the steel map; if you move a shelf, cabinet, window or outlet, move the dots (and the joints) first.

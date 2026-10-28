@@ -20,10 +20,12 @@ const PD = [
   { k: 'snItemsOn', g: 'Take items out', l: 'Towel bar, toilet paper and bottles in the shower nook', d: true, t: 'c' },
   { k: 'winOn', g: 'Take items out', l: 'Side window over the dinette (Van Windows Direct TL201-SE, driver side forward slider)', d: true, t: 'c' },
   { k: 'gearOn', g: 'Take items out', l: 'Charging gear on a pull-out shelf over the battery under the couch: the BELTTT inverter, the LiTime DC-DC charger and the VEVOR shore charger', d: true, t: 'c' },
+  { k: 'cnOn', g: 'Take items out', l: 'Nook in the wall behind the couch, where the back cushion tilts into the pans (31 to 57 in up) with furring rail S5 cut away there', d: true, t: 'c' },
   { k: 'gcabOn', g: 'Take items out', l: 'Gear cabinet under the east end of the couch (floor-mounted, two side panels, the shelf is its sliding top) and the removable couch frame with its wall blocks', d: true, t: 'c' },
   { k: 'blkBOn', g: 'Take items out', l: 'The middle wall block for the couch frame (20 in; you said "maybe, if needed")', d: true, t: 'c' },
   { k: 'wallsOn', g: 'Take items out', l: 'Floor-to-ceiling walls: behind the dinette backs (at the closet end and behind the driver seat) and one on each side of the fridge', d: true, t: 'c' },
-  { k: 'bedLen', g: 'Bed / couch', l: 'Length', d: 74, s: .5, a: 40, b: 120 },
+  { k: 'bedX0', g: 'Bed / couch', l: 'Rear end of the couch, along the wall from the back mark (5 since the nook behind the couch: the couch went from 74 to 69 in long, the front end stays at 74, at the gear cabinet and the closet)', d: 5, s: .5, a: 0, b: 30 },
+  { k: 'bedLen', g: 'Bed / couch', l: 'Length (69: it was 74, the rear end moved forward 5 in)', d: 69, s: .5, a: 40, b: 120 },
   { k: 'bedD', g: 'Bed / couch', l: 'Depth, closed (the couch on its base)', d: 26, s: .5, a: 15, b: 40 },
   { k: 'bedBack', g: 'Bed / couch', l: 'Leaf width (flips out in front; = back cushion length)', d: 20, s: .5, a: 0, b: 40 },
   { k: 'platform', g: 'Bed / couch', l: 'Seat base (deck 3/4 in lower; the leaf folds onto it). Raised from 14 to 17 1/2 for the gear shelf, then to 18 1/2 so a 3/4 x 1 rail can run along the deck front over the cabinet', d: 18.5, s: .5, a: 6, b: 30 },
@@ -58,9 +60,15 @@ const PD = [
   { k: 'winGH', g: 'Side window', l: 'Window glass, overall: height (29.12)', d: 29.12, s: .05, a: 20, b: 40 },
   { k: 'winOL', g: 'Side window', l: 'Glass edge to cutout: the glass starts this far left of the cutout (9 11/16)', d: 9.6875, s: .0625, a: 0, b: 20 },
   { k: 'winOB', g: 'Side window', l: 'Glass edge to cutout: the glass starts this far below the cutout (2 3/4)', d: 2.75, s: .125, a: 0, b: 8 },
-  { k: 'blkA', g: 'Couch frame blocks', l: 'Wall block at the back end: its center, along the wall from the back mark (you said 3)', d: 3, s: .25, a: 1.5, b: 70 },
+  { k: 'blkA', g: 'Couch frame blocks', l: 'Wall block at the back end: its center, along the wall from the back mark (you said 3 in from the end of the couch: 8 now that the couch starts at 5)', d: 8, s: .25, a: 1.5, b: 70 },
   { k: 'blkB', g: 'Couch frame blocks', l: 'Wall block in the middle (you said 20, if needed)', d: 20, s: .25, a: 1.5, b: 70 },
   { k: 'blkC', g: 'Couch frame blocks', l: 'Wall block at the cabinet end (you said 41)', d: 41, s: .25, a: 1.5, b: 70 },
+  { k: 'cnX0', g: 'Couch nook', l: 'Nook behind the couch: starts, along the wall from the back mark (the opening; its rear frame V5 is 1 1/2 in before this)', d: 5, s: .5, a: 0, b: 60 },
+  { k: 'cnX1', g: 'Couch nook', l: 'Nook behind the couch: ends (its front frame V6 is 1 1/2 in after this)', d: 74, s: .5, a: 20, b: 98 },
+  { k: 'cnZ0', g: 'Couch nook', l: 'Nook: the recess in the steel starts this far up (the pans start at 31, over the 1/8 in strip of S4 at 29 1/2 to 31)', d: 31, s: .5, a: 20, b: 50 },
+  { k: 'cnZ1', g: 'Couch nook', l: 'Nook: the recess in the steel ends this far up (the pans end at 56 1/2, the strip of S6 is 56 1/2 to 58)', d: 57, s: .5, a: 40, b: 70 },
+  { k: 'cnD', g: 'Couch nook', l: 'Nook depth, from the face of the walls to the back (the pans are 0 in off the body; the face of the covering is 4 7/8 off it, and 4 1/2 leaves 3/8 for a 1/4 in lining on the 1/8 in ribs)', d: 4.5, s: .25, a: 2, b: 5 },
+  { k: 'cnTilt', g: 'Couch nook', l: 'Back cushion tilt, degrees back from upright (12 is what the side view C draws)', d: 12, s: .5, a: 0, b: 25 },
   { k: 'shPull', g: 'Charging gear', l: 'Gear shelf: how far it pulls out (18 in full-extension slides; the shelf is 17 1/2 deep)', d: 18, s: 1, a: 10, b: 40 },
   { k: 'fwT', g: 'Floor-to-ceiling walls', l: 'Wall thickness (the walls are inside the closet, the shower and the counter cabinet, so nothing else moves)', d: .75, s: .125, a: .25, b: 3 },
   { k: 'benchLen', g: 'Dinette', l: 'Bench length', d: 19.5, s: .5, a: 10, b: 40 },
@@ -411,7 +419,7 @@ function collisions(L) {
     bx('', 'the divider between the two columns', dm, dm + .5, 0, 20, L.cabTot >= 3 ? L.wellShelf + .75 : ch - 7.25, ch - 2.5, { vs: ['drawer'] }),
     // under the couch: the driver wheel well, the battery, the underside of the deck, the closet and the rear doors; the lawn chairs have to stay between them (y is out from the passenger wall: the driver side is at y = vanW)
     bx('', 'the driver side wheel well', 42, 76, P.vanW - 7, P.vanW, 0, 7.5, { prof: wellH, vs: ['chair'] }), P.battOn && bx('', 'the battery', L.batt[0], L.batt[1], P.vanW - 17, P.vanW - 7, 0, 9.5, { vs: ['chair'] }),
-    bx('', 'the underside of the couch deck', 0, P.bedLen, P.vanW - P.bedD, P.vanW + 5, P.platform - 1.5, P.platform + 40, { vs: ['chair'] }), P.closetOn && bx('', 'the closet', L.c0, L.c1, P.vanW - P.closetD, P.vanW + 5, 0, 80, { vs: ['chair'] }),
+    bx('', 'the underside of the couch deck', P.bedX0, P.bedX1, P.vanW - P.bedD, P.vanW + 5, P.platform - 1.5, P.platform + 40, { vs: ['chair'] }), P.closetOn && bx('', 'the closet', L.c0, L.c1, P.vanW - P.closetD, P.vanW + 5, 0, 80, { vs: ['chair'] }),
     bx('', 'the rear doors', -30, -6, -5, P.vanW + 5, 0, 90, { vs: ['chair'] }), bx('', 'the driver side wall', -30, P.cab, P.vanW, P.vanW + 5, 0, 90, { vs: ['chair'] }), bx('', 'the floor', -30, P.cab + 10, -5, P.vanW + 5, -40, 0, { vs: ['chair'] }),
     // the trash can has the divider (down to the floor for it) beside it and the cabinet door in front of it
     P.canOn && bx('', 'the divider between the two columns', dm, dm + .5, 0, 20, 0, ch - 2.5, { vs: ['can', 'tank', 'hotboard'] }), bx('', 'the cabinet door', L.cabS, L.angS - .75, P.cabD - .75, P.cabD, 0, ch - 2.5, { vs: ['can'] })
@@ -436,7 +444,7 @@ function collisions(L) {
   if (L.hook) outOf('Hook', 'the dish towel hook with its towel', L.hook.x0, L.hook.x1, 0, P.doorX, 'the wall before the sliding door opening');
   if (L.chairs) {
     const c = L.chairs, over = c.d1 - P.bedD;
-    if (over > .06 && c.x1 > 0 && c.x0 < P.bedLen) { ids.add('Chairs'); list.push({ ids: ['Chairs'], msg: `The stack of lawn chairs sticks out ${fmt(over)} in past the front of the couch deck (${fmt(P.bedD)} in out from the driver wall) into the aisle.` }); }
+    if (over > .06 && c.x1 > P.bedX0 && c.x0 < P.bedX1) { ids.add('Chairs'); list.push({ ids: ['Chairs'], msg: `The stack of lawn chairs sticks out ${fmt(over)} in past the front of the couch deck (${fmt(P.bedD)} in out from the driver wall) into the aisle.` }); }
   }
   if (L.can) outOf('Can', 'the pull-out tray under the trash can', L.can.tx0, L.can.tx1, L.cabS, L.angS - .75, 'the flat part of the cabinet');
   if (L.jug) {
@@ -456,9 +464,9 @@ function collisions(L) {
 
 function layout(P0) {
   // the wall covering takes its thickness off each side of the inside width, only if the 'take it off' box is on
-  const P = Object.assign({}, P0, { vanW: P0.vanW - (P0.wallOn && P0.wallSub ? 2 * P0.wallT : 0) });
+  const P = Object.assign({}, P0, { vanW: P0.vanW - (P0.wallOn && P0.wallSub ? 2 * P0.wallT : 0), bedX1: P0.bedX0 + P0.bedLen });
   const L = { P };
-  L.c0 = P.bedLen; L.c1 = P.bedLen + P.closetW;
+  L.c0 = P.bedX1; L.c1 = P.bedX1 + P.closetW;
   L.bA = [L.c1, L.c1 + P.benchLen]; L.bB = [P.cab - P.benchLen, P.cab];
   // the closet: the clothes hang from the rod (the garment's shoulder is hangDrop below it), the longest one ends cloClear above the drawers, and the drawers fill the space under it
   L.hangBot = P.rodHi - P.hangDrop - P.cloLen; L.drawTop = Math.max(3, L.hangBot - P.cloClear); L.split = L.drawTop + .15;
@@ -498,7 +506,7 @@ function layout(P0) {
   const tx = L.bA[1] + Math.max(0, L.spare / 2);
   L.tbl = [tx, tx + L.tableLen];
   L.tableLow = Math.max(3, P.seatH - P.pillowT);
-  L.cabs = [[0, P.bedLen], [L.c1, P.cab]];
+  L.cabs = [[0, P.bedX1], [L.c1, P.cab]];
   L.doors = [];
   L.cabs.forEach((c, ci) => {
     const len = c[1] - c[0], w = Math.max(1, (len - 0.5) / 3);
@@ -523,10 +531,12 @@ function layout(P0) {
     L.cblk = P.gcabOn ? [[P.blkA, 1], [P.blkB, P.blkBOn ? 1 : 0], [P.blkC, 1]].filter(b => b[1]).map(b => ({ x: b[0], x0: b[0] - .75, x1: b[0] + .75, y0: 0, y1: 1.5, z0: 0, z1: bz1 })) : [];
     // the front rail across the cabinet: 3/4 x 1 on edge, glued and screwed to the deck's underside along the front edge between the panels (fh = its height; its bottom stays fz0 up, over the tallest unit)
     const fh = 1, tall = L.gear ? Math.max(P.dcH, P.invH, P.chH) + sz1 : 0;
-    L.cmod = P.gcabOn ? { du, rz0: bz1, beamX0: sx0 - .65 - .75 + .75, beamX1: L.c0, west: sx0 - .65 - .75, posts: [0, sx0 - .65 - .75 - 1.5], fr: { x0: sx0 - .65 - .75 + .75, x1: L.c0, y0: P.bedD - .75, y1: P.bedD, z0: du - fh, z1: du, h: fh, tall } } : null; }
+    L.cmod = P.gcabOn ? { du, rz0: bz1, beamX0: sx0 - .65 - .75 + .75, beamX1: L.c0, west: sx0 - .65 - .75, posts: [P.bedX0, sx0 - .65 - .75 - 1.5], fr: { x0: sx0 - .65 - .75 + .75, x1: L.c0, y0: P.bedD - .75, y1: P.bedD, z0: du - fh, z1: du, h: fh, tall } } : null; }
   // the side window over the dinette: the cutout (the slider frame's outline, what goes through the steel) and the glass (outside, glued over the stamping)
   { const cx0 = P.winX, cx1 = cx0 + P.winCW, cz0 = P.winZ, cz1 = cz0 + P.winCH, gx0 = cx0 - P.winOL, gz0 = cz0 - P.winOB;
     L.win = P.winOn ? { cx0, cx1, cz0, cz1, gx0, gx1: gx0 + P.winGW, gz0, gz1: gz0 + P.winGH, div: gx0 + 28.625 } : null; }
+  // the nook in the wall behind the couch (driver side): an opening in the covering from the top edge of furring rail S4 to the bottom edge of S6, over the pan band of the steel; the back cushion tilts back into it
+  L.cnook = P.cnOn ? { x0: P.cnX0, x1: P.cnX1, z0: P.cnZ0, z1: P.cnZ1, d: P.cnD, tilt: P.cnTilt } : null;
   L.pan = P.panW; L.fr = [P.panW, P.panW + P.fridgeW]; L.cabS = L.fr[1];
   L.angS = L.cabS + P.flatLen; L.angLen = P.cabD > P.sinkD ? P.angLen : 0;
   L.slope = L.angLen > 0 ? (P.cabD - P.sinkD) / L.angLen : 0.4;
@@ -660,8 +670,8 @@ function toggleIds(ids) {
   kick();
 }
 function animating(now) { for (const id in ANIM) if (now - ANIM[id].t0 < DUR) return true; return false; }
-// the four legs along the free edge: the end legs 1 in from the ends of the leaf, the others evenly between (about 24 in apart on the 74 in leaf)
-const legXs = P => { const k = (P.bedLen - 3.25) / 3; return [1, 1 + k, 1 + 2 * k, P.bedLen - 2.25]; };
+// the four legs along the free edge: the end legs 1 in from the ends of the leaf, the others evenly between (about 22 in apart on the 69 in leaf)
+const legXs = P => { const k = (P.bedLen - 3.25) / 3, x0 = P.bedX0; return [x0 + 1, x0 + 1 + k, x0 + 1 + 2 * k, x0 + P.bedLen - 2.25]; };
 // the bed makes up in three moves: the back cushion comes off the wall, the leaf flips over the front edge, the legs fold down
 function bedState(s) {
   const th = clamp((s - .25) / .5, 0, 1) * Math.PI;

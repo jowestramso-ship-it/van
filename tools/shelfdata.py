@@ -7,6 +7,20 @@ CUSH = 5                         # seat and back cushion thickness (was 6; 5 kee
 SEAT_T = PLAT + CUSH             # seat cushion top 23 1/2
 BACK_T = SEAT_T + 20             # back cushion top 43 1/2
 BAT = (52, 73); C0 = 74
+# the nook behind the couch (user: 'I'm gonna put in a nook behind the couch and the couch will become 69in long. so the back will tilt into the nook' ... 'it will go from 31 to 57'):
+# the couch is 69 long, 5 to 74 (the front end stays at the gear cabinet and the closet, the rear end moved forward 5 in); the nook behind it is an opening in the wall covering from the top edge of
+# furring rail S4 (32) to the bottom edge of S6 (55 1/2), over the pan band of the steel (31 to 56 1/2 up, 0 to 1/8 in off the body); the back cushion tilts back into it
+COUCH_X0 = 5; COUCH_LEN = C0 - COUCH_X0          # 69
+CN_X0, CN_X1 = 5, 74                                # the opening along the wall (the same span as the couch); its frames V5 (3 1/2 to 5) and V6 (74 to 75 1/2) are outside it
+CN_Z0, CN_Z1 = 31, 57                               # the recess in the steel: the pans (31 to 56 1/2) and the strips of S4 and S6 beside them
+CN_OZ0, CN_OZ1 = 32.0, 55.5                         # the opening in the covering: S4's top edge to S6's bottom edge (the rails stay where they are)
+CN_D = 4.5                                          # depth from the face of the walls to the back (the pans are 0 in off the body; the covering's face is 4 7/8 off it)
+CN_TILT = 12                                        # degrees the back cushion leans back
+import math as _m
+CN_SETOUT = (CN_OZ0 - SEAT_T) * _m.tan(_m.radians(CN_TILT))      # the cushion's base stands this far out from the wall face, so that at the bottom of the opening its rear edge is just at the face (1 3/4 in)
+CN_TOPIN = (BACK_T - CN_OZ0) * _m.tan(_m.radians(CN_TILT))       # how far the cushion's top rear edge goes into the nook (2 1/2 in)
+CN_MAXTILT = _m.degrees(_m.atan(CN_D / (BACK_T - CN_OZ0)))        # the tilt that would fill the nook's depth (21 degrees: the seat would lose 3 1/2 in)
+SEAT_DEPTH = 26 - CN_SETOUT - CUSH / _m.cos(_m.radians(CN_TILT))   # the seat cushion's clear depth in front of the back (about 19 in)
 SH_G, SH_T = 1.0, .5             # gap over the battery (9 1/2) and the tray's plywood
 SH_Z0 = 9.5 + SH_G; SH_Z1 = SH_Z0 + SH_T
 HATCH_Y = 26 - .75               # the tray's face, flush with the couch front (the removable louvered panel was here)
@@ -31,7 +45,7 @@ CB_H = DECK_U                    # 17
 # a full-length back rail hung on three wall blocks, a front rail, an end rail and a cross rail west of the cabinet on three posts, and a separate deck lid on top
 BR_H = 3.5                       # the rails are 3/4 x 3 1/2 on edge
 BR_Z0 = DECK_U - BR_H            # 13 1/2
-BLK_X = (3, 20, 41)              # centers along the wall; the middle one 'if needed'
+BLK_X = (8, 20, 41)              # centers along the wall; the middle one 'if needed'; the rear one is 3 in in from the rear end of the couch (5)
 BLK_W, BLK_D = 1.5, 1.5          # a 2x2 (1 1/2 x 1 1/2 actual), standing on the floor against the wall (so they carry the back of the couch to the floor), tops at the rail's underside
 BLK_Z0, BLK_Z1 = 0, BR_Z0; BLK_H = BLK_Z1 - BLK_Z0   # 0 to 13 1/2: screwed through the planks into the furring rails S1 (3 up) and S2 (12 up)
 BEAM_T = 1.5                     # over the cabinet the back rail is doubled (two 3/4 x 3 1/2 on edge = 1 1/2 thick) and rests on a ledger on each panel
@@ -43,7 +57,7 @@ RL_T, RL_H = .75, 1.0
 RL_Z0, RL_Z1 = DECK_U - RL_H, DECK_U          # 16 to 17
 RL_X0, RL_X1 = CB_X0 + CB_T, CB_X1          # between the panels
 RL_Y0, RL_Y1 = CB_Y1 - RL_T, CB_Y1
-POST_X = (0, SH_DIV - POST)      # two posts, so the lawn chairs (34 1/2 long) can still slide in between them
+POST_X = (COUCH_X0, SH_DIV - POST)      # two posts (the rear one at the rear end of the couch, 5): they are 30 5/8 in apart clear, less than the 34 1/2 in lawn chairs, which go in from the rear doors along the wall (they sit behind the posts, under the rear rail)
 # the wall cabinets: the bottom was 61, raised 2 in to 63 (user: 'make the wall cabinets be 2 in higher'); the top stays at the finished ceiling at the wall
 CAB_BOT = 63; CAB_TOP = 74.5625; DOOR_H = 10; DOOR_Z0 = CAB_BOT + .5; DOOR_Z1 = DOOR_Z0 + DOOR_H
 # the side window over the dinette: Van Windows Direct TL201-SE, driver side forward slider (the numbers of window.py and wtemplate.py)

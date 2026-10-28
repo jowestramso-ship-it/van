@@ -2,10 +2,10 @@
 [
 "Driver",
 "Bed / couch",
-"0 to 74",
-"74 x 26 (couch), 74 x 46 opened",
+"5 to 74",
+"69 x 26 (couch), 69 x 46 opened",
 "deck top 17 3/4, seat base 18 1/2 (deck + the 3/4 in leaf), seat top 23 1/2 by day, bed top 22 3/4 at night (the base raised 4 1/2 in from 14: 3 1/2 in so the gear shelf fits over the battery and 1 in more so a hardwood rail can run under the deck front across the cabinet; the cushions cut from 6 in to 5 in to keep the headroom)",
-"makes up with a hinged leaf: the 20 in leaf (3/4 in plywood, a plain slab with no rails) lies back on the deck, face down, under the seat cushion by day and flips out level with the deck on 4 legs, about 24 in apart (12 5/8 in of 3/8 x 1 1/4 in flat bar folded into through-slots in the leaf so they are flush, plus a 4 1/2 in screw-out foot, 17 1/8 in standing) at night, 3 in in from the free edge so they land 43 in out from the wall (1 in short of the front edge of the shower pan, 44 in, when the pan is down); the back cushion (5 in thick, one 20 in piece, 20 in tall) lies on it, 26 + 20 = 46 in wide; the couch is a removable piece: a frame (a back rail on three wall blocks, a front rail on two posts west of the cabinet) with its deck on top, which also rests on the two panels of the gear cabinet (see the Couch frame and Gear cabinet rows); the space under it is 17 in, with the gear shelf over the battery (see the gear shelf row) and a 3/4 x 1 hardwood rail glued under the deck front over the cabinet (see the Couch frame row)"
+"makes up with a hinged leaf: the 20 in leaf (3/4 in plywood, a plain slab with no rails) lies back on the deck, face down, under the seat cushion by day and flips out level with the deck on 4 legs, about 22 in apart (12 5/8 in of 3/8 x 1 1/4 in flat bar folded into through-slots in the leaf so they are flush, plus a 4 1/2 in screw-out foot, 17 1/8 in standing) at night, 3 in in from the free edge so they land 43 in out from the wall (1 in short of the front edge of the shower pan, 44 in, when the pan is down); the back cushion (5 in thick, one 20 in piece, 20 in tall) lies on it, 26 + 20 = 46 in wide; the couch is a removable piece: a frame (a back rail on three wall blocks, a front rail on two posts west of the cabinet) with its deck on top, which also rests on the two panels of the gear cabinet (see the Couch frame and Gear cabinet rows); the space under it is 17 in, with the gear shelf over the battery (see the gear shelf row) and a 3/4 x 1 hardwood rail glued under the deck front over the cabinet (see the Couch frame row)"
 ],
 [
 "Driver",
@@ -410,10 +410,18 @@
 [
 "Driver",
 "Couch frame (removable) and wall blocks",
-"0 to 74; blocks at 3, 20 (if needed) and 41 in",
-"back rail 3/4 x 3 1/2 in, 74 long; front rail 38 5/8 long on two 1 1/2 in posts; blocks 1.5 x 1.5 x 13.5",
+"5 to 74; blocks at 8, 20 (if needed) and 41 in",
+"back rail 3/4 x 3 1/2 in, 69 long; front rail 38 5/8 long on two 1 1/2 in posts; blocks 1.5 x 1.5 x 13.5",
 "rails 13 1/2 to 17 up; blocks 0 to 13 1/2 up",
-"the couch is a separate frame, deck included, that lifts up and out of the van in one piece (about 80 lb, two people) and just sits over the cabinet, with nothing screwed: the back rail rests on three wall blocks (2x2 posts standing on the floor against the wall, screwed through the planks into the furring rails S1 and S2) and just sits on them (a dowel in each post top locates it), and over the cabinet it is doubled and rests on a ledger on each panel; west of the cabinet a front rail, an end rail and a cross rail on two posts with screw-out feet (the lawn chairs slide in between them); over the cabinet the deck rests on the panels, with a 3/4 x 1 hardwood rail glued and screwed under its front edge (16 to 17 up) so rail and deck work as one stiff beam; diagram C5"
+"the couch is a separate frame, deck included, that lifts up and out of the van in one piece (about 80 lb, two people) and just sits over the cabinet, with nothing screwed: the back rail rests on three wall blocks (2x2 posts standing on the floor against the wall, screwed through the planks into the furring rails S1 and S2) and just sits on them (a dowel in each post top locates it), and over the cabinet it is doubled and rests on a ledger on each panel; west of the cabinet a front rail, an end rail and a cross rail on two posts with screw-out feet (the posts are 30 5/8 in apart since the couch starts at 5, less than the 34 1/2 in lawn chairs, which go in from the rear doors); over the cabinet the deck rests on the panels, with a 3/4 x 1 hardwood rail glued and screwed under its front edge (16 to 17 up) so rail and deck work as one stiff beam; diagram C5"
+],
+[
+"Driver",
+"Nook behind the couch (the back cushion tilts into it)",
+"5 to 74",
+"an opening in the wall covering, 69 long, 4 1/2 deep into the wall (the pans are 0 in off the body, the face of the walls 4 7/8 off it)",
+"opening 32 to 55 1/2 up (the top edge of S4 to the bottom edge of S6); the recess in the steel is 31 to 57 up (the pans, 31 to 56 1/2, and the strips of S4 and S6 beside them)",
+"user: \"I'm gonna put in a nook behind the couch and the couch will become 69in long. so the back will tilt into the nook\" and \"it will go from 31 to 57\"; the couch is 69 long, 5 to 74 (the front end stays at the gear cabinet); S5 is cut away there, with two 1x2 frames V5 (3 1/2 to 5 in) and V6 (74 to 75 1/2 in) on three blocks each; the back cushion (20 tall, 5 thick) leans back 12 degrees with its base 1 13/16 in out from the wall so that its rear edge is at the wall face at the bottom of the opening, and it goes 2 7/16 in into the nook at the top (the nook would take up to about 21 degrees but each degree costs seat depth); the seat in front of it is about 19 in deep; the couch plate and the dimmer moved up onto S6 (57 1/4 up) and riser A to 76 1/2 in; open: whether to line the back of the nook (a 1/4 in lining on the ribs leaves 4 1/2 in from the face)"
 ],
 [
 "Driver",

@@ -106,14 +106,23 @@ function drawDriver(L, V) {
     o.push(LBL(X((c[0] + c[1]) / 2), Y(P.cabBot - 2.4), 'Wall cabinet', `${fmt(c[1] - c[0])} long x ${fmt(P.cabDepth)} deep x ${fmt(L.ceilF - P.cabBot)} tall (${fmt(P.cabBot)} to ${fmt(L.ceilF)} in up)`, { size: 12, fill: COL.P }));
   });
   o.push(GE());
+  // the nook in the wall behind the couch: an opening in the covering from the top edge of S4 to the bottom edge of S6 (S5 is cut away there), over the pans; the back cushion tilts back into it
+  if (L.cnook) {
+    const n = L.cnook, oz0 = FURR[3] + STRIP_W / 2, oz1 = FURR[5] - STRIP_W / 2, fw = 1.5;
+    o.push(GB('cnook', 'Nook behind the couch'));
+    o.push(box(n.x0, n.x1, oz0, oz1, { fill: '#534AB7', fo: .07, stroke: '#534AB7', sw: 1.6, dash: '6 3' }));
+    o.push(box(n.x0 - fw, n.x0, oz0, oz1, { fill: '#C7792A', fo: .55, stroke: '#3E230B', sw: 1 })); o.push(box(n.x1, n.x1 + fw, oz0, oz1, { fill: '#C7792A', fo: .55, stroke: '#3E230B', sw: 1 }));
+    o.push(LBL(X((n.x0 + n.x1) / 2), Y(oz1 - 5.5), 'Nook behind the couch', `an opening ${fmt(n.x0)} to ${fmt(n.x1)} in along the wall, ${fmt(oz0)} to ${fmt(oz1)} in up (the top edge of S4 to the bottom edge of S6; S5 is cut away; a 1x2 frame at each end, V5 and V6), over the pans of the steel (${fmt(n.z0)} to ${fmt(n.z1)} up), ${fmt(n.d)} in deep; the back cushion tilts ${fmt(n.tilt)} degrees back into it`, { size: 12.5, fill: '#534AB7' }));
+    o.push(GE());
+  }
   // bed / couch with a hinged leaf. The deck top is 3/4 in below the seat base: by day the leaf (face down) lies on the deck under the seat cushion; at night it is flipped out level with the deck, on three legs, with the back cushion on it
   o.push(GB('bed', 'Bed / couch'));
   {
     const s = V.bed || 0, bs = bedState(s), plat = P.platform, lt = .75, deck = plat - lt, bt = plat + P.mattress, LW = P.bedBack, th = bs.th;
     const sn = Math.sin(th), cs = Math.cos(th);
     const zr = (r0, r1, t0, t1) => { const zs = [[r0, t0], [r0, t1], [r1, t0], [r1, t1]].map(c => deck + c[0] * sn + c[1] * cs); return [Math.min.apply(null, zs), Math.max.apply(null, zs)]; };
-    let g = box(0, P.bedLen, 0, deck - lt, { stroke: COL.P, sw: 1, dash: '5 3', so: .45 });
-    g += box(0, P.bedLen, deck - lt, deck, { fill: COL.G, fo: .25, stroke: COL.G, sw: 1 });
+    let g = box(P.bedX0, P.bedX1, 0, deck - lt, { stroke: COL.P, sw: 1, dash: '5 3', so: .45 });
+    g += box(P.bedX0, P.bedX1, deck - lt, deck, { fill: COL.G, fo: .25, stroke: COL.G, sw: 1 });
     if (bs.legs > .01) {
       const psi = bs.legs * Math.PI / 2, tp = lt / 2, LG = Math.min(deck - tp - .25, 12.625) + Math.max(0, deck - tp - .25 - 12.625) * bs.legs, pr = LW - P.legIn;
       legXs(P).forEach(lx => {
@@ -122,18 +131,18 @@ function drawDriver(L, V) {
       });
     }
     const lf = zr(0, LW, 0, lt);
-    g += box(0, P.bedLen, lf[0], Math.max(lf[1], lf[0] + .3), { fill: '#B07A2A', fo: .55 + .3 * bs.lift, stroke: '#5A3A00', sw: 1.2 });
+    g += box(P.bedX0, P.bedX1, lf[0], Math.max(lf[1], lf[0] + .3), { fill: '#B07A2A', fo: .55 + .3 * bs.lift, stroke: '#5A3A00', sw: 1.2 });
     const fade = 1 - .75 * Math.sin(clamp((s - .2) / .6, 0, 1) * Math.PI), sb0 = deck + lt * Math.max(0, cs);
-    g += box(0, P.bedLen, sb0, sb0 + P.mattress, { fill: COL.P, fo: .12 * fade, stroke: COL.P, sw: 1.4, rx: 3, so: fade });
-    if (bs.back > .02) g += box(0, P.bedLen, bt, bt + LW * bs.back, { fill: COL.P, fo: .1, stroke: COL.P, sw: 1.4, rx: 3 });
-    if (bs.flat > .02) g += box(0, P.bedLen, deck, deck + P.mattress, { fill: COL.P, fo: .2 * bs.flat, stroke: COL.P, sw: 2.2, rx: 3, so: bs.flat });
+    g += box(P.bedX0, P.bedX1, sb0, sb0 + P.mattress, { fill: COL.P, fo: .12 * fade, stroke: COL.P, sw: 1.4, rx: 3, so: fade });
+    if (bs.back > .02) g += box(P.bedX0, P.bedX1, bt, bt + LW * bs.back, { fill: COL.P, fo: .1, stroke: COL.P, sw: 1.4, rx: 3 });
+    if (bs.flat > .02) g += box(P.bedX0, P.bedX1, deck, deck + P.mattress, { fill: COL.P, fo: .2 * bs.flat, stroke: COL.P, sw: 2.2, rx: 3, so: bs.flat });
     if (s < .3) {
-      g += LBL(X(P.bedLen / 2), Y(plat + P.mattress / 2 - 0.4), 'Seat cushion', `top at ${fmt(bt)} in (click to make up the bed)`, { size: 12.5, fill: COL.P, op: 1 - s / .3 });
-      if (LW * bs.back > 9) g += LBL(X(P.bedLen / 2), Y(bt + LW * bs.back / 2), 'Back cushion', `upright, ${fmt(LW)} tall`, { size: 12.5, fill: COL.P, op: 1 - s / .3 });
+      g += LBL(X((P.bedX0 + P.bedX1) / 2), Y(plat + P.mattress / 2 - 0.4), 'Seat cushion', `top at ${fmt(bt)} in (click to make up the bed)`, { size: 12.5, fill: COL.P, op: 1 - s / .3 });
+      if (LW * bs.back > 9) g += LBL(X((P.bedX0 + P.bedX1) / 2), Y(bt + LW * bs.back / 2), 'Back cushion', `upright, ${fmt(LW)} tall`, { size: 12.5, fill: COL.P, op: 1 - s / .3 });
     }
-    if (s > .85) g += LBL(X(P.bedLen / 2), Y(deck + P.mattress / 2 - 0.4), 'Bed made up', `${fmt(P.bedD + LW)} wide, top at ${fmt(deck + P.mattress)} in, leaf on 4 legs`, { size: 12.5, fill: COL.P, op: (s - .85) / .15 });
-    else if (s >= .3) g += T(X(P.bedLen / 2), Y(bt + 6), 'leaf flips over (the seat cushion comes off)', { size: 11, fill: '#5A3A00', op: Math.min(1, (s - .3) * 4) * (s > .75 ? (.85 - s) * 10 : 1) });
-    o.push(MV('bed', g, HITR(Math.min(X(0), X(P.bedLen)), Y(bt + LW), S * P.bedLen, S * (bt + LW))));
+    if (s > .85) g += LBL(X((P.bedX0 + P.bedX1) / 2), Y(deck + P.mattress / 2 - 0.4), 'Bed made up', `${fmt(P.bedD + LW)} wide, top at ${fmt(deck + P.mattress)} in, leaf on 4 legs`, { size: 12.5, fill: COL.P, op: (s - .85) / .15 });
+    else if (s >= .3) g += T(X((P.bedX0 + P.bedX1) / 2), Y(bt + 6), 'leaf flips over (the seat cushion comes off)', { size: 11, fill: '#5A3A00', op: Math.min(1, (s - .3) * 4) * (s > .75 ? (.85 - s) * 10 : 1) });
+    o.push(MV('bed', g, HITR(Math.min(X(P.bedX0), X(P.bedX1)), Y(bt + LW), S * P.bedLen, S * (bt + LW))));
   }
   o.push(GE());
   if (L.gear) {
@@ -154,13 +163,13 @@ function drawDriver(L, V) {
     o.push(box(c.x0, c.x0 + W, 0, du, wood)); o.push(box(c.x1, c.x1 + W, 0, du, wood));
     o.push(LBL(X(c.x0 + W / 2), Y(du - 2.2), 'Gear cabinet', `floor-mounted: two 3/4 in plywood side panels ${fmt(c.x0)} and ${fmt(c.x1)} in from the back, ${fmt(c.x1 - c.x0 - W)} in apart, ${fmt(c.y1)} deep, floor to the deck (${fmt(du)} up); the shelf is its sliding top; the front below the shelf is open`, { size: 11, fill: '#5A3A00' }));
     // the couch frame: the front rail (3/4 x 3 1/2 on edge under the deck edge) and three posts; the back rail and the end rail are behind
-    o.push(box(0, m.west, rz0, du, { fill: COL.G, fo: .3, stroke: COL.G, sw: 1.2 }));
+    o.push(box(P.bedX0, m.west, rz0, du, { fill: COL.G, fo: .3, stroke: COL.G, sw: 1.2 }));
     m.posts.forEach(px => o.push(box(px, px + 1.5, 0, rz0, { fill: COL.G, fo: .35, stroke: COL.G, sw: 1.2 })));
-    o.push(box(0, c.x1, rz0, du, { stroke: COL.G, sw: .9, dash: '4 3', so: .6 }));
+    o.push(box(P.bedX0, c.x1, rz0, du, { stroke: COL.G, sw: .9, dash: '4 3', so: .6 }));
     // the front rail across the cabinet: 3/4 x 1 hardwood on edge, glued and screwed to the deck's underside, 1/2 in over the tallest unit
     o.push(box(m.fr.x0, m.fr.x1, m.fr.z0, m.fr.z1, { fill: '#B5833C', fo: .85, stroke: '#5A3A00', sw: 1.2 }));
     o.push(LBL(X((m.fr.x0 + m.fr.x1) / 2), Y(m.fr.z0 - .5), 'Front rail over the cabinet', `3/4 x ${fmt(m.fr.h)} in hardwood on edge, ${fmt(m.fr.x1 - m.fr.x0)} in long between the panels, glued and screwed to the underside of the deck so the rail and the plywood work as one stiff beam (a bare deck edge sags 1/4 to 1 in under a person); its bottom is ${fmt(m.fr.z0)} in up, ${m.fr.tall ? fmt(m.fr.z0 - m.fr.tall) + ' in over the tallest unit' : 'clear of the units'}`, { size: 10, fill: '#5A3A00', dy: 13 }));
-    o.push(LBL(X(m.west / 2), Y(rz0 + 1.8), 'Couch frame (removable)', `front rail 3/4 x 3 1/2 in on edge, ${fmt(m.west)} long, on two 1 1/2 in posts with screw-out feet (the lawn chairs slide in between them); behind it a full-length back rail (dashed), a west end rail and a middle cross rail; the deck is part of the frame, which lifts out in one piece and rests on the cabinet's side panels east of ${fmt(c.x0)} in`, { size: 11, fill: COL.G }));
+    o.push(LBL(X((P.bedX0 + m.west) / 2), Y(rz0 + 1.8), 'Couch frame (removable)', `front rail 3/4 x 3 1/2 in on edge, ${fmt(m.west)} long, on two 1 1/2 in posts with screw-out feet (the lawn chairs slide in between them); behind it a full-length back rail (dashed), a west end rail and a middle cross rail; the deck is part of the frame, which lifts out in one piece and rests on the cabinet's side panels east of ${fmt(c.x0)} in`, { size: 11, fill: COL.G }));
     o.push(GE());
   }
   if (L.cblk.length) {

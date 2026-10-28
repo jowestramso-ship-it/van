@@ -26,10 +26,11 @@ async function grab(page, side) {
     const add = (name, x0, x1, z0, z1, dims, zv) => items.push({ name, dims: dims || '', x0: f(x0), x1: f(x1), z0: f(z0), z1: f(z1), zv: zv == null ? null : f(zv) });
     const F = fmt;
     if (side === 'driver') {
-      add('Couch frame and deck (removable)', 0, P.bedLen, 0, P.platform, `${F(P.bedLen)} long x ${F(P.bedD)} deep; rails ${F(P.platform - 1.5 - 3.5)} to ${F(P.platform - 1.5)} up, deck ${F(P.platform - 1.5)} to ${F(P.platform - .75)}; it lifts out (see the wall blocks and the gear cabinet)`);
+      add('Couch frame and deck (removable)', P.bedX0, P.bedX1, 0, P.platform, `${F(P.bedLen)} long x ${F(P.bedD)} deep; rails ${F(P.platform - 1.5 - 3.5)} to ${F(P.platform - 1.5)} up, deck ${F(P.platform - 1.5)} to ${F(P.platform - .75)}; it lifts out (see the wall blocks and the gear cabinet)`);
       if (L.cmod) add('Front rail across the gear cabinet', L.cmod.fr.x0, L.cmod.fr.x1, L.cmod.fr.z0, L.cmod.fr.z1, `3/4 x ${F(L.cmod.fr.h)} hardwood, glued and screwed under the deck front, bottom ${F(L.cmod.fr.z0)} up`);
-      add('Seat cushion', 0, P.bedLen, P.platform, P.platform + P.mattress, `top at ${F(P.platform + P.mattress)}`);
-      add('Back cushion, upright', 0, P.bedLen, P.platform + P.mattress, P.platform + P.mattress + P.bedBack, `${F(P.bedBack)} tall`);
+      add('Seat cushion', P.bedX0, P.bedX1, P.platform, P.platform + P.mattress, `top at ${F(P.platform + P.mattress)}`);
+      add('Back cushion, upright', P.bedX0, P.bedX1, P.platform + P.mattress, P.platform + P.mattress + P.bedBack, `${F(P.bedBack)} tall${L.cnook ? ', drawn upright; it tilts back ' + F(L.cnook.tilt) + ' degrees into the nook behind it' : ''}`);
+      if (L.cnook) { const n = L.cnook, oz0 = FURR[3] + STRIP_W / 2, oz1 = FURR[5] - STRIP_W / 2; add('Nook behind the couch (opening in the wall covering)', n.x0, n.x1, oz0, oz1, `${F(n.x1 - n.x0)} long, ${F(oz1 - oz0)} tall, ${F(n.d)} in deep into the wall: S4 is its bottom edge, S6 its top edge, S5 is cut away, a 1x2 frame at each end (V5 at ${F(n.x0 - 1.5)} to ${F(n.x0)}, V6 at ${F(n.x1)} to ${F(n.x1 + 1.5)}); the pans of the steel behind it are ${F(n.z0)} to ${F(n.z1)} up`); }
       add('Wheel well', 42, 76, 0, 7.5, 'sticks out 7 in');
       if (P.battOn) add('Battery', L.batt[0], L.batt[1], 0, 9.5, `${F(L.batt[1] - L.batt[0])} wide, 9 1/2 tall`);
       if (L.gear) {

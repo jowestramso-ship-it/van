@@ -20,6 +20,7 @@ def _blocks(FD, side):
         for n in ('S4', 'S5', 'S6'):
             for x in FD['AP'][n]: out.append((n, x, HT[n], False))
         for nm, cx, cz in FD['FRAME_BLK']: out.append((nm, cx, cz, nm in ('J3', 'J4')))
+        for nm, cx, cz in FD['NOOK_BLK_D']: out.append((nm, cx, cz, False))
     else:
         for n in ('S4', 'S5', 'S6'):
             for x in FD['PAP'][n]:
@@ -53,7 +54,8 @@ def _map(FD, side):
         for x0, x1 in SEG[n]:
             xa, xb = sorted((xx(x0), xx(x1)))
             a(_r(xa, yy(h + FD['STRIP_W'] / 2), xb - xa, S * FD['STRIP_W'], STRIP, '#B8975A', 1))
-        a(_t(xx(2) if not flip else xx(W - 2) , yy(h) + 3.5, n, 10, 'middle', '#5A3A00', 700))
+        x2 = SEG[n][0][0] + 2 if SEG[n][0][0] > 2 else 2                # the name sits on the first piece (S5 starts after the nook behind the couch)
+        a(_t(xx(x2) if not flip else xx(W - 2), yy(h) + 3.5, n, 10, 'middle', '#5A3A00', 700))
     # the wheel well, the window, the sliding door, the nooks
     a(_r(xx(42) if not flip else xx(76), yy(7.5), S * 34, S * 7.5, '#D8B79A', '#8A6B4D', 1, 'fill-opacity=".7" stroke-dasharray="4 3"')); a(_t(xx(59), yy(3.2), 'wheel well', 9.5, 'middle', '#5A3A00'))
     if not flip:
@@ -61,6 +63,9 @@ def _map(FD, side):
         a(_r(xx(wx0), yy(wz1), S * (wx1 - wx0), S * (wz1 - wz0), '#B5D4F4', BLU, 1.4, 'fill-opacity=".35"')); a(_t(xx((wx0 + wx1) / 2), yy((wz0 + wz1) / 2) + 3, 'side window cutout', 10, 'middle', BLU, 600))
         for nm, x0, x1, z0, z1 in FD['WIN_FRAME']:
             a(_r(xx(x0), yy(z1), S * (x1 - x0), S * (z1 - z0), '#E9D3AA', '#B8975A', 1, 'fill-opacity=".9"'))
+        a(_r(xx(FD['CN_X0']), yy(FD['CN_OZ1']), S * (FD['CN_X1'] - FD['CN_X0']), S * (FD['CN_OZ1'] - FD['CN_OZ0']), '#F6EBD4', '#534AB7', 1.4, 'stroke-dasharray="6 3"')); a(_t(xx((FD['CN_X0'] + FD['CN_X1']) / 2), yy(48.4), 'nook behind the couch (S5 cut away)', 10.5, 'middle', '#3C3489', 600))
+        for nm, x0, x1, b, t, sp in FD['VFR_D']:
+            a(_r(xx(x0), yy(t), S * (x1 - x0), S * (t - b), '#E9D3AA', '#B8975A', 1))
     else:
         a(_r(xx(155), yy(67), S * (155 - 104), S * 67, '#fff', '#8A5A00', 1.4, 'stroke-dasharray="6 4"')); a(_t(xx(129.5), yy(33), 'sliding door opening', 11, 'middle', '#8A5A00', 600)); a(_t(xx(129.5), yy(33) + 14, '(no wall behind it)', 10, 'middle', '#8A5A00'))
         for nx0, nx1 in ((12.5, 29.75), (76, 93.25)):
@@ -84,7 +89,8 @@ def _map(FD, side):
         elif fl:                                                        # the sill and the head: the distance along, below the sill and above the head
             a(_t(xx(x), yy(z) + (S * 1.8 + 9 if g == 'J3' else -S * 1.8 - 3), fr16(x), 8.5, 'middle', '#3E230B', 700))
         else:                                                           # a nook frame: its name and height up, beside it (V3's on the counter nook side)
-            a(_t(xx(x) + (-S * 2.1 if g == 'V3' else S * 2.1), yy(z) + 3, g + ' ' + fr16(z) + ' up', 8.5, 'end' if g == 'V3' else 'start', '#3E230B', 700))
+            left = g in ('V3', 'V5')                                      # V3 on the counter nook side, V5 on the rear side of the couch nook
+            a(_t(xx(x) + (-S * 2.1 if left else S * 2.1), yy(z) + 3, g + ' ' + fr16(z) + ' up', 8.5, 'end' if left else 'start', '#3E230B', 700))
     return _svg(1100, 610, ''.join(o), f'Where every spacer block goes on the {"driver" if not flip else "passenger"} wall'), bl
 
 def _svg(w, h, body, title):
@@ -93,12 +99,12 @@ def _svg(w, h, body, title):
 def _table(FD, side, bl):
     fr16, fr8, HT = FD['fr16'], FD['fr8'], FD['HT']
     rows = []
-    for g in ('S4', 'S5', 'S6', 'J1', 'J2', 'J3', 'J4', 'V1', 'V2', 'V3'):
+    for g in ('S4', 'S5', 'S6', 'J1', 'J2', 'J3', 'J4', 'V5', 'V6', 'V1', 'V2', 'V3'):
         it = [(i, x, z) for gg, i, x, z, fl in bl if gg == g]
         if not it: continue
         if g in HT: what = f'furring rail {g}, {fr8(HT[g])} up'
         elif g.startswith('J'): what = {'J1': 'window frame, left jamb', 'J2': 'window frame, right jamb', 'J3': 'window frame, sill', 'J4': 'window frame, head'}[g]
-        else: what = {'V1': 'shower nook rear frame', 'V2': 'shower nook front frame', 'V3': 'counter nook rear frame'}[g]
+        else: what = {'V1': 'shower nook rear frame', 'V2': 'shower nook front frame', 'V3': 'counter nook rear frame', 'V5': 'couch nook rear frame', 'V6': 'couch nook front frame'}[g]
         if g in HT or g in ('J3', 'J4'): pos = ', '.join(fr16(x) for _i, x, _z in it)
         else: pos = f'{fr16(it[0][1])} in from the back, at ' + ', '.join(fr16(z) for _i, _x, z in it) + ' in up'
         rows.append(f'<tr><td><b>{g}</b></td><td>{what}</td><td>{len(it)}</td><td>{pos}</td></tr>')
@@ -110,7 +116,7 @@ def block_html(FD):
     d, bd = _map(FD, 'D'); p, bp = _map(FD, 'P')
     return (CSS + '<h3>Where every spacer block goes (' + str(len(bd) + len(bp)) + ' blocks)</h3>'
             '<p>A block is a 3 1/2 in cut of 2x4 stood on its 3 1/2 in side: <b>1 1/2 along the wall x 3 1/2 up</b> on the steel, <b>3 5/8 in out</b> with the glue. Its center sits on the dot, and its vertical center is the furring rail\'s height (the window sill and head blocks lie on their side). Each dark block below shows its distance from the back mark; the tables list the same numbers. S1, S2 and S3 take adhesive pads and S7 and S8 thin shims at their dots, not blocks (the maps and the glossary below the diagrams show all three).</p>' + FD['marks_html']() +
-            '<div class="bmap"><figure>' + d + f'<figcaption><b>Driver wall: {len(bd)} blocks</b> (S4, S5 and S6 at their dots, and three under each of the four window frame pieces).</figcaption></figure>' + _table(FD, 'D', bd) +
+            '<div class="bmap"><figure>' + d + f'<figcaption><b>Driver wall: {len(bd)} blocks</b> (S4, S5 and S6 at their dots, three under each of the four window frame pieces, and three under each of the two couch nook frames V5 and V6).</figcaption></figure>' + _table(FD, 'D', bd) +
             '<figure style="margin-top:14px">' + p + f'<figcaption><b>Passenger wall: {len(bp)} blocks</b> (S4, S6, the middle piece of S5, and three under each nook frame V1 to V3; V4 sits straight on the steel).</figcaption></figure>' + _table(FD, 'P', bp) + '</div>')
 
 
@@ -185,7 +191,7 @@ ATT_STEPS = [
 
 def attach_html(FD):
     return ('<h3>How to attach a block to the steel</h3>'
-            '<p>All 70 blocks go on the same way, with adhesive or tape and never with screws. The drawing shows one block in section; the steps follow.</p>'
+            '<p>All ' + str(FD['TOT_BLOCKS']) + ' blocks go on the same way, with adhesive or tape and never with screws. The drawing shows one block in section; the steps follow.</p>'
             '<figure style="margin:0 0 12px;border:1px solid #d9d5ca;border-radius:8px;padding:8px;background:#fff;min-width:0">' + _att_svg() + '</figure>'
             '<ol class="steps">' + ''.join(f'<li>{x}</li>' for x in ATT_STEPS) + '</ol>')
 

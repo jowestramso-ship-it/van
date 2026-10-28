@@ -80,16 +80,23 @@ function drawPlan(L, V) {
   o.push(Ln(xx(P.cab), yy(0), xx(P.cab), yy(Wd), { stroke: '#5F5E5A', sw: 2, dash: '6 3' }));
   o.push(T(xx(P.cab) - 3, yy(Wd) + 14, `cab wall at ${fmt(P.cab)} (could be off by 2 to 4 in)`, { anchor: 'end', size: 10, fill: '#5F5E5A', halo: false }));
   // ---------- driver side ----------
+  if (L.cnook) {
+    const n = L.cnook;
+    o.push(GB('cnook', 'Nook behind the couch'));
+    o.push(it(n.x0, n.x1, -n.d, 0, '#534AB7', '', null, { fo: .1, dash: '5 3' }));
+    o.push(T(xx((n.x0 + n.x1) / 2), yy(-n.d) + 8, `nook behind the couch: ${fmt(n.d)} in deep into the wall, ${fmt(n.z0)} to ${fmt(n.z1)} up`, { size: 9.5, fill: '#534AB7' }));
+    o.push(GE());
+  }
   const sb = V.bed || 0;
   o.push(GB('bed', 'Bed / couch'));
   {
     const bs = bedState(sb);
-    let g = R(xx(0), yy(P.bedD), S * P.bedLen, S * P.bedBack * bs.ext, { fill: COL.P, fo: .14, stroke: COL.P, sw: 1.6 });
+    let g = R(xx(P.bedX0), yy(P.bedD), S * P.bedLen, S * P.bedBack * bs.ext, { fill: COL.P, fo: .14, stroke: COL.P, sw: 1.6 });
     if (bs.legs > .02) legXs(P).forEach(lx => { g += R(xx(lx), yy(P.bedD + P.bedBack - P.legIn - .6), S * 1.25, S * 1.25, { fill: '#B07A2A', fo: .9 * bs.legs, stroke: '#5A3A00', sw: 1 }); });
-    g += R(xx(0), yy(P.bedD), S * P.bedLen, S * P.bedBack, { fill: COL.P, fo: .05, stroke: COL.P, sw: 1.6, dash: '6 4' });
-    g += it(0, P.bedLen, 0, P.bedD, COL.P, 'Bed / couch', `${fmt(P.bedLen)} x ${fmt(P.bedD)}, platform ${fmt(P.platform)}, mattress top ${fmt(P.platform + P.mattress)}`, { fo: .12 });
-    g += T(xx(P.bedLen * .7), yy(P.bedD + P.bedBack * .67), `bed made up with the leaf: ${fmt(P.bedLen)} x ${fmt(P.bedD + P.bedBack)}`, { size: 10.5, fill: COL.P, w: 500 });
-    o.push(MV('bed', g, HITR(xx(0), yy(0), S * P.bedLen, S * (P.bedD + P.bedBack))));
+    g += R(xx(P.bedX0), yy(P.bedD), S * P.bedLen, S * P.bedBack, { fill: COL.P, fo: .05, stroke: COL.P, sw: 1.6, dash: '6 4' });
+    g += it(P.bedX0, P.bedX1, 0, P.bedD, COL.P, 'Bed / couch', `${fmt(P.bedLen)} x ${fmt(P.bedD)}, platform ${fmt(P.platform)}, mattress top ${fmt(P.platform + P.mattress)}`, { fo: .12 });
+    g += T(xx(P.bedX0 + P.bedLen * .7), yy(P.bedD + P.bedBack * .67), `bed made up with the leaf: ${fmt(P.bedLen)} x ${fmt(P.bedD + P.bedBack)}`, { size: 10.5, fill: COL.P, w: 500 });
+    o.push(MV('bed', g, HITR(xx(P.bedX0), yy(0), S * P.bedLen, S * (P.bedD + P.bedBack))));
   }
   o.push(GE());
   o.push(GB('closet', 'Closet'));

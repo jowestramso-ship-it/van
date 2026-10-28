@@ -6,6 +6,8 @@ STRIP_W, STRIP_T, FRAME_W = 3.5, .75, 1.5
 SPC_W, SPC_H, SPC_D = 1.5, 3.5, 3.5
 HT = {'S1': 3, 'S2': 12, 'S3': 21.25, 'S4': 30.25, 'S5': 43.5, 'S6': 57.25, 'S7': 66, 'S8': 76.75}   # center heights up from the floor (the furring rail is 3 1/2 in wide, so it runs 1 3/4 in either side of its center)
 AP = {'S1': [6, 17.75, 31.25, 82.94, 98.9, 119.35, 139.95], 'S2': [15, 30.75, 40, 54, 62, 72, 80, 96, 104, 119.35, 139.95], 'S3': [22, 34, 46, 58, 70, 78, 99, 110, 122, 134, 146], 'S4': [10, 17.75, 31.25, 44.5, 58.6, 71.31, 82.94, 98.9, 114.94, 127.25, 139.75, 147], 'S5': [17.75, 31.25, 44.5, 58.6, 71.31, 82.94, 98.9, 114.94, 127.25, 139.75], 'S6': [10, 17.75, 31.25, 44.5, 58.6, 71.31, 82.94, 98.9, 114.94, 127.25, 139.75, 147], 'S7': [17.75, 31.25, 44.5, 58.6, 71.31, 82.94, 98.9, 114.94, 127.25, 139.75], 'S8': [10, 24, 36, 58.6, 76, 93, 98.9, 114, 127, 140]}
+S4_TOP, S6_BOT = HT['S4'] + STRIP_W / 2, HT['S6'] - STRIP_W / 2      # the top edge of S4 (32) and the bottom edge of S6 (55 1/2): the bottom and top of the couch nook and of the counter nook frames
+assert (S4_TOP, S6_BOT) == (CN_OZ0, CN_OZ1)      # the nook's opening in shelfdata.py is between them
 JAMB = 1.5                                  # the window opening is framed with a sill, a head and two jambs of the same 3/4 x 1 1/2 in furring rail
 WL, WR = WIN_CX0 - JAMB, WIN_CX1 + JAMB     # the furring rails stop at the jambs
 FR_Z0, FR_Z1 = WIN_CZ0 - JAMB, WIN_CZ1 + JAMB
@@ -15,6 +17,11 @@ for _n in WIN_STRIPS:
     if not any(x > WR for x in AP[_n]): AP[_n].append(147)    # the short piece past the window keeps one dot
 SEG_D = {n: [(0, 154)] for n in HT}; SEG_D['S1'] = [(0, 42), (76, 154)]
 for _n in WIN_STRIPS: SEG_D[_n] = [(0, WL), (WR, 154)]
+# the nook behind the couch (driver side, 5 to 74 in): its two frames of 1x2 stand outside the opening, between S4 (its bottom edge) and S6 (its top edge); S5 is cut away from the rear frame to the front frame, so its dots there go
+VFR_D = (('V5', CN_X0 - FRAME_W, CN_X0, S4_TOP, S6_BOT, True), ('V6', CN_X1, CN_X1 + FRAME_W, S4_TOP, S6_BOT, True))
+SEG_D['S5'] = [(CN_X1 + FRAME_W, WL), (WR, 154)]
+AP['S5'] = [x for x in AP['S5'] if x > CN_X1 + FRAME_W]
+NOOK_BLK_D = [(nm, (x0 + x1) / 2, hh) for nm, x0, x1, b, t, sp in VFR_D for hh in (b + 5, (b + t) / 2, t - 5)]      # three blocks under each frame, as on the passenger nooks
 # the opening's frame, from the back mark and up from the floor: (name, x0, x1, z0, z1)
 WIN_FRAME = [('J1 left jamb', WL, WIN_CX0, FR_Z0, FR_Z1), ('J2 right jamb', WIN_CX1, WR, FR_Z0, FR_Z1), ('J3 sill', WIN_CX0, WIN_CX1, FR_Z0, WIN_CZ0), ('J4 head', WIN_CX0, WIN_CX1, WIN_CZ1, FR_Z1)]
 # three blocks under each piece of the frame: the jambs at the top, middle and bottom, the sill and the head at a third of the way along
@@ -28,10 +35,10 @@ for _nm, _x0, _x1, _z0, _z1 in WIN_FRAME:
 SEG_P = {'S1': [(0, 42), (76, 104)], 'S2': [(0, 104)], 'S3': [(0, 104)], 'S4': [(0, 104)], 'S5': [(0, 11), (31.25, 74.5), (94.75, 104)], 'S6': [(0, 104)], 'S7': [(0, 104)], 'S8': [(0, 154)]}
 PAP = {'S1': [6, 17.75, 31.25, 82.94, 98.9], 'S2': [15, 30.75, 40, 54, 62, 72, 80, 96, 104], 'S3': [22, 34, 46, 58, 70, 78, 99], 'S4': [10, 17.75, 31.25, 44.5, 58.6, 71.31, 82.94, 98.9], 'S5': [2, 9, 32, 44.5, 58.6, 71.31, 98.9], 'S6': [10, 17.75, 31.25, 44.5, 58.6, 71.31, 82.94, 98.9], 'S7': [x for x in AP['S7'] if x <= 104], 'S8': AP['S8']}
 # the nook frames: (name, x0, x1, bottom, top, spacer?)
-S4_TOP, S6_BOT = HT['S4'] + STRIP_W / 2, HT['S6'] - STRIP_W / 2      # the counter nook frames run from the top of S4 to the bottom of S6 (32 to 55 1/2)
+# the counter nook frames run from the top of S4 to the bottom of S6 (32 to 55 1/2)
 VFR = (('V1', 11, 12.5, 38, 54, True), ('V2', 29.75, 31.25, 38, 54, True), ('V3', 74.5, 76, S4_TOP, S6_BOT, True), ('V4', 93.25, 94.75, S4_TOP, S6_BOT, False))
 # where the long furring rails are joined (a furring rail over 96 in does not come in one stick); the joint sits on a dot
-JOINT_D = {'S2': 80, 'S3': 78, 'S4': 71.25, 'S5': 71.25, 'S6': 71.25, 'S7': 71.25, 'S8': 76}
+JOINT_D = {'S2': 80, 'S3': 78, 'S4': 71.25, 'S6': 71.25, 'S7': 71.25, 'S8': 76}      # S5 has no joint now: its piece next to the nook is 24 3/4 in long
 JOINT_P = {'S2': 54, 'S3': 46, 'S4': 58.625, 'S6': 58.625, 'S7': 58.625, 'S8': 76}
 def cut_pieces(seg, joint, dots):
     """every furring rail piece: (furring rail, letter, x0, x1, joined?, dots in the piece), in order from the back"""
@@ -49,14 +56,14 @@ def cut_pieces(seg, joint, dots):
     return out
 DRV_PIECES = cut_pieces(SEG_D, JOINT_D, AP)
 PASS_PIECES = cut_pieces(SEG_P, JOINT_P, PAP)
-DRV_BLOCKS = sum(len(AP[n]) for n in ('S4', 'S5', 'S6')) + len(FRAME_BLK)
+DRV_BLOCKS = sum(len(AP[n]) for n in ('S4', 'S5', 'S6')) + len(FRAME_BLK) + len(NOOK_BLK_D)
 PASS_BLOCKS = len(PAP['S4']) + sum(1 for x in PAP['S5'] if 31.25 <= x <= 74.5) + len(PAP['S6']) + 3 * 3      # S4, S5 (middle piece only), S6, and three under each of V1 to V3
 DRV_SHIMS = len(AP['S7']) + len(AP['S8'])
 PASS_SHIMS = len(PAP['S7']) + len(PAP['S8'])
 # the totals for the cut list and the build guide
 import math as _m
 FRAME_LEN = {nm: max(z1 - z0, x1 - x0) for nm, x0, x1, z0, z1 in WIN_FRAME}
-NOOK_LEN = [t - b for nm, x0, x1, b, t, sp in VFR] + [17.25] * 3
+NOOK_LEN = [t - b for nm, x0, x1, b, t, sp in VFR] + [17.25] * 3 + [t - b for nm, x0, x1, b, t, sp in VFR_D]
 ALL_LENGTHS = [p[3] - p[2] for p in DRV_PIECES + PASS_PIECES] + list(FRAME_LEN.values()) + NOOK_LEN
 N_PIECES = len(ALL_LENGTHS)
 def pack_sticks(lengths, stick=96, kerf=.125):
