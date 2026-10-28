@@ -224,7 +224,7 @@ def _flat_svg():
     a(_r(185, 460, 112, 24, RAIL, INK, 1.6)); a(_l(300, 396, 300, 566, GR, 1.2, '4 3'))
     a(_t(183, 412, 'spacer', 11, 'middle', GR, 600)); a(_t(52, 579, 'steel', 11, 'middle', GR, 600))
     a(_l(290, 460, 290, 446, INK, 1)); a(f'<circle cx="290" cy="460" r="2.4" fill="{INK}"/>')
-    a(_t(186, 427, 'only a 3/4 in edge', 11, 'start', INK, 600)); a(_t(186, 440, 'to screw to', 11, 'start', INK, 600))
+    a(_t(192, 427, 'only a 3/4 in edge', 10.5, 'start', INK, 600)); a(_t(192, 440, 'to screw to', 10.5, 'start', INK, 600))
     a(_arr(69, 546, 297, 546)); a(_t(183, 540, '7 1/8 in from the steel, not 4 3/8 in', 11, 'middle', INK, 700))
     for k, ln in enumerate(['On edge, the board sticks out 3 1/2 in, puts the wall', '2 3/4 in further into the room and gives the plywood', 'only a 3/4 in edge to screw to. It is not used this way.']): a(_t(24, 598 + 16 * k, ln, 11.5, 'start', INK))
     # 4. from the room
