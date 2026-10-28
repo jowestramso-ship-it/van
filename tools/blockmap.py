@@ -109,13 +109,89 @@ CSS = '<style>.bmap{margin:10px 0 18px}.bmap figure{margin:0 0 10px;border:1px s
 def block_html(FD):
     d, bd = _map(FD, 'D'); p, bp = _map(FD, 'P')
     return (CSS + '<h3>Where every spacer block goes (' + str(len(bd) + len(bp)) + ' blocks)</h3>'
-            '<p>A block is a 3 1/2 in cut of 2x4 stood on its 3 1/2 in side: <b>1 1/2 along the wall x 3 1/2 up</b> on the steel, <b>3 5/8 in out</b> with the glue. Its center sits on the dot, and its vertical center is the strip\'s height (the window sill and head blocks lie on their side). Each dark block below shows its distance from the back mark; the tables list the same numbers. S1, S2 and S3 take adhesive pads and S7 and S8 thin shims at their dots, not blocks.</p>'
+            '<p>A block is a 3 1/2 in cut of 2x4 stood on its 3 1/2 in side: <b>1 1/2 along the wall x 3 1/2 up</b> on the steel, <b>3 5/8 in out</b> with the glue. Its center sits on the dot, and its vertical center is the strip\'s height (the window sill and head blocks lie on their side). Each dark block below shows its distance from the back mark; the tables list the same numbers. S1, S2 and S3 take adhesive pads and S7 and S8 thin shims at their dots, not blocks (the maps and the glossary below the diagrams show all three).</p>' + FD['marks_html']() +
             '<div class="bmap"><figure>' + d + f'<figcaption><b>Driver wall: {len(bd)} blocks</b> (S4, S5 and S6 at their dots, and three under each of the four window frame pieces).</figcaption></figure>' + _table(FD, 'D', bd) +
             '<figure style="margin-top:14px">' + p + f'<figcaption><b>Passenger wall: {len(bp)} blocks</b> (S4, S6, the middle piece of S5, and three under each nook frame V1 to V3; V4 sits straight on the steel).</figcaption></figure>' + _table(FD, 'P', bp) + '</div>')
+
+
+def _arr(x1, y1, x2, y2, col=INK, sw=1):
+    import math
+    a = math.atan2(y2 - y1, x2 - x1); L = 6
+    hd = lambda x, y, ang: f'<polygon points="{x:.1f},{y:.1f} {x - L * math.cos(ang - .45):.1f},{y - L * math.sin(ang - .45):.1f} {x - L * math.cos(ang + .45):.1f},{y - L * math.sin(ang + .45):.1f}" fill="{col}"/>'
+    return _l(x1, y1, x2, y2, col, sw) + hd(x2, y2, a) + hd(x1, y1, a + math.pi)
+
+def _call(x, y, tx, ty, s, anchor='start', col=INK, sz=11.5):
+    return _l(tx + (3 if anchor == 'start' else -3), ty, x, y, col, 1) + f'<circle cx="{x:.1f}" cy="{y:.1f}" r="2.2" fill="{col}"/>' + _t(tx + (8 if anchor == 'start' else -8), ty + 4, s, sz, anchor, col)
+
+def _mk(x, y, ch, col=INK):
+    return f'<circle cx="{x:.1f}" cy="{y:.1f}" r="9" fill="#fff" stroke="{col}" stroke-width="1.6"/>' + _t(x, y + 4, ch, 11.5, 'middle', col, 700).replace('stroke-width:2.6px', 'stroke-width:0px')
+
+def _att_svg():
+    S = 52; X0 = 96; ZB = 372                       # S px per inch; X0 the steel face at the dot; ZB the bottom of the block
+    X = lambda x: X0 + S * x; Z = lambda z: ZB - S * z
+    BR = '#B45309'; GL = '#8A6A00'; WD = '#5A3A00'
+    xs = {'bond': 0, 'blk': .125, 'glue': 3.625, 'strip': 3.625, 'ply': 4.375}       # inches out from the steel face
+    o = []; a = o.append
+    a(_t(20, 24, 'Attaching a block to the steel: a section through one block', 13.5, 'start', INK, 700))
+    a(_t(20, 41, 'the steel of the van on the left, the room on the right; this is a cut across the wall at the middle of a block', 11, 'start', '#5F5E5A'))
+    a('<defs><pattern id="hst" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="7" stroke="#9AA0A8" stroke-width="2"/></pattern></defs>')
+    a(_r(X(-1.05), Z(5.3), S * 1.05, S * 5.8, 'url(#hst)', '#9AA0A8', 1))                                                       # the steel
+    a(_r(X0 - 1.5, Z(5.3), 3, S * 5.8, BR, BR, .5))                                                                             # its cleaned, scuffed face
+    a(_t(52, ZB + 44, 'outside of the van', 10, 'middle', '#5F5E5A', 600))
+    a(_r(X(xs['bond']), Z(3.5), S * .125, S * 3.5, '#D4A017', GL, 1))                                                          # the bond line
+    a(_r(X(xs['blk']), Z(3.5), S * 3.5, S * 3.5, '#C8A878', INK, 1.4))                                                         # the block
+    for k in range(1, 7): a(_l(X(xs['blk']) + 4, Z(3.5) + S * 3.5 * k / 7, X(3.625) - 4, Z(3.5) + S * 3.5 * k / 7, '#A8885A', .8))   # the grain, running up
+    a(_r(X(xs['strip']), Z(3.5), S * .75, S * 3.5, '#E9D3AA', '#B8975A', 1.3))                                                 # the 1x4 strip
+    a(_r(X(xs['glue']), Z(3.5), 4, S * 3.5, '#D4A017', GL, .6))                                                                # wood glue
+    a(_r(X(xs['ply']), Z(5.3), S * .375, S * 5.8, '#F3E7C8', '#B8975A', 1))                                                    # the plywood, later
+    xh = X(xs['ply']); a(_l(xh, Z(1.75), X(2.7), Z(1.75), RED, 2.4)); a(_r(xh - 3, Z(1.75) - 5, 4, 10, RED, RED, .5))       # the strip's screw
+    # the markers, with short straight leaders
+    my = 78
+    for xm, top, ch, col in ((X(-.55), Z(5.3), 'a', BR), (X(.06) + 3, Z(3.5), 'b', GL), (X(1.9), Z(3.5), 'c', WD), (X(3.625) + 2, Z(3.5), 'd', GL), (X(4.0), Z(3.5), 'e', WD), (X(4.56), Z(5.3), 'g', '#5F5E5A')):
+        a(_l(xm, my + 9, xm, top, col, 1.2)); a(_mk(xm, my, ch, col))
+    a(_l(xh + S * .375 + 2, Z(1.75), xh + S * .375 + 26, Z(1.75), RED, 1.2)); a(_mk(xh + S * .375 + 35, Z(1.75), 'f', RED))
+    # the two standoffs, measured from the steel
+    for k, (xe, lab, yo) in enumerate(((3.625, '3 5/8 in: the block and its glue', 26), (4.375, '4 3/8 in to the face of the strip', 56))):
+        yd = ZB + yo; a(_l(X0, ZB + 2, X0, yd + 5, '#B4B2A9', .8, '3 3')); a(_l(X(xe), ZB + 2, X(xe), yd + 5, '#B4B2A9', .8, '3 3'))
+        a(_arr(X0, yd, X(xe), yd)); a(_t(X(xe) + 8 if k else X0 + 8, yd - 5, lab, 11, 'start', INK, 700 if k == 0 else 600))
+    # the key
+    KX = 420; ky = 96
+    key = [('a', BR, ['the van\'s steel at the dot: scuffed dull, wiped with', '70/30 alcohol and water, dry. Nothing is screwed into it']),
+           ('b', GL, ['bond line, 1/8 in: polyurethane adhesive (Sikaflex-252)', 'or VHB tape (about 110 mil), put on the block']),
+           ('c', WD, ['block: a 3 1/2 in cut of 2x4. 1 1/2 along the wall,', '3 1/2 up, 3 1/2 out; the grain runs up the face']),
+           ('d', GL, ['wood glue between the block and the strip']),
+           ('e', WD, ['strip: 1x4 laid flat, 3/4 x 3 1/2 in']),
+           ('f', RED, ['one #8 x 1 1/2 in screw per block, in a pilot hole']),
+           ('g', '#5F5E5A', ['plywood wall, 3/8 in; it goes on later, over the screw heads'])]
+    for ch, col, ls in key:
+        a(_mk(KX, ky, ch, col))
+        for n, ln in enumerate(ls): a(_t(KX + 18, ky + 4 + 15 * n, ln, 11.5, 'start', INK))
+        ky += 15 * len(ls) + 17
+    a(_t(KX - 9, ky + 12, 'The strip\'s back ends up about 3 3/4 in off the body of the van', 11, 'start', '#5F5E5A'))
+    a(_t(KX - 9, ky + 27, '(the steel at the dots is 1/8 in off the body), the same line as', 11, 'start', '#5F5E5A'))
+    a(_t(KX - 9, ky + 42, 'the pads and shims on the other strips.', 11, 'start', '#5F5E5A'))
+    return _svg(780, 460, ''.join(o), 'Attaching a spacer block to the steel')
+
+ATT_STEPS = [
+    '<b>Mark the dots.</b> From the chart above, mark each block\'s place on the steel with a pencil or a bit of tape (its distance from the back mark and its height up). Each one goes on solid steel at the dot, clear of the holes and of the edges of the pans.',
+    '<b>Prepare the steel</b> at each mark, a little bigger than the block: remove loose paint and rust; wipe off any oil or wax; scuff lightly with a gray Scotch-Brite pad or 400 grit paper until the paint is evenly dull (if you go through to bare steel, touch it with a rust-inhibiting primer first); vacuum the dust; wipe with a 70/30 mix of isopropyl alcohol and water on a lint-free cloth and dry it with another; do not touch it again.',
+    '<b>Prepare the block.</b> Sand the face smooth and wipe off the dust. For VHB tape, also seal the face with a coat of polyurethane and let it dry, because raw wood is porous.',
+    '<b>Put the adhesive on the block, not on the steel.</b> Polyurethane adhesive (Sikaflex-252 or similar): a bead round the edge of the 1 1/2 x 3 1/2 in face and one down the middle, enough to leave a 1/8 in bond line when pressed. It works from 50 to 95 F and stays workable for only about 35 minutes at 73 F, so press each block on within that time. VHB tape (about 110 mil, so the 3 1/2 in block plus the tape is the 3 5/8 in standoff): put the tape on the block face first, press it firmly, then peel the liner. Apply it only when the steel, the block and the tape are between 70 and 100 F, never below about 50 F, and with no condensation on the steel.',
+    '<b>Set the block on its mark</b>, square to the wall with its 3 1/2 in side up, and press it on at once (no sliding it around). Use a strip as the gauge: lay one of the strip\'s own pieces across the faces of the blocks of that strip, with wax paper or plastic wrap between so it does not stick, and press each block against it, so they all end on one line. With VHB press hard, about 15 psi, which on this face is about 79 lb, for a minute, and brace it. With adhesive hold it with masking tape or a prop until it sets. Nothing is screwed into the van body: there are no holes through to the outside.',
+    '<b>Leave it a day or more</b> before it takes any load. Then lay a straightedge across the blocks of one strip: their outer faces should be within about 1/16 in of each other (sand a high block, or shim a low one with thin veneer), so the strip\'s back sits 3 3/4 in off the body along its whole length.',
+    '<b>Then the strip:</b> wood glue on the block, the strip on top, and one #8 x 1 1/2 in screw through the strip into the block, in a pilot hole. S1, S2 and S3 (adhesive pads) and S7 and S8 (shims) get their pad or shim glued to the steel the same way (steps 2 to 6), and the strip goes on top of it.',
+    '<b>Test one block first.</b> Glue one block to a spot that will be hidden and try to pry it off with a flat bar after a day: it should tear the wood or the paint off the steel, not let go clean. If it lets go clean, the steel was not clean enough or the wrong adhesive for it.',
+]
+
+def attach_html(FD):
+    return ('<h3>How to attach a block to the steel</h3>'
+            '<p>All 70 blocks go on the same way, with adhesive or tape and never with screws. The drawing shows one block in section; the steps follow.</p>'
+            '<figure style="margin:0 0 12px;border:1px solid #d9d5ca;border-radius:8px;padding:8px;background:#fff;min-width:0">' + _att_svg() + '</figure>'
+            '<ol class="steps">' + ''.join(f'<li>{x}</li>' for x in ATT_STEPS) + '</ol>')
 
 if __name__ == '__main__':
     here = os.path.dirname(os.path.abspath(__file__)); FD = {}
     exec(open(os.path.join(here, 'shelfdata.py')).read(), FD); exec(open(os.path.join(here, 'furring.py')).read(), FD)
     out = os.path.join(os.path.dirname(here), 'blocks.html')
-    open(out, 'w', encoding='utf-8').write('<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Blocks</title><body style="font:16px/1.5 system-ui;max-width:1200px;margin:0 auto;padding:16px">' + block_html(FD) + '</body>')
+    open(out, 'w', encoding='utf-8').write('<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Blocks</title><body style="font:16px/1.5 system-ui;max-width:1200px;margin:0 auto;padding:16px">' + block_html(FD) + attach_html(FD) + '</body>')
     print('wrote', out)
