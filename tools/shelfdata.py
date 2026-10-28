@@ -14,7 +14,11 @@ COUCH_X0 = 5; COUCH_LEN = C0 - COUCH_X0          # 69
 CN_X0, CN_X1 = 5, 74                                # the opening along the wall (the same span as the couch); its frames V5 (3 1/2 to 5) and V6 (74 to 75 1/2) are outside it
 CN_Z0, CN_Z1 = 31, 57                               # the recess in the steel: the pans (31 to 56 1/2) and the strips of S4 and S6 beside them
 CN_OZ0, CN_OZ1 = 32.0, 55.5                         # the opening in the covering: S4's top edge to S6's bottom edge (the rails stay where they are)
-CN_D = 4.5                                          # depth from the face of the walls to the back (the pans are 0 in off the body; the covering's face is 4 7/8 off it)
+CN_LINE = .25                                       # the nook is lined with 1/4 in plywood (user: 'add plywood lined in the back of the nook behind couch, and show how to do the sides'): the back on the ribs, a floor on S4, a ceiling under S6 and two sides
+CN_FACE = 3.75 + .75 + .375                         # the face of the wall covering: a furring rail's back 3 3/4 off the body + the rail 3/4 + the 3/8 in plywood = 4 7/8
+CN_RIB = .125                                       # the ribs between the pans stand 1/8 in off the body; the lining is glued to them
+CN_D = CN_FACE - CN_RIB - CN_LINE                   # 4 1/2: from the face of the walls to the face of the lining
+CN_NOTCH = (6, 4.75)                                # the steel angle at the lower rear corner (x 3 to 11, up to 36 3/4) stands 1 1/2 in off the body: the lining has a 6 in x 4 3/4 in notch there
 CN_TILT = 12                                        # degrees the back cushion leans back
 import math as _m
 CN_SETOUT = (CN_OZ0 - SEAT_T) * _m.tan(_m.radians(CN_TILT))      # the cushion's base stands this far out from the wall face, so that at the bottom of the opening its rear edge is just at the face (1 3/4 in)

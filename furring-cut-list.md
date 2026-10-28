@@ -14,7 +14,7 @@ A 154 in wall does not come in one stick, so a furring rail that is longer than 
 | D04 | S2b | 12 | 80 | 154 | **74** | joins its other half | 96, 104, 119.35, 139.95 |
 | D05 | S3a | 21 1/4 | 0 | 78 | **78** | joins its other half | 22, 34, 46, 58, 70, 78 |
 | D06 | S3b | 21 1/4 | 78 | 154 | **76** | joins its other half | 99, 110, 122, 134, 146 |
-| D07 | S4a | 30 1/4 | 0 | 71 1/4 | **71 1/4** | joins its other half | 10, 17.75, 31.25, 44.5, 58.6, 71.31 |
+| D07 | S4a | 30 1/4 | 0 | 71 1/4 | **71 1/4** | joins its other half | 13, 17.75, 31.25, 44.5, 58.6, 71.31 |
 | D08 | S4b | 30 1/4 | 71 1/4 | 154 | **82 3/4** | joins its other half | 82.94, 98.9, 114.94, 127.25, 139.75, 147 |
 | D09 | S5a | 43 1/2 | 75 1/2 | 100 1/4 | **24 3/4** |  | 82.94, 98.9 |
 | D10 | S5b | 43 1/2 | 142 15/16 | 154 | **11 1/16** |  | 147 |
@@ -41,6 +41,10 @@ The window cutout is 39 11/16 x 22 5/8 in. Around it goes a frame of 1x2 furring
 
 The frame sits 1 1/2 in outside the cutout on every side, so the opening that is left is exactly the cutout. Cut the four pieces after you have measured the real hole (the opening is already cut), not before.
 
+### Couch nook lining, driver side (5 pieces of 1/4 in plywood, one 4 x 8 sheet)
+
+Not furring: the nook behind the couch is lined with 1/4 in plywood (the Furring page has the drawings and the steps): the back (A) 69 x 23 3/8 in with a 6 x 4 3/4 in notch at the lower rear corner for the steel angle, a floor (B) and a ceiling (C) 69 x 4 1/2 in each, and two sides (D) 23 x 4 1/2 in each. The nook is then 4 1/2 in deep from the face of the walls to the back.
+
 ### Couch nook frames, driver side (2 pieces)
 
 The nook behind the couch is an opening in the wall covering, 5 to 74 in along the wall and 32 to 55 1/2 in up: S4 is its bottom edge and S6 its top edge, so it needs no cross pieces, only a frame of 1x2 at each end to finish the covering's edge. Each stands outside the opening, between S4 and S6, on three blocks.
@@ -60,7 +64,7 @@ The nook behind the couch is an opening in the wall covering, 5 to 74 in along t
 | P04 | S2b | 12 | 54 | 104 | **50** | joins its other half | 62, 72, 80, 96, 104 |
 | P05 | S3a | 21 1/4 | 0 | 46 | **46** | joins its other half | 22, 34, 46 |
 | P06 | S3b | 21 1/4 | 46 | 104 | **58** | joins its other half | 58, 70, 78, 99 |
-| P07 | S4a | 30 1/4 | 0 | 58 5/8 | **58 5/8** | joins its other half | 10, 17.75, 31.25, 44.5, 58.6 |
+| P07 | S4a | 30 1/4 | 0 | 58 5/8 | **58 5/8** | joins its other half | 13, 17.75, 31.25, 44.5, 58.6 |
 | P08 | S4b | 30 1/4 | 58 5/8 | 104 | **45 3/8** | joins its other half | 71.31, 82.94, 98.9 |
 | P09 | S5a | 43 1/2 | 0 | 11 | **11** |  | 2, 9 |
 | P10 | S5b | 43 1/2 | 31 1/4 | 74 1/2 | **43 1/4** |  | 32, 44.5, 58.6, 71.31 |
@@ -95,9 +99,9 @@ The passenger furring rails stop at the sliding door opening (104 in); only S8 c
 
 ## Also cut: spacer blocks (not furring rails), and what holds them
 
-The wood blocks are the spacers that hold S4, S5, S6, the window frame (J1 to J4), the shower and counter nook frames V1 to V3 and the couch nook frames V5 and V6 off the steel so every furring rail's back sits on the same line, 3 3/4 in off the body. Each is **1 1/2 x 3 1/2 in on the steel and 3 1/2 in out**: 1 1/2 along the wall, 3 1/2 up (as tall as a 1x4 furring rail is wide), so the furring rail rests on its whole width.
+The wood blocks are the spacers that hold S4, S5, S6, the window frame (J1 to J4), the shower and counter nook frames V1 to V3 and the couch nook frames V5 and V6 off the steel so every furring rail's back sits on the same line, 3 3/4 in off the body. Each is a 3 1/2 in cut of 2x4 that is **3 1/2 in out** from the steel. On **S4 and S6 it lies on its side: 3 1/2 along the wall, 1 1/2 up**, exactly the height of the 1 1/2 in strip of steel it sits on (the steel stands 1 1/2 in off the body below S4's strip and 3 in off above S6's, so a block standing up would run into it). On **S5 and under the frames it stands up: 1 1/2 along the wall, 3 1/2 up**, on the ribs, where the steel is flat above and below.
 
-- **Size and stock: cut 3 1/2 in pieces off a 2x4** (a 2x4 is really 1 1/2 x 3 1/2 in) and stand each on its 3 1/2 in side, so the block is 1 1/2 x 3 1/2 in on the steel (1 1/2 along the wall, 3 1/2 up) and 3 1/2 in out. The 1/8 in glue line under it makes the 3 5/8 in standoff, and the grain runs up the face of the block, so the furring rail's screw goes into side grain (a block with its grain pointing at the furring rail would take that screw in end grain, which holds about half as well). On the 1 1/2 in bands of steel under and over the pans (S4 and S6) the 3 1/2 in tall block spans the band and 1 in of pan above and below it; the pans are only 1/8 in lower, so the glue line takes up the difference.
+- **Size and stock: cut 3 1/2 in pieces off a 2x4** (a 2x4 is really 1 1/2 x 3 1/2 in) so each block is 1 1/2 x 3 1/2 in on the steel and 3 1/2 in out (lying on its side on S4 and S6, standing up on S5 and the frames). The 1/8 in glue line under it makes the 3 5/8 in standoff, and the grain runs along the 3 1/2 in cut, which is never the direction out from the wall, so the furring rail's screw goes into side grain (a block with its grain pointing at the furring rail would take that screw in end grain, which holds about half as well). On S4 and S6 the block lies on the 1 1/2 in strip of steel (29 1/2 to 31 and 56 1/2 to 58 up): the steel is 1/8 in off the body there, so the 3 5/8 in standoff puts the furring rail's back on the common line.
 - **Block to the steel: adhesive, not screws.** Nothing is drilled into the van's body. Use a polyurethane construction adhesive (the kind van builders use is Sikaflex 252 or a similar one; check the label for steel and for a bond line of about 1/8 in) or 3M VHB tape. Put it only on solid steel, away from the holes, and test one block on a scrap of your own steel (pull it off after a day) before you do the wall.
 - **If you use polyurethane adhesive instead of tape (Sikaflex-252 is one):** Sika's data sheet gives an application range of 50 to 95 F (10 to 35 C), best at 59 to 77 F (15 to 25 C), a skin time of about 40 minutes and an open time of about 35 minutes at 73 F, so press each block on within half an hour and hold it (masking tape or a prop) until it has set; leave it a day or more before loading it. Painted steel may need Sika's primer or activator (see its pre-treatment chart, and test one block). The prep is the same as below: scuff, wipe off the dust, 70/30 isopropyl alcohol and water, dry. Do not use screws or rivnuts into the steel: at the dots it is the van's outer skin or a rib pressed from it, so a screw would go through the outside of the van.
 - **If you use VHB tape, temperature:** apply it when the steel, the block and the tape are all between 70 and 100 F (21 to 38 C); do not apply it below about 50 F (10 C), where the adhesive is too stiff to wet the surface (some grades say 60 F). Warm the steel with the van heater or a heat lamp if you have to, keep it out of direct sun that heats the steel well past 100 F, and make sure there is no condensation on it. Once the tape is on, it holds in the cold.

@@ -67,7 +67,7 @@ const PD = [
   { k: 'cnX1', g: 'Couch nook', l: 'Nook behind the couch: ends (its front frame V6 is 1 1/2 in after this)', d: 74, s: .5, a: 20, b: 98 },
   { k: 'cnZ0', g: 'Couch nook', l: 'Nook: the recess in the steel starts this far up (the pans start at 31, over the 1/8 in strip of S4 at 29 1/2 to 31)', d: 31, s: .5, a: 20, b: 50 },
   { k: 'cnZ1', g: 'Couch nook', l: 'Nook: the recess in the steel ends this far up (the pans end at 56 1/2, the strip of S6 is 56 1/2 to 58)', d: 57, s: .5, a: 40, b: 70 },
-  { k: 'cnD', g: 'Couch nook', l: 'Nook depth, from the face of the walls to the back (the pans are 0 in off the body; the face of the covering is 4 7/8 off it, and 4 1/2 leaves 3/8 for a 1/4 in lining on the 1/8 in ribs)', d: 4.5, s: .25, a: 2, b: 5 },
+  { k: 'cnLine', g: 'Couch nook', l: 'Nook lining: 1/4 in plywood on the 1/8 in ribs for the back, with a floor on S4, a ceiling under S6 and two sides (0 = bare steel). The depth from the face of the walls to the back is then 3 3/4 + 3/4 + the wall covering - 1/8 - this: 4 1/2', d: .25, s: .125, a: 0, b: .75 },
   { k: 'cnTilt', g: 'Couch nook', l: 'Back cushion tilt, degrees back from upright (12 is what the side view C draws)', d: 12, s: .5, a: 0, b: 25 },
   { k: 'shPull', g: 'Charging gear', l: 'Gear shelf: how far it pulls out (18 in full-extension slides; the shelf is 17 1/2 deep)', d: 18, s: 1, a: 10, b: 40 },
   { k: 'fwT', g: 'Floor-to-ceiling walls', l: 'Wall thickness (the walls are inside the closet, the shower and the counter cabinet, so nothing else moves)', d: .75, s: .125, a: .25, b: 3 },
@@ -536,7 +536,7 @@ function layout(P0) {
   { const cx0 = P.winX, cx1 = cx0 + P.winCW, cz0 = P.winZ, cz1 = cz0 + P.winCH, gx0 = cx0 - P.winOL, gz0 = cz0 - P.winOB;
     L.win = P.winOn ? { cx0, cx1, cz0, cz1, gx0, gx1: gx0 + P.winGW, gz0, gz1: gz0 + P.winGH, div: gx0 + 28.625 } : null; }
   // the nook in the wall behind the couch (driver side): an opening in the covering from the top edge of furring rail S4 to the bottom edge of S6, over the pan band of the steel; the back cushion tilts back into it
-  L.cnook = P.cnOn ? { x0: P.cnX0, x1: P.cnX1, z0: P.cnZ0, z1: P.cnZ1, d: P.cnD, tilt: P.cnTilt } : null;
+  L.cnook = P.cnOn ? { x0: P.cnX0, x1: P.cnX1, z0: P.cnZ0, z1: P.cnZ1, line: P.cnLine, face: 3.75 + .75 + P.wallT, d: 3.75 + .75 + P.wallT - .125 - P.cnLine, tilt: P.cnTilt } : null;
   L.pan = P.panW; L.fr = [P.panW, P.panW + P.fridgeW]; L.cabS = L.fr[1];
   L.angS = L.cabS + P.flatLen; L.angLen = P.cabD > P.sinkD ? P.angLen : 0;
   L.slope = L.angLen > 0 ? (P.cabD - P.sinkD) / L.angLen : 0.4;
