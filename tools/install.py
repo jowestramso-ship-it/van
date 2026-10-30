@@ -710,7 +710,7 @@ def build():
              'Multimeter; garden hose for the leak test']
     nook = ['OSI Quad Max (paintable hybrid sealant) for a thin bead where the plywood meets the wall covering; leave the top or bottom edge unsealed so the wool can breathe',
             'Havelock wool for the nook: a pad cut from a batt, about 7/8 in thick when fitted (split the batt into layers if it is thicker), cut about 1/4 in oversize so it stays put',
-            '3/8 in plywood for the back of each nook, two pieces (cut each about 17 1/8 x 15 7/8: both the jar nook, 76 to 93 1/4 in from the back, and the shower nook, 12 1/2 to 29 3/4, are 17 1/4 x 16, 38 to 54 in up). With 1 1/4 in spare behind the jars, 3/8 in plywood leaves 7/8 in for the wool',
+            '3/8 in plywood for the back of each nook, two pieces (cut each about 17 1/8 x 15 7/8: both the jar nook, 76 to 93 1/4 in from the back, and the shower nook, 9 3/8 to 26 5/8, are 17 1/4 x 16, 38 to 54 in up). With 1 1/4 in spare behind the jars, 3/8 in plywood leaves 7/8 in for the wool',
             'Water-based polyurethane for the back and every edge of that plywood, two coats, cured for a few days before it goes in',
             'Isopropyl alcohol and rags to wipe the steel, touch-up white paint and rust-inhibiting primer for any chips in the factory paint']
     head = ('<h1>Roof fan and air conditioner: install steps</h1>'

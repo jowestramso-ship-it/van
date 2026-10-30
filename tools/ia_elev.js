@@ -68,7 +68,7 @@ function wallsDraw(E, L, side) {
   if (!ws.length) return '';
   o.push(GB('fwalls', 'Floor-to-ceiling walls'));
   ws.forEach(w => {
-    const xm = (w.x0 + w.x1) / 2, lab = w.id === 'W1' ? 'Wall at the closet end' : w.id === 'W2' ? 'Wall behind the driver seat' : w.id === 'W3' ? 'Wall, shower side of the fridge' : 'Wall, counter side of the fridge';
+    const xm = (w.x0 + w.x1) / 2, lab = w.id === 'W1' ? 'Wall at the closet end' : w.id === 'W2' ? 'Wall behind the driver seat' : 'Wall, counter side of the fridge';
     o.push(E.box(w.x0, w.x1, 0, L.ceilF, { fill: '#8A6B4D', fo: .6, stroke: '#3E230B', sw: 1.3 }));
     o.push(LBL(E.xx(xm), E.yy(w.id === 'W2' ? 50 : w.id === 'W1' ? 50 : 56), lab, `${fmt(P.fwT)} thick, ${fmt(w.d)} in out from the wall, floor to ceiling`, { size: 10, fill: '#5A3A00' }));
   });
@@ -294,10 +294,10 @@ function drawPass(L, V) {
   const panTop = 3.8;
   o.push(GB('bath', 'Wet bath'));
   o.push(box(0, P.panW, 0, L.ceilF, { fill: COL.T, fo: .08, stroke: COL.T, sw: 1.5, rx: 3 }));
-  o.push(LBL(X(P.panW / 2), Y(L.ceilF * 0.9), 'Wet bath', `${fmt(P.panW)} x ${fmt(P.panD)} in, shower curtain`, { size: 12, fill: COL.T }));
+  o.push(LBL(X(P.panW / 2), Y(L.ceilF * 0.9), 'Wet bath', `${fmt(P.panW)} x ${fmt(P.panD)} in, curtains on three sides`, { size: 12, fill: COL.T }));
 
   o.push(GE());
-  // shower head and valve on the passenger wall of the stall (head on an arm that points out into the stall; valve below it at the cab end)
+  // shower head and valve on the back wall of the stall (head on an arm that points out into the stall, left of the nook; valve under the rear end of the nook)
   o.push(GB('shower', 'Shower head and valve'));
   if (P.showerOn) {
     const hx = P.headX, hz = P.headZ;
@@ -310,7 +310,7 @@ function drawPass(L, V) {
   }
   o.push(GE());
   // shower nook and counter nook are recesses in the wall (fixed positions)
-  const nkx = Math.min(29.75, P.panW - 6.25), nk0 = nkx - P.snookLen;
+  const nk0 = L.snx[0], nkx = L.snx[1];
   o.push(GB('snook', 'Shower nook'));
   const snTop = P.snookTop, snBot = snTop - P.snookH;
   o.push(box(nk0, nkx, snBot, snTop, { fill: '#7A4A1E', fo: .2, stroke: '#7A4A1E', sw: 1.5, rx: 3, dash: '5 3' }));
@@ -322,11 +322,21 @@ function drawPass(L, V) {
   o.push(box(0, P.panW, 0, panTop, { fill: '#D9ECF7', fo: .95, stroke: COL.BL, sw: 1.8 }));
   o.push(T(X(P.panW / 2), Y(1.2), 'fixed pan, 3 in curb', { size: 10, fill: COL.BL }));
   o.push(GE());
+  if (L.curtain) {      // the ceiling rail and the two curtains pulled aside to the two ends so the stall shows
+    const cu = L.curtain, PUR = '#7B3FA0';
+    o.push(GB('curtain', 'Shower curtains'));
+    o.push(Ln(X(cu.x0), Y(cu.z), X(cu.x1), Y(cu.z), { stroke: '#2C2C2A', sw: 3, dash: '9 4' }));
+    o.push(box(cu.x0, cu.x0 + 4.5, panTop - 1.5, cu.z, { fill: PUR, fo: .18, stroke: PUR, sw: 1.2, dash: '4 3', rx: 2 }));
+    o.push(box(cu.x1 - 4.5, cu.x1, panTop - 1.5, cu.z, { fill: PUR, fo: .18, stroke: PUR, sw: 1.2, dash: '4 3', rx: 2 }));
+    o.push(LBL(X(cu.x1 - 2.25), Y(cu.z - 9), 'Shower curtains', `two curtains, ${fmt(cu.len)} in long, hung from a rail on the ceiling that runs round the three open sides (${fmt(P.curIn)} in inside the pan's edge, so the hems hang inside the curb), drawn pulled aside; they overlap ${cu.over} in in the middle of the front`, { size: 10, fill: PUR }));
+    o.push(GE());
+  }
   if (L.liner) {
     const ln = L.liner;
     o.push(GB('liner', 'Waterproof liner'));
     o.push(box(ln.x0, ln.x1, ln.z0, ln.z1, { fill: '#2A9D8F', fo: .1, stroke: '#1F7A70', sw: 1.4, dash: '2 3' }));
-    o.push(LBL(X(ln.x0 + 5.4), Y(31.5), 'Liner', `a thin FRP panel (${(+P.linerT).toFixed(2)} in) over the plywood on the stall wall, ${fmt(ln.x0)} to ${fmt(ln.x1)} in along it and ${fmt(ln.z0)} to ${fmt(ln.z1)} up (it stops ${fmt(P.linerGap)} in above the pan edge, the gap filled with flexible sealant), with the nook cut out and lined and the same on W3's stall face; ${ln.sheets} sheets of 4 x 8 ft, about ${Math.round(ln.lbs)} lb`, { size: 10.5, fill: '#1F7A70' }));
+    (ln.joints || []).forEach(jx => o.push(Ln(X(jx), Y(ln.z0), X(jx), Y(ln.z1), { stroke: '#1F7A70', so: .5, sw: 1, dash: '1 4' })));
+    o.push(LBL(X(ln.x0 + 5.4), Y(31.5), 'Liner', `PVC paneling (${fmt(P.linerT)} in thick planks, ${ln.planks} of them stood on end) over the plywood on the back wall of the stall only, ${fmt(ln.x0)} to ${fmt(ln.x1)} in along it and ${fmt(ln.z0)} to ${fmt(ln.z1)} up (it stops ${fmt(P.linerGap)} in above the pan edge, the gap filled with flexible sealant), with the nook cut out of the planks and lined; the other three sides are curtains; about ${Math.round(ln.lbs)} lb`, { size: 10.5, fill: '#1F7A70' }));
     o.push(GE());
   }
   if (L.toilet) {

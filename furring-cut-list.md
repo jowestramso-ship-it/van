@@ -66,8 +66,8 @@ The nook behind the couch is an opening in the wall covering, 5 to 74 in along t
 | P06 | S3b | 21 1/4 | 46 | 104 | **58** | joins its other half | 58, 70, 78, 99 |
 | P07 | S4a | 30 1/4 | 0 | 58 5/8 | **58 5/8** | joins its other half | 13, 17.75, 31.25, 44.5, 58.6 |
 | P08 | S4b | 30 1/4 | 58 5/8 | 104 | **45 3/8** | joins its other half | 71.31, 82.94, 98.9 |
-| P09 | S5a | 43 1/2 | 0 | 11 | **11** |  | 2, 9 |
-| P10 | S5b | 43 1/2 | 31 1/4 | 74 1/2 | **43 1/4** |  | 32, 44.5, 58.6, 71.31 |
+| P09 | S5a | 43 1/2 | 0 | 5 1/2 | **5 1/2** |  | 2 |
+| P10 | S5b | 43 1/2 | 28 1/8 | 74 1/2 | **46 3/8** |  | 31.25, 44.5, 58.6, 71.31 |
 | P11 | S5c | 43 1/2 | 94 3/4 | 104 | **9 1/4** |  | 98.9 |
 | P12 | S6a | 57 1/4 | 0 | 58 5/8 | **58 5/8** | joins its other half | 10, 17.75, 31.25, 44.5, 58.6 |
 | P13 | S6b | 57 1/4 | 58 5/8 | 104 | **45 3/8** | joins its other half | 71.31, 82.94, 98.9 |
@@ -82,8 +82,8 @@ The passenger furring rails stop at the sliding door opening (104 in); only S8 c
 
 | Cut | Piece | What it is | Length | Where |
 |---|---|---|---|---|
-| E01 | V1 | vertical, shower nook rear end | **16** | 11 to 12 1/2 in from the back, 38 to 54 in up |
-| E02 | V2 | vertical, shower nook front end | **16** | 29 3/4 to 31 1/4 in from the back, 38 to 54 in up |
+| E01 | V1 | vertical, shower nook rear end | **16** | 7 7/8 to 9 3/8 in from the back, 38 to 54 in up |
+| E02 | V2 | vertical, shower nook front end | **16** | 26 5/8 to 28 1/8 in from the back, 38 to 54 in up |
 | E03 | V3 | vertical, counter nook rear end | **23 1/2** | 74 1/2 to 76 in from the back, 32 to 55 1/2 in up |
 | E04 | V4 | vertical, counter nook right end | **23 1/2** | 93 1/4 to 94 3/4 in from the back, 32 to 55 1/2 in up |
 | E05 | X1 | cross piece, shower nook floor | **17 1/4** | between V1 and V2, top edge at 38 in up |
@@ -93,8 +93,8 @@ The passenger furring rails stop at the sliding door opening (104 in); only S8 c
 ## Totals
 
 - Driver side furring rails: 1037 1/8 in (86.4 ft), 17 pieces; window frame 130 5/8 in, 4 pieces; couch nook frames 47 in, 2 pieces.
-- Passenger side furring rails: 807 1/2 in (67.3 ft), 17 pieces; frames and cross pieces 130 3/4 in, 7 pieces.
-- Everything: **2153 in (179 ft), 47 pieces**. Packed onto 8 ft sticks with a 1/8 in saw kerf: the 34 furring rails S1 to S8 are **23 sticks of 1x4**, buy about 27; the 13 frame and cross pieces are **4 sticks of 1x2**, buy about 5 (some spare for bad boards and cutting mistakes).
+- Passenger side furring rails: 805 1/8 in (67.1 ft), 17 pieces; frames and cross pieces 130 3/4 in, 7 pieces.
+- Everything: **2150 5/8 in (179 ft), 47 pieces**. Packed onto 8 ft sticks with a 1/8 in saw kerf: the 34 furring rails S1 to S8 are **23 sticks of 1x4**, buy about 27; the 13 frame and cross pieces are **4 sticks of 1x2**, buy about 5 (some spare for bad boards and cutting mistakes).
 - The wall diagrams say about 97 ft for the driver side alone; this list agrees (1167 3/4 in is 97.3 ft).
 
 ## Also cut: spacer blocks (not furring rails), and what holds them

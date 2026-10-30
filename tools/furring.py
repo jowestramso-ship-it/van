@@ -32,12 +32,12 @@ for _nm, _x0, _x1, _z0, _z1 in WIN_FRAME:
         FRAME_BLK += [(_nm[:2], (_x0 + _x1) / 2, _z) for _z in (_z0 + 3, (_z0 + _z1) / 2, _z1 - 3)]
     else:                      # the sill and the head
         FRAME_BLK += [(_nm[:2], _x0 + (_x1 - _x0) * _f, (_z0 + _z1) / 2) for _f in (1 / 6, .5, 5 / 6)]
-# the passenger side, which has no window: the furring rails stop at the sliding door (104 in) and are cut away at the two nooks
-SEG_P = {'S1': [(0, 42), (76, 104)], 'S2': [(0, 104)], 'S3': [(0, 104)], 'S4': [(0, 104)], 'S5': [(0, 11), (31.25, 74.5), (94.75, 104)], 'S6': [(0, 104)], 'S7': [(0, 104)], 'S8': [(0, 154)]}
-PAP = {'S1': [6, 17.75, 31.25, 82.94, 98.9], 'S2': [15, 30.75, 40, 54, 62, 72, 80, 96, 104], 'S3': [22, 34, 46, 58, 70, 78, 99], 'S4': [13, 17.75, 31.25, 44.5, 58.6, 71.31, 82.94, 98.9], 'S5': [2, 9, 32, 44.5, 58.6, 71.31, 98.9], 'S6': [10, 17.75, 31.25, 44.5, 58.6, 71.31, 82.94, 98.9], 'S7': [x for x in AP['S7'] if x <= 104], 'S8': AP['S8']}
+# the passenger side, which has no window: the furring rails stop at the sliding door (104 in) and are cut away at the two nooks (S5's rear piece is a short 5 1/2 in one: the shower's feed rises at the head's own place, 7 in, past it)
+SEG_P = {'S1': [(0, 42), (76, 104)], 'S2': [(0, 104)], 'S3': [(0, 104)], 'S4': [(0, 104)], 'S5': [(0, 5.5), (SN_X1 + FRAME_W, 74.5), (94.75, 104)], 'S6': [(0, 104)], 'S7': [(0, 104)], 'S8': [(0, 154)]}
+PAP = {'S1': [6, 17.75, 31.25, 82.94, 98.9], 'S2': [15, 30.75, 40, 54, 62, 72, 80, 96, 104], 'S3': [22, 34, 46, 58, 70, 78, 99], 'S4': [13, 17.75, 31.25, 44.5, 58.6, 71.31, 82.94, 98.9], 'S5': [2, 31.25, 44.5, 58.6, 71.31, 98.9], 'S6': [10, 17.75, 31.25, 44.5, 58.6, 71.31, 82.94, 98.9], 'S7': [x for x in AP['S7'] if x <= 104], 'S8': AP['S8']}
 # the nook frames: (name, x0, x1, bottom, top, spacer?)
 # the counter nook frames run from the top of S4 to the bottom of S6 (32 to 55 1/2)
-VFR = (('V1', 11, 12.5, 38, 54, True), ('V2', 29.75, 31.25, 38, 54, True), ('V3', 74.5, 76, S4_TOP, S6_BOT, True), ('V4', 93.25, 94.75, S4_TOP, S6_BOT, False))
+VFR = (('V1', SN_X0 - FRAME_W, SN_X0, SN_Z0, SN_Z1, True), ('V2', SN_X1, SN_X1 + FRAME_W, SN_Z0, SN_Z1, True), ('V3', 74.5, 76, S4_TOP, S6_BOT, True), ('V4', 93.25, 94.75, S4_TOP, S6_BOT, False))
 # where the long furring rails are joined (a furring rail over 96 in does not come in one stick); the joint sits on a dot
 JOINT_D = {'S2': 80, 'S3': 78, 'S4': 71.25, 'S6': 71.25, 'S7': 71.25, 'S8': 76}      # S5 has no joint now: its piece next to the nook is 24 3/4 in long
 JOINT_P = {'S2': 54, 'S3': 46, 'S4': 58.625, 'S6': 58.625, 'S7': 58.625, 'S8': 76}

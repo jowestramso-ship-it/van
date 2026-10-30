@@ -185,10 +185,10 @@ function drawPlan(L, V) {
   // ---------- passenger side ----------
   o.push(GB('pan', 'Shower'));
   o.push(ip(0, P.panW, 0, P.panD, COL.T, '', null, { fo: .08, dash: '6 4' }));
-  { const cx = xx((L.toilet ? L.toilet.x0 : P.panW) / 2), cy = yp(P.panD / 2); o.push(T(cx, cy - 14, 'Shower', { size: 11, fill: COL.T, w: 500 })); o.push(T(cx, cy, `${fmt(P.panW)} x ${fmt(P.panD)}, fixed pan`, { size: 9.5, fill: COL.T })); o.push(T(cx, cy + 12, 'curtain on the aisle side', { size: 9, fill: COL.T })); }
+  { const cx = xx((L.toilet ? L.toilet.x0 : P.panW) / 2), cy = yp(P.panD * .72); o.push(T(cx, cy - 14, 'Shower', { size: 11, fill: COL.T, w: 500 })); o.push(T(cx, cy, `${fmt(P.panW)} x ${fmt(P.panD)}, fixed pan`, { size: 9.5, fill: COL.T })); o.push(T(cx, cy + 12, 'curtains on 3 sides', { size: 9, fill: COL.T })); }
   o.push(ip(L.pdr.x - 1.2, L.pdr.x + 1.2, L.pdr.y - 1.2, L.pdr.y + 1.2, '#185FA5', '', null, { fo: .45 })); o.push(T(xx(L.pdr.x), yp(L.pdr.y) + 3, 'drain', { size: 8.5, fill: '#185FA5' }));
   o.push(GE());
-  if (L.liner) { const ln = L.liner; o.push(GB('liner', 'Waterproof liner')); o.push(ip(ln.x0, ln.x1, 0, .7, '#2A9D8F', '', null, { fo: .85 })); if (ln.w3) o.push(ip(ln.x1 - .7, ln.x1, 0, P.panD, '#2A9D8F', '', null, { fo: .85 })); o.push(GE()); }
+  if (L.liner) { const ln = L.liner; o.push(GB('liner', 'Waterproof liner')); o.push(ip(ln.x0, ln.x1, 0, .7, '#2A9D8F', '', null, { fo: .85 })); o.push(GE()); }
   if (L.toilet) {
     o.push(GB('toilet', 'Toilet'));
     o.push(ip(L.toilet.x0, L.toilet.x1, L.toilet.y0, L.toilet.y1, '#993556', 'Toilet', `Fold-To-Go ${fmt(P.toiletD)} x ${fmt(P.toiletW)}`, { fo: .2, fs: 10 }));
@@ -197,11 +197,20 @@ function drawPlan(L, V) {
   o.push(GB('shower', 'Shower head and valve'));
   if (P.showerOn) o.push(ip(P.headX - 2, P.headX + 2, P.headOut - 2, P.headOut + 2, '#185FA5', 'Shower head', `${fmt(P.headZ)} up`, { fo: .3 }));
   o.push(GE());
-  const nkx = Math.min(29.75, P.panW - 6.25);
+  const nk0 = L.snx[0], nkx = L.snx[1];
   o.push(GB('snook', 'Shower nook'));
-  o.push(ip(nkx - P.snookLen, nkx, 0, 4.5, '#7A4A1E', '', null, { fo: .3, dash: '3 2' }));
-  o.push(T(xx(nkx - P.snookLen / 2), yp(1.3), 'shower nook 4.5 deep', { size: 8.5, fill: '#5A3510' }));
+  o.push(ip(nk0, nkx, 0, 4.5, '#7A4A1E', '', null, { fo: .3, dash: '3 2' }));
+  o.push(T(xx((nk0 + nkx) / 2), yp(1.3), 'shower nook 4.5 deep', { size: 8.5, fill: '#5A3510' }));
   o.push(GE());
+  if (L.curtain) {      // the ceiling rail (dashed) round the three open sides and the two curtains that overlap in the middle of the front
+    const cu = L.curtain, yF = P.panD - P.curIn, m = P.panW / 2, PUR = '#7B3FA0', seg = (a, b, c, d, st) => o.push(Ln(xx(a), yp(b), xx(c), yp(d), st));
+    o.push(GB('curtain', 'Shower curtains'));
+    seg(cu.x0, 0, cu.x0, yF, { stroke: '#2C2C2A', sw: 2.2, dash: '7 3' }); seg(cu.x0, yF, cu.x1, yF, { stroke: '#2C2C2A', sw: 2.2, dash: '7 3' }); seg(cu.x1, yF, cu.x1, 0, { stroke: '#2C2C2A', sw: 2.2, dash: '7 3' });
+    seg(cu.x0, .8, cu.x0, yF + .3, { stroke: PUR, sw: 3.6, so: .8 }); seg(cu.x0, yF + .3, m + cu.over / 2, yF + .3, { stroke: PUR, sw: 3.6, so: .8 });
+    seg(cu.x1, .8, cu.x1, yF - .9, { stroke: '#B07ACB', sw: 3.6, so: .85 }); seg(cu.x1, yF - .9, m - cu.over / 2, yF - .9, { stroke: '#B07ACB', sw: 3.6, so: .85 });
+    o.push(T(xx(m), yp(P.panD) - 4, 'two curtains on a ceiling rail, overlapping 6 in', { size: 9, fill: PUR }));
+    o.push(GE());
+  }
   o.push(GB('counter', 'Cabinet and counter outline'));
   o.push(T(xx(L.cabS + 8), yp(P.cabD - 3.5), `Cabinet ${fmt(P.cabD)} deep`, { size: 10, fill: COL.C, w: 500 }));
   o.push(Poly([[xx(L.cabS), yp(P.cabD)], [xx(L.angS), yp(P.cabD)], [xx(L.sinkS), yp(P.sinkD)], [xx(L.sinkE), yp(P.sinkD)], [xx(L.sinkE), yp(0)], [xx(L.cabS), yp(0)]], { fill: COL.C, fo: .12, stroke: COL.C, sw: 1.6 }));

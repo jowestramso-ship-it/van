@@ -54,7 +54,7 @@ WALL_TRIM = '''<h3>Covering the corners and the edges of 3/8 in plywood</h3>
 
 def pages(root):
     TR = {}; exec(_read(os.path.join(root, 'tools', 'trim.py')), TR)   # the seven drawings of the trim details
-    PN = {}; exec(_read(os.path.join(root, 'tools', 'panpage.py')), PN)
+    PN = {}; exec(_read(os.path.join(root, 'tools', 'shelfdata.py')), PN); exec(_read(os.path.join(root, 'tools', 'panpage.py')), PN)
     BM = {}; exec(_read(os.path.join(root, 'tools', 'blockmap.py')), BM)   # the chart of where every spacer block goes   # the Shower pan page: six drawings, the parts and the steps
     FD = {}
     exec(_read(os.path.join(root, 'tools', 'shelfdata.py')), FD); exec(_read(os.path.join(root, 'tools', 'furring.py')), FD)   # the window's place and the furring counts
@@ -154,7 +154,7 @@ def pages(root):
         intro=f'<p>{H.escape("Walls: " + body("cover").split("Walls:")[1].strip()) if "Walls:" in body("cover") else ""}</p>' + table(['Floor-to-ceiling wall']),
         steps=['<b>Seal and finish both faces of every sheet first</b> (a clear water-based finish or hardwax oil), before you hang it.',
                '<b>Hang the sheets floor to ceiling,</b> glued to every furring rail, with a screw and a finish washer about every 8 in and 1/16 in between sheets; the joints fall at 42, 90 and 138 in.',
-               '<b>Stand the four 3/4 in floor-to-ceiling walls</b> (W1 closet end, W2 behind the driver seat, W3 shower and fridge, W4 fridge and counter) on the finished floor and fix them to the framing; the dinette backs lean on W1 and W2.',
+               '<b>Stand the three 3/4 in floor-to-ceiling walls</b> (W1 closet end, W2 behind the driver seat, W4 counter side of the fridge) on the finished floor and fix them to the framing; the dinette backs lean on W1 and W2. The shower has no end wall: its three open sides are curtains (the Wet bath page).',
                '<b>Then cover the corners and edges</b> (the table below): after the sheets are up and before the cabinets, so the cabinets and the trim meet cleanly.'],
         blocks=['<h3>The seven finishes, drawn to scale</h3>' + TR['trim_html'](), WALL_TRIM]))
     P.append(dict(slug='heavy', nav='Battery and tanks', title='The heavy low things: battery and tanks',
@@ -180,18 +180,18 @@ def pages(root):
                '<b>Cushions:</b> the seat cushion 5 in thick, and the back cushion 5 in thick and 20 in tall in one piece, leaning back 12 degrees into the nook behind the couch, with its base 1 3/4 in out from the wall (the seat is then about 19 in deep); check the seated headroom (3 1/2 in under the wall cabinets, which are at 63 in up).'],
         blocks=[C, Bd]))
     P.append(dict(slug='pan', nav='Shower pan', title='Shower pan: set it, drain it, line the stall',
-        kick='Passenger side, rear end: after the walls and W3 are framed and the subfloor is down, before the toilet and the nook.',
-        intro='<p>You bought the pan (36 x 24 in), so this page is about setting it, not building it: bed it, drain it through the floor at the rear-door end, test it, then line the plywood of the stall wall and W3 with a thin waterproof FRP panel and seal every joint with flexible sealant. The liner is FRP paneling, as you chose. Two things are still guesses until you measure: how far out from the wall the drain hole is (5 in from the rear end is yours; 12 out, the middle, is mine) and how tall the pan\'s lip is against the wall. Change them in the plan\'s sizes and the drawings and checks follow.</p>' + table(['Shower \\(fixed pan', 'Shower wall liner']),
+        kick='Passenger side, rear end: after the walls are framed and the subfloor is down, before the toilet, the curtains and the nook.',
+        intro='<p>You bought the pan (36 x 24 in), so this page is about setting it, not building it: bed it, drain it through the floor at the rear-door end, test it, then line the back wall of the stall (the plywood on the passenger wall, and the shower nook) with PVC paneling and seal every joint with flexible sealant. Only the back wall is lined: the other three sides of the stall are curtains, so there is no end wall W3 and no corner. The lining is PVC paneling, as you chose. Two things are still guesses until you measure: how far out from the wall the drain hole is (5 in from the rear end is yours; 12 out, the middle, is mine) and how tall the pan\'s lip is against the wall; and the thickness of the planks (5/16 in is a placeholder). Change them in the plan\'s sizes and the drawings and checks follow.</p>' + table(['Shower \\(fixed pan', 'Shower wall paneling']),
         steps=PN['STEPS'], blocks=[PN['pan_html']()]))
     P.append(dict(slug='bath', nav='Wet bath', title='Wet bath: stall, toilet and nook',
         kick='Passenger side, at the rear end; it needs the passenger-side furring rails and the walls first.',
-        intro=table(['Shower', 'Toilet', 'Floor-to-ceiling wall W3']),
+        intro=table(['Shower', 'Toilet', 'Shower curtains']),
         steps=[fp.replace('<p class="sug">', '').replace('</p>', ''),
-               '<b>Stand W3</b> (35 1/4 to 36 in from the back, 24 in deep) as the end wall of the stall, and frame the shower nook between the nook frames V1 and V2 (the furring page).',
-               '<b>The pan</b> (36 x 24 in, 3 in curb, bought, fixed) is set, drained and tested, and the wall and W3 lined, on the previous page, before this one.',
-               '<b>Plumb it:</b> the shower head at 9 in from the back and the valve at 33 in (holes through the liner, sealed behind their flanges); the drain runs from the rear-door end of the pan to a tank under the van (the grey tank\'s place is not set).',
-               '<b>Curtain on three sides</b> on a rod above (diagram E3), pulled to the rear end.',
-               '<b>Toilet:</b> the Reliance Fold-To-Go stays set up on the pan at the cab end (20 3/4 to 35 1/4 in), sideways.',
+               '<b>Frame the shower nook</b> between the nook frames V1 and V2 (the furring page), centered on the 36 in stall (9 3/8 to 26 5/8 in from the back). There is no end wall: the cab end of the stall, next to the fridge, is a curtain.',
+               '<b>The pan</b> (36 x 24 in, 3 in curb, bought, fixed) is set, drained and tested, and the back wall lined with PVC paneling, on the previous page, before this one.',
+               '<b>Plumb it:</b> the shower head at 7 in from the back, 70 up, left of the nook, and the valve at 11 in, 36 up, under the rear end of the nook (holes through the paneling, sealed behind their flanges); the hot and cold lines rise at 9 3/4 in, left of the first block of S4, and the feed to the head rises at 7 in; the drain runs from the rear-door end of the pan to a tank under the van (the grey tank\'s place is not set).',
+               '<b>Curtains on three sides:</b> bend the ceiling rail to a U, 1 1/2 in inside the pan\'s edge (33 in across the front and 22 1/2 in down each end), fix it up into the ceiling slats, and hang the two curtains from it so they overlap 6 in in the middle of the front, with small weights in the hems, inside the curb (diagram E3). Pull them aside to the two ends when you are not showering.',
+               '<b>Toilet:</b> the Reliance Fold-To-Go stays set up on the pan at the cab end (19 1/2 to 34 in, its back half an inch short of the cab-end curtain), sideways.',
                '<b>Nook contents:</b> towel bar, a shelf, toilet paper and bottles (keep the paper out of the splash). The nook has no front lip, so water runs out over the open edge: screw an eye into each end of the nook and stretch a bungee cord across the front, about 5 1/2 in above the shelf board, to keep the bottles from falling out.'],
         blocks=[E3]))
     P.append(dict(slug='kitchen', nav='Kitchen side', title='Counter, sink, fridge and the rest of the passenger side',

@@ -7,7 +7,7 @@ const PD = [
   { k: 'ceil', g: 'Van', l: 'Ceiling height at the wall (bare, to the rib)', d: 75.5, s: .5, a: 60, b: 90 },
   { k: 'numLbl', g: 'Take items out', l: 'Number the items in the side views and list their names and sizes under the drawing (untick to write them on the drawing)', d: true, t: 'c' },
   { k: 'showerOn', g: 'Take items out', l: 'Shower head and valve in the wet bath', d: true, t: 'c' },
-  { k: 'linerOn', g: 'Take items out', l: 'Waterproof liner (a thin FRP panel over the plywood) on the shower wall, the shower end wall W3 and inside the shower nook', d: true, t: 'c' },
+  { k: 'linerOn', g: 'Take items out', l: 'Waterproof liner (PVC paneling over the plywood) on the back wall of the shower and inside the shower nook; the other three sides are curtains', d: true, t: 'c' },
   { k: 'microOn', g: 'Take items out', l: 'Microwave and its shelf (untick to take it out of the diagram and the checks)', d: true, t: 'c' },
   { k: 'tvOn', g: 'Take items out', l: 'TV over the nook', d: true, t: 'c' },
   { k: 'towelOn', g: 'Take items out', l: 'Paper towel roll in its recess in the angled front', d: true, t: 'c' },
@@ -70,7 +70,7 @@ const PD = [
   { k: 'cnLine', g: 'Couch nook', l: 'Nook lining: 1/4 in plywood on the 1/8 in ribs for the back, with a floor on S4, a ceiling under S6 and two sides (0 = bare steel). The depth from the face of the walls to the back is then 3 3/4 + 3/4 + the wall covering - 1/8 - this: 4 1/2', d: .25, s: .125, a: 0, b: .75 },
   { k: 'cnTilt', g: 'Couch nook', l: 'Back cushion tilt, degrees back from upright (12 is what the side view C draws)', d: 12, s: .5, a: 0, b: 25 },
   { k: 'shPull', g: 'Charging gear', l: 'Gear shelf: how far it pulls out (18 in full-extension slides; the shelf is 17 1/2 deep)', d: 18, s: 1, a: 10, b: 40 },
-  { k: 'fwT', g: 'Floor-to-ceiling walls', l: 'Wall thickness (the walls are inside the closet, the shower and the counter cabinet, so nothing else moves)', d: .75, s: .125, a: .25, b: 3 },
+  { k: 'fwT', g: 'Floor-to-ceiling walls', l: 'Wall thickness (the walls are inside the closet and the counter cabinet, so nothing else moves)', d: .75, s: .125, a: .25, b: 3 },
   { k: 'benchLen', g: 'Dinette', l: 'Bench length', d: 19.5, s: .5, a: 10, b: 40 },
   { k: 'benchD', g: 'Dinette', l: 'Bench depth', d: 28, s: .5, a: 15, b: 45 },
   { k: 'seatH', g: 'Dinette', l: 'Seat height', d: 17.5, s: .5, a: 10, b: 26 },
@@ -86,17 +86,17 @@ const PD = [
   { k: 'doorH', g: 'Wall cabinets', l: 'Door height (3 doors a side, widths follow the cabinet; 10 now the cabinets are 2 in shorter)', d: 10, s: .5, a: 6, b: 24 },
   { k: 'panW', g: 'Passenger side', l: 'Shower pan length', d: 36, s: .5, a: 20, b: 50 },
   { k: 'panD', g: 'Passenger side', l: 'Shower pan depth', d: 24, s: .5, a: 16, b: 36 },
-  { k: 'snookLen', g: 'Passenger side', l: 'Shower nook length along the wall (it ends at 29 3/4 on the cab side; a shorter nook comes off the rear end)', d: 17.25, s: .25, a: 6, b: 23.75 },
+  { k: 'snookLen', g: 'Passenger side', l: 'Shower nook length along the wall (it is centered on the pan, so a longer or shorter nook grows or shrinks at both ends; 21 is the longest that keeps its rear frame on the full-depth steel, past 6 in)', d: 17.25, s: .25, a: 6, b: 21 },
   { k: 'snookH', g: 'Passenger side', l: 'Shower nook height (the recess in the shower wall)', d: 16, s: .5, a: 6, b: 40 },
   { k: 'snookTop', g: 'Passenger side', l: 'Shower nook top, up from the floor (54 is level with the top of the jar nook and the bottom of the TV)', d: 54, s: .5, a: 20, b: 70 },
   { k: 'nookLen', g: 'Passenger side', l: 'Jar nook length along the wall (the nook ends at 93 1/4 on the cab side; a shorter nook comes off the rear end)', d: 17.25, s: .25, a: 6, b: 35.25 },
   { k: 'jarW', g: 'Passenger side', l: 'Jar width, center to center along the shelf (quart jars 3 3/4)', d: 3.75, s: .25, a: 2, b: 6 },
   { k: 'nookH', g: 'Passenger side', l: 'Jar nook height above the countertop (16 puts its top level with the bottom of the TV)', d: 16, s: .5, a: 8, b: 24 },
-  { k: 'headX', g: 'Passenger side', l: 'Shower head: along the wall, from the back (the stall is 0 to the shower pan length; it is toward the rear, and the valve is at the cab end where the hot and cold lines arrive)', d: 9, s: .5, a: 1, b: 35 },
+  { k: 'headX', g: 'Passenger side', l: 'Shower head: along the wall, from the back (the stall is 0 to the shower pan length; it is to the left of the nook, toward the rear, over the standing space, and its feed rises beside the nook\'s rear frame)', d: 7, s: .5, a: 1, b: 35 },
   { k: 'headZ', g: 'Passenger side', l: 'Shower head: height up from the floor (the finished ceiling at the wall is about 74 1/2)', d: 70, s: .5, a: 50, b: 74 },
   { k: 'headOut', g: 'Passenger side', l: 'Shower head: how far it sticks out from the wall on its arm', d: 6, s: .5, a: 2, b: 14 },
-  { k: 'valveX', g: 'Passenger side', l: 'Shower valve (mixer handle): along the wall, from the back', d: 33, s: .5, a: 1, b: 35 },
-  { k: 'valveZ', g: 'Passenger side', l: 'Shower valve: height up from the floor (the pan is fixed, with a 3 in curb)', d: 44, s: .5, a: 26, b: 60 },
+  { k: 'valveX', g: 'Passenger side', l: 'Shower valve (mixer handle): along the wall, from the back (under the rear end of the nook, within reach of the standing space; the hot and cold lines rise left of the first block of S4, at 13)', d: 11, s: .5, a: 1, b: 35 },
+  { k: 'valveZ', g: 'Passenger side', l: 'Shower valve: height up from the floor (36 puts it between furring rails S4 and S5 and under the nook, which starts at 38)', d: 36, s: .5, a: 26, b: 60 },
   { k: 'toiletW', g: 'Toilet', l: 'Toilet: width, side to side (Reliance Fold-To-Go 14 1/2)', d: 14.5, s: .5, a: 10, b: 24 },
   { k: 'toiletD', g: 'Toilet', l: 'Toilet: depth, front to back (it sits sideways, so this runs along the wall; Fold-To-Go 14 1/2)', d: 14.5, s: .5, a: 10, b: 26 },
   { k: 'toiletH', g: 'Toilet', l: 'Toilet: height of the top of the seat (Fold-To-Go about 14 1/2, low)', d: 14.5, s: .25, a: 10, b: 24 },
@@ -104,7 +104,9 @@ const PD = [
   { k: 'tbarDrop', g: 'Shower nook contents', l: 'Towel bar: how far below the top of the nook', d: 3.5, s: .25, a: 1, b: 8 },
   { k: 'snCord', g: 'Shower nook contents', l: 'Bungee cord across the nook front: height above the shelf board (0 for none; it keeps the bottles from falling out)', d: 5.5, s: .25, a: 0, b: 9 },
   { k: 'snShelf', g: 'Shower nook contents', l: 'Shelf board: its top, up from the floor (toilet paper under it, bottles on it)', d: 43.75, s: .25, a: 38, b: 54 },
-  { k: 'linerT', g: 'Shower liner and drain', l: 'Liner thickness (FRP panel 0.09 in, which is a little under 3/32)', d: .09, s: .005, a: .03, b: .25 },
+  { k: 'linerT', g: 'Shower liner and drain', l: 'Liner thickness (PVC paneling planks are 8 mm, which is 5/16 in: a placeholder, measure yours)', d: .3125, s: .005, a: .05, b: .5 },
+  { k: 'pvcW', g: 'Shower liner and drain', l: 'PVC plank width, as it covers on the wall (a 10 in plank with its tongue covers about 9 3/4: measure yours)', d: 9.75, s: .25, a: 4, b: 16 },
+  { k: 'curIn', g: 'Shower liner and drain', l: 'Shower curtain rail: how far it runs inside the pan\'s edge (the curtains hang inside the 3 in curb, 6 in overlap in the middle of the front)', d: 1.5, s: .25, a: .5, b: 6 },
   { k: 'linerTop', g: 'Shower liner and drain', l: 'Liner top, up from the floor (the finished ceiling at the wall is about 74 1/2; the head is at 70)', d: 74, s: .5, a: 40, b: 75 },
   { k: 'linerGap', g: 'Shower liner and drain', l: 'Liner: the gap it leaves above the pan edge against the wall, filled with flexible sealant (the pan top is 3.8 up with the 3 in curb; a stiff panel cannot lap over the pan lip)', d: .25, s: .0625, a: 0, b: 1 },
   { k: 'pdrX', g: 'Shower liner and drain', l: 'Shower drain hole: along the wall from the back (5 in from the rear end of the pan, as you said)', d: 5, s: .25, a: 2, b: 34 },
@@ -466,16 +468,17 @@ function layout(P0) {
   // the wall covering takes its thickness off each side of the inside width, only if the 'take it off' box is on
   const P = Object.assign({}, P0, { vanW: P0.vanW - (P0.wallOn && P0.wallSub ? 2 * P0.wallT : 0), bedX1: P0.bedX0 + P0.bedLen });
   const L = { P };
+  L.snx = [(P.panW - P.snookLen) / 2, (P.panW + P.snookLen) / 2];      // the shower nook is centered on the pan
   L.c0 = P.bedX1; L.c1 = P.bedX1 + P.closetW;
   L.bA = [L.c1, L.c1 + P.benchLen]; L.bB = [P.cab - P.benchLen, P.cab];
   // the closet: the clothes hang from the rod (the garment's shoulder is hangDrop below it), the longest one ends cloClear above the drawers, and the drawers fill the space under it
   L.hangBot = P.rodHi - P.hangDrop - P.cloLen; L.drawTop = Math.max(3, L.hangBot - P.cloClear); L.split = L.drawTop + .15;
   { const n = Math.max(1, Math.round(P.cloDrawN)), gap = .125, h = (L.drawTop - 1 - (n - 1) * gap) / n; L.cloDr = []; for (let i = 0; i < n; i++) L.cloDr.push({ z0: 1 + i * (h + gap), z1: 1 + i * (h + gap) + h }); L.cloDrH = h; L.cloDrW = P.closetW - 1.5 - 1; L.cloPull = Math.max(0, P.cloDrawD - 1); }
-  // the toilet: sideways at the cab end of the wet bath, back against the wall to the fridge, centered across the stall (y = out from the passenger wall)
-  { const x1 = P.panW - (P.wallsOn ? P.fwT : 0), y0 = (P.panD - P.toiletW) / 2; L.toilet = P.toiletOn ? { x0: x1 - P.toiletD, x1, y0, y1: y0 + P.toiletW, z1: P.toiletH } : null; }
+  // the toilet: sideways at the cab end of the wet bath, its back a half inch short of the cab-end curtain (there is no wall W3 now), centered across the stall (y = out from the passenger wall)
+  { const x1 = P.panW - P.curIn - .5, y0 = (P.panD - P.toiletW) / 2; L.toilet = P.toiletOn ? { x0: x1 - P.toiletD, x1, y0, y1: y0 + P.toiletW, z1: P.toiletH } : null; }
   // the shower nook contents: a towel bar bay at the rear end, then a shelf board with the bottles on it and the toilet paper rolls under it
   {
-    const nkx = Math.min(29.75, P.panW - 6.25), nk0 = nkx - P.snookLen, bot = P.snookTop - P.snookH, top = P.snookTop, lip = P.snookLip;
+    const nk0 = L.snx[0], nkx = L.snx[1], bot = P.snookTop - P.snookH, top = P.snookTop, lip = P.snookLip;
     const sn = { x0: nk0, x1: nkx, z0: bot, z1: top, bay: nk0 + P.tbarBay, shelfTop: Math.min(top - 1, P.snShelf) };
     sn.bar = { x0: nk0 + .5, x1: sn.bay - .5, z: top - P.tbarDrop };
     sn.cord = P.snCord > 0 ? { x0: nk0 + .6, x1: nkx - .6, z: Math.min(top - .75, sn.shelfTop + P.snCord) } : null;   // a bungee cord stretched across the front of the nook between two screw eyes
@@ -484,20 +487,24 @@ function layout(P0) {
     sn.bottlesEnd = bx0 - .5; sn.rollClear = sn.shelfTop - .75 - bot - 4.5; sn.bottleClear = top - sn.shelfTop;
     L.sn = P.snItemsOn ? sn : null;
   }
-  // the waterproof liner: a thin FRP panel over the plywood on the stall's wall (0 to the face of W3), on W3's stall face, and inside the nook; it laps down over the pan edge
-  { const x1 = P.panW - (P.wallsOn ? P.fwT : 0), pz = 3.8, z0 = pz + P.linerGap, z1 = Math.min(P.linerTop, L.ceilF || P.linerTop), hh = z1 - z0;
-    const nkx = Math.min(29.75, P.panW - 6.25), nk0 = nkx - P.snookLen, nb = P.snookTop - P.snookH, nt = P.snookTop;
-    const pieces = x1 * hh + (P.wallsOn ? P.panD * hh : 0), nookSides = 2 * 4.5 * (nt - nb) + 2 * P.snookLen * 4.5;   // the wall panel's cut-out is the nook's back; its four sides come out of the offcuts
-    const sheets = hh <= 96 ? Math.ceil((x1 + (P.wallsOn ? P.panD : 0)) / 48) : 99;
-    L.liner = P.linerOn ? { x0: 0, x1, z0, z1, h: hh, t: P.linerT, w3: P.wallsOn, nook: { x0: nk0, x1: nkx, z0: nb, z1: nt }, sheets, left: sheets * 4608 - pieces, nookSides, lbs: (pieces + nookSides) / 144 * .5 } : null;
+  // the waterproof liner: PVC paneling (tongue and groove planks stood on end, 8 ft long) over the plywood on the back wall of the stall, 0 to the pan length, and lining the nook (the cut-outs are the nook's back);
+  // the other three sides of the stall are curtains, so there is no end wall and no corner. The joints start at the nook's rear edge, so the nook's edges fall on joints; it stops a little above the pan edge
+  { const x1 = P.panW, pz = 3.8, z0 = pz + P.linerGap, z1 = Math.min(P.linerTop, L.ceilF || P.linerTop), hh = z1 - z0;
+    const nk0 = L.snx[0], nkx = L.snx[1], nb = P.snookTop - P.snookH, nt = P.snookTop;
+    const joints = []; for (let k = -Math.ceil(nk0 / P.pvcW); k <= Math.ceil(x1 / P.pvcW); k++) { const x = nk0 + k * P.pvcW; if (x > .5 && x < x1 - .5) joints.push(x); }
+    const planks = joints.length + 1;
+    const pieces = x1 * hh, nookSides = 2 * 4.5 * (nt - nb) + 2 * P.snookLen * 4.5;   // the wall planks' cut-outs are the nook's back; its floor, ceiling and two sides come out of the offcuts
+    const plankLen = hh <= 96 ? 96 : 0;
+    L.liner = P.linerOn ? { x0: 0, x1, z0, z1, h: hh, t: P.linerT, nook: { x0: nk0, x1: nkx, z0: nb, z1: nt }, planks: plankLen ? planks : 99, joints, left: planks * P.pvcW * 96 - pieces - nookSides, nookSides, lbs: (pieces + nookSides) / 144 * .4 } : null;
     L.pdr = { x: P.pdrX, y: P.pdrY }; }
+  // the shower curtains: two flexible curtains hang from one bent rail on the ceiling that runs round the three open sides, curIn inside the pan's edge (so the hems hang inside the curb); they overlap 6 in in the middle of the front
+  L.curtain = P.showerOn ? { x0: P.curIn, x1: P.panW - P.curIn, y: P.panD - P.curIn, z: (L.ceilF || 74.5) - .5, over: 6, len: (L.ceilF || 74.5) - 1.5 } : null;
   // floor-to-ceiling walls. Driver side (y = out from the driver wall): the closet's cab-side panel carried out to the bench depth, which the back of the rear bench leans on,
   // and the wall behind the driver seat (face at the cab wall mark, body behind it), which the back of the cab-end bench leans on. Passenger side (y = out from the passenger wall):
-  // one each side of the fridge, taken out of the shower and out of the counter cabinet so that no other position moves; the shower one is as deep as the pan, the counter one as deep as the cabinet
+  // one on the counter side of the fridge, taken out of the counter cabinet so that no other position moves, as deep as the cabinet (the shower side of the fridge has no wall: the stall's cab end is a curtain)
   L.walls = !P.wallsOn ? [] : [
     { id: 'W1', side: 'd', x0: L.c1 - P.fwT, x1: L.c1, d: P.benchD, n: 'wall behind the rear dinette seat (closet end)' },
     { id: 'W2', side: 'd', x0: P.cab, x1: P.cab + P.fwT, d: P.benchD, n: 'wall behind the driver seat' },
-    { id: 'W3', side: 'p', x0: P.panW - P.fwT, x1: P.panW, d: Math.max(P.panD, 2 + P.fridgeD), n: 'wall between the shower and the fridge' },
     { id: 'W4', side: 'p', x0: P.panW + P.fridgeW, x1: P.panW + P.fridgeW + P.fwT, d: Math.max(P.cabD, 2 + P.fridgeD), n: 'wall between the fridge and the counter cabinet' },
   ];
   L.gap = L.bB[0] - L.bA[1];

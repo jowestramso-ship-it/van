@@ -130,58 +130,58 @@
 [
 "Passenger",
 "Shower head and valve",
-"head 9, valve 33 (the stall is 0 to 36)",
+"head 7, valve 11 (the stall is 0 to 36)",
 "head on a 6 in arm, pointing into the stall",
-"head 70 up, valve 44 up (the pan is fixed, with a 3 in curb)",
-"added later; the head is toward the rear and the valve at the cab end, where the hot and cold lines arrive from the hot water tank; positions are adjustable in the interactive plan. The static drawings E and F do not show them yet"
+"head 70 up, valve 36 up (the pan is fixed, with a 3 in curb)",
+"the head is to the left of the shower nook (toward the rear, over the standing space) and the valve is under the nook's rear end, between furring rails S4 and S5, within reach of where you stand; the hot and cold lines rise at 9 3/4 in, left of the first block of S4 (13), and the feed to the head rises at the head's own place, past S6 and S7 (drilled, not notched); positions are adjustable in the interactive plan"
 ],
 [
 "Passenger",
 "Shower nook (P1, P2)",
-"12.5 to 29.75",
-"17.25 long x 4.5 deep",
+"9 3/8 to 26 5/8 (centered on the 36 in pan)",
+"17.25 long x 4.5 deep (about 4 1/4 clear inside its lining)",
 "38 to 54 up (16 tall), open at the front with no lip; a bungee cord across the front, about 5 1/2 in above the shelf board, keeps the bottles in",
-"recess in the shower wall: the pans are the body (0 deep) and the planks sit 4.5 in off the body; needs a waterproof lining and a slight slope to the front so water runs out over the open edge (no lip, no notch); two screw eyes, one at each end of the nook, hold the cord"
+"recess in the shower wall: the pans are the body (0 deep) and the planks sit 4.5 in off the body; lined with PVC paneling (the cut-outs of the wall planks are its back) and a slight slope to the front so water runs out over the open edge (no lip, no notch); two screw eyes, one at each end of the nook, hold the cord; its frames V1 (7 7/8 to 9 3/8) and V2 (26 5/8 to 28 1/8) stand on the full-depth steel"
 ],
 [
 "Passenger",
 "Shower (fixed pan)",
 "0 to 36",
 "36 x 24",
-"fixed pan with a 3 in curb, curtain on the aisle side",
-"the pan does not tip; it is bought (36 x 24, you said), not built; the drain hole is at the middle of the rear-door end (5 in from the rear end, as you said, and 12 out, the middle of the depth: assumed, check it on the pan) and runs straight down through the floor to the grey water tank under the van; how to set it and line the stall: the Shower pan page of the build guide"
+"fixed pan with a 3 in curb; the back wall is paneled with PVC and the other three sides are curtains",
+"the pan does not tip; it is bought (36 x 24, you said), not built; the drain hole is at the middle of the rear-door end (5 in from the rear end, as you said, and 12 out, the middle of the depth: assumed, check it on the pan) and runs straight down through the floor to the grey water tank under the van; how to set it and line the back wall: the Shower pan page of the build guide"
 ],
 [
 "Passenger",
-"Shower wall liner (waterproof)",
-"0 to 35.25 on the wall, and W3 (35.25 to 36) 24 out; inside the nook (12.5 to 29.75)",
-"a thin FRP panel, 0.09 in: 35 1/4 x 69 15/16 on the wall (the nook cut out), 24 x 69 15/16 on W3, the nook lined from the cut-out and offcuts; 2 sheets of 4 x 8 ft",
+"Shower wall paneling (PVC, waterproof)",
+"0 to 36 on the back wall (no end wall); inside the nook (9 3/8 to 26 5/8)",
+"PVC tongue and groove planks, 5/16 in (8 mm), 10 in wide (about 9 3/4 covering), 8 ft long: 4 of them stood on end on the wall, joints at 9 3/8, 19 1/8 and 28 7/8, the nook cut out of them and lined from the cut-outs and offcuts",
 "4 1/16 to 74 up (it stops 1/4 in above the pan edge at 3.8 up; flexible sealant fills the gap)",
-"glued over the 3/8 in plywood (you chose plywood with a thin waterproof liner over it); about 16 lb of liner; a corner moulding at W3, 1/8 in gaps at the edges filled with flexible sealant, a flexible sealant joint at the pan, every screw and hole below the splash line sealed; holes through it for the shower arm (1 1/8 in) and the valve (2 1/4 in), both placeholders until you measure the real parts, each hidden under its flange or plate with a ring of sealant behind; you chose FRP paneling (the maker and the adhesive are not chosen yet)"
+"glued over the 3/8 in plywood with the panel maker's adhesive (you chose plywood with a waterproof lining over it, and PVC paneling for the lining); about 9 lb of planks; 1/8 in expansion gaps at the ends and the top, end trim at the rear edge and the cab edge, a flexible sealant joint at the pan, every screw and hole below the splash line sealed; holes through it for the shower arm (1 1/8 in, in plank 1) and the valve (2 1/4 in, in plank 2, clear of the joint at 9 3/8), both placeholders until you measure the real parts, each hidden under its flange or plate with a ring of sealant behind; the maker and the adhesive are not chosen yet"
 ],
 [
 "Passenger",
 "Toilet (Reliance Fold-To-Go)",
-"20.75 to 35.25",
+"19.5 to 34",
 "14 1/2 deep x 14 1/2 wide",
 "seat about 14 1/2 up (it stands on the pan, 3.8 up)",
-"left set up in the stall, sideways, its back against W3; 20 3/4 in of floor in front, 4 3/4 in each side; a folding seat on four legs holding a bag, so no tank, vent or drain"
+"left set up in the stall, sideways, its back half an inch short of the cab-end curtain, next to the fridge; 19 1/2 in of floor in front, 4 3/4 in each side; a folding seat on four legs holding a bag, so no tank, vent or drain"
 ],
 [
 "Passenger",
 "Shower nook contents",
-"12.5 to 29.75",
+"9 3/8 to 26 5/8",
 "towel bar 5 in long; a shelf board; two toilet paper rolls and three bottles",
 "bar 50 1/2 up; shelf top 43 3/4; rolls 38 to 42 1/2; bottles 43 3/4 up to about 53",
-"towel bar in the rear 6 in of the nook, the shelf and bottles in the rest, the paper (one in use, one spare) under the shelf; the paper is about 18 in along the wall from the shower head, so it needs a small hinged door or a lidded holder"
+"towel bar in the rear 6 in of the nook, the shelf and bottles in the rest, the paper (one in use, one spare) under the shelf; the paper is about 12 in along the wall from the shower head, so it needs a small hinged door or a lidded holder"
 ],
 [
 "Passenger",
-"Floor-to-ceiling wall W3 (shower and fridge)",
-"35.25 to 36",
-"3/4 thick x 24 out from the wall",
-"floor to the finished ceiling",
-"the end wall of the shower, between it and the fridge; inside the 36 in pan length"
+"Shower curtains and rail",
+"0 to 36 (the rail runs 1 1/2 in inside the pan edge)",
+"two curtains, about 40 to 50 in wide x 73 in long; one rail bent to a U: 33 in across the front, 22 1/2 in down each end",
+"rail on the ceiling at 74 up; hems about 2 in above the pan floor, inside the 3 in curb",
+"hung from a rail on the ceiling round the three open sides (the rear end, the front and the cab end, where there is no wall: the fridge stands beside the curtain); they overlap 6 in in the middle of the front; no rod in the hem, small weights instead; hold them aside with a loop while driving; diagram E3"
 ],
 [
 "Passenger",
