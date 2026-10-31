@@ -207,7 +207,7 @@ function ceilingSVG(d, WR) {
   // lights
   d.lights.forEach((l, i) => { const wet = l.y > d.P.vanW - d.panD && l.x < 6 + d.panW && l.x > 6; o.push(`<circle cx="${X(l.x)}" cy="${Y(l.y)}" r="${Math.max(6, S * d.P.lightD / 2)}" fill="#FFD84A" stroke="${wet && !G ? C12 : CLT}" stroke-width="${wet ? 3 : 1.8}"/>`); if (wet) o.push(`<text x="${X(l.x) + 12}" y="${Y(l.y) + 16}" style="font-size:10.5px;font-weight:700;fill:${G ? '#5F5E5A' : C12}">wet-rated (IP65)</text>`); });
   if (G) { const placed = [], wg = WR.filter(w => w.C).map(w => EW.wireGroup(w, 'C', X, Y, placed)); wg.forEach(g => o.push(g.l));
-    o.push(`<rect x="${X(RX) - 11}" y="${Y(34) - 8}" width="22" height="16" rx="3" fill="#FFF1D6" stroke="${INK}" stroke-width="2"/><text x="${X(RX)}" y="${Y(34) + 4}" text-anchor="middle" style="font-size:10px;font-weight:700;fill:${INK}">JB</text>`); wg.forEach(g => o.push(g.p)); }
+    o.push(`<rect x="${X(RX) - 11}" y="${Y(34) - 8}" width="22" height="16" rx="3" fill="#FFF1D6" stroke="${INK}" stroke-width="2"/><text x="${X(RX)}" y="${Y(34) + 4}" text-anchor="middle" style="font-size:10px;font-weight:700;fill:${INK}">JB</text>`); wg.forEach(g => o.push(g.p)); WR.forEach(w => o.push(EW.traceLayer(w, 'C', X, Y))); }
   // where the risers meet the walls
   o.push(`<text x="${X(RX) + 16}" y="${Y(0) + 14}" style="font-size:11px;font-weight:700;fill:${INK}">riser A (A/C, 12 V) at ${RX + 3.5}</text><text x="${X(RX) + 16}" y="${Y(68) - 8}" style="font-size:11px;font-weight:700;fill:${INK}">riser B (120 V, branches) at ${RX}</text>`);
   // legend
@@ -272,8 +272,9 @@ function oneLineSVG(WR) {
   const G = !!WR, id = re => ((WR || []).find(w => re.test(w.n)) || {}).id || '';
   const W = 1070, H = 640, o = [];
   const box = (x, y, w, h, t1, t2, col) => { if (G) col = INK; o.push(`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="6" fill="#fff" stroke="${col || INK}" stroke-width="1.8"/><text x="${x + w / 2}" y="${y + (t2 ? h / 2 - 3 : h / 2 + 4)}" text-anchor="middle" style="font-size:12.5px;font-weight:700;fill:${INK}">${esc(t1)}</text>`); if (t2) o.push(`<text x="${x + w / 2}" y="${y + h / 2 + 12}" text-anchor="middle" style="font-size:11px;fill:#5F5E5A">${esc(t2)}</text>`); };
-  const ln = (x1, y1, x2, y2, col, lab, lx, ly, w, g, wid, px, py) => {
-    if (G && g) { const dash = col === C120 ? ' stroke-dasharray="9 6"' : ''; o.push(`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#fff" stroke-width="${EW.gw(g) + 3}" stroke-linecap="round"/><line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${EW.gc(g)}" stroke-width="${EW.gw(g)}"${dash}/>`); if (wid) o.push(EW.wirePill(wid, g, px, py)); }
+  const ln = (x1, y1, x2, y2, col, lab, lx, ly, w, g, wid, px, py, tg) => {
+    if (G && g) { const dash = col === C120 ? ' stroke-dasharray="9 6"' : '', tag = tg || wid || '';
+      o.push(`<g class="wgrp ${EW.byG[g].cls}"${tag ? ` data-wr="${tag}"` : ''}><line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#fff" stroke-width="${EW.gw(g) + 3}" stroke-linecap="round"/><line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${EW.gc(g)}" stroke-width="${EW.gw(g)}"${dash}/>${wid ? EW.wirePill(wid, g, px, py) : ''}</g>`); }
     else o.push(`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${G ? '#9a9a94' : col}" stroke-width="${G ? 1.4 : (w || 2.4)}"/>`);
     if (lab) o.push(`<text x="${lx}" y="${ly}" text-anchor="middle" style="font-size:11px;fill:${INK}">${esc(lab)}</text>`); };
   // sources (left)
@@ -285,7 +286,7 @@ function oneLineSVG(WR) {
   ln(210, 55, 270, 55, C120, '30 A', 240, 48, 0, '10', id(/^Shore power inlet to/), 240, 66);
   ln(115, 241, 115, 270, C12, '', 0, 0, 0, '2', id(/^Cab charge cable/), 72, 256); o.push(`<text x="122" y="259" style="font-size:11px;fill:${INK}">2 AWG, about 15 ft</text>`);
   // the charger output to the battery (2 AWG, 100 A fuse), running down between the left column and the battery
-  ln(210, 131, 235, 131, C12, '', 0, 0, 0, '2'); ln(235, 131, 235, 346, C12, '', 0, 0, 0, '2', id(/^Shore charger \(VEVOR/), 235, 160); ln(235, 346, 270, 346, C12, '', 0, 0, 0, '2');
+  { const vv = id(/^Shore charger \(VEVOR/); ln(210, 131, 235, 131, C12, '', 0, 0, 0, '2', '', 0, 0, vv); ln(235, 131, 235, 346, C12, '', 0, 0, 0, '2', vv, 235, 160); ln(235, 346, 270, 346, C12, '', 0, 0, 0, '2', '', 0, 0, vv); }
   o.push(`<text x="231" y="338" style="font-size:10.5px;fill:${INK}" transform="rotate(-90 231 338)">VEVOR 2 AWG, 100 A fuse</text>`);
   // transfer switch and the inverter (inverter only: no charger, no transfer switch of its own)
   box(270, 30, 200, 60, 'Transfer switch, 30 A', 'shore or inverter, never both', C120);
@@ -293,13 +294,13 @@ function oneLineSVG(WR) {
   ln(370, 115, 370, 90, C120, '', 0, 0, 0, '12', id(/^Inverter output/), 392, 103);
   // battery + bus
   box(270, 330, 190, 66, 'Battery 280 Ah, 12.8 V', 'lithium assumed (3.6 kWh)', INK);
-  ln(115, 322, 115, 362, C12, '', 0, 0, 0, '2'); ln(115, 362, 270, 362, C12, '2 AWG, 80 A', 172, 356, 0, '2', id(/^DC-DC charger to the bus/), 150, 378);
+  ln(115, 322, 115, 362, C12, '', 0, 0, 0, '2', '', 0, 0, id(/^DC-DC charger to the bus/)); ln(115, 362, 270, 362, C12, '2 AWG, 80 A', 172, 356, 0, '2', id(/^DC-DC charger to the bus/), 150, 378);
   ln(365, 330, 365, 300, C12, 'Class T 250 A, 2/0 AWG', 440, 322, 4, '2/0', id(/^Battery \+ to the Class T/) + ' ' + id(/^Battery . to the shunt/), 312, 315);
   box(270, 240, 190, 54, '+ bus bar and shunt (500 A)', 'near the battery', INK);
   ln(365, 240, 365, 175, C12, '2/0 AWG, 250 A fuse', 440, 214, 4, '2/0', id(/^Bus to the inverter/), 365, 208);
   // 12 V branches (right of the bus)
   const br = [['A/C 12 V, up to 58 A', '6 AWG pair, 100 A fuse', CAC, '6', /^A\/C feed/], ['Fuse block: 4 ceiling, 4 cabinet lights', '16 AWG, 5 A', CLT, '16', /^Lights feed/], ['Soft LED strip, about 31 ft in 3 runs', '14 AWG, its own 10 A circuit', CLT, '14', /^Soft LED strip circuit/], ['Roof fan, up to 2.7 A', '14 AWG, 5 A', C12, '14', /^Roof fan/], ['Water pump, 7 A (under the sink)', '14 AWG, 10 A', C12, '14', /^Water pump/], ['Control panel and shunt display', '18 AWG, 3 A', C12, '18', /^Control panel/]];
-  br.forEach((b, i) => { const y = 214 + i * 56; ln(460, 267, 540, 267, C12, '', 0, 0, 0, '12', i === 0 ? id(/^12 V trunk/) : '', 500, 259); ln(540, 267, 540, y + 20, C12, '', 0, 0, 0, '12'); ln(540, y + 20, 600, y + 20, b[2], '', 0, 0, 2.8, b[3], id(b[4]), 570, y + 12); box(600, y, 330, 40, b[0], b[1], b[2]); });
+  br.forEach((b, i) => { const y = 214 + i * 56; ln(460, 267, 540, 267, C12, '', 0, 0, 0, '12', i === 0 ? id(/^12 V trunk/) : '', 500, 259, id(/^12 V trunk/)); ln(540, 267, 540, y + 20, C12, '', 0, 0, 0, '12', '', 0, 0, id(/^12 V trunk/)); ln(540, y + 20, 600, y + 20, b[2], '', 0, 0, 2.8, b[3], id(b[4]), 570, y + 12); box(600, y, 330, 40, b[0], b[1], b[2]); });
   o.push(`<text x="600" y="198" style="font-size:12px;font-weight:700;fill:${C12}">12 V DC circuits (blade fuse block, except the A/C)</text>`);
   // AC side
   ln(470, 60, 600, 60, C120, '', 0, 0, 0, '10', id(/^Transfer switch to the AC panel/), 535, 76);
@@ -307,7 +308,7 @@ function oneLineSVG(WR) {
   o.push(`<text x="540" y="46" style="font-size:12px;font-weight:700;fill:${C120}">120 V AC circuits</text>`);
   [['A  counter outlets, GFCI', '15 A, 12 AWG'], ['B  microwave, its own', '15 A, 12 AWG'], ['C  fridge, TV, dinette outlets', '15 A, 12 AWG'], ['D  water heater 1440 W', '20 A, 12 AWG']].forEach((c, i) => { const y = 16 + i * 0; });
   const ac = [['A  couch, dinette, under-TV outlets (GFCI)', '15 A, 12 AWG'], ['B/D  microwave or water heater, via the selector', '20 A, 12 AWG, one at a time'], ['C  fridge, its own breaker', '15 A, 12 AWG']];
-  ac.forEach((c, i) => { const x = 770, y = 12 + i * 34; ln(750, 80, 760, 80, C120, '', 0, 0, 0, '12'); ln(760, 80, 760, y + 14, C120, '', 0, 0, 0, '12'); ln(760, y + 14, x, y + 14, C120, '', 0, 0, 0, '12', i === 0 ? id(/^120 V circuits/) : '', 740, 62); o.push(`<rect x="${x}" y="${y}" width="280" height="28" rx="5" fill="#fff" stroke="${C120}" stroke-width="1.5"/><text x="${x + 8}" y="${y + 13}" style="font-size:11.5px;font-weight:700;fill:${INK}">${esc(c[0])}</text><text x="${x + 8}" y="${y + 24}" style="font-size:10.5px;fill:#5F5E5A">${esc(c[1])}</text>`); });
+  ac.forEach((c, i) => { const x = 770, y = 12 + i * 34; ln(750, 80, 760, 80, C120, '', 0, 0, 0, '12', '', 0, 0, id(/^120 V circuits/)); ln(760, 80, 760, y + 14, C120, '', 0, 0, 0, '12', '', 0, 0, id(/^120 V circuits/)); ln(760, y + 14, x, y + 14, C120, '', 0, 0, 0, '12', i === 0 ? id(/^120 V circuits/) : '', 740, 62, id(/^120 V circuits/)); o.push(`<rect x="${x}" y="${y}" width="280" height="28" rx="5" fill="#fff" stroke="${C120}" stroke-width="1.5"/><text x="${x + 8}" y="${y + 13}" style="font-size:11.5px;font-weight:700;fill:${INK}">${esc(c[0])}</text><text x="${x + 8}" y="${y + 24}" style="font-size:10.5px;fill:#5F5E5A">${esc(c[1])}</text>`); });
   o.push(`<rect x="600" y="112" width="150" height="58" rx="5" fill="#FFF1D6" stroke="${C120}" stroke-width="1.5"/><text x="610" y="128" style="font-size:11.5px;font-weight:700;fill:${INK}">B/D: one 30 A SPDT</text><text x="610" y="143" style="font-size:11px;fill:${INK}">center off rocker (KCD3):</text><text x="610" y="158" style="font-size:11px;fill:${INK}">microwave | off | heater</text>`);
   if (G) o.push(`<text x="600" y="560" style="font-size:11.5px;fill:#5F5E5A">Colour and thickness = gauge; dashed = 120 V; WR = wire number.</text>`);
   o.push(`<text x="20" y="${H - 54}" style="font-size:11.5px;fill:#5F5E5A">Fuses sit within 7 in of the battery or bus (Class T for the inverter, 100 A for the A/C). Wire sizes are for the short runs shown (battery to inverter under 3 ft, A/C about 12 ft);</text><text x="20" y="${H - 38}" style="font-size:11.5px;fill:#5F5E5A">the A/C size comes from a related OutEquipPro model. Follow your inverter’s and the A/C maker’s manuals where they differ.</text><text x="20" y="${H - 22}" style="font-size:11.5px;fill:#5F5E5A">One neutral-to-ground bond only: follow the inverter\u2019s manual (the BELTTT\u2019s was not found) and make sure the transfer switch does not create a second one. Have the 120 V side inspected before use.</text>`);
@@ -364,6 +365,17 @@ function loadTable(d) {
   b.id { color: ${C120}; white-space: nowrap; } b.wid { color: #1b1a17; white-space: nowrap; background: #fff; border: 1.5px solid #8a8a84; border-radius: 9px; padding: 0 6px; } b.pid { color: ${CPL}; white-space: nowrap; } .kd { color: #5F5E5A; }
   .note { background: #FAF9F5; border: 1px solid #D3D1C7; border-radius: 10px; padding: 10px 14px; color: #3d3b34; font-size: 14px; margin: 0 0 14px; }
   .note ul { margin: 4px 0 0 18px; padding: 0; } .note li { font-size: 14px; line-height: 1.5; }
+  .wtrace { background: #FAF9F5; border: 1px solid #D3D1C7; border-radius: 10px; padding: 10px 14px; margin: 10px 0 8px; }
+  @media (min-width: 900px) { .wtrace { position: sticky; top: 0; z-index: 20; box-shadow: 0 3px 10px rgba(0,0,0,.10); } }
+  .wt-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  .wt-row select { flex: 1 1 260px; min-width: 0; font-size: 14px; padding: 6px; }
+  .wt-row button { font-size: 14px; padding: 6px 12px; border: 1px solid #8a8a84; border-radius: 8px; background: #fff; color: #2C2C2A; cursor: pointer; }
+  .wt-card { margin-top: 8px; font-size: 14px; line-height: 1.45; color: #3d3b34; }
+  .wt-h { font-size: 15px; margin-bottom: 2px; } .wt-id { font-weight: 700; border: 1.5px solid #8a8a84; border-radius: 9px; padding: 0 7px; background: #fff; } .wt-n { font-weight: 600; margin: 2px 0 4px; } .wt-m { color: #5F5E5A; margin-top: 2px; }
+  .wt-s, .wt-e { display: inline-block; font-size: 11px; font-weight: 700; color: #fff; border-radius: 9px; padding: 1px 8px; margin-right: 6px; letter-spacing: .4px; } .wt-s { background: #1B7F3B; } .wt-e { background: #111; }
+  #wsec svg .wtr { display: none; } #wsec.trace svg .wtr.sel { display: inline; }
+  #wsec.trace svg .wgrp { display: none !important; } #wsec.trace svg .wgrp.sel { display: inline !important; }
+  tr.wgrp.sel td { background: #FFF6CC; }
   a { color: #185FA5; }`;
   const tog = (id, furr, label, plumbId) => `<div class="tog"><label><input type="checkbox" checked onchange="document.getElementById('${furr}').style.display=this.checked?'':'none'"> Show the furring rails and dots</label><label><input type="checkbox" checked onchange="document.getElementById('${id}').style.display=this.checked?'':'none'"> ${label}</label>${plumbId ? `<label style="color:${CPL};font-weight:600"><input type="checkbox" checked onchange="var d=this.checked?'':'none';document.getElementById('plumb${plumbId}').style.display=d;var t=document.getElementById('plumbTable${plumbId}');if(t)t.style.display=d"> Show the plumbing (pipes)</label>` : ''}</div>`;
   const key = `<p class="legend"><span><svg width="16" height="16" viewBox="0 0 16 16" style="display:inline;vertical-align:-3px;width:16px;min-width:0"><circle cx="8" cy="8" r="6.5" fill="#fff" stroke="${C120}" stroke-width="1.8"/></svg> 120 V outlet</span><span>S = switch</span><span style="color:${CPL};font-weight:600">grey pipes and fixtures with hexagon labels (PL) = plumbing, shown for reference: shower head, valve, pump, drain (hide it with the box above the drawing)</span><span>M = control panel</span><span>M/H = heater or microwave selector</span><span>IN = shore inlet</span><span style="color:#B8860B">yellow = lights and LED strips</span><span>orange boxes = mounted units</span><span>dashed boxes = furniture (for reference)</span><span style="color:${C12}">blue dashed</span> / <span style="color:${C120}">red dashed</span> = 12 V / 120 V runs</p>`;
@@ -399,22 +411,59 @@ function loadTable(d) {
   <h2>4. Ceiling: lights, fan, A/C and the wire runs</h2>
   <p class="lead">Four ceiling lights in two rows (positions from the plan): the shower light and the countertop and sink light on one slat, the two center-row lights on another, so each row is on its own slat. The soft LED strip runs round the edge. Risers A and B stand at 79 in from the rear-door edge (73 on the wall maps), in the bay between the ribs at 61 and 97. Every rib the cables cross needs a grommeted hole: use any factory holes first, and keep to the web of the rib, not the flange.</p>
   <div class="figwrap">${ceilingSVG(plan)}</div>
+  <div id="wsec">
   <h2>5. All the wires, colored by gauge</h2>
-  <p class="lead">Every wire in the van, drawn on the same steel and furring rails (faint) and the same items as the sections above. The colour and the thickness show the gauge (AWG, the bigger the number the thinner the wire); the key sets which ones to show. The routes are my proposal, drawn between the items already on this page, straight along the free bands between the furring rails and up the two risers: the real path follows the notches and grommets. The sizes and fuses are the ones in the one-line diagram and the cable table; the few places where I chose a size are marked in the wire list.</p>
-  ${EW.keyHTML(WR)}
-  <h3>5a. One-line diagram, by gauge</h3>
-  <div class="figwrap">${oneLineSVG(WR)}</div>
-  <h3>5b. Driver side wall</h3>
+  <p class="lead wlead">Every wire in the van, drawn on the same steel and furring rails (faint) and the same items as the sections above. The colour and the thickness show the gauge (AWG, the bigger the number the thinner the wire); the key sets which ones to show. The routes are my proposal, drawn between the items already on this page, straight along the free bands between the furring rails and up the two risers: the real path follows the notches and grommets. The sizes and fuses are the ones in the one-line diagram and the cable table; the few places where I chose a size are marked in the wire list. <b>To follow one wire from where it starts to where it goes, use the wire box just below the key.</b></p>
+  <div class="wkey">${EW.keyHTML(WR)}</div>
+  <div class="wtrace" id="wtrace">
+    <div class="wt-row"><button type="button" onclick="wtStep(-1)">\u25C0 Previous</button><select id="wtSel" onchange="wtr(this.value)" aria-label="Pick one wire"><option value="">All wires</option>${WR.map(w => `<option value="${w.id}">${w.id} \u00B7 ${EW.byG[w.g].name} AWG \u00B7 ${esc(w.n.length > 72 ? w.n.slice(0, 70) + '\u2026' : w.n)}</option>`).join('')}</select><button type="button" onclick="wtStep(1)">Next \u25B6</button><button type="button" onclick="wtr('')">Show all wires</button></div>
+    <div class="wt-card" id="wtCard">All the wires are showing. Pick one (or press Next) and only that wire stays: a green START mark where it begins, a black END mark where it ends, and arrows along the way. The drawings that do not have it are hidden.</div>
+  </div>
+  <div class="wview" data-title="the one-line diagram" data-nozoom="1"><h3>5a. One-line diagram, by gauge</h3>
+  <div class="figwrap">${oneLineSVG(WR)}</div></div>
+  <div class="wview" data-title="the driver side wall"><h3>5b. Driver side wall</h3>
   <div class="tog"><label><input type="checkbox" checked onchange="document.getElementById('wbaseD').style.display=this.checked?'':'none'"> Show the steel, furring rails and furniture (faint)</label></div>
-  <div class="figwrap">${wDw}</div>
-  <h3>5c. Passenger side wall</h3>
+  <div class="figwrap">${wDw}</div></div>
+  <div class="wview" data-title="the passenger side wall"><h3>5c. Passenger side wall</h3>
   <div class="tog"><label><input type="checkbox" checked onchange="document.getElementById('wbaseP').style.display=this.checked?'':'none'"> Show the steel, furring rails and furniture (faint)</label></div>
-  <div class="figwrap">${wPw}</div>
-  <h3>5d. Ceiling</h3>
-  <div class="figwrap">${ceilingSVG(plan, WR)}</div>
+  <div class="figwrap">${wPw}</div></div>
+  <div class="wview" data-title="the ceiling"><h3>5d. Ceiling</h3>
+  <div class="figwrap">${ceilingSVG(plan, WR)}</div></div>
+  </div>
   <h3>5e. The wire list</h3>
-  ${EW.tableHTML(WR, fr)}
-  <script>function wgShow(c,on){var l=document.querySelectorAll('.'+c);for(var i=0;i<l.length;i++)l[i].style.display=on?'':'none'}</script>
+  <div class="wlist">${EW.tableHTML(WR, fr)}</div>
+  <script>
+  var WRD = ${JSON.stringify(WR.map(w => ({ id: w.id, g: EW.byG[w.g].name, c: EW.gc(w.g), lw: EW.gw(w.g), t: w.t, n: w.n, from: w.from, to: w.to, prot: w.prot, len: w.len >= 10 ? Math.round(w.len) : Math.round(w.len * 10) / 10, note: (w.note || '') + (w.tnote ? (w.note ? '. ' : '') + w.tnote : '') }))).replace(/</g, '\\u003c')};
+  function wgShow(c,on){var l=document.querySelectorAll('.'+c);for(var i=0;i<l.length;i++)l[i].style.display=on?'':'none'}
+  function wzoom(svg,id){
+    var orig=svg.getAttribute('data-vb')||svg.getAttribute('viewBox');svg.setAttribute('data-vb',orig);
+    var o=orig.split(' ').map(Number),els=svg.querySelectorAll('.wtr.sel,.wgrp.sel'),x0=1e9,y0=1e9,x1=-1e9,y1=-1e9,k,b;
+    if(!els.length){svg.setAttribute('viewBox',orig);return}
+    for(k=0;k<els.length;k++){b=els[k].getBBox();if(!b.width&&!b.height)continue;x0=Math.min(x0,b.x);y0=Math.min(y0,b.y);x1=Math.max(x1,b.x+b.width);y1=Math.max(y1,b.y+b.height)}
+    var bw=x1-x0,bh=y1-y0,pad=70,asp=o[3]/o[2];
+    if(!(bw>0)||bw>0.6*o[2]&&bh>0.6*o[3]){svg.setAttribute('viewBox',orig);return}
+    var w=Math.max(bw+2*pad,640),h=w*asp;if(bh+2*pad>h){h=bh+2*pad;w=h/asp}
+    if(w>=o[2]){svg.setAttribute('viewBox',orig);return}
+    var cx=(x0+x1)/2,cy=(y0+y1)/2,vx=Math.min(Math.max(cx-w/2,o[0]),o[0]+o[2]-w),vy=Math.min(Math.max(cy-h/2,o[1]),o[1]+o[3]-h);
+    svg.setAttribute('viewBox',vx.toFixed(1)+' '+vy.toFixed(1)+' '+w.toFixed(1)+' '+h.toFixed(1))
+  }
+  function wesc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+  function wtr(id){
+    var sec=document.getElementById('wsec'),all=!id,els=document.querySelectorAll('[data-wr]'),i;
+    sec.classList.toggle('trace',!all);
+    for(i=0;i<els.length;i++){var on=!all&&(' '+els[i].getAttribute('data-wr')+' ').indexOf(' '+id+' ')>=0;els[i].classList.toggle('sel',on)}
+    var vw=document.querySelectorAll('#wsec .wview'),shown=[];
+    for(i=0;i<vw.length;i++){var has=all||!!vw[i].querySelector('[data-wr~="'+id+'"]');vw[i].style.display=has?'':'none';if(has&&!all)shown.push(vw[i].getAttribute('data-title'))}
+    for(i=0;i<vw.length;i++){if(vw[i].style.display==='none'||vw[i].getAttribute('data-nozoom'))continue;wzoom(vw[i].querySelector('svg'),id)}
+    if(all){for(i=0;i<vw.length;i++){var sv=vw[i].querySelector('svg');if(sv&&sv.getAttribute('data-vb'))sv.setAttribute('viewBox',sv.getAttribute('data-vb'))}}
+    document.getElementById('wtSel').value=id;
+    var card=document.getElementById('wtCard');
+    if(all){card.textContent='All the wires are showing. Pick one (or press Next) and only that wire stays: a green START mark where it begins, a black END mark where it ends, and arrows along the way. The drawings that do not have it are hidden.';return}
+    var w=WRD.filter(function(x){return x.id===id})[0];
+    card.innerHTML='<div class="wt-h"><span class="wt-id">'+w.id+'</span> <svg width="46" height="14" viewBox="0 0 46 14" style="display:inline-block;width:46px;max-width:46px;min-width:0;height:14px;vertical-align:-3px"><line x1="3" y1="7" x2="43" y2="7" stroke="'+w.c+'" stroke-width="'+w.lw+'" stroke-linecap="round"'+(w.t==='ac'?' stroke-dasharray="8 5"':'')+'/></svg> <b>'+w.g+' AWG</b> \u00B7 '+(w.t==='ac'?'120 V':'12 V or battery')+' \u00B7 about '+w.len+' ft</div><div class="wt-n">'+wesc(w.n)+'</div><div class="wt-l"><span class="wt-s">START</span>'+wesc(w.from)+'</div><div class="wt-l"><span class="wt-e">END</span>'+wesc(w.to)+'</div><div class="wt-m"><b>Fuse or breaker:</b> '+wesc(w.prot)+'</div>'+(w.note?'<div class="wt-m">'+wesc(w.note)+'</div>':'')+'<div class="wt-m"><b>Drawn on:</b> '+shown.join(', ')+'</div>'
+  }
+  function wtStep(d){var s=document.getElementById('wtSel'),i=s.selectedIndex+d;if(i<0)i=s.options.length-1;if(i>=s.options.length)i=0;wtr(s.options[i].value)}
+  </script>
   <h2>6. What it adds up to</h2>
   ${loadTable(plan)}
   <h2>7. Order of work</h2>

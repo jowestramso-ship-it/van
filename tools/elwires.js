@@ -43,30 +43,30 @@ function wiresFor(pl, Dl, Pl, ceil) {
   const W = [];
   const add = w => { W.push(w); return w; };
   // ---- the hub board and the gear shelf (drawn on the one-line diagram: the runs are short, inside the hub's 2 x 10 in)
-  add({ g: '2/0', t: 'dc', n: 'Battery + to the Class T fuse and the bus +', from: 'battery', to: 'bus', prot: 'Class T 250 A, within 7 in of the post', len: 1.5, hub: true, note: 'red 2 ft; the whole inverter load goes through it' });
-  add({ g: '2/0', t: 'dc', n: 'Battery − to the shunt and the bus −', from: 'battery', to: 'bus', prot: 'none (the shunt, 500 A)', len: 1.5, hub: true, note: 'black 2 ft; the shunt sits on the negative' });
-  add({ g: '2/0', t: 'dc', n: 'Bus to the inverter, + and −', from: 'bus', to: 'inverter', prot: '250 A on the + (the Class T can serve it)', len: 4, hub: true, note: 'with a 2 ft loop so the gear shelf can slide out' });
+  add({ g: '2/0', t: 'dc', n: 'Battery + to the Class T fuse and the bus +', from: 'battery', to: 'bus', prot: 'Class T 250 A, within 7 in of the post', len: 1.5, hub: true, T: { D: [[[70.5, 9.5], [70.5, 6.5], [72, 6.5]]] }, tnote: 'The battery\u2019s post positions are assumed (+ at the cab end of the top); the order of the parts on the hub board is yours to choose.', note: 'red 2 ft; the whole inverter load goes through it' });
+  add({ g: '2/0', t: 'dc', n: 'Battery − to the shunt and the bus −', from: 'battery', to: 'bus', prot: 'none (the shunt, 500 A)', len: 1.5, hub: true, T: { D: [[[67, 9.5], [67, 3.5], [72, 3.5]]] }, note: 'black 2 ft; the shunt sits on the negative' });
+  add({ g: '2/0', t: 'dc', n: 'Bus to the inverter, + and −', from: 'bus', to: 'inverter', prot: '250 A on the + (the Class T can serve it)', len: 4, hub: true, T: { D: [[[72, 9], [71, 9], [71, 11]]] }, note: 'with a 2 ft loop so the gear shelf can slide out' });
   add({ g: '2', t: 'dc', n: 'Cab charge cable: starter battery to the DC-DC charger, + and −', from: 'starter battery, under the van', to: 'DC-DC charger', prot: '80 A at the starter battery', len: 17, note: 'about 15 ft under the van plus a 2 ft loop; it comes up through the sealed floor grommet at 70 in beside the battery, under the gear shelf',
     D: [[[70, .5], [75.4, .5], [75.4, 10], [dcMid(D.dc), 10], [dcMid(D.dc), D.dc.z0]]], lab: { D: [75.4, 5] } });
-  add({ g: '2', t: 'dc', n: 'DC-DC charger to the bus, + and −', from: 'DC-DC charger', to: 'bus', prot: '80 A at the bus', len: 6, hub: true, note: '4 ft plus a 2 ft loop for the shelf' });
-  add({ g: '2', t: 'dc', n: 'Shore charger (VEVOR 80 A) to the bus, + and −', from: 'shore charger', to: 'bus', prot: '100 A at the bus', len: 6, hub: true, note: 'its 120 V input is WR10' });
+  add({ g: '2', t: 'dc', n: 'DC-DC charger to the bus, + and −', from: 'DC-DC charger', to: 'bus', prot: '80 A at the bus', len: 6, hub: true, T: { D: [[[57.05, 12.4], [57.05, 10.2], [72, 10.2], [72, 7.6]]] }, note: '4 ft plus a 2 ft loop for the shelf' });
+  add({ g: '2', t: 'dc', n: 'Shore charger (VEVOR 80 A) to the bus, + and −', from: 'shore charger', to: 'bus', prot: '100 A at the bus', len: 6, hub: true, T: { D: [[[50.55, 12.6], [50.55, 9.8], [72, 9.8], [72, 8.4]]] }, note: 'its 120 V input is WR10' });
   add({ g: '10', t: 'ac', n: 'Shore power inlet to the transfer switch and the hub (30 A cable in flexible conduit)', from: D.inlet.id + ' shore inlet', to: 'hub board, 30 A breaker', prot: '30 A shore breaker', len: 8, note: 'runs inside the wall in the free band above S2 (13 3/4 to 19 1/2 up), clear of the couch wall-post screws',
     D: [[[D.inlet.x, D.inlet.z], [D.inlet.x, 16.7], [72.2, 16.7], [72.2, 11]]], lab: { D: [30, 16.7] } });
-  add({ g: '12', t: 'ac', n: 'Inverter output to the transfer switch', from: 'inverter', to: 'transfer switch', prot: '20 A at the inverter output (about 17 A at 2000 W)', len: 3, hub: true, note: 'my size (the BELTTT manual was not found): 12 AWG carries the 2000 W; follow its manual' });
-  add({ g: '10', t: 'ac', n: 'Transfer switch to the AC panel (30 A main)', from: 'transfer switch', to: 'AC panel', prot: '30 A main', len: 2, hub: true, note: 'shore or inverter, never both' });
-  add({ g: '12', t: 'ac', n: 'AC panel to the shore charger (its own breaker)', from: 'AC panel', to: 'shore charger', prot: '15 A breaker', len: 3, hub: true, note: 'from the shore side only, never from the inverter; the cord needs a loop for the shelf' });
+  add({ g: '12', t: 'ac', n: 'Inverter output to the transfer switch', from: 'inverter', to: 'transfer switch', prot: '20 A at the inverter output (about 17 A at 2000 W)', len: 3, hub: true, T: { D: [[[72.35, 13.4], [73.2, 13.4], [73.2, 10.2]]] }, note: 'my size (the BELTTT manual was not found): 12 AWG carries the 2000 W; follow its manual' });
+  add({ g: '10', t: 'ac', n: 'Transfer switch to the AC panel (30 A main)', from: 'transfer switch', to: 'AC panel', prot: '30 A main', len: 2, hub: true, T: { D: [[[73.6, 10], [73.6, 8.5]]] }, tnote: 'Both ends are on the hub board; the order of its parts is yours to choose, so only the board is marked.', note: 'shore or inverter, never both' });
+  add({ g: '12', t: 'ac', n: 'AC panel to the shore charger (its own breaker)', from: 'AC panel', to: 'shore charger', prot: '15 A breaker', len: 3, hub: true, T: { D: [[[73.9, 8.5], [73.9, 16.3], [46, 16.3], [46, 15]]] }, note: 'from the shore side only, never from the inverter; the cord needs a loop for the shelf' });
   // ---- the risers and trunks
-  add({ g: '6', t: 'dc', n: 'A/C feed pair (+ and −), up riser A and across the ceiling', from: 'battery side of the hub (100 A fuse)', to: 'A/C unit', prot: '100 A fuse at the battery', len: 12, note: 'in its own loom in riser A; 6 AWG is the maker’s size for 12 ft (4 AWG would lose less)',
+  add({ g: '6', t: 'dc', n: 'A/C feed pair (+ and −), up riser A and across the ceiling', from: 'battery side of the hub (100 A fuse)', to: 'A/C unit', prot: '100 A fuse at the battery', len: 12, T: { D: [[[73, 11], [73, R0], [ra(0), R0]]] }, note: 'in its own loom in riser A; 6 AWG is the maker’s size for 12 ft (4 AWG would lose less)',
     D: [[[ra(0), R0], [ra(0), 75]]], C: [[[RX, 0], [RX, acY], [ac.x, acY]]], lab: { D: [ra(0), 26], C: [RX, 13] } });
-  add({ g: '12', t: 'ac', n: '120 V circuits A, B/D and C (three 12 AWG cables in flexible conduit): up riser A, across the ceiling, down riser B', from: 'AC panel', to: 'every 120 V outlet', prot: 'A 15 A GFCI, B/D 20 A, C 15 A', note: 'the ceiling run and riser B follow the red dashed trunk of the ceiling diagram; separate from the 12 V loom by 2 in',
+  add({ g: '12', t: 'ac', n: '120 V circuits A, B/D and C (three 12 AWG cables in flexible conduit): up riser A, across the ceiling, down riser B', from: 'AC panel', to: 'every 120 V outlet', prot: 'A 15 A GFCI, B/D 20 A, C 15 A', T: { D: [[[73, 11], [73, R0], [ra(1), R0]]] }, note: 'the ceiling run and riser B follow the red dashed trunk of the ceiling diagram; separate from the 12 V loom by 2 in',
     D: [[[ra(1), R0], [ra(1), 75]]], C: [[[RX + 1.2, 0], [RX + 1.2, 68]]], P: [[[rb(0), 75], [rb(0), 8]]], lab: { D: [ra(1), 44], C: [RX + 1.2, 52], P: [rb(0), 40] } });
-  add({ g: '12', t: 'dc', n: '12 V trunk from the fuse block: up riser A, across the ceiling, down riser B', from: 'hub fuse block', to: 'ceiling junction box JB and riser B', prot: 'the fuse block (each circuit fused below it)', note: 'the pump and panel branches are drawn as tapping it in riser B (my reading of the riser B note); if each is fused at the hub instead, they run the whole way from riser A and across the ceiling',
+  add({ g: '12', t: 'dc', n: '12 V trunk from the fuse block: up riser A, across the ceiling, down riser B', from: 'hub fuse block', to: 'ceiling junction box JB and riser B', prot: 'the fuse block (each circuit fused below it)', T: { D: [[[73, 11], [73, R0], [ra(2), R0]]] }, note: 'the pump and panel branches are drawn as tapping it in riser B (my reading of the riser B note); if each is fused at the hub instead, they run the whole way from riser A and across the ceiling',
     D: [[[ra(2), R0], [ra(2), 75]]], C: [[[RX - 1.2, 0], [RX - 1.2, 68]]], P: [[[rb(1), 75], [rb(1), 24]]], lab: { D: [ra(2), 31], C: [RX - 1.2, 8], P: [rb(1), 66] } });
-  add({ g: '14', t: 'dc', n: 'Soft LED strip circuit: up riser A to the junction box, then to the strip’s three feeds', from: 'hub fuse block', to: 'strip along the ceiling edge, three runs', prot: '10 A, its own circuit', note: 'the strip is about 76 W (6.4 A) at full: 14 AWG has plenty of margin; the back run is fed from the driver run’s feed',
+  add({ g: '14', t: 'dc', n: 'Soft LED strip circuit: up riser A to the junction box, then to the strip’s three feeds', from: 'hub fuse block', to: 'strip along the ceiling edge, three runs', prot: '10 A, its own circuit', T: { D: [[[73, 11], [73, R0], [ra(3), R0]]] }, endsOverride: [['C', [82.5, 1.5]], ['C', [82.5, 66.5]], ['C', [1.9, 3.4]]], note: 'the strip is about 76 W (6.4 A) at full: 14 AWG has plenty of margin; the back run is fed from the driver run’s feed',
     D: [[[ra(3), R0], [ra(3), 75]]], C: [[[82.5, 0], [82.5, 66.5]], [[RX, 34], [82.5, 34]], [[82.5, 3.4], [1.9, 3.4]]], lab: { D: [ra(3), 22], C: [82.5, 12] } });
-  add({ g: '14', t: 'dc', n: 'Roof fan feed: up riser A to the junction box, then to the fan', from: 'hub fuse block', to: 'roof fan', prot: '5 A', note: 'the fan has no switch: it is controlled at the fan itself',
+  add({ g: '14', t: 'dc', n: 'Roof fan feed: up riser A to the junction box, then to the fan', from: 'hub fuse block', to: 'roof fan', prot: '5 A', T: { D: [[[73, 11], [73, R0], [ra(4), R0]]] }, note: 'the fan has no switch: it is controlled at the fan itself',
     D: [[[ra(4), R0], [ra(4), 75]]], C: [[[83.6, 0], [83.6, 20.5], [fan.x, 20.5], [fan.x, fanY]]], lab: { D: [ra(4), 38], C: [50, 20.5] } });
-  add({ g: '16', t: 'dc', n: 'Lights feed: up riser A to the junction box and the cabinet tops', from: 'hub fuse block', to: 'ceiling lights, cabinet lights, their switches', prot: '5 A (4 ceiling + 4 cabinet lights, about 32 W)', note: 'the cabinet-light wires leave it along the cabinet tops (WR20, WR21, WR23)',
+  add({ g: '16', t: 'dc', n: 'Lights feed: up riser A to the junction box and the cabinet tops', from: 'hub fuse block', to: 'ceiling lights, cabinet lights, their switches', prot: '5 A (4 ceiling + 4 cabinet lights, about 32 W)', T: { D: [[[73, 11], [73, R0], [ra(5), R0]]] }, note: 'the cabinet-light wires leave it along the cabinet tops (WR20, WR21, WR23)',
     D: [[[ra(5), R0], [ra(5), 75]]], C: [[[84.7, 0], [84.7, 36], [RX, 36]]], lab: { D: [ra(5), 55], C: [84.7, 24] } });
   add({ g: '18', t: 'dc', n: 'Dimmer push button ED14 to the dimming controller at the junction box', from: D.dim.id + ' button', to: 'dimming controller at JB', prot: 'with the strip circuit', note: 'a 12 V PWM controller rated 10 A or more sits at JB (my placement) and switches the strip circuit; the button wire is low current',
     D: [[[D.dim.x, D.dim.z], [D.dim.x, 62.6], [ra(6), 62.6], [ra(6), 75]]], C: [[[85.8, 0], [85.8, 37.5], [RX, 37.5]]], lab: { D: [D.dim.x, 60.6], C: [85.8, 45] } });
@@ -85,7 +85,7 @@ function wiresFor(pl, Dl, Pl, ceil) {
     D: [[[3.45, 49], [3.45, 75]]], C: [[[9.45, 0], [9.45, lt[0].y], [lt[0].x, lt[0].y]]], lab: { D: [3.45, 60], C: [9.45, 29] } });
   add({ g: '16', t: 'dc', n: 'Feed to the dinette switch ' + D.dsw.id + ' on W2', from: 'lights feed, top of riser A', to: D.dsw.id + ' switch', prot: '5 A (lights circuit)', note: 'along the cabinet top toward the cab, down the corner behind the planks, into the box through a grommet',
     D: [[[ra(5), 71.4], [D.dsw.x, 71.4], [D.dsw.x, D.dsw.z + .8]]], lab: { D: [118, 71.4] } });
-  add({ g: '16', t: 'dc', n: 'Dinette lights ' + D.ld1.id + ' and ' + D.ld2.id + ' from the switch ' + D.dsw.id, from: D.dsw.id + ' (switched)', to: D.ld1.id + ' and ' + D.ld2.id, prot: '5 A (lights circuit)', note: 'back up the corner, along the cabinet interior, one drop to each light',
+  add({ g: '16', t: 'dc', n: 'Dinette lights ' + D.ld1.id + ' and ' + D.ld2.id + ' from the switch ' + D.dsw.id, from: D.dsw.id + ' (switched)', to: D.ld1.id + ' and ' + D.ld2.id, prot: '5 A (lights circuit)', endsOverride: [['D', [D.ld1.x, lz + .5]], ['D', [D.ld2.x, lz + .5]]], note: 'back up the corner, along the cabinet interior, one drop to each light',
     D: [[[D.dsw.x - 1.1, D.dsw.z + .8], [D.dsw.x - 1.1, 69.4], [D.ld1.x, 69.4], [D.ld1.x, lz + .5]], [[D.ld2.x, 69.4], [D.ld2.x, lz + .5]]], lab: { D: [(D.ld1.x + D.ld2.x) / 2, 69.4] } });
   // ---- passenger wall loads
   add({ g: '12', t: 'ac', n: 'Fridge outlet ' + P.fr.id + ', circuit C', from: 'riser B (120 V)', to: P.fr.id + ' outlet behind the fridge', prot: '15 A (circuit C, the fridge alone)', note: 'in the free band between S1 and S2, behind the fridge platform',
@@ -102,9 +102,9 @@ function wiresFor(pl, Dl, Pl, ceil) {
     P: [[[rb(1), 24], [105.5, 24], [105.5, 20.6]]], lab: { P: [88, 24] } });
   add({ g: '18', t: 'dc', n: 'Control panel ' + P.pan.id + ' (battery monitor, pump switch, tank levels)', from: 'riser B (12 V loom)', to: P.pan.id + ' panel', prot: '3 A', note: 'small 18 AWG',
     P: [[[rb(1), 47.5], [P.pan.x, 47.5], [P.pan.x, P.pan.z - .8]]], lab: { P: [P.pan.x - 1, 47.5 - 3.6] } });
-  add({ g: '16', t: 'dc', n: 'Switch ' + P.s11.id + ' to the counter and sink light ' + P.cl.id, from: P.s11.id + ' left rocker', to: P.cl.id + ' light', prot: '5 A (lights circuit)', note: '16 AWG pair behind the covering to riser B (about 27 in), up to the ceiling, then along the slat to the light',
+  add({ g: '16', t: 'dc', n: 'Switch ' + P.s11.id + ' to the counter and sink light ' + P.cl.id, from: P.s11.id + ' left rocker', to: P.cl.id + ' light', prot: '5 A (lights circuit)', flow: ['P', 'C'], note: '16 AWG pair behind the covering to riser B (about 27 in), up to the ceiling, then along the slat to the light',
     P: [[[P.s11.x, P.s11.z], [P.s11.x, 61.3], [rb(4), 61.3], [rb(4), 75]]], C: [[[81.8, 68], [81.8, lt[1].y], [lt[1].x, lt[1].y]]], lab: { P: [88, 61.3], C: [88, lt[1].y] } });
-  add({ g: '16', t: 'dc', n: 'Switch ' + P.s14.id + ' to the two center-row ceiling lights', from: P.s14.id + ' right rocker', to: 'center row lights, rear and front', prot: '5 A (lights circuit)', note: 'up riser B, across to the center slat, then along it, round the A/C opening, to both lights',
+  add({ g: '16', t: 'dc', n: 'Switch ' + P.s14.id + ' to the two center-row ceiling lights', from: P.s14.id + ' right rocker', to: 'center row lights, rear and front', prot: '5 A (lights circuit)', flow: ['P', 'C'], endsOverride: [['C', [lt[2].x, lt[2].y]], ['C', [lt[3].x, lt[3].y]]], note: 'up riser B, across to the center slat, then along it, round the A/C opening, to both lights',
     P: [[[P.s14.x, P.s14.z], [P.s14.x, 62.2], [rb(5), 62.2], [rb(5), 75]]], C: [[[82.7, 68], [82.7, 34]], [[lt[2].x, lt[2].y], [lt[2].x, aT], [aR, aT], [aR, 34], [lt[3].x, lt[3].y]]], lab: { P: [88, 62.2], C: [92, 34] } });
   W.forEach((w, i) => { w.id = 'WR' + (i + 1); });
   W.forEach(w => { if (w.len == null) { let d = 0; ['D', 'P', 'C'].forEach(v => (w[v] || []).forEach(pl_ => { for (let i = 1; i < pl_.length; i++) d += Math.hypot(pl_[i][0] - pl_[i - 1][0], pl_[i][1] - pl_[i - 1][1]); })); w.len = d / 12; } });
@@ -121,6 +121,43 @@ function wirePill(id, g, x, y) {
   const w = 10 + id.length * 6.2;
   return `<rect x="${x - w / 2}" y="${y - 8}" width="${w}" height="16" rx="8" fill="#fff" fill-opacity=".96" stroke="${gc(g)}" stroke-width="2"/><text x="${x}" y="${y + 3.7}" text-anchor="middle" style="font-size:9.5px;font-weight:700;fill:#1b1a17">${id}</text>`;
 }
+// where a wire starts and where it ends: the first point of its first view and the last point of its last view (lead-ins and hub routes included), unless set by hand
+const FLOW = ['D', 'C', 'P'];
+function viewsOf(w) { return (w.flow || FLOW).filter(v => (w[v] && w[v].length) || (w.T && w.T[v] && w.T[v].length)); }
+function allIn(w, v) { return ((w.T && w.T[v]) || []).concat(w[v] || []); }
+function endsOf(w) {
+  const vs = viewsOf(w); if (!vs.length) return null;
+  const first = allIn(w, vs[0]), last = allIn(w, vs[vs.length - 1]);
+  return { start: { v: vs[0], pt: first[0][0] }, ends: w.endsOverride ? w.endsOverride.map(e => ({ v: e[0], pt: e[1] })) : [{ v: vs[vs.length - 1], pt: last[last.length - 1][last[last.length - 1].length - 1] }] };
+}
+function arrows(pts, X, Y, g) {
+  let o = '';
+  for (let i = 1; i < pts.length; i++) {
+    const x0 = X(pts[i - 1][0]), y0 = Y(pts[i - 1][1]), x1 = X(pts[i][0]), y1 = Y(pts[i][1]), len = Math.hypot(x1 - x0, y1 - y0);
+    if (len < 46) continue;
+    const n = Math.max(1, Math.floor(len / 150)), ang = Math.atan2(y1 - y0, x1 - x0), ca = Math.cos(ang), sa = Math.sin(ang);
+    for (let k = 1; k <= n; k++) { const t = k / (n + 1), cx = x0 + (x1 - x0) * t, cy = y0 + (y1 - y0) * t;
+      o += `<path d="M${(cx + 7 * ca).toFixed(1)} ${(cy + 7 * sa).toFixed(1)} L${(cx - 5 * ca - 6 * sa).toFixed(1)} ${(cy - 5 * sa + 6 * ca).toFixed(1)} L${(cx - 5 * ca + 6 * sa).toFixed(1)} ${(cy - 5 * sa - 6 * ca).toFixed(1)} Z" fill="#fff" stroke="#111" stroke-width="1.6" stroke-linejoin="round"/>`; }
+  }
+  return o;
+}
+function marker(label, pt, X, Y, col, up) {
+  const x = X(pt[0]), y = Y(pt[1]), w = label === 'START' ? 48 : 36;
+  let by = up ? y - 40 : y + 36; if (by < 34) by = y + 36; if (by > 600) by = y - 40;
+  const bx = Math.min(1040 - w / 2, Math.max(30 + w / 2, x));
+  return `<line x1="${x}" y1="${y}" x2="${bx}" y2="${by + (by > y ? -9 : 9)}" stroke="${col}" stroke-width="2.4"/><circle cx="${x}" cy="${y}" r="6.5" fill="#fff" fill-opacity=".85" stroke="${col}" stroke-width="3"/><circle cx="${x}" cy="${y}" r="2.2" fill="${col}"/><rect x="${bx - w / 2}" y="${by - 9}" width="${w}" height="18" rx="9" fill="${col}" stroke="#fff" stroke-width="1.5"/><text x="${bx}" y="${by + 4}" text-anchor="middle" style="font-size:10.5px;font-weight:700;fill:#fff;letter-spacing:.4px">${label}</text>`;
+}
+// what is added to one drawing when this wire is picked: its hidden-otherwise routes, direction arrows, START and END
+function traceLayer(w, view, X, Y) {
+  const e = endsOf(w); if (!e) return '';
+  const parts = [];
+  ((w.T && w.T[view]) || []).forEach(p => parts.push(wireLine(p, X, Y, w.g, w.t)));
+  allIn(w, view).forEach(p => parts.push(arrows(p, X, Y, w.g)));
+  if (e.start.v === view) parts.push(marker('START', e.start.pt, X, Y, '#1B7F3B', true));
+  e.ends.filter(x => x.v === view).forEach(x => parts.push(marker('END', x.pt, X, Y, '#111', false)));
+  return parts.length ? `<g class="wtr" data-wr="${w.id}">${parts.join('')}</g>` : '';
+}
+
 // one wire as two svg groups (its lines, and its number label), both with its gauge as the class so the gauge boxes can hide them; draw every wire's lines first, then every label
 function wireGroup(w, view, X, Y, placed) {
   const segs = w[view]; if (!segs) return { l: '', p: '' };
@@ -128,7 +165,7 @@ function wireGroup(w, view, X, Y, placed) {
   let pill = '';
   const lb = w.lab && w.lab[view];
   if (lb) { let x = X(lb[0]), y = Y(lb[1]); for (let t = 0; t < 8 && placed.some(q => Math.abs(q[0] - x) < 46 && Math.abs(q[1] - y) < 17); t++) y -= 17; placed.push([x, y]); pill = wirePill(w.id, w.g, x, y); }
-  return { l: `<g class="wgrp ${byG[w.g].cls}"><title>${w.id}: ${byG[w.g].name} AWG</title>${o}</g>`, p: pill ? `<g class="wgrp ${byG[w.g].cls}">${pill}</g>` : '' };
+  return { l: `<g class="wgrp ${byG[w.g].cls}" data-wr="${w.id}"><title>${w.id}: ${byG[w.g].name} AWG</title>${o}</g>`, p: pill ? `<g class="wgrp ${byG[w.g].cls}" data-wr="${w.id}">${pill}</g>` : '' };
 }
 
 // ------------------------------------------------------------------ the wall views: the steel and furring faint, every wire on top
@@ -141,7 +178,16 @@ function wallWires(side, items, base, furn, W, symbol, fr, esc, INK) {
   const bigs = [], smalls = [];
   items.forEach(e => {
     if (e.k === 'run') return;
-    if (e.k === 'box' || e.k === 'strip') { const [g] = symbol(e, X, Y); bigs.push(g); return; }
+    if (e.k === 'box' || e.k === 'strip') { const [g] = symbol(e, X, Y); bigs.push(g);
+      if (e.k === 'box') {                       // name the boxes, so a wire can be followed from one to the next
+        const xa = X(e.x0), xb = X(e.x1), bx = Math.min(xa, xb), bw = Math.abs(xb - xa), by = Y(e.z1), bh = 6 * (e.z1 - e.z0), nm = e.n.split(/[,(]/)[0].replace(/^Power hub board$/, 'hub').replace(/^Shore charger$/, 'charger').replace(/^Inverter$/, 'inverter').replace(/^Battery$/, 'battery').replace(/^DC-DC charger$/, 'DC-DC').trim();
+        const st = 'font-size:9.5px;font-weight:700;fill:#6b3a00;paint-order:stroke;stroke:#fff;stroke-width:2.6px';
+        if (bw >= 80 && bh >= 40) bigs.push(`<text x="${bx + bw / 2}" y="${by + bh / 2 + 3.5}" text-anchor="middle" style="${st}">${e.id} ${esc(nm)}</text>`);
+        else if (bw >= 50) bigs.push(`<text x="${bx + 4}" y="${/charger/.test(nm) ? by + bh - 5 : by + 12}" style="${st}">${e.id} ${esc(nm)}</text>`);
+        else if (bh >= 50) bigs.push(`<text transform="rotate(-90 ${bx + bw / 2 + 3.4} ${by + bh / 2})" x="${bx + bw / 2 + 3.4}" y="${by + bh / 2}" text-anchor="middle" style="${st}">${e.id} ${esc(nm)}</text>`);
+        else bigs.push(`<text x="${bx + bw + 4}" y="${by + bh / 2 + 3.5}" style="${st}">${e.id}</text>`);
+      }
+      return; }
     const [g, cx, cy] = symbol(e, X, Y);
     smalls.push(g + `<text x="${cx + 9}" y="${cy + 15}" style="font-size:8.5px;font-weight:700;fill:#5F5E5A;paint-order:stroke;stroke:#fff;stroke-width:2.5px">${e.id}</text>`);
   });
@@ -156,7 +202,7 @@ function wallWires(side, items, base, furn, W, symbol, fr, esc, INK) {
   // arrows where the risers go on to the ceiling
   const arrows = W.filter(w => w[view] && w.C).map(w => { const top = w[view].map(p => p[p.length - 1]).filter(p => p[1] >= 74.9)[0]; return top ? `<path d="M${X(top[0]) - 4} ${Y(75) - 2} L${X(top[0])} ${Y(75) - 9} L${X(top[0]) + 4} ${Y(75) - 2}" fill="${gc(w.g)}" stroke="#fff" stroke-width=".8"/>` : ''; }).join('');
   const inner = base.inner.replace(/ id="[^"]*"/g, '');
-  return `<svg viewBox="0 0 1070 636" role="img" aria-label="${flip ? 'Passenger' : 'Driver'} wall: every wire, coloured by gauge"><g class="wbase" id="wbase${side}" opacity=".33">${inner}</g>${fu}${bigs.join('')}${pump}${stub}${wires}${smalls.join('')}${arrows}${call}</svg>`;
+  return `<svg viewBox="0 0 1070 636" role="img" aria-label="${flip ? 'Passenger' : 'Driver'} wall: every wire, coloured by gauge"><g class="wbase" id="wbase${side}" opacity=".33">${inner}</g>${fu}${bigs.join('')}${pump}${stub}${wires}${smalls.join('')}${arrows}${call}${W.map(w => traceLayer(w, view, X, Y)).join('')}</svg>`;
 }
 
 // ------------------------------------------------------------------ the key, the gauge boxes and the table
@@ -169,9 +215,9 @@ function keyHTML(W) {
   <p class="lead"><b>How to read it:</b> the colour and thickness show the gauge. A solid line is 12 V or battery cable (a + and a − of that size); a dashed line is 120 V (one cable with hot, neutral and ground). The white round label is the wire’s own number, WR1, WR2 and so on. The drawn length is one way along the route drawn, with no slack or loops, so add 15 to 20% when you buy and double the 12 V and battery runs for the − wire. The hub board runs and the A/C length use the figures in the cable table.</p>`;
 }
 function tableHTML(W, fr) {
-  const rows = W.map(w => `<tr class="wgrp ${byG[w.g].cls}"><td><b class="wid">${w.id}</b></td><td style="white-space:nowrap"><svg width="40" height="12" viewBox="0 0 40 12" style="display:inline-block;width:40px;max-width:40px;min-width:0;height:12px;vertical-align:-2px"><line x1="3" y1="6" x2="37" y2="6" stroke="${gc(w.g)}" stroke-width="${gw(w.g)}" stroke-linecap="round"${w.t === 'ac' ? ' stroke-dasharray="7 5"' : ''}/></svg> <b>${byG[w.g].name}</b></td><td>${w.t === 'ac' ? '120 V' : '12 V / battery'}</td><td>${esc2(w.n)}<div class="kd">${esc2(w.from)} → ${esc2(w.to)}</div></td><td>${esc2(w.prot)}</td><td class="num">${w.len >= 10 ? Math.round(w.len) : (Math.round(w.len * 10) / 10)} ft</td><td class="kd">${esc2(w.note || '')}</td></tr>`).join('');
+  const rows = W.map(w => `<tr class="wgrp ${byG[w.g].cls}" data-wr="${w.id}"><td><b class="wid">${w.id}</b></td><td style="white-space:nowrap"><svg width="40" height="12" viewBox="0 0 40 12" style="display:inline-block;width:40px;max-width:40px;min-width:0;height:12px;vertical-align:-2px"><line x1="3" y1="6" x2="37" y2="6" stroke="${gc(w.g)}" stroke-width="${gw(w.g)}" stroke-linecap="round"${w.t === 'ac' ? ' stroke-dasharray="7 5"' : ''}/></svg> <b>${byG[w.g].name}</b></td><td>${w.t === 'ac' ? '120 V' : '12 V / battery'}</td><td>${esc2(w.n)}<div class="kd">${esc2(w.from)} → ${esc2(w.to)}</div></td><td>${esc2(w.prot)}</td><td class="num">${w.len >= 10 ? Math.round(w.len) : (Math.round(w.len * 10) / 10)} ft</td><td class="kd">${esc2(w.note || '')}</td></tr>`).join('');
   return `<div class="tw"><table><thead><tr><th>#</th><th>AWG</th><th>Carries</th><th>Wire (from → to)</th><th>Fuse or breaker</th><th>Length</th><th>Notes</th></tr></thead><tbody>${rows}</tbody></table></div>`;
   function esc2(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
 }
 
-module.exports = { AWG, byG, gc, gw, wiresFor, wireLine, wirePill, wireGroup, wallWires, keyHTML, tableHTML };
+module.exports = { AWG, byG, gc, gw, wiresFor, wireLine, wirePill, wireGroup, wallWires, keyHTML, tableHTML, traceLayer, viewsOf, endsOf };
