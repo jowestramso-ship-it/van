@@ -17,7 +17,8 @@ const PD = [
   { k: 'battOn', g: 'Take items out', l: 'Battery under the couch', d: true, t: 'c' },
   { k: 'closetOn', g: 'Take items out', l: 'Closet and its doors (the space it leaves stays empty; the dinette still starts where the closet ends)', d: true, t: 'c' },
   { k: 'toiletOn', g: 'Take items out', l: 'Toilet in the wet bath: the Reliance Fold-To-Go, left set up in the stall (at the cab end, sideways, its back against the wall to the fridge)', d: true, t: 'c' },
-  { k: 'snItemsOn', g: 'Take items out', l: 'Towel bar, toilet paper and bottles in the shower nook', d: true, t: 'c' },
+  { k: 'snItemsOn', g: 'Take items out', l: 'Toilet paper and bottles (and the towel bar, if it is ticked below) in the shower nook', d: true, t: 'c' },
+  { k: 'tbarOn', g: 'Take items out', l: 'Towel bar in the rear 6 in of the shower nook (user: remove the 5 in towel bar, so it is off; tick it to put it back)', d: false, t: 'c' },
   { k: 'winOn', g: 'Take items out', l: 'Side window over the dinette (Van Windows Direct TL201-SE, driver side forward slider)', d: true, t: 'c' },
   { k: 'gearOn', g: 'Take items out', l: 'Charging gear on a pull-out shelf over the battery under the couch: the BELTTT inverter, the LiTime DC-DC charger and the VEVOR shore charger', d: true, t: 'c' },
   { k: 'cnOn', g: 'Take items out', l: 'Nook in the wall behind the couch, where the back cushion tilts into the pans (31 to 57 in up) with furring rail S5 cut away there', d: true, t: 'c' },
@@ -481,8 +482,8 @@ function layout(P0) {
   // the shower nook contents: a towel bar bay at the rear end, then a shelf board with the bottles on it and the toilet paper rolls under it
   {
     const nk0 = L.snx[0], nkx = L.snx[1], bot = P.snookTop - P.snookH, top = P.snookTop, lip = P.snookLip;
-    const sn = { x0: nk0, x1: nkx, z0: bot, z1: top, bay: nk0 + P.tbarBay, shelfTop: Math.min(top - 1, P.snShelf) };
-    sn.bar = { x0: nk0 + .5, x1: sn.bay - .5, z: top - P.tbarDrop };
+    const sn = { x0: nk0, x1: nkx, z0: bot, z1: top, bay: nk0 + (P.tbarOn ? P.tbarBay : 0), shelfTop: Math.min(top - 1, P.snShelf), barOn: !!P.tbarOn };      // no towel bar: no bay for the hand towel either, the shelf and the bottles start at the rear end
+    sn.bar = { x0: nk0 + .5, x1: Math.max(nk0 + .5, sn.bay - .5), z: top - P.tbarDrop };
     sn.cord = P.snCord > 0 ? { x0: nk0 + .6, x1: nkx - .6, z: Math.min(top - .75, sn.shelfTop + P.snCord) } : null;   // a bungee cord stretched across the front of the nook between two screw eyes
     sn.rolls = [[nkx - 4.75, nkx - .25], [nkx - 9.5, nkx - 5]].map(r => ({ x0: r[0], x1: r[1], z0: bot, z1: bot + 4.5 }));
     let bx0 = sn.bay + .5; sn.bottles = [[2.6, 8.5], [3, 9], [2.6, 7.5]].map(b => { const o = { x0: bx0, x1: bx0 + b[0], z0: sn.shelfTop, z1: sn.shelfTop + b[1] }; bx0 += b[0] + .5; return o; });

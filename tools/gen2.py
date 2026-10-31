@@ -1060,16 +1060,14 @@ def passenger_items(tank=False):
     grp('snook','Shower nook')
     box(SN_X0,SN_X1,SN_Z0,SN_Z1,'#7A4A1E','Shower nook','17.25 x 16, 4.5 deep, bungee cord, centered',yy(60.5),0.2,'stroke-dasharray="5 3"')
     box(SN_X0,SN_X1,SN_Z0,39.5,'#5A3510','',None,yy(38.5),0.9)
-    grp('snitems','Shower nook: towel bar, toilet paper and bottles')
-    _n0, _n1 = SN_X0, SN_X1; _bay = _n0 + 6
-    a(f'<line x1="{xx(_n0+.5):.1f}" y1="{yy(50.5):.1f}" x2="{xx(_bay-.5):.1f}" y2="{yy(50.5):.1f}" stroke="#444441" stroke-width="3.4" stroke-linecap="round"/>')
-    a(f'<line x1="{xx(_bay):.1f}" y1="{yy(38):.1f}" x2="{xx(_bay):.1f}" y2="{yy(54):.1f}" stroke="#7A4A1E" stroke-width="1.2" stroke-dasharray="3 3"/>')
+    grp('snitems','Shower nook: toilet paper and bottles')
+    _n0, _n1 = SN_X0, SN_X1; _bay = _n0      # no towel bar (user: remove the 5 in towel bar), so no bay for a hand towel: the shelf and the bottles start at the rear end
     a(f'<rect x="{xx(_bay):.1f}" y="{yy(43.75):.1f}" width="{S*(_n1-_bay):.1f}" height="{S*0.75:.1f}" fill="#8A6B4D" stroke="#3E230B" stroke-width="1"/>')
     for _x0 in (_n1-9.5,_n1-4.75): a(f'<rect x="{xx(_x0):.1f}" y="{yy(42.5):.1f}" width="{S*4.5:.1f}" height="{S*4.5:.1f}" rx="2" fill="#F3E3B3" stroke="#8A5A00" stroke-width="1.2"/>')
     _bx = _bay + .5
     for _w,_h,_c in ((2.6,8.5,'#9EC9E8'),(3,9,'#C7B3E0'),(2.6,7.5,'#A9D3B4')):
         a(f'<rect x="{xx(_bx):.1f}" y="{yy(43.75+_h):.1f}" width="{S*_w:.1f}" height="{S*_h:.1f}" rx="2" fill="{_c}" fill-opacity="0.75" stroke="#444441" stroke-width="0.9"/>'); _bx += _w + .5
-    a(f'<text class="ts" x="{xx((_n0+_n1)/2):.1f}" y="{yy(35.5):.1f}" text-anchor="middle" style="font-size:9.5px;fill:#5A3510;paint-order:stroke;stroke:#fff;stroke-width:3px">towel bar 50 1/2, shelf 43 3/4, paper under</text>')
+    a(f'<text class="ts" x="{xx((_n0+_n1)/2):.1f}" y="{yy(35.5):.1f}" text-anchor="middle" style="font-size:9.5px;fill:#5A3510;paint-order:stroke;stroke:#fff;stroke-width:3px">shelf 43 3/4, paper under, bottles on it</text>')
     grp('curt','Shower curtains and rail')
     a(f'<line x1="{xx(CUR_IN):.1f}" y1="{yy(74.0):.1f}" x2="{xx(PAN_W-CUR_IN):.1f}" y2="{yy(74.0):.1f}" stroke="#2C2C2A" stroke-width="2.6" stroke-dasharray="8 4"/>')
     for _cx in (CUR_IN, PAN_W-CUR_IN-4.5): a(f'<rect x="{xx(_cx):.1f}" y="{yy(74.0):.1f}" width="{S*4.5:.1f}" height="{S*(74.0-2.3):.1f}" rx="2" fill="#7B3FA0" fill-opacity="0.16" stroke="#7B3FA0" stroke-width="1.1" stroke-dasharray="4 3"/>')

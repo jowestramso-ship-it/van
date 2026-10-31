@@ -348,10 +348,12 @@ function drawPass(L, V) {
   }
   if (L.sn) {
     const n = L.sn, bot = n.z0;
-    o.push(GB('snitems', 'Towel bar, toilet paper and bottles'));
-    o.push(box(n.bay - .1, n.bay + .1, bot, n.z1, { fill: '#7A4A1E', fo: .5, stroke: '#7A4A1E', sw: 1, dash: '3 3' }));
-    o.push(Ln(X(n.bar.x0), Y(n.bar.z), X(n.bar.x1), Y(n.bar.z), { stroke: '#444441', sw: 3.2, cap: 'round' }));
-    o.push(LBL(X((n.bar.x0 + n.bar.x1) / 2), Y(n.bar.z - 3.2), 'Towel bar', `${fmt(n.bar.x1 - n.bar.x0)} long, ${fmt(n.bar.z)} up, inside the nook`, { size: 10, fill: '#444441' }));
+    o.push(GB('snitems', n.barOn ? 'Towel bar, toilet paper and bottles' : 'Toilet paper and bottles'));
+    if (n.barOn) {
+      o.push(box(n.bay - .1, n.bay + .1, bot, n.z1, { fill: '#7A4A1E', fo: .5, stroke: '#7A4A1E', sw: 1, dash: '3 3' }));
+      o.push(Ln(X(n.bar.x0), Y(n.bar.z), X(n.bar.x1), Y(n.bar.z), { stroke: '#444441', sw: 3.2, cap: 'round' }));
+      o.push(LBL(X((n.bar.x0 + n.bar.x1) / 2), Y(n.bar.z - 3.2), 'Towel bar', `${fmt(n.bar.x1 - n.bar.x0)} long, ${fmt(n.bar.z)} up, inside the nook`, { size: 10, fill: '#444441' }));
+    }
     o.push(box(n.bay, n.x1, n.shelfTop - .75, n.shelfTop, { fill: '#8A6B4D', fo: .8, stroke: '#3E230B', sw: 1 }));
     n.rolls.forEach(r => o.push(box(r.x0, r.x1, r.z0, r.z1, { fill: '#F3E3B3', fo: .95, stroke: '#8A5A00', sw: 1.2, rx: 2 })));
     o.push(LBL(X((n.rolls[1].x0 + n.rolls[0].x1) / 2), Y(n.rolls[0].z0 + 2.25), 'Toilet paper', `a roll in use and a spare, 4 1/2 in across; ${fmt(n.rollClear)} in clear under the shelf`, { size: 10, fill: '#8A5A00' }));
