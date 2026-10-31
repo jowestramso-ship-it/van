@@ -93,10 +93,10 @@ const PD = [
   { k: 'nookLen', g: 'Passenger side', l: 'Jar nook length along the wall (the nook ends at 93 1/4 on the cab side; a shorter nook comes off the rear end)', d: 17.25, s: .25, a: 6, b: 35.25 },
   { k: 'jarW', g: 'Passenger side', l: 'Jar width, center to center along the shelf (quart jars 3 3/4)', d: 3.75, s: .25, a: 2, b: 6 },
   { k: 'nookH', g: 'Passenger side', l: 'Jar nook height above the countertop (16 puts its top level with the bottom of the TV)', d: 16, s: .5, a: 8, b: 24 },
-  { k: 'headX', g: 'Passenger side', l: 'Shower head: along the wall, from the back (the stall is 0 to the shower pan length; it is to the left of the nook, toward the rear, over the standing space, and its feed rises beside the nook\'s rear frame)', d: 7, s: .5, a: 1, b: 35 },
+  { k: 'headX', g: 'Passenger side', l: 'Shower head: along the wall, from the back (the stall is 0 to the shower pan length; you asked for the plumbing to the left of the nook in the passenger-wall view and around 30 in along, so it is on the cab side of the nook, over the toilet end; 29 keeps its riser between the blocks of S4 to S7)', d: 29, s: .5, a: 1, b: 35 },
   { k: 'headZ', g: 'Passenger side', l: 'Shower head: height up from the floor (the finished ceiling at the wall is about 74 1/2)', d: 70, s: .5, a: 50, b: 74 },
   { k: 'headOut', g: 'Passenger side', l: 'Shower head: how far it sticks out from the wall on its arm', d: 6, s: .5, a: 2, b: 14 },
-  { k: 'valveX', g: 'Passenger side', l: 'Shower valve (mixer handle): along the wall, from the back (to the left of the nook, under the head, within reach of the standing space; the hot and cold lines rise beside it, clear of the shallow steel before 6 in and of the first block of S4, at 13)', d: 7, s: .5, a: 1, b: 35 },
+  { k: 'valveX', g: 'Passenger side', l: 'Shower valve (mixer handle): along the wall, from the back (around 30, as you said: 29, under the head, on the cab side of the nook; the hot and cold lines rise beside it, between the blocks of S4 at 17 3/4 and 31 1/4)', d: 29, s: .5, a: 1, b: 35 },
   { k: 'valveZ', g: 'Passenger side', l: 'Shower valve: height up from the floor (36: you chose it; it sits between furring rails S4 and S5, and now that the nook is not above it you could raise it to 44)', d: 36, s: .5, a: 26, b: 60 },
   { k: 'toiletW', g: 'Toilet', l: 'Toilet: width, side to side (Reliance Fold-To-Go 14 1/2)', d: 14.5, s: .5, a: 10, b: 24 },
   { k: 'toiletD', g: 'Toilet', l: 'Toilet: depth, front to back (it sits sideways, so this runs along the wall; Fold-To-Go 14 1/2)', d: 14.5, s: .5, a: 10, b: 26 },
@@ -287,15 +287,17 @@ function LBL(x, y, name, dims, o) {
   }
   const i = KEYS.length; KEYS.push({ x, y, name, dims: [dims, o.keyMore].filter(Boolean).join(', '), fill });
   const op = o.op != null && o.op < 1 ? ` opacity="${f1(o.op)}"` : '';
-  return `<g class="nb"${op}><circle cx="${f1(x)}" cy="${f1(y)}" r="9.5" fill="#fff" fill-opacity=".94" stroke="${fill}" stroke-width="1.7"/><text x="${f1(x)}" y="${f1(y + 3.8)}" text-anchor="middle" style="font-size:10.5px;font-weight:700;fill:${fill}">\u0001${i}\u0001</text></g>`;
+  return `<g class="nb"${op}><rect x="${f1(x - 15.5)}" y="${f1(y - 8.5)}" width="31" height="17" rx="8.5" fill="#fff" fill-opacity=".94" stroke="${fill}" stroke-width="1.7"/><text x="${f1(x)}" y="${f1(y + 3.5)}" text-anchor="middle" style="font-size:9.5px;font-weight:700;fill:${fill}">\u0001${i}\u0001</text></g>`;
 }
 // small notes that only belong on a drawing with the names written on it
 const NOTE = (x, y, s, o) => P.numLbl ? '' : T(x, y, s, o);
 // the numbers, in the order the items sit across the drawing; returns the body with the tokens replaced and the key rows
-function numberLabels(body) {
+function numberLabels(body, pfx) {
+  // every reference is a prefix and a number (user: 'give them all different reference points, so if i say 30 you know which one exactly'): the prefix says which drawing, so DR31, PS31 and CK31 are three different things
+  pfx = pfx || '';
   const seen = [...new Set([...body.matchAll(/\u0001(\d+)\u0001/g)].map(m => +m[1]))];
   const ord = seen.sort((a, b) => KEYS[a].x - KEYS[b].x || KEYS[a].y - KEYS[b].y);
-  const num = {}; ord.forEach((k, n) => { num[k] = n + 1; });
+  const num = {}; ord.forEach((k, n) => { num[k] = pfx + (n + 1); });
   return { body: body.replace(/\u0001(\d+)\u0001/g, (m, k) => num[k]), rows: ord.map(k => Object.assign({ n: num[k] }, KEYS[k])) };
 }
 function R(x, y, w, h, o) {
@@ -491,10 +493,10 @@ function layout(P0) {
     L.sn = P.snItemsOn ? sn : null;
   }
   // the waterproof liner: PVC paneling (tongue and groove planks stood on end, 8 ft long) over the plywood on the back wall of the stall, 0 to the pan length, and lining the nook (the cut-outs are the nook's back);
-  // the other three sides of the stall are curtains, so there is no end wall and no corner. The planks start at the rear end (the nook's edges are cut lengthwise out of the planks they fall in); it stops a little above the pan edge
+  // the other three sides of the stall are curtains, so there is no end wall and no corner. The planks start at the cab end (the nook's edges are cut lengthwise out of the planks they fall in); it stops a little above the pan edge
   { const x1 = P.panW, pz = 3.8, z0 = pz + P.linerGap, z1 = Math.min(P.linerTop, L.ceilF || P.linerTop), hh = z1 - z0;
     const nk0 = L.snx[0], nkx = L.snx[1], nb = P.snookTop - P.snookH, nt = P.snookTop;
-    const joints = []; for (let k = 1; k * P.pvcW < x1 - .5; k++) joints.push(k * P.pvcW);      // the planks start at the rear end: full planks, the last one cut
+    const joints = []; for (let k = 1; x1 - k * P.pvcW > .5; k++) joints.unshift(x1 - k * P.pvcW);      // the planks start at the cab end: full planks, the rear one cut (the head and the valve sit in the middle of the full cab-end plank)
     const planks = joints.length + 1;
     const pieces = x1 * hh, nookSides = 2 * 4.5 * (nt - nb) + 2 * P.snookLen * 4.5;   // the wall planks' cut-outs are the nook's back; its floor, ceiling and two sides come out of the offcuts
     const plankLen = hh <= 96 ? 96 : 0;

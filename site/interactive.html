@@ -33,7 +33,7 @@
   .keybox h2 { font-size: 15px; margin: 0 0 6px; }
   .keybox ol { list-style: none; margin: 0; padding: 0; columns: 2 340px; column-gap: 28px; }
   .keybox li { break-inside: avoid; display: flex; gap: 8px; align-items: flex-start; margin: 3px 0; font-size: 13.5px; line-height: 1.35; }
-  .keybox .kn { flex: 0 0 22px; height: 22px; box-sizing: border-box; border-radius: 50%; border: 2px solid; text-align: center; font-weight: 700; font-size: 11.5px; line-height: 18px; background: #fff; }
+  .keybox .kn { flex: 0 0 auto; min-width: 22px; height: 22px; padding: 0 5px; box-sizing: border-box; border-radius: 11px; border: 2px solid; text-align: center; font-weight: 700; font-size: 11px; line-height: 18px; background: #fff; }
   .keybox .kd { color: var(--mute); }
   svg text { font-family: -apple-system, "Segoe UI", sans-serif; }
   svg .mv { cursor: pointer; }
@@ -62,10 +62,10 @@
   .hdlist label.off { color: var(--mute); text-decoration: line-through; }
   .drghint { color: #3C3489; margin-right: 10px; }
   .build { margin: 0; padding: 0; list-style: none; counter-reset: st; }
-  .build li { counter-increment: st; border-top: 1px solid #ECEAE0; padding: 8px 0 8px 34px; position: relative; font-size: 13.5px; line-height: 1.45; }
+  .build li { counter-increment: st; border-top: 1px solid #ECEAE0; padding: 8px 0 8px 42px; position: relative; font-size: 13.5px; line-height: 1.45; }
   .build li:first-child { border-top: 0; }
-  .build li::before { content: counter(st); position: absolute; left: 0; top: 8px; width: 22px; height: 22px; border-radius: 50%; background: #2C2C2A; color: #fff; font-size: 12px; font-weight: 700; text-align: center; line-height: 22px; }
-  .build li.done::before { content: "\2713"; background: var(--ok); }
+  .build li::before { content: "BS" counter(st); position: absolute; left: 0; top: 8px; min-width: 30px; height: 22px; padding: 0 3px; box-sizing: border-box; border-radius: 11px; background: #2C2C2A; color: #fff; font-size: 11px; font-weight: 700; text-align: center; line-height: 22px; }
+  .build li.done::before { background: var(--ok); }
   .build li.done .bt { text-decoration: line-through; color: var(--mute); }
   .build label { display: flex; gap: 8px; align-items: flex-start; cursor: pointer; }
   .build .bt { font-weight: 600; display: block; }
@@ -292,10 +292,10 @@ const PD = [
   { k: 'nookLen', g: 'Passenger side', l: 'Jar nook length along the wall (the nook ends at 93 1/4 on the cab side; a shorter nook comes off the rear end)', d: 17.25, s: .25, a: 6, b: 35.25 },
   { k: 'jarW', g: 'Passenger side', l: 'Jar width, center to center along the shelf (quart jars 3 3/4)', d: 3.75, s: .25, a: 2, b: 6 },
   { k: 'nookH', g: 'Passenger side', l: 'Jar nook height above the countertop (16 puts its top level with the bottom of the TV)', d: 16, s: .5, a: 8, b: 24 },
-  { k: 'headX', g: 'Passenger side', l: 'Shower head: along the wall, from the back (the stall is 0 to the shower pan length; it is to the left of the nook, toward the rear, over the standing space, and its feed rises beside the nook\'s rear frame)', d: 7, s: .5, a: 1, b: 35 },
+  { k: 'headX', g: 'Passenger side', l: 'Shower head: along the wall, from the back (the stall is 0 to the shower pan length; you asked for the plumbing to the left of the nook in the passenger-wall view and around 30 in along, so it is on the cab side of the nook, over the toilet end; 29 keeps its riser between the blocks of S4 to S7)', d: 29, s: .5, a: 1, b: 35 },
   { k: 'headZ', g: 'Passenger side', l: 'Shower head: height up from the floor (the finished ceiling at the wall is about 74 1/2)', d: 70, s: .5, a: 50, b: 74 },
   { k: 'headOut', g: 'Passenger side', l: 'Shower head: how far it sticks out from the wall on its arm', d: 6, s: .5, a: 2, b: 14 },
-  { k: 'valveX', g: 'Passenger side', l: 'Shower valve (mixer handle): along the wall, from the back (to the left of the nook, under the head, within reach of the standing space; the hot and cold lines rise beside it, clear of the shallow steel before 6 in and of the first block of S4, at 13)', d: 7, s: .5, a: 1, b: 35 },
+  { k: 'valveX', g: 'Passenger side', l: 'Shower valve (mixer handle): along the wall, from the back (around 30, as you said: 29, under the head, on the cab side of the nook; the hot and cold lines rise beside it, between the blocks of S4 at 17 3/4 and 31 1/4)', d: 29, s: .5, a: 1, b: 35 },
   { k: 'valveZ', g: 'Passenger side', l: 'Shower valve: height up from the floor (36: you chose it; it sits between furring rails S4 and S5, and now that the nook is not above it you could raise it to 44)', d: 36, s: .5, a: 26, b: 60 },
   { k: 'toiletW', g: 'Toilet', l: 'Toilet: width, side to side (Reliance Fold-To-Go 14 1/2)', d: 14.5, s: .5, a: 10, b: 24 },
   { k: 'toiletD', g: 'Toilet', l: 'Toilet: depth, front to back (it sits sideways, so this runs along the wall; Fold-To-Go 14 1/2)', d: 14.5, s: .5, a: 10, b: 26 },
@@ -486,15 +486,17 @@ function LBL(x, y, name, dims, o) {
   }
   const i = KEYS.length; KEYS.push({ x, y, name, dims: [dims, o.keyMore].filter(Boolean).join(', '), fill });
   const op = o.op != null && o.op < 1 ? ` opacity="${f1(o.op)}"` : '';
-  return `<g class="nb"${op}><circle cx="${f1(x)}" cy="${f1(y)}" r="9.5" fill="#fff" fill-opacity=".94" stroke="${fill}" stroke-width="1.7"/><text x="${f1(x)}" y="${f1(y + 3.8)}" text-anchor="middle" style="font-size:10.5px;font-weight:700;fill:${fill}">\u0001${i}\u0001</text></g>`;
+  return `<g class="nb"${op}><rect x="${f1(x - 15.5)}" y="${f1(y - 8.5)}" width="31" height="17" rx="8.5" fill="#fff" fill-opacity=".94" stroke="${fill}" stroke-width="1.7"/><text x="${f1(x)}" y="${f1(y + 3.5)}" text-anchor="middle" style="font-size:9.5px;font-weight:700;fill:${fill}">\u0001${i}\u0001</text></g>`;
 }
 // small notes that only belong on a drawing with the names written on it
 const NOTE = (x, y, s, o) => P.numLbl ? '' : T(x, y, s, o);
 // the numbers, in the order the items sit across the drawing; returns the body with the tokens replaced and the key rows
-function numberLabels(body) {
+function numberLabels(body, pfx) {
+  // every reference is a prefix and a number (user: 'give them all different reference points, so if i say 30 you know which one exactly'): the prefix says which drawing, so DR31, PS31 and CK31 are three different things
+  pfx = pfx || '';
   const seen = [...new Set([...body.matchAll(/\u0001(\d+)\u0001/g)].map(m => +m[1]))];
   const ord = seen.sort((a, b) => KEYS[a].x - KEYS[b].x || KEYS[a].y - KEYS[b].y);
-  const num = {}; ord.forEach((k, n) => { num[k] = n + 1; });
+  const num = {}; ord.forEach((k, n) => { num[k] = pfx + (n + 1); });
   return { body: body.replace(/\u0001(\d+)\u0001/g, (m, k) => num[k]), rows: ord.map(k => Object.assign({ n: num[k] }, KEYS[k])) };
 }
 function R(x, y, w, h, o) {
@@ -690,10 +692,10 @@ function layout(P0) {
     L.sn = P.snItemsOn ? sn : null;
   }
   // the waterproof liner: PVC paneling (tongue and groove planks stood on end, 8 ft long) over the plywood on the back wall of the stall, 0 to the pan length, and lining the nook (the cut-outs are the nook's back);
-  // the other three sides of the stall are curtains, so there is no end wall and no corner. The planks start at the rear end (the nook's edges are cut lengthwise out of the planks they fall in); it stops a little above the pan edge
+  // the other three sides of the stall are curtains, so there is no end wall and no corner. The planks start at the cab end (the nook's edges are cut lengthwise out of the planks they fall in); it stops a little above the pan edge
   { const x1 = P.panW, pz = 3.8, z0 = pz + P.linerGap, z1 = Math.min(P.linerTop, L.ceilF || P.linerTop), hh = z1 - z0;
     const nk0 = L.snx[0], nkx = L.snx[1], nb = P.snookTop - P.snookH, nt = P.snookTop;
-    const joints = []; for (let k = 1; k * P.pvcW < x1 - .5; k++) joints.push(k * P.pvcW);      // the planks start at the rear end: full planks, the last one cut
+    const joints = []; for (let k = 1; x1 - k * P.pvcW > .5; k++) joints.unshift(x1 - k * P.pvcW);      // the planks start at the cab end: full planks, the rear one cut (the head and the valve sit in the middle of the full cab-end plank)
     const planks = joints.length + 1;
     const pieces = x1 * hh, nookSides = 2 * 4.5 * (nt - nb) + 2 * P.snookLen * 4.5;   // the wall planks' cut-outs are the nook's back; its floor, ceiling and two sides come out of the offcuts
     const plankLen = hh <= 96 ? 96 : 0;
@@ -2346,7 +2348,7 @@ function computeChecks(L, V) {
   const ov = Math.min(L.sinkE, P.doorX + P.slideW) - Math.max(L.sinkS, P.doorX);
   if (ov > .5) push('ok', `The sink cabinet (${fmt(L.sinkS)} to ${fmt(L.sinkE)}) sits ${fmt(ov)} in inside the sliding door opening (${fmt(P.doorX)} to ${fmt(P.doorX + P.slideW)} in, ${fmt(P.slideH)} tall); you said that overlap is intended.`);
   if (P.showerOn) {
-    push(P.headZ > L.ceilF - 1 ? 'bad' : 'ok', `Shower head: ${fmt(P.headX)} in from the back (the stall runs 0 to ${fmt(P.panW)}), ${fmt(P.headZ)} in up on a ${fmt(P.headOut)} in arm, ${fmt(L.ceilF - P.headZ)} in under the finished ceiling at the wall. A 6 ft person (72 in) is taller than the head, so they stand ${fmt(P.headOut + 2)} in or more out from the wall under the spray, or you use a hand-held wand on a slide bar. The shower plumbing is to the left of the nook (the nook starts ${fmt(L.snx[0])} in from the back): the head and its feed ${fmt(P.headX)} in from the back, and the valve ${fmt(P.valveX)} in from the back and ${fmt(P.valveZ)} in up, between furring rails S4 and S5 and over the standing space. The hot and cold lines rise beside the valve, clear of the first block of S4 (at 13), through S4 (drilled, not notched).`);
+    push(P.headZ > L.ceilF - 1 ? 'bad' : 'ok', `Shower head: ${fmt(P.headX)} in from the back (the stall runs 0 to ${fmt(P.panW)}), ${fmt(P.headZ)} in up on a ${fmt(P.headOut)} in arm, ${fmt(L.ceilF - P.headZ)} in under the finished ceiling at the wall. A 6 ft person (72 in) is taller than the head, so they stand ${fmt(P.headOut + 2)} in or more out from the wall under the spray, or you use a hand-held wand on a slide bar. The shower plumbing is on the cab side of the nook, the left of it in this view (the nook is ${fmt(L.snx[0])} to ${fmt(L.snx[1])} in from the back): the head and its feed ${fmt(P.headX)} in from the back, and the valve ${fmt(P.valveX)} in from the back and ${fmt(P.valveZ)} in up, between furring rails S4 and S5, over the toilet end. The hot and cold lines rise beside the valve between the blocks of S4 (at 17 3/4 and 31 1/4), through S4, and the feed rises from the valve to the head between the same blocks, through S5, S6 and S7 (drilled, not notched).`);
   }
   if (L.toilet) {
     const t = L.toilet, front = t.x0, side = t.y0, reachH = Math.hypot(P.valveX - (t.x0 - 6), P.panD / 2), reach = Math.hypot(reachH, P.valveZ - 55);
@@ -2371,7 +2373,7 @@ function computeChecks(L, V) {
       const vh = P.valveHole / 2, jn = (ln.joints || []).find(j => Math.abs(j - P.valveX) < vh + .4);
       if (P.showerOn && jn !== undefined) warn.push(`a plank joint (at ${fmt(jn)} in) runs through the valve hole: move the valve or the nook so the hole sits in the middle of a plank`);
     }
-    push(bad.length ? 'bad' : warn.length ? 'warn' : 'ok', `Shower pan and paneling: you bought the pan (${fmt(P.panW)} x ${fmt(P.panD)} in, 3 in curb), so it is set on the floor, not built: bedded and leveled, with its drain over a hole through the floor at ${fmt(d.x)} in along and ${fmt(d.y)} out (the middle of the rear-door end: 5 in from the rear end, as you said, and 12 out, the middle of the depth, which I assumed: check it on the pan), ${t ? fmt(toToilet) + ' in from the toilet\'s rear edge and ' : ''}${fmt(Math.abs(d.x - P.headX))} in along from the shower head. Only the back wall of the stall is lined: ${ln ? `PVC paneling (tongue and groove planks, ${fmt(P.linerT)} in thick) glued over the plywood, stood on end, from ${fmt(ln.x0)} to ${fmt(ln.x1)} in along the wall and ${fmt(ln.z0)} to ${fmt(ln.z1)} up (it stops ${fmt(P.linerGap)} in above the pan edge, and that gap is filled with flexible sealant), ${ln.planks} planks of 8 ft in all with the joints at ${(ln.joints || []).map(fmt).join(', ')} in (they start at the rear end; the nook's edges are cut lengthwise out of the planks they fall in), and it lines the shower nook (the planks' cut-outs are the nook's back; the floor, ceiling and two sides come out of the offcuts), about ${Math.round(ln.lbs)} lb. It leaves ${fmt(Math.max(0, 4.5 - ln.t))} in of depth in the nook.` : 'the paneling is switched off (the plywood in the stall would need its own waterproof coating).'} The other three sides of the stall have no wall: two curtains hang from one rail on the ceiling round them, ${fmt(P.curIn)} in inside the pan's edge, and overlap 6 in in the middle of the front. ${bad.length ? 'PROBLEM: ' + bad.join('; ') + '. ' : ''}${warn.length ? 'Check: ' + warn.join('; ') + '. ' : ''}The holes in the paneling are ${fmt(P.headHole)} in for the shower arm and ${fmt(P.valveHole)} in for the valve (each 1/4 in bigger than the part that goes through, hidden by its flange or trim plate with a ring of sealant behind it). The plywood's screws with finish washers must be countersunk and filled flush where the paneling goes, and the planks are glued with the maker's panel adhesive, with no screws through the face. The build guide has a Shower pan page with the drawings and the order.`);
+    push(bad.length ? 'bad' : warn.length ? 'warn' : 'ok', `Shower pan and paneling: you bought the pan (${fmt(P.panW)} x ${fmt(P.panD)} in, 3 in curb), so it is set on the floor, not built: bedded and leveled, with its drain over a hole through the floor at ${fmt(d.x)} in along and ${fmt(d.y)} out (the middle of the rear-door end: 5 in from the rear end, as you said, and 12 out, the middle of the depth, which I assumed: check it on the pan), ${t ? fmt(toToilet) + ' in from the toilet\'s rear edge and ' : ''}${fmt(Math.abs(d.x - P.headX))} in along from the shower head. Only the back wall of the stall is lined: ${ln ? `PVC paneling (tongue and groove planks, ${fmt(P.linerT)} in thick) glued over the plywood, stood on end, from ${fmt(ln.x0)} to ${fmt(ln.x1)} in along the wall and ${fmt(ln.z0)} to ${fmt(ln.z1)} up (it stops ${fmt(P.linerGap)} in above the pan edge, and that gap is filled with flexible sealant), ${ln.planks} planks of 8 ft in all with the joints at ${(ln.joints || []).map(fmt).join(', ')} in (they start at the cab end, so the head and the valve are in the middle of the full cab-end plank; the nook's edges are cut lengthwise out of the planks they fall in), and it lines the shower nook (the planks' cut-outs are the nook's back; the floor, ceiling and two sides come out of the offcuts), about ${Math.round(ln.lbs)} lb. It leaves ${fmt(Math.max(0, 4.5 - ln.t))} in of depth in the nook.` : 'the paneling is switched off (the plywood in the stall would need its own waterproof coating).'} The other three sides of the stall have no wall: two curtains hang from one rail on the ceiling round them, ${fmt(P.curIn)} in inside the pan's edge, and overlap 6 in in the middle of the front. ${bad.length ? 'PROBLEM: ' + bad.join('; ') + '. ' : ''}${warn.length ? 'Check: ' + warn.join('; ') + '. ' : ''}The holes in the paneling are ${fmt(P.headHole)} in for the shower arm and ${fmt(P.valveHole)} in for the valve (each 1/4 in bigger than the part that goes through, hidden by its flange or trim plate with a ring of sealant behind it). The plywood's screws with finish washers must be countersunk and filled flush where the paneling goes, and the planks are glued with the maker's panel adhesive, with no screws through the face. The build guide has a Shower pan page with the drawings and the order.`);
   }
   if (L.gear) {
     const g = L.gear, sh = g.sh, u = [g.inv, g.dc, g.ch], names = ['the inverter', 'the DC-DC charger', 'the shore charger'];
@@ -2444,6 +2446,8 @@ const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
 
 /* ================= views, movers, drawing loop ================= */
 const ALLDC = ['dc0', 'dc1', 'dc2', 'dc3', 'dc4', 'dc5'];
+// the reference prefix of the items numbered on each drawing (DR3 is the third item on the driver side, PS3 on the passenger side): the checks are CK1, CK2 ... and the build steps BS1, BS2 ..., so no number means two things
+const VIEW_PFX = { driver: 'DR', pass: 'PS', end: 'BE', cross: 'XS', bare: 'RF', ceil: 'CL', plan: 'FA' };
 const VIEWS = [
   { id: 'driver', label: 'Driver side', drag: 'the lawn chairs under the couch (left-right and up-down)', draw: drawDriver, movers: [['Couch to bed', ['bed']], ['Dinette to bed', ['dinette']], ['Wall cabinet doors, bed side', ['dc0', 'dc1', 'dc2']], ['Wall cabinet doors, dinette side', ['dc3', 'dc4', 'dc5']], ['Closet door', ['clo_hi']], ['Closet drawers', ['clo_dr']], ['Gear shelf', ['gear_sh']]] },
   { id: 'pass', label: 'Passenger side', drag: 'the drawers and shelves under the counter, the jar shelf, the microwave, the trash can, the dish towel hook, the hot water tank, the fresh water tank, the drain jug and the drain line (all of them left-right and up-down)', draw: drawPass, movers: [['Shower pan', ['pan']], ['Fridge door', ['fridge']], ['Trash can pull-out', ['can']], ['Fold-out table with the foot ledge', ['flap', 'ledge']], ['Foot ledge only', ['ledge']]] },
@@ -2503,12 +2507,12 @@ function render() {
   KEYS.length = 0;
   const r = vw.draw(L, V), svg = $('#svg');
   svg.setAttribute('viewBox', `0 0 ${Math.round(r.w)} ${Math.round(r.h)}`);
-  const nl = numberLabels(stripGroups(r.body, REMOVED()));
+  const nl = numberLabels(stripGroups(r.body, REMOVED()), VIEW_PFX[view]);
   svg.innerHTML = DEFS + nl.body;
   renderKey(nl.rows);
   // checks (only touch the page when the text changed)
   const ch = computeChecks(L, V), sig = JSON.stringify(ch);
-  if (sig !== lastSig) { lastSig = sig; $('#checks').innerHTML = ch.map((c, i) => `<li class="${c.lv}"><span class="no">${i + 1}</span> ${c.t}</li>`).join(''); }
+  if (sig !== lastSig) { lastSig = sig; $('#checks').innerHTML = ch.map((c, i) => `<li class="${c.lv}"><span class="no">CK${i + 1}</span> ${c.t}</li>`).join(''); }
   renderAlerts(L, ch);
   renderHideBar();
   renderBuild(L);
@@ -2571,8 +2575,8 @@ function renderAlerts(L, ch) {
   if (!el) return;
   const txt = dragging && dragging.moved ? (DRAG_SAYS[dragging.id] ? DRAG_SAYS[dragging.id](L) : sayMore(L, dragging.id)) : '', say = txt ? `<div class="rd">${txt}</div>` : '';
   const head = bad.length ? `<b>&#10007; ${bad.length === 1 ? '1 thing does not fit' : bad.length + ' things do not fit'}</b>` : '<b>&#10003; Everything fits</b>';
-  const cau = warn.length ? ` <span class="cau">${warn.length} caution${warn.length === 1 ? '' : 's'}: number${warn.length === 1 ? '' : 's'} ${warn.map(c => ch.indexOf(c) + 1).join(', ')} in Does it fit? below</span>` : '';
-  const html = head + cau + say + (bad.length ? `<ul>${bad.map(c => `<li><span class="no">${ch.indexOf(c) + 1}</span> ${headline(c.t)}</li>`).join('')}</ul>` : '');
+  const cau = warn.length ? ` <span class="cau">${warn.length} caution${warn.length === 1 ? '' : 's'}: ${warn.map(c => 'CK' + (ch.indexOf(c) + 1)).join(', ')} in Does it fit? below</span>` : '';
+  const html = head + cau + say + (bad.length ? `<ul>${bad.map(c => `<li><span class="no">CK${ch.indexOf(c) + 1}</span> ${headline(c.t)}</li>`).join('')}</ul>` : '');
   el.className = 'alerts' + (bad.length ? ' bad' : '');
   if (el.innerHTML !== html) el.innerHTML = html;
   $('.stage').classList.toggle('bad', bad.length > 0);
