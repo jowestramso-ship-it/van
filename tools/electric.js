@@ -291,7 +291,7 @@ function loadTable(d) {
     ['Air conditioner, eco', `${fr(P.acEcoA)} A for ${fr(P.acEcoH)} h`, P.acEcoA * P.acEcoH, 'figures from the listing and reviews'],
     ['Fridge, 120 V', 'about 100 W while it runs, assumed 45% of the day', 0.1 * 24 * 0.45 / Vn * 1000, 'your figure of 100 W; the 45% is my assumption for a warm van'],
     ['Inverter idling, on all day for the fridge', 'about 20 W for 24 h', 0.02 * 24 / Vn * 1000, 'assumed; some inverters have a search mode that cuts this to a few watts, but check it still wakes for the fridge'],
-    ['2 ceiling lights, 3 under-cabinet lights', 'about 20 W for 4 h', 20 * 4 / Vn, 'assumed LEDs: about 4 W each'],
+    ['2 ceiling lights, 4 under-cabinet lights', 'about 24 W for 4 h', 24 * 4 / Vn, 'assumed LEDs: about 4 W each'],
     ['Roof fan', `${fr(P.fanLowW)} W low, ${fr(P.fanHighW)} W high for ${fr(P.fanHighH)} h`, ((P.fanLowW * (24 - P.fanHighH) + P.fanHighW * P.fanHighH) / 12), 'from the plan'],
     ['Soft LED strip, dimmed', 'about 31 ft at about 3 W a foot, about 30% for 4 h', 94 * .3 * 4 / Vn, 'assumed: a 2700 K strip at about 3 W a foot is about 94 W at full'],
     ['Water pump', 'about 7 A for 20 min', 7 / 3, 'assumed'],
