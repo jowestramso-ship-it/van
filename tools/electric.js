@@ -6,6 +6,7 @@
 */
 const {chromium} = require(process.env.NODE_PATH + '/playwright');
 const fs = require('fs');
+const EW = require('./elwires.js');
 const fr = v => { let w = Math.floor(v + 1e-9), r = Math.round((v - w) * 16); if (r === 16){w++;r=0;} let n=r,d=16; while(n&&n%2===0){n/=2;d/=2;} return (n? (w?w+' ':'')+n+'/'+d : ''+w); };
 const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 
@@ -53,7 +54,7 @@ const E_PASS = pl => { const sl = pl.lights.filter(l => l.x > 6 && l.x < 6 + pl.
   ] : []),
 ]; };
 
-// plumbing shown for reference, drawn in teal with PL numbers so it cannot be mistaken for the electrics
+// plumbing shown for reference, drawn as pipes and fixtures in slate with hexagon PL labels so it cannot be mistaken for the electrics (wires are drawn as coloured lines with round labels)
 const PLUMB = pl => {
   const rz = 27.5;                                   // rz: the band between furring rails S3 (21 1/4) and S4 (30 1/4), inside the 2 in zone (23 1/4 to 29 1/2 up) and above the five oval slots at 25 1/3
   const rx = pl.valveX - 1.5, vz = pl.valveZ, sx = pl.pdrX;      // the lines rise at rx, between the blocks of S4 (at 17 3/4 and 31 1/4)
@@ -61,7 +62,7 @@ const PLUMB = pl => {
     {k:'phead', n:'Shower head', x:pl.headX, z:pl.headZ, lab:'H', note:fr(pl.headZ) + ' in up on a ' + fr(pl.headOut) + ' in arm pointing into the stall, on the cab side of the nook, around 30 in along the wall as you said (' + fr(pl.headX) + '), over the toilet end; the feed rises straight up from the valve at the head\'s own position'},
     {k:'pvalve', n:'Shower valve (mixer handle)', x:pl.valveX, z:pl.valveZ, lab:'V', note:'on the cab side of the shower nook, the left of it in the passenger-wall view (user: the plumbing is to the left of the nook, and the head and the valve are around 30 in along the wall; the nook is ' + fr(pl.snookEnd - (pl.sn ? pl.sn.x1 - pl.sn.x0 : 12)) + ' to ' + fr(pl.snookEnd) + ' in), under the head, ' + fr(vz) + ' in up, between furring rails S4 and S5, over the toilet end; the hot and cold lines come up beside it at ' + fr(rx) + ' in. The steel angle at the rear end stands 1 1/2 in off the body up to 36 3/4 (sloping down to 31 at 11 in), so about 3 in of room is left behind the covering'},
     {k:'ppump', n:'Water pump, under the sink beside the water heater', x0:104, x1:107, z0:12, z1:20, note:'user: the pump will fit somewhere closer to the water heater (it was at 119 to 122). On the inside of the sink cabinet\u2019s rear end panel (the heater, 87 1/4 to 101 1/4, is just beyond it), above the fresh tank (top at 10 in), about 3 in from the heater\u2019s fittings; reached through the sink cabinet\u2019s doors or hatch (my placement). Its 12 V feed (14 AWG, 10 A, from the fuse block) is the pump circuit on the one-line diagram'},
-    {k:'ppath', n:'Hot and cold supply to the shower valve (two 1/2 in PEX lines)', pts:[[105.5, 20.5], [105.5, rz], [rx, rz], [rx, vz - 1.5]], at:[70, rz], note:'cold leaves the pump (now beside the heater, at 104 to 107) and rises inside the sink cabinet (from 104 on, the wall is the sliding door, so there is no cavity there: clip it inside the cabinet) to ' + fr(rz) + ' in up, then through the cabinet\u2019s rear end panel at 103 into the wall cavity behind the covering at ' + fr(rz) + ' in up: between furring rails S3 and S4 (the free band between the 3 1/2 in furring rails is 23 to 28 1/2 up), in the 2 in zone (23 1/4 to 29 1/2 up) where the steel is only 2 in off the body so there is about 2 1/2 in of room behind the covering, and above the five oval slots at 25 1/3 up. It crosses the pillar at about 98 and runs on behind the covering past the back of the fridge (there is no wall between the fridge and the shower now: its end is a curtain) to the rear end of the stall, then up at ' + fr(rx) + ' in, between the blocks of S4 (at 17 3/4 and 31 1/4), through S4 (drill it, do not notch) to the valve. The hot line branches off the hot water tank (87 1/4 to 101 1/4, fittings at its back) at about 94 and runs beside the cold one, 1 in apart; foam sleeve on the hot one, and insulation between both lines and the steel'},
+    {k:'ppath', two:true, n:'Hot and cold supply to the shower valve (two 1/2 in PEX lines)', pts:[[105.5, 20.5], [105.5, rz], [rx, rz], [rx, vz - 1.5]], at:[70, rz], note:'cold leaves the pump (now beside the heater, at 104 to 107) and rises inside the sink cabinet (from 104 on, the wall is the sliding door, so there is no cavity there: clip it inside the cabinet) to ' + fr(rz) + ' in up, then through the cabinet\u2019s rear end panel at 103 into the wall cavity behind the covering at ' + fr(rz) + ' in up: between furring rails S3 and S4 (the free band between the 3 1/2 in furring rails is 23 to 28 1/2 up), in the 2 in zone (23 1/4 to 29 1/2 up) where the steel is only 2 in off the body so there is about 2 1/2 in of room behind the covering, and above the five oval slots at 25 1/3 up. It crosses the pillar at about 98 and runs on behind the covering past the back of the fridge (there is no wall between the fridge and the shower now: its end is a curtain) to the rear end of the stall, then up at ' + fr(rx) + ' in, between the blocks of S4 (at 17 3/4 and 31 1/4), through S4 (drill it, do not notch) to the valve. The hot line branches off the hot water tank (87 1/4 to 101 1/4, fittings at its back) at about 94 and runs beside the cold one, 1 in apart; foam sleeve on the hot one, and insulation between both lines and the steel'},
     {k:'ppath', n:'Feed from the valve to the shower head', pts:[[pl.valveX, vz + 1.5], [pl.headX, vz + 1.5], [pl.headX, pl.headZ - 1.2]], at:[pl.headX, 52], note:'from the top of the valve straight up (the head is at the valve\'s own place), past S5, S6 and S7 (drill each, do not notch) in the gap between their blocks at 17 3/4 and 31 1/4, to the head; one mixed-water line'},
     {k:'pdrain', n:'Shower drain, through the floor to the grey water tank under the van', x:sx, z:.8, note:'a 1 1/2 in drain at the rear-door end of the pan (' + fr(sx) + ' in along, about ' + fr(pl.pdrY) + ' in out from the wall), the pan floor sloping to it; straight down through the floor, a shallow trap under it, then to the grey tank (30 x 17 x 8 space, position not set) with its vent. The tank has to be lower than the pan'},
   ];
@@ -109,7 +110,7 @@ async function grabBase(page2, idx) {
 }
 
 // ------------------------------------------------------------------ drawing
-const CPL = '#0E7C86', INK = '#1b1a17', C120 = '#B3261E', C12 = '#185FA5', CAC = '#B45309', CLT = '#B8860B';
+const CPL = '#475569', CPLF = '#D9E2EC', INK = '#1b1a17', C120 = '#B3261E', C12 = '#185FA5', CAC = '#B45309', CLT = '#B8860B';
 function symbol(e, X, Y) {
   const o = [], r = 7;
   if (e.k === 'out120') { const x = X(e.x), y = Y(e.z); o.push(`<circle cx="${x}" cy="${y}" r="${r}" fill="#fff" stroke="${C120}" stroke-width="1.8"/><line x1="${x-3}" y1="${y-3}" x2="${x-3}" y2="${y+1}" stroke="${C120}" stroke-width="1.6"/><line x1="${x+3}" y1="${y-3}" x2="${x+3}" y2="${y+1}" stroke="${C120}" stroke-width="1.6"/>`); return [o.join(''), x, y]; }
@@ -117,11 +118,16 @@ function symbol(e, X, Y) {
   if (e.k === 'sw') { const x = X(e.x), y = Y(e.z); o.push(`<rect x="${x-6.5}" y="${y-6.5}" width="13" height="13" rx="2" fill="#fff" stroke="${INK}" stroke-width="1.8"/><text x="${x}" y="${y+3.6}" text-anchor="middle" style="font-size:10px;font-weight:700;fill:${INK}">S</text>`); return [o.join(''), x, y]; }
   if (e.k === 'lt') { const x = X(e.x), y = Y(e.z); o.push(`<circle cx="${x}" cy="${y}" r="${r}" fill="#FFD84A" stroke="${CLT}" stroke-width="1.8"/>`); return [o.join(''), x, y]; }
   if (e.k === 'plate') { const x = X(e.x), y = Y(e.z); o.push(`<rect x="${x-17}" y="${y-9}" width="34" height="18" rx="3" fill="#fff" stroke="${INK}" stroke-width="1.8"/><rect x="${x-14}" y="${y-5.5}" width="11" height="11" rx="1.5" fill="#fff" stroke="${INK}" stroke-width="1.5"/><text x="${x-8.5}" y="${y+3}" text-anchor="middle" style="font-size:8.5px;font-weight:700;fill:${INK}">S</text><circle cx="${x+9}" cy="${y}" r="6" fill="#fff" stroke="${C120}" stroke-width="1.6"/><line x1="${x+6.6}" y1="${y-2.6}" x2="${x+6.6}" y2="${y+.8}" stroke="${C120}" stroke-width="1.4"/><line x1="${x+11.4}" y1="${y-2.6}" x2="${x+11.4}" y2="${y+.8}" stroke="${C120}" stroke-width="1.4"/>`); return [o.join(''), x, y]; }
-  if (e.k === 'phead' || e.k === 'pvalve') { const x = X(e.x), y = Y(e.z); o.push(`<circle cx="${x}" cy="${y}" r="8" fill="#D7F0F2" stroke="${CPL}" stroke-width="2.2"/><text x="${x}" y="${y+3.6}" text-anchor="middle" style="font-size:10px;font-weight:700;fill:${CPL}">${e.lab}</text>`); return [o.join(''), x, y]; }
-  if (e.k === 'ppump') { const xa = X(e.x0), xb = X(e.x1), x = Math.min(xa, xb), w = Math.max(12, Math.abs(xb - xa)), y0 = Y(e.z1), h = 6 * (e.z1 - e.z0); o.push(`<rect x="${x}" y="${y0}" width="${w}" height="${h}" rx="4" fill="#D7F0F2" fill-opacity=".8" stroke="${CPL}" stroke-width="2.2"/><text x="${x + w / 2}" y="${y0 + h / 2 + 3.4}" text-anchor="middle" style="font-size:9.5px;font-weight:700;fill:${CPL}">pump</text>`); return [o.join(''), x + w / 2, y0 + h / 2]; }
-  if (e.k === 'ppath') { const pts = e.pts.map(p => X(p[0]) + ',' + Y(p[1])).join(' '); o.push(`<polyline points="${pts}" fill="none" stroke="${CPL}" stroke-width="3.2" stroke-dasharray="9 5" stroke-linejoin="round" opacity=".9"/><polyline points="${e.pts.map(p => (X(p[0]) + 4) + ',' + (Y(p[1]) + 4)).join(' ')}" fill="none" stroke="#B3261E" stroke-width="2" stroke-dasharray="9 5" stroke-linejoin="round" opacity=".55"/>`); return [o.join(''), X(e.at[0]), Y(e.at[1])]; }
-  if (e.k === 'pdrain') { const x = X(e.x), y = Y(e.z); o.push(`<circle cx="${x}" cy="${y}" r="8" fill="#D7F0F2" stroke="${CPL}" stroke-width="2.2"/><line x1="${x}" y1="${y-4}" x2="${x}" y2="${y+14}" stroke="${CPL}" stroke-width="2.4"/><path d="M${x-5} ${y+9} L${x} ${y+16} L${x+5} ${y+9}" fill="none" stroke="${CPL}" stroke-width="2.4"/><text x="${x}" y="${y+3.4}" text-anchor="middle" style="font-size:9px;font-weight:700;fill:${CPL}">D</text>`); return [o.join(''), x, y]; }
-  if (e.k === 'pvent') { const x = X(e.x), y = Y(e.z); o.push(`<rect x="${x-8}" y="${y-8}" width="16" height="16" rx="8" fill="#D7F0F2" stroke="${CPL}" stroke-width="2.2"/><text x="${x}" y="${y+3.4}" text-anchor="middle" style="font-size:8.5px;font-weight:700;fill:${CPL}">VT</text>`); return [o.join(''), x, y]; }
+  if (e.k === 'phead') { const x = X(e.x), y = Y(e.z); o.push(`<line x1="${x}" y1="${y-12}" x2="${x}" y2="${y-3}" stroke="${CPL}" stroke-width="3.4" stroke-linecap="round"/><path d="M${x-11} ${y+3} Q${x} ${y-12} ${x+11} ${y+3} Z" fill="${CPLF}" stroke="${CPL}" stroke-width="2.2" stroke-linejoin="round"/><g stroke="${CPL}" stroke-width="1.6" stroke-linecap="round" stroke-dasharray="1 3.2"><line x1="${x-7}" y1="${y+7}" x2="${x-9}" y2="${y+17}"/><line x1="${x}" y1="${y+7}" x2="${x}" y2="${y+18}"/><line x1="${x+7}" y1="${y+7}" x2="${x+9}" y2="${y+17}"/></g>`); return [o.join(''), x, y]; }
+  if (e.k === 'pvalve') { const x = X(e.x), y = Y(e.z); o.push(`<line x1="${x-11}" y1="${y}" x2="${x+11}" y2="${y}" stroke="${CPL}" stroke-width="3.6" stroke-linecap="round"/><circle cx="${x}" cy="${y}" r="7" fill="#fff" stroke="${CPL}" stroke-width="2.4"/><line x1="${x}" y1="${y}" x2="${x+5}" y2="${y-9}" stroke="${CPL}" stroke-width="3" stroke-linecap="round"/>`); return [o.join(''), x, y]; }
+  if (e.k === 'ppump') { const xa = X(e.x0), xb = X(e.x1), x = Math.min(xa, xb), w = Math.max(14, Math.abs(xb - xa)), y0 = Y(e.z1), h = 6 * (e.z1 - e.z0), cx = x + w / 2, cy = y0 + h / 2; o.push(`<rect x="${x}" y="${y0}" width="${w}" height="${h}" rx="7" fill="${CPLF}" fill-opacity=".9" stroke="${CPL}" stroke-width="2.4"/><circle cx="${cx}" cy="${cy - 6}" r="9" fill="#fff" stroke="${CPL}" stroke-width="2"/><path d="M${cx} ${cy-6} m-5 0 a5 5 0 0 1 5 -5 M${cx} ${cy-6} m5 0 a5 5 0 0 1 -5 5" fill="none" stroke="${CPL}" stroke-width="2" stroke-linecap="round"/><text x="${cx}" y="${y0 + h - 7}" text-anchor="middle" style="font-size:9.5px;font-weight:700;fill:${CPL}">pump</text>`); return [o.join(''), cx, cy]; }
+  if (e.k === 'ppath') { const tube = (pts, inner) => { const q = pts.map(p => X(p[0]) + ',' + Y(p[1])).join(' '); return `<polyline points="${q}" fill="none" stroke="${CPL}" stroke-width="9" stroke-linejoin="round" stroke-linecap="round"/><polyline points="${q}" fill="none" stroke="${inner}" stroke-width="5" stroke-linejoin="round" stroke-linecap="round"/>`; };
+    const fit = (pts, dx, dy) => pts.map(p => `<circle cx="${X(p[0]) + dx}" cy="${Y(p[1]) + dy}" r="5.6" fill="#fff" stroke="${CPL}" stroke-width="2"/>`).join('');
+    if (e.two) { const sh = pts => pts.map(p => [p[0] + 8 / 6 * (X(1) < X(0) ? -1 : 1), p[1] - 8 / 6]); o.push(tube(e.pts, '#CFE6FA')); o.push(tube(sh(e.pts), '#FAD7CC')); o.push(fit(e.pts.slice(1, -1), 0, 0), fit(sh(e.pts).slice(1, -1), 0, 0)); }
+    else { o.push(tube(e.pts, '#EEF1F5')); o.push(fit(e.pts.slice(1, -1), 0, 0)); }
+    return [o.join(''), X(e.at[0]), Y(e.at[1])]; }
+  if (e.k === 'pdrain') { const x = X(e.x), y = Y(e.z); o.push(`<rect x="${x-4.5}" y="${y}" width="9" height="22" fill="#fff" stroke="${CPL}" stroke-width="2"/><ellipse cx="${x}" cy="${y}" rx="11" ry="5" fill="${CPLF}" stroke="${CPL}" stroke-width="2.2"/><g stroke="${CPL}" stroke-width="1.6" stroke-linecap="round"><line x1="${x-5}" y1="${y}" x2="${x+5}" y2="${y}"/></g><path d="M${x-6} ${y+27} L${x} ${y+34} L${x+6} ${y+27}" fill="none" stroke="${CPL}" stroke-width="2.4" stroke-linejoin="round"/>`); return [o.join(''), x, y]; }
+  if (e.k === 'pvent') { const x = X(e.x), y = Y(e.z); o.push(`<rect x="${x-8}" y="${y-8}" width="16" height="16" rx="8" fill="${CPLF}" stroke="${CPL}" stroke-width="2.2"/><text x="${x}" y="${y+3.4}" text-anchor="middle" style="font-size:8.5px;font-weight:700;fill:${CPL}">VT</text>`); return [o.join(''), x, y]; }
   if (e.k === 'wet') { const x = X(e.x), y = Y(e.z); o.push(`<circle cx="${x}" cy="${y}" r="7" fill="#DCEAF6" stroke="${C12}" stroke-width="1.8" stroke-dasharray="3 2"/><text x="${x}" y="${y+3.4}" text-anchor="middle" style="font-size:9px;font-weight:700;fill:${C12}">${e.lab}</text>`); return [o.join(''), x, y]; }
   if (e.k === 'sel') { const x = X(e.x), y = Y(e.z); o.push(`<rect x="${x-10}" y="${y-8}" width="20" height="16" rx="3" fill="#fff" stroke="${C120}" stroke-width="2"/><text x="${x}" y="${y+3.4}" text-anchor="middle" style="font-size:8.5px;font-weight:700;fill:${C120}">M/H</text>`); return [o.join(''), x, y]; }
   if (e.k === 'inlet') { const x = X(e.x), y = Y(e.z); o.push(`<rect x="${x-8}" y="${y-8}" width="16" height="16" rx="3" fill="#FFF1D6" stroke="${CAC}" stroke-width="2"/><text x="${x}" y="${y+3.6}" text-anchor="middle" style="font-size:9px;font-weight:700;fill:${CAC}">IN</text>`); return [o.join(''), x, y]; }
@@ -153,19 +159,20 @@ function wallSVG(list, side, base, furn, plumb) {
     e.id = 'PL' + (i + 1);
     const [g, cx, cy] = symbol(e, X, Y); pg.push(g);
     let bx = cx + 14, by = cy + 16;
-    for (let t = 0; t < 6 && placed.some(q => Math.hypot(q[0] - bx, q[1] - by) < 24); t++) by += 14;
+    for (let t = 0; t < 6 && placed.some(q => Math.hypot(q[0] - bx, q[1] - by) < 26); t++) by += 14;
     placed.push([bx, by]);
-    pg.push(`<rect x="${bx-15}" y="${by-8}" width="30" height="16" rx="3" fill="#fff" fill-opacity=".95" stroke="${CPL}" stroke-width="1.5"/><text x="${bx}" y="${by+3.8}" text-anchor="middle" style="font-size:9.5px;font-weight:700;fill:${CPL}">${e.id}</text>`);
+    pg.push(`<polygon points="${bx-18},${by} ${bx-12},${by-9} ${bx+12},${by-9} ${bx+18},${by} ${bx+12},${by+9} ${bx-12},${by+9}" fill="${CPLF}" stroke="${CPL}" stroke-width="1.6"/><text x="${bx}" y="${by+3.8}" text-anchor="middle" style="font-size:9.5px;font-weight:700;fill:${CPL}">${e.id}</text>`);
     const where = e.pts ? `from ${fr(e.pts[0][0])} in, ${fr(e.pts[0][1])} up, to ${fr(e.pts[e.pts.length - 1][0])} in, ${fr(e.pts[e.pts.length - 1][1])} up` : e.x0 != null ? `${fr(e.x0)} to ${fr(e.x1)}, ${fr(e.z0)} to ${fr(e.z1)} up` : `${fr(e.x)} in, ${fr(e.z)} up`;
     return `<tr><td><b class="pid">${e.id}</b></td><td>${esc(e.n)}</td><td>${where}</td><td class="kd">${esc(e.note)}</td></tr>`;
   });
-  const svg = `<svg viewBox="0 0 1070 636" role="img" aria-label="${flip ? 'Passenger' : 'Driver'} wall: steel, furring rails, furniture outlines, the electrical items${plumb && plumb.length ? ' and the plumbing in teal' : ''}">${base.inner}<g id="elec${side}">${o.join('')}</g>${pg.length ? `<g id="plumb${side}">${pg.join('')}</g>` : ''}</svg>`;
-  const ptable = prow.length ? `<h3 style="color:${CPL}">Plumbing on this wall (teal, for reference: not electrical)</h3><div class="tw"><table><thead><tr><th>#</th><th>Item</th><th>Where (in from the back mark, up from the floor)</th><th>Notes</th></tr></thead><tbody>${prow.join('')}</tbody></table></div>` : '';
+  const svg = `<svg viewBox="0 0 1070 636" role="img" aria-label="${flip ? 'Passenger' : 'Driver'} wall: steel, furring rails, furniture outlines, the electrical items${plumb && plumb.length ? ' and the plumbing as pipes' : ''}">${base.inner}<g id="elec${side}">${o.join('')}</g>${pg.length ? `<g id="plumb${side}">${pg.join('')}</g>` : ''}</svg>`;
+  const ptable = prow.length ? `<div id="plumbTable${side}"><h3 style="color:${CPL}">Plumbing on this wall (pipes with hexagon labels, for reference: not electrical)</h3><div class="tw"><table><thead><tr><th>#</th><th>Item</th><th>Where (in from the back mark, up from the floor)</th><th>Notes</th></tr></thead><tbody>${prow.join('')}</tbody></table></div></div>` : '';
   return { svg, table: `<div class="tw"><table><thead><tr><th>#</th><th>Item</th><th>Where (in from the back mark, up from the floor)</th><th>Notes</th></tr></thead><tbody>${rows.join('')}</tbody></table></div>`, ptable, legend: base.legend };
 }
 
-function ceilingSVG(d) {
-  const S = 6, X = x => 50 + S * x, Y = y => 56 + S * y, W = 1070, H = 56 + S * 68 + 140;
+function ceilingSVG(d, WR) {
+  const G = !!WR;                                   // gauge mode: the wires are drawn from the wire list, coloured by gauge
+  const S = 6, X = x => 50 + S * x, Y = y => 56 + S * y, W = 1070, H = 56 + S * 68 + 140 + (G ? 60 : 0);
   const o = [`<rect x="${X(0)}" y="${Y(0)}" width="${S * 160}" height="${S * 68}" fill="#fff" stroke="#5F5E5A" stroke-width="1.6"/>`];
   d.ribBands.forEach(b => o.push(`<rect x="${X(b[0])}" y="${Y(0)}" width="${S * (b[1] - b[0])}" height="${S * 68}" fill="#9aa3ad" fill-opacity=".45" stroke="#5F5E5A" stroke-width=".8"/>`));
   for (let x = 0; x <= 160; x += 20) o.push(`<text x="${X(x)}" y="${Y(68) + 16}" text-anchor="middle" style="font-size:10px;fill:#185FA5;font-weight:700">${x}</text>`);
@@ -179,6 +186,7 @@ function ceilingSVG(d) {
   const RX = 79;                                   // the ceiling trunks are drawn at 73 on the wall maps = 79 from the rear-door edge, in the bay between the ribs at 61 and 97; riser B climbs the passenger wall there, riser A the driver wall at 76 1/2 (82 1/2 from the rear-door edge, past the nook's front frame) and jogs 3 1/2 in at the ceiling
   const line = (pts, col, w, dash) => `<polyline points="${pts.map(p => X(p[0]) + ',' + Y(p[1])).join(' ')}" fill="none" stroke="${col}" stroke-width="${w}"${dash ? ` stroke-dasharray="${dash}"` : ''} stroke-linejoin="round"/>`;
   const acY = ac.y - ac.w / 2, fanY = fan.y - fan.w / 2;
+  if (!G) {
   o.push(line([[RX - 1.2, 0], [RX - 1.2, 68]], C12, 3, '8 4'));                        // 12 V trunk across
   o.push(line([[RX + 1.2, 0], [RX + 1.2, 68]], C120, 3, '8 4'));                       // 120 V across
   o.push(line([[RX, 0], [RX, acY], [ac.x, acY]], CAC, 4.5));                           // A/C feed to the notch in the frame's driver-side wall
@@ -188,19 +196,27 @@ function ceilingSVG(d) {
       // each row of ceiling lights runs along one slat; a row that crosses the A/C opening (it cuts that slat) goes round the opening, above it, in the gap between slats
       const cross = y > ac.y - ac.w / 2 && y < ac.y + ac.w / 2 && x0 < ac.x - ac.w / 2 && x1 > ac.x + ac.w / 2;
       o.push(line(cross ? [[x0, y], [x0, aT], [aR, aT], [aR, y], [x1, y]] : [[x0, y], [x1, y]], CLT, 2.2, '2 3')); }); }
-  o.push(`<rect x="${X(RX) - 11}" y="${Y(34) - 8}" width="22" height="16" rx="3" fill="#FFF1D6" stroke="${CAC}" stroke-width="2"/><text x="${X(RX)}" y="${Y(34) + 4}" text-anchor="middle" style="font-size:10px;font-weight:700;fill:${CAC}">JB</text>`);
+  }
+  o.push(`<rect x="${X(RX) - 11}" y="${Y(34) - 8}" width="22" height="16" rx="3" fill="#FFF1D6" stroke="${G ? INK : CAC}" stroke-width="2"/><text x="${X(RX)}" y="${Y(34) + 4}" text-anchor="middle" style="font-size:10px;font-weight:700;fill:${G ? INK : CAC}">JB</text>`);
   // the wet bath stall (36 along the wall, 24 out from the passenger wall; wall numbers + 6 from the rear-door edge)
-  o.push(`<rect x="${X(6)}" y="${Y(44)}" width="${S * 36}" height="${S * 24}" fill="${C12}" fill-opacity=".07" stroke="${C12}" stroke-width="1.4" stroke-dasharray="5 3"/><text x="${X(6) + 6}" y="${Y(44) + 14}" style="font-size:11px;font-weight:700;fill:${C12}">wet bath stall</text>`);
+  o.push(`<rect x="${X(6)}" y="${Y(44)}" width="${S * 36}" height="${S * 24}" fill="${G ? '#5F5E5A' : C12}" fill-opacity=".07" stroke="${G ? '#5F5E5A' : C12}" stroke-width="1.4" stroke-dasharray="5 3"/><text x="${X(6) + 6}" y="${Y(44) + 14}" style="font-size:11px;font-weight:700;fill:${G ? '#5F5E5A' : C12}">wet bath stall</text>`);
   // the soft LED strip around the ceiling edge: driver side, across the back, passenger side (about 31 ft in all, fed in three sections)
   { const e = 1.5, cabX = d.P.cab + 6;
     o.push(`<polyline points="${X(cabX)},${Y(e)} ${X(e)},${Y(e)} ${X(e)},${Y(68 - e)} ${X(cabX)},${Y(68 - e)}" fill="none" stroke="#F4C95D" stroke-width="9" stroke-opacity=".55" stroke-linejoin="round"/><polyline points="${X(cabX)},${Y(e)} ${X(e)},${Y(e)} ${X(e)},${Y(68 - e)} ${X(cabX)},${Y(68 - e)}" fill="none" stroke="#B8860B" stroke-width="1.6" stroke-linejoin="round"/>`);
-    o.push(`<text x="${X(e) + 8}" y="${Y(e) + 20}" style="font-size:10.5px;font-weight:700;fill:#8a6a00">soft LED strip around the edge</text>`); }
+    o.push(`<text x="${G ? X(16) : X(e) + 8}" y="${Y(e) + (G ? 38 : 20)}" style="font-size:10.5px;font-weight:700;fill:#8a6a00">soft LED strip around the edge</text>`); }
   // lights
-  d.lights.forEach((l, i) => { const wet = l.y > d.P.vanW - d.panD && l.x < 6 + d.panW && l.x > 6; o.push(`<circle cx="${X(l.x)}" cy="${Y(l.y)}" r="${Math.max(6, S * d.P.lightD / 2)}" fill="#FFD84A" stroke="${wet ? C12 : CLT}" stroke-width="${wet ? 3 : 1.8}"/>`); if (wet) o.push(`<text x="${X(l.x) + 12}" y="${Y(l.y) + 16}" style="font-size:10.5px;font-weight:700;fill:${C12}">wet-rated (IP65)</text>`); });
+  d.lights.forEach((l, i) => { const wet = l.y > d.P.vanW - d.panD && l.x < 6 + d.panW && l.x > 6; o.push(`<circle cx="${X(l.x)}" cy="${Y(l.y)}" r="${Math.max(6, S * d.P.lightD / 2)}" fill="#FFD84A" stroke="${wet && !G ? C12 : CLT}" stroke-width="${wet ? 3 : 1.8}"/>`); if (wet) o.push(`<text x="${X(l.x) + 12}" y="${Y(l.y) + 16}" style="font-size:10.5px;font-weight:700;fill:${G ? '#5F5E5A' : C12}">wet-rated (IP65)</text>`); });
+  if (G) { const placed = [], wg = WR.filter(w => w.C).map(w => EW.wireGroup(w, 'C', X, Y, placed)); wg.forEach(g => o.push(g.l));
+    o.push(`<rect x="${X(RX) - 11}" y="${Y(34) - 8}" width="22" height="16" rx="3" fill="#FFF1D6" stroke="${INK}" stroke-width="2"/><text x="${X(RX)}" y="${Y(34) + 4}" text-anchor="middle" style="font-size:10px;font-weight:700;fill:${INK}">JB</text>`); wg.forEach(g => o.push(g.p)); }
   // where the risers meet the walls
   o.push(`<text x="${X(RX) + 16}" y="${Y(0) + 14}" style="font-size:11px;font-weight:700;fill:${INK}">riser A (A/C, 12 V) at ${RX + 3.5}</text><text x="${X(RX) + 16}" y="${Y(68) - 8}" style="font-size:11px;font-weight:700;fill:${INK}">riser B (120 V, branches) at ${RX}</text>`);
   // legend
   const ly = Y(68) + 66;
+  if (G) {
+    EW.AWG.forEach((a, i) => { const x = X(0) + Math.floor(i / 4) * 520, y = ly + (i % 4) * 18; o.push(`<line x1="${x}" y1="${y}" x2="${x + 36}" y2="${y}" stroke="${a.c}" stroke-width="${a.w}" stroke-linecap="round"/><text x="${x + 44}" y="${y + 4}" style="font-size:12px;fill:${INK}"><tspan style="font-weight:700">${a.name} AWG</tspan>, ${a.use}</text>`); });
+    ['solid = 12 V; dashed = 120 V. The WR labels are the wires\u2019 numbers (the table below). JB = the ceiling junction box,', 'with the dimming controller (my placement). Grey bands = ribs; dashed squares = the roof units; yellow circles = the four ceiling', 'lights; the pale band = the soft LED strip. Riser A comes up at the top (driver wall), riser B at the bottom (passenger wall).'].forEach((t, i) => o.push(`<text x="${X(0)}" y="${ly + 88 + i * 16}" style="font-size:12px;fill:${INK}">${t}</text>`));
+    return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Ceiling seen from above: every wire coloured by gauge"><style>text{font-family:-apple-system,"Segoe UI",sans-serif}</style>${o.join('')}</svg>`;
+  }
   const leg = [[C12, 'dashed blue: 12 V trunk (fuse block feed, 12 AWG)', '8 4', 3], [C120, 'dashed red: 120 V circuits in flexible conduit (12 AWG)', '8 4', 3], [CAC, 'solid orange: A/C feed, 6 AWG, 100 A fuse at the battery', null, 4.5], [CLT, 'dotted yellow: the ceiling lights, one slat for each row (16 AWG); the center row goes round the A/C opening', '2 3', 2.2], ['#F4C95D', 'pale yellow band: soft LED strip around the edge (14 AWG, its own 10 A circuit)', null, 7]];
   leg.forEach((l, i) => o.push(`<line x1="${X(0)}" y1="${ly + i * 16}" x2="${X(0) + 34}" y2="${ly + i * 16}" stroke="${l[0]}" stroke-width="${l[3]}"${l[2] ? ` stroke-dasharray="${l[2]}"` : ''}/><text x="${X(0) + 42}" y="${ly + i * 16 + 4}" style="font-size:12px;fill:${INK}">${l[1]}</text>`));
   o.push(`<text x="${X(86)}" y="${ly + 4}" style="font-size:12px;fill:${INK}">JB = ceiling junction box (12 V fuse block feed splits here)</text><text x="${X(86)}" y="${ly + 20}" style="font-size:12px;fill:${INK}">grey bands = ribs; dashed squares = the unit footprints on the roof</text><text x="${X(86)}" y="${ly + 36}" style="font-size:12px;fill:${INK}">yellow circles = the four ceiling lights (shower; countertop and sink together; two in the center row; positions from the plan)</text>`);
@@ -252,45 +268,50 @@ function selectorSVG() {
   tx(20, 308, 'with heat shrink boots, or put the switch in a plastic box. Turn the microwave off before moving the switch.', 'font-size:11px;fill:#5F5E5A');
   return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Wiring of the heater or microwave selector: the breaker feeds the common pin, the two other pins go to the microwave outlet and the heater"><style>text{font-family:-apple-system,"Segoe UI",sans-serif}</style>${o.join('')}</svg>`;
 }
-function oneLineSVG() {
+function oneLineSVG(WR) {
+  const G = !!WR, id = re => ((WR || []).find(w => re.test(w.n)) || {}).id || '';
   const W = 1070, H = 640, o = [];
-  const box = (x, y, w, h, t1, t2, col) => { o.push(`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="6" fill="#fff" stroke="${col || INK}" stroke-width="1.8"/><text x="${x + w / 2}" y="${y + (t2 ? h / 2 - 3 : h / 2 + 4)}" text-anchor="middle" style="font-size:12.5px;font-weight:700;fill:${INK}">${esc(t1)}</text>`); if (t2) o.push(`<text x="${x + w / 2}" y="${y + h / 2 + 12}" text-anchor="middle" style="font-size:11px;fill:#5F5E5A">${esc(t2)}</text>`); };
-  const ln = (x1, y1, x2, y2, col, lab, lx, ly, w) => { o.push(`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${col}" stroke-width="${w || 2.4}"/>`); if (lab) o.push(`<text x="${lx}" y="${ly}" text-anchor="middle" style="font-size:11px;fill:${INK}">${esc(lab)}</text>`); };
+  const box = (x, y, w, h, t1, t2, col) => { if (G) col = INK; o.push(`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="6" fill="#fff" stroke="${col || INK}" stroke-width="1.8"/><text x="${x + w / 2}" y="${y + (t2 ? h / 2 - 3 : h / 2 + 4)}" text-anchor="middle" style="font-size:12.5px;font-weight:700;fill:${INK}">${esc(t1)}</text>`); if (t2) o.push(`<text x="${x + w / 2}" y="${y + h / 2 + 12}" text-anchor="middle" style="font-size:11px;fill:#5F5E5A">${esc(t2)}</text>`); };
+  const ln = (x1, y1, x2, y2, col, lab, lx, ly, w, g, wid, px, py) => {
+    if (G && g) { const dash = col === C120 ? ' stroke-dasharray="9 6"' : ''; o.push(`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#fff" stroke-width="${EW.gw(g) + 3}" stroke-linecap="round"/><line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${EW.gc(g)}" stroke-width="${EW.gw(g)}"${dash}/>`); if (wid) o.push(EW.wirePill(wid, g, px, py)); }
+    else o.push(`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${G ? '#9a9a94' : col}" stroke-width="${G ? 1.4 : (w || 2.4)}"/>`);
+    if (lab) o.push(`<text x="${lx}" y="${ly}" text-anchor="middle" style="font-size:11px;fill:${INK}">${esc(lab)}</text>`); };
   // sources (left)
   box(20, 30, 190, 50, 'Shore power inlet', '30 A, 120 V', CAC);
   box(20, 105, 190, 52, 'Shore charger VEVOR 80 A', 'shore side only, 14.6 V lithium', INK);
   box(20, 185, 190, 56, 'Alternator', 'starter battery fuse 80 A', INK);
   box(20, 270, 190, 52, 'DC-DC charger LiTime 60 A', 'on the gear shelf', INK);
-  ln(115, 80, 115, 105, C120, '15 A breaker', 170, 98);
-  ln(210, 55, 270, 55, C120, '30 A', 240, 48);
-  ln(115, 241, 115, 270, C12, '', 0, 0); o.push(`<text x="122" y="259" style="font-size:11px;fill:${INK}">2 AWG, about 15 ft</text>`);
+  ln(115, 80, 115, 105, C120, '15 A breaker', 170, 98, 0, '12', id(/^AC panel to the shore charger/), 115, 92);
+  ln(210, 55, 270, 55, C120, '30 A', 240, 48, 0, '10', id(/^Shore power inlet to/), 240, 66);
+  ln(115, 241, 115, 270, C12, '', 0, 0, 0, '2', id(/^Cab charge cable/), 72, 256); o.push(`<text x="122" y="259" style="font-size:11px;fill:${INK}">2 AWG, about 15 ft</text>`);
   // the charger output to the battery (2 AWG, 100 A fuse), running down between the left column and the battery
-  ln(210, 131, 235, 131, C12, '', 0, 0); ln(235, 131, 235, 346, C12, '', 0, 0); ln(235, 346, 270, 346, C12, '', 0, 0);
+  ln(210, 131, 235, 131, C12, '', 0, 0, 0, '2'); ln(235, 131, 235, 346, C12, '', 0, 0, 0, '2', id(/^Shore charger \(VEVOR/), 235, 160); ln(235, 346, 270, 346, C12, '', 0, 0, 0, '2');
   o.push(`<text x="231" y="338" style="font-size:10.5px;fill:${INK}" transform="rotate(-90 231 338)">VEVOR 2 AWG, 100 A fuse</text>`);
   // transfer switch and the inverter (inverter only: no charger, no transfer switch of its own)
   box(270, 30, 200, 60, 'Transfer switch, 30 A', 'shore or inverter, never both', C120);
   box(270, 115, 200, 60, 'Inverter BELTTT 2000 W', 'pure sine, inverter only', CAC);
-  ln(370, 115, 370, 90, C120, '', 0, 0);
+  ln(370, 115, 370, 90, C120, '', 0, 0, 0, '12', id(/^Inverter output/), 392, 103);
   // battery + bus
   box(270, 330, 190, 66, 'Battery 280 Ah, 12.8 V', 'lithium assumed (3.6 kWh)', INK);
-  ln(115, 322, 115, 362, C12, '', 0, 0); ln(115, 362, 270, 362, C12, '2 AWG, 80 A', 172, 356);
-  ln(365, 330, 365, 300, C12, 'Class T 250 A, 2/0 AWG', 440, 322, 4); 
+  ln(115, 322, 115, 362, C12, '', 0, 0, 0, '2'); ln(115, 362, 270, 362, C12, '2 AWG, 80 A', 172, 356, 0, '2', id(/^DC-DC charger to the bus/), 150, 378);
+  ln(365, 330, 365, 300, C12, 'Class T 250 A, 2/0 AWG', 440, 322, 4, '2/0', id(/^Battery \+ to the Class T/) + ' ' + id(/^Battery . to the shunt/), 312, 315);
   box(270, 240, 190, 54, '+ bus bar and shunt (500 A)', 'near the battery', INK);
-  ln(365, 240, 365, 175, C12, '2/0 AWG, 250 A fuse', 440, 214, 4);
+  ln(365, 240, 365, 175, C12, '2/0 AWG, 250 A fuse', 440, 214, 4, '2/0', id(/^Bus to the inverter/), 365, 208);
   // 12 V branches (right of the bus)
-  const br = [['A/C 12 V, up to 58 A', '6 AWG pair, 100 A fuse', CAC], ['Fuse block: 4 ceiling, 4 cabinet lights', '16 AWG, 5 A', CLT], ['Soft LED strip, about 31 ft in 3 runs', '14 AWG, its own 10 A circuit', CLT], ['Roof fan, up to 2.7 A', '14 AWG, 5 A', C12], ['Water pump, 7 A (under the sink)', '14 AWG, 10 A', C12], ['Control panel and shunt display', '18 AWG, 3 A', C12]];
-  br.forEach((b, i) => { const y = 214 + i * 56; ln(460, 267, 540, 267, C12, '', 0, 0); ln(540, 267, 540, y + 20, C12, '', 0, 0); ln(540, y + 20, 600, y + 20, b[2], '', 0, 0, 2.8); box(600, y, 330, 40, b[0], b[1], b[2]); });
+  const br = [['A/C 12 V, up to 58 A', '6 AWG pair, 100 A fuse', CAC, '6', /^A\/C feed/], ['Fuse block: 4 ceiling, 4 cabinet lights', '16 AWG, 5 A', CLT, '16', /^Lights feed/], ['Soft LED strip, about 31 ft in 3 runs', '14 AWG, its own 10 A circuit', CLT, '14', /^Soft LED strip circuit/], ['Roof fan, up to 2.7 A', '14 AWG, 5 A', C12, '14', /^Roof fan/], ['Water pump, 7 A (under the sink)', '14 AWG, 10 A', C12, '14', /^Water pump/], ['Control panel and shunt display', '18 AWG, 3 A', C12, '18', /^Control panel/]];
+  br.forEach((b, i) => { const y = 214 + i * 56; ln(460, 267, 540, 267, C12, '', 0, 0, 0, '12', i === 0 ? id(/^12 V trunk/) : '', 500, 259); ln(540, 267, 540, y + 20, C12, '', 0, 0, 0, '12'); ln(540, y + 20, 600, y + 20, b[2], '', 0, 0, 2.8, b[3], id(b[4]), 570, y + 12); box(600, y, 330, 40, b[0], b[1], b[2]); });
   o.push(`<text x="600" y="198" style="font-size:12px;font-weight:700;fill:${C12}">12 V DC circuits (blade fuse block, except the A/C)</text>`);
   // AC side
-  ln(470, 60, 600, 60, C120, '', 0, 0);
+  ln(470, 60, 600, 60, C120, '', 0, 0, 0, '10', id(/^Transfer switch to the AC panel/), 535, 76);
   box(600, 56, 150, 48, 'AC panel', '30 A main, GFCI', C120);
   o.push(`<text x="540" y="46" style="font-size:12px;font-weight:700;fill:${C120}">120 V AC circuits</text>`);
   [['A  counter outlets, GFCI', '15 A, 12 AWG'], ['B  microwave, its own', '15 A, 12 AWG'], ['C  fridge, TV, dinette outlets', '15 A, 12 AWG'], ['D  water heater 1440 W', '20 A, 12 AWG']].forEach((c, i) => { const y = 16 + i * 0; });
   const ac = [['A  couch, dinette, under-TV outlets (GFCI)', '15 A, 12 AWG'], ['B/D  microwave or water heater, via the selector', '20 A, 12 AWG, one at a time'], ['C  fridge, its own breaker', '15 A, 12 AWG']];
-  ac.forEach((c, i) => { const x = 770, y = 12 + i * 34; ln(750, 80, 760, 80, C120, '', 0, 0); ln(760, 80, 760, y + 14, C120, '', 0, 0); ln(760, y + 14, x, y + 14, C120, '', 0, 0); o.push(`<rect x="${x}" y="${y}" width="280" height="28" rx="5" fill="#fff" stroke="${C120}" stroke-width="1.5"/><text x="${x + 8}" y="${y + 13}" style="font-size:11.5px;font-weight:700;fill:${INK}">${esc(c[0])}</text><text x="${x + 8}" y="${y + 24}" style="font-size:10.5px;fill:#5F5E5A">${esc(c[1])}</text>`); });
+  ac.forEach((c, i) => { const x = 770, y = 12 + i * 34; ln(750, 80, 760, 80, C120, '', 0, 0, 0, '12'); ln(760, 80, 760, y + 14, C120, '', 0, 0, 0, '12'); ln(760, y + 14, x, y + 14, C120, '', 0, 0, 0, '12', i === 0 ? id(/^120 V circuits/) : '', 740, 62); o.push(`<rect x="${x}" y="${y}" width="280" height="28" rx="5" fill="#fff" stroke="${C120}" stroke-width="1.5"/><text x="${x + 8}" y="${y + 13}" style="font-size:11.5px;font-weight:700;fill:${INK}">${esc(c[0])}</text><text x="${x + 8}" y="${y + 24}" style="font-size:10.5px;fill:#5F5E5A">${esc(c[1])}</text>`); });
   o.push(`<rect x="600" y="112" width="150" height="58" rx="5" fill="#FFF1D6" stroke="${C120}" stroke-width="1.5"/><text x="610" y="128" style="font-size:11.5px;font-weight:700;fill:${INK}">B/D: one 30 A SPDT</text><text x="610" y="143" style="font-size:11px;fill:${INK}">center off rocker (KCD3):</text><text x="610" y="158" style="font-size:11px;fill:${INK}">microwave | off | heater</text>`);
+  if (G) o.push(`<text x="600" y="560" style="font-size:11.5px;fill:#5F5E5A">Colour and thickness = gauge; dashed = 120 V; WR = wire number.</text>`);
   o.push(`<text x="20" y="${H - 54}" style="font-size:11.5px;fill:#5F5E5A">Fuses sit within 7 in of the battery or bus (Class T for the inverter, 100 A for the A/C). Wire sizes are for the short runs shown (battery to inverter under 3 ft, A/C about 12 ft);</text><text x="20" y="${H - 38}" style="font-size:11.5px;fill:#5F5E5A">the A/C size comes from a related OutEquipPro model. Follow your inverter’s and the A/C maker’s manuals where they differ.</text><text x="20" y="${H - 22}" style="font-size:11.5px;fill:#5F5E5A">One neutral-to-ground bond only: follow the inverter\u2019s manual (the BELTTT\u2019s was not found) and make sure the transfer switch does not create a second one. Have the 120 V side inspected before use.</text>`);
-  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="One-line diagram: shore power and alternator charging, battery, inverter, chargers, transfer switch, fuses and circuits"><style>text{font-family:-apple-system,"Segoe UI",sans-serif}</style>${o.join('')}</svg>`;
+  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="One-line diagram: shore power and alternator charging, battery, inverter, chargers, transfer switch, fuses and circuits${G ? ', coloured by wire gauge' : ''}"><style>text{font-family:-apple-system,"Segoe UI",sans-serif}</style>${o.join('')}</svg>`;
 }
 
 function loadTable(d) {
@@ -325,6 +346,8 @@ function loadTable(d) {
   await b.close();
   const Dlist = E_DRIVER(plan), Plist = E_PASS(plan), Dw = wallSVG(Dlist, 'D', baseA, furn.D), Pw = wallSVG(Plist, 'P', baseD, furn.P, PLUMB(plan));
   const selId = (Plist.find(e => e.k === 'sel') || {}).id;
+  const WR = EW.wiresFor(plan, Dlist, Plist, { ac: plan.ac, fan: plan.fan, lights: plan.lights });
+  const wDw = EW.wallWires('D', Dlist, baseA, furn.D, WR, symbol, fr, esc, INK), wPw = EW.wallWires('P', Plist, baseD, furn.P, WR, symbol, fr, esc, INK);
 
   const style = css + `
   body { max-width: none; margin: 0; padding: 0; background: #fff; color: #2C2C2A; color-scheme: light; }
@@ -338,12 +361,12 @@ function loadTable(d) {
   table { border-collapse: collapse; width: 100%; font-size: 14px; margin: 6px 0 8px; }
   th, td { border-bottom: 1px solid #D3D1C7; padding: 5px 8px; text-align: left; vertical-align: top; }
   th { color: #5F5E5A; font-weight: 600; } td.num { white-space: nowrap; text-align: right; } tr.tot td { border-top: 2px solid #5F5E5A; }
-  b.id { color: ${C120}; white-space: nowrap; } b.pid { color: #0E7C86; white-space: nowrap; } .kd { color: #5F5E5A; }
+  b.id { color: ${C120}; white-space: nowrap; } b.wid { color: #1b1a17; white-space: nowrap; background: #fff; border: 1.5px solid #8a8a84; border-radius: 9px; padding: 0 6px; } b.pid { color: ${CPL}; white-space: nowrap; } .kd { color: #5F5E5A; }
   .note { background: #FAF9F5; border: 1px solid #D3D1C7; border-radius: 10px; padding: 10px 14px; color: #3d3b34; font-size: 14px; margin: 0 0 14px; }
   .note ul { margin: 4px 0 0 18px; padding: 0; } .note li { font-size: 14px; line-height: 1.5; }
   a { color: #185FA5; }`;
-  const tog = (id, furr, label) => `<div class="tog"><label><input type="checkbox" checked onchange="document.getElementById('${furr}').style.display=this.checked?'':'none'"> Show the furring rails and dots</label><label><input type="checkbox" checked onchange="document.getElementById('${id}').style.display=this.checked?'':'none'"> ${label}</label></div>`;
-  const key = `<p class="legend"><span><svg width="16" height="16" viewBox="0 0 16 16" style="display:inline;vertical-align:-3px;width:16px;min-width:0"><circle cx="8" cy="8" r="6.5" fill="#fff" stroke="${C120}" stroke-width="1.8"/></svg> 120 V outlet</span><span>S = switch</span><span style="color:#0E7C86;font-weight:600">teal = plumbing, shown for reference (H = shower head, V = valve, pump)</span><span>M = control panel</span><span>M/H = heater or microwave selector</span><span>IN = shore inlet</span><span style="color:#B8860B">yellow = lights and LED strips</span><span>orange boxes = mounted units</span><span>dashed boxes = furniture (for reference)</span><span style="color:${C12}">blue dashed</span> / <span style="color:${C120}">red dashed</span> = 12 V / 120 V runs</p>`;
+  const tog = (id, furr, label, plumbId) => `<div class="tog"><label><input type="checkbox" checked onchange="document.getElementById('${furr}').style.display=this.checked?'':'none'"> Show the furring rails and dots</label><label><input type="checkbox" checked onchange="document.getElementById('${id}').style.display=this.checked?'':'none'"> ${label}</label>${plumbId ? `<label style="color:${CPL};font-weight:600"><input type="checkbox" checked onchange="var d=this.checked?'':'none';document.getElementById('plumb${plumbId}').style.display=d;var t=document.getElementById('plumbTable${plumbId}');if(t)t.style.display=d"> Show the plumbing (pipes)</label>` : ''}</div>`;
+  const key = `<p class="legend"><span><svg width="16" height="16" viewBox="0 0 16 16" style="display:inline;vertical-align:-3px;width:16px;min-width:0"><circle cx="8" cy="8" r="6.5" fill="#fff" stroke="${C120}" stroke-width="1.8"/></svg> 120 V outlet</span><span>S = switch</span><span style="color:${CPL};font-weight:600">grey pipes and fixtures with hexagon labels (PL) = plumbing, shown for reference: shower head, valve, pump, drain (hide it with the box above the drawing)</span><span>M = control panel</span><span>M/H = heater or microwave selector</span><span>IN = shore inlet</span><span style="color:#B8860B">yellow = lights and LED strips</span><span>orange boxes = mounted units</span><span>dashed boxes = furniture (for reference)</span><span style="color:${C12}">blue dashed</span> / <span style="color:${C120}">red dashed</span> = 12 V / 120 V runs</p>`;
   const body = `<div class="wrap">
   <h1>Electrical and lighting layout</h1>
   <p class="lead">A proposal for where the electrics go, drawn on the same steel and furring rails as the wall marking map, with the furniture outlined for reference. Positions are inches from the back mark (0 is 6 in in from the rear-door edge) and up from the floor; the ceiling plan uses inches from the rear-door edge. The steel and furring rails are the measured drawing; the electrical items are my proposal, so check each one against the real wall and tell me what to move.</p>
@@ -351,6 +374,7 @@ function loadTable(d) {
   <ul><li>The battery is lithium, 280 Ah at 12.8 V (about 3.6 kWh), where the plan has it under the couch, 52 to 73 in.</li>
   <li><b>Your equipment:</b> a BELTTT 2000 W inverter (an inverter only: the listings show no charger and no transfer switch), a LiTime 60 A DC-DC charger from the alternator (2 AWG from the starter battery), and a VEVOR 80 A lithium shore charger. All three sit on one pull-out gear shelf over the battery under the couch (the shelf slides out into the aisle on two 18 in slides; every cable to it has a loop for that, see the cable table). Because the inverter has no transfer switch, the AC panel has a 30 A transfer switch that connects either shore power or the inverter, never both, and the shore charger is fed from the shore side only, on its own 15 A breaker (about 11 A at 120 V). With the charger running, a heater or microwave and the fridge could pass the 30 A shore inlet, so the charger is its own circuit and the total is worth watching.</li>
   <li><b>Ceiling lights:</b> four: one over the shower (wet rated) and one over the countertop and sink together, both on the slat at 58 in across, and two in the center row (36 and about 100 from the rear-door edge, centered across the van; each is kept 2 in clear of a rib, so they sit at 35 7/8 and 102 1/8), all 12 V and on a slat. The two in the center row share one switch on the passenger wall just rear of the sink. Everything else is lit from the cabinets, the jar nook and the soft LED strip.</li>
+  <li><b>Your 12 V lights:</b> a 6 pack of recessed 12 V LED lights for RVs, boats and campers (3000 K warm white, CRI 90+, stepless dimming). The plan has eight 12 V lights (four in the ceiling and four under the cabinets), so one 6 pack covers six: buy a second pack, or two more single lights. I have not seen the listing\u2019s numbers, so check these before you cut any hole: the cutout (hole) size and the depth behind the panel (the ceiling is 3/16 plywood plus a 3/4 slat; the cabinet bottoms are 3/4, and the cabinet is open above them); the watts each (I assumed 4 W); whether the dimming is built into the light (a touch ring or a press-and-hold) or needs a dimmer switch, because the rocker switches in this plan are plain on-off; and the IP rating, since the light over the shower has to be wet rated (IP65). Send me those numbers and I will change the plan to match.</li>
   <li><b>Light switches:</b> at the rear doors (the shower light, and the rear one of the two lights under the cabinet over the couch; the roof fan has no switch), right next to the cab-end one of the two lights over the couch (its own), on the dinette\u2019s back wall W2, between the dinette and the driver\u2019s seat (only the two lights under the cabinet over the seats), a two-rocker 12 V plate on the passenger wall under the TV, just rear of the sink (EP11, the left rocker, for the ceiling light over the countertop and the sink, and EP14, the right one, for the two center-row ceiling lights), and the dimmer for the soft strip. Each switch runs its own group, so ordinary 12 V rated switches work: no push buttons or controller are needed.</li>
   <li><b>Under-cabinet lights:</b> one in the middle of the couch, and two over the dinette, each centered over its bench seat and then moved 6 in toward the table, all on the underside of the wall cabinets. They replace the under-cabinet LED strips, the wall reading lights and the single light over the table I had first suggested.</li>
   <li><b>Soft LED lighting:</b> one warm white dimmable strip around the ceiling edge, along the driver side, across the back and along the passenger side (154 + 68 + 154 = 376 in, about 31 ft), in three runs fed separately so none is longer than about 13 ft from its feed. The strip you found (BTF-LIGHTING FCOB, 336 LEDs/m, 8 mm wide) is 8 W/m, so the 9.55 m is about 76 W (6.4 A) at full: it has its own 10 A circuit on 14 AWG, with plenty of margin. Buy three 5 m (16.4 ft) reels: two (32.8 ft) would cover the 31.3 ft only with soldered joins and about 1 1/2 ft to spare, and the spare third reel lights something else. One switch with a dimmer next to the couch outlet.</li>
@@ -369,16 +393,31 @@ function loadTable(d) {
   <div class="figwrap">${Dw.svg}</div>
   ${key}${Dw.table}
   <h2>3. Passenger side wall</h2>
-  ${tog('elecP', 'furrP', 'Show the electrical items')}
+  ${tog('elecP', 'furrP', 'Show the electrical items', 'P')}
   <div class="figwrap">${Pw.svg}</div>
-  <div class="tog"><label><input type="checkbox" checked onchange="document.getElementById('plumbP').style.display=this.checked?'':'none'"> Show the plumbing (teal)</label></div>
   ${key}${Pw.table}${Pw.ptable}
   <h2>4. Ceiling: lights, fan, A/C and the wire runs</h2>
   <p class="lead">Six lights in two rows (positions from the plan), each row on its own slat. Risers A and B stand at 79 in from the rear-door edge (73 on the wall maps), in the bay between the ribs at 61 and 97. Every rib the cables cross needs a grommeted hole: use any factory holes first, and keep to the web of the rib, not the flange.</p>
   <div class="figwrap">${ceilingSVG(plan)}</div>
-  <h2>5. What it adds up to</h2>
+  <h2>5. All the wires, colored by gauge</h2>
+  <p class="lead">Every wire in the van, drawn on the same steel and furring rails (faint) and the same items as the sections above. The colour and the thickness show the gauge (AWG, the bigger the number the thinner the wire); the key sets which ones to show. The routes are my proposal, drawn between the items already on this page, straight along the free bands between the furring rails and up the two risers: the real path follows the notches and grommets. The sizes and fuses are the ones in the one-line diagram and the cable table; the few places where I chose a size are marked in the wire list.</p>
+  ${EW.keyHTML(WR)}
+  <h3>5a. One-line diagram, by gauge</h3>
+  <div class="figwrap">${oneLineSVG(WR)}</div>
+  <h3>5b. Driver side wall</h3>
+  <div class="tog"><label><input type="checkbox" checked onchange="document.getElementById('wbaseD').style.display=this.checked?'':'none'"> Show the steel, furring rails and furniture (faint)</label></div>
+  <div class="figwrap">${wDw}</div>
+  <h3>5c. Passenger side wall</h3>
+  <div class="tog"><label><input type="checkbox" checked onchange="document.getElementById('wbaseP').style.display=this.checked?'':'none'"> Show the steel, furring rails and furniture (faint)</label></div>
+  <div class="figwrap">${wPw}</div>
+  <h3>5d. Ceiling</h3>
+  <div class="figwrap">${ceilingSVG(plan, WR)}</div>
+  <h3>5e. The wire list</h3>
+  ${EW.tableHTML(WR, fr)}
+  <script>function wgShow(c,on){var l=document.querySelectorAll('.'+c);for(var i=0;i<l.length;i++)l[i].style.display=on?'':'none'}</script>
+  <h2>6. What it adds up to</h2>
   ${loadTable(plan)}
-  <h2>6. Order of work</h2>
+  <h2>7. Order of work</h2>
   <div class="note"><ul>
   <li>Before the walls and ceiling are covered: run the risers, the ceiling trunk and every branch, with grommets in all steel and the 12 V and 120 V in separate looms (at least 2 in apart, crossing at right angles). This is the rough-in step of the build order.</li>
   <li>With the furring rails: fix the electrical boxes to blocking between the furring rails, and add the blocking behind the hub board, the switch plates and the outlets before the planks go on.</li>
