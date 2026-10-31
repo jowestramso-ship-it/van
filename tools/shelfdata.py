@@ -28,12 +28,12 @@ SEAT_DEPTH = 26 - CN_SETOUT - CUSH / _m.cos(_m.radians(CN_TILT))   # the seat cu
 # the shower stall (user: 'the nook is offcenter to the right' ... 'Valve under the nook's rear end (recommended)' ... 'The back wall will be lined with pvc paneling, including the nook. Then the other 3 sides will have shower curtains that cover sides and meet in the front center. They will be hung up from a rail on the ceiling'):
 # the same numbers as the sizes and layout() in ia_core.js (panW, panD, snookLen, snookTop, snookH, headX, headZ, valveX, valveZ, linerT, pvcW, curIn), so change both
 PAN_W, PAN_D = 36, 24                                # the bought pan; the stall runs 0 to 36 along the wall, with no end wall W3 (the cab end is a curtain)
-SN_LEN, SN_Z0, SN_Z1 = 17.25, 38, 54
-SN_X0, SN_X1 = (PAN_W - SN_LEN) / 2, (PAN_W + SN_LEN) / 2   # the shower nook, centered on the pan (9 3/8 to 26 5/8); its frames V1 (7 7/8 to 9 3/8) and V2 (26 5/8 to 28 1/8) stand outside it, on the full-depth steel past 6 in
-HEAD_X, HEAD_Z = 7, 70                               # left of the nook, over the standing space; the feed rises straight up from the valve
-VALVE_X, VALVE_Z = 11, 36                            # under the nook's rear end (the nook starts at 38), between furring rails S4 and S5
+SN_LEN, SN_Z0, SN_Z1 = 12, 38, 54                         # the nook is 12 wide (user: 'the nook will be not as wide'; it was 17 1/4): two toilet paper rolls under the shelf need 9 1/2
+SN_X0, SN_X1 = (PAN_W - SN_LEN) / 2, (PAN_W + SN_LEN) / 2   # the shower nook, centered on the pan (12 to 24); its frames V1 (10 1/2 to 12) and V2 (24 to 25 1/2) stand outside it, on the full-depth steel past 6 in
+HEAD_X, HEAD_Z = 7, 70                               # the plumbing is to the left of the nook (user), over the standing space; the feed rises straight up from the valve
+VALVE_X, VALVE_Z = 7, 36                             # to the left of the nook, under the head (the nook starts at 38 up), between furring rails S4 and S5; its 4 1/2 in plate (4 3/4 to 9 1/4) clears the joint at 9 3/4
 LINER_T, PVC_W = .3125, 9.75                         # the back wall is lined with PVC paneling: tongue and groove planks 8 mm (5/16 in) thick, a 10 in plank covers 9 3/4 on the wall; stood on end, 8 ft long
-PVC_JOINTS = [SN_X0 + k * PVC_W for k in range(-1, 4) if .5 < SN_X0 + k * PVC_W < PAN_W - .5]   # the joints start at the nook's rear edge so that the nook's edges fall on joints
+PVC_JOINTS = [k * PVC_W for k in range(1, 5) if .5 < k * PVC_W < PAN_W - .5]   # the planks start at the rear end, so the joints are at 9 3/4, 19 1/2 and 29 1/4 (the nook's edges, at 12 and 24, fall inside planks 2 and 3 and are cut lengthwise)
 CUR_IN = 1.5                                         # the curtain rail runs this far inside the pan's edge on the three open sides
 TOILET_X = (PAN_W - CUR_IN - .5 - 14.5, PAN_W - CUR_IN - .5)    # the toilet's back half an inch short of the cab-end curtain
 SH_G, SH_T = 1.0, .5             # gap over the battery (9 1/2) and the tray's plywood

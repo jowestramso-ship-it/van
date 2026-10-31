@@ -87,7 +87,7 @@ const PD = [
   { k: 'doorH', g: 'Wall cabinets', l: 'Door height (3 doors a side, widths follow the cabinet; 10 now the cabinets are 2 in shorter)', d: 10, s: .5, a: 6, b: 24 },
   { k: 'panW', g: 'Passenger side', l: 'Shower pan length', d: 36, s: .5, a: 20, b: 50 },
   { k: 'panD', g: 'Passenger side', l: 'Shower pan depth', d: 24, s: .5, a: 16, b: 36 },
-  { k: 'snookLen', g: 'Passenger side', l: 'Shower nook length along the wall (it is centered on the pan, so a longer or shorter nook grows or shrinks at both ends; 21 is the longest that keeps its rear frame on the full-depth steel, past 6 in)', d: 17.25, s: .25, a: 6, b: 21 },
+  { k: 'snookLen', g: 'Passenger side', l: 'Shower nook length along the wall (12: you asked for a narrower nook, so the shower plumbing is to the left of it; it is centered on the pan, so a longer or shorter nook grows or shrinks at both ends; 21 is the longest that keeps its rear frame on the full-depth steel, past 6 in; two toilet paper rolls under the shelf need 9 1/2)', d: 12, s: .25, a: 6, b: 21 },
   { k: 'snookH', g: 'Passenger side', l: 'Shower nook height (the recess in the shower wall)', d: 16, s: .5, a: 6, b: 40 },
   { k: 'snookTop', g: 'Passenger side', l: 'Shower nook top, up from the floor (54 is level with the top of the jar nook and the bottom of the TV)', d: 54, s: .5, a: 20, b: 70 },
   { k: 'nookLen', g: 'Passenger side', l: 'Jar nook length along the wall (the nook ends at 93 1/4 on the cab side; a shorter nook comes off the rear end)', d: 17.25, s: .25, a: 6, b: 35.25 },
@@ -96,8 +96,8 @@ const PD = [
   { k: 'headX', g: 'Passenger side', l: 'Shower head: along the wall, from the back (the stall is 0 to the shower pan length; it is to the left of the nook, toward the rear, over the standing space, and its feed rises beside the nook\'s rear frame)', d: 7, s: .5, a: 1, b: 35 },
   { k: 'headZ', g: 'Passenger side', l: 'Shower head: height up from the floor (the finished ceiling at the wall is about 74 1/2)', d: 70, s: .5, a: 50, b: 74 },
   { k: 'headOut', g: 'Passenger side', l: 'Shower head: how far it sticks out from the wall on its arm', d: 6, s: .5, a: 2, b: 14 },
-  { k: 'valveX', g: 'Passenger side', l: 'Shower valve (mixer handle): along the wall, from the back (under the rear end of the nook, within reach of the standing space; the hot and cold lines rise left of the first block of S4, at 13)', d: 11, s: .5, a: 1, b: 35 },
-  { k: 'valveZ', g: 'Passenger side', l: 'Shower valve: height up from the floor (36 puts it between furring rails S4 and S5 and under the nook, which starts at 38)', d: 36, s: .5, a: 26, b: 60 },
+  { k: 'valveX', g: 'Passenger side', l: 'Shower valve (mixer handle): along the wall, from the back (to the left of the nook, under the head, within reach of the standing space; the hot and cold lines rise beside it, clear of the shallow steel before 6 in and of the first block of S4, at 13)', d: 7, s: .5, a: 1, b: 35 },
+  { k: 'valveZ', g: 'Passenger side', l: 'Shower valve: height up from the floor (36: you chose it; it sits between furring rails S4 and S5, and now that the nook is not above it you could raise it to 44)', d: 36, s: .5, a: 26, b: 60 },
   { k: 'toiletW', g: 'Toilet', l: 'Toilet: width, side to side (Reliance Fold-To-Go 14 1/2)', d: 14.5, s: .5, a: 10, b: 24 },
   { k: 'toiletD', g: 'Toilet', l: 'Toilet: depth, front to back (it sits sideways, so this runs along the wall; Fold-To-Go 14 1/2)', d: 14.5, s: .5, a: 10, b: 26 },
   { k: 'toiletH', g: 'Toilet', l: 'Toilet: height of the top of the seat (Fold-To-Go about 14 1/2, low)', d: 14.5, s: .25, a: 10, b: 24 },
@@ -491,10 +491,10 @@ function layout(P0) {
     L.sn = P.snItemsOn ? sn : null;
   }
   // the waterproof liner: PVC paneling (tongue and groove planks stood on end, 8 ft long) over the plywood on the back wall of the stall, 0 to the pan length, and lining the nook (the cut-outs are the nook's back);
-  // the other three sides of the stall are curtains, so there is no end wall and no corner. The joints start at the nook's rear edge, so the nook's edges fall on joints; it stops a little above the pan edge
+  // the other three sides of the stall are curtains, so there is no end wall and no corner. The planks start at the rear end (the nook's edges are cut lengthwise out of the planks they fall in); it stops a little above the pan edge
   { const x1 = P.panW, pz = 3.8, z0 = pz + P.linerGap, z1 = Math.min(P.linerTop, L.ceilF || P.linerTop), hh = z1 - z0;
     const nk0 = L.snx[0], nkx = L.snx[1], nb = P.snookTop - P.snookH, nt = P.snookTop;
-    const joints = []; for (let k = -Math.ceil(nk0 / P.pvcW); k <= Math.ceil(x1 / P.pvcW); k++) { const x = nk0 + k * P.pvcW; if (x > .5 && x < x1 - .5) joints.push(x); }
+    const joints = []; for (let k = 1; k * P.pvcW < x1 - .5; k++) joints.push(k * P.pvcW);      // the planks start at the rear end: full planks, the last one cut
     const planks = joints.length + 1;
     const pieces = x1 * hh, nookSides = 2 * 4.5 * (nt - nb) + 2 * P.snookLen * 4.5;   // the wall planks' cut-outs are the nook's back; its floor, ceiling and two sides come out of the offcuts
     const plankLen = hh <= 96 ? 96 : 0;

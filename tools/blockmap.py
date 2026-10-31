@@ -68,7 +68,7 @@ def _map(FD, side):
             a(_r(xx(x0), yy(t), S * (x1 - x0), S * (t - b), '#E9D3AA', '#B8975A', 1))
     else:
         a(_r(xx(155), yy(67), S * (155 - 104), S * 67, '#fff', '#8A5A00', 1.4, 'stroke-dasharray="6 4"')); a(_t(xx(129.5), yy(33), 'sliding door opening', 11, 'middle', '#8A5A00', 600)); a(_t(xx(129.5), yy(33) + 14, '(no wall behind it)', 10, 'middle', '#8A5A00'))
-        for nx0, nx1 in ((12.5, 29.75), (76, 93.25)):
+        for nx0, nx1 in ((FD['SN_X0'], FD['SN_X1']), (76, 93.25)):
             a(_r(xx(nx1), yy(54), S * (nx1 - nx0), S * 16, '#F6EBD4', '#7A4A1E', 1.2, 'stroke-dasharray="5 3"')); a(_t(xx((nx0 + nx1) / 2), yy(46), 'nook', 10, 'middle', '#7A4A1E'))
         for nm, x0, x1, b, t, sp in FD['VFR']:
             xa, xb = sorted((xx(x0), xx(x1)))
