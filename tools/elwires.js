@@ -6,8 +6,8 @@ const AWG = [
   { g: '2/0', c: '#6A1B9A', w: 7.5, cls: 'wg-2o0', name: '2/0', use: 'battery, bus and inverter cables' },
   { g: '2', c: '#D81B60', w: 6, cls: 'wg-2', name: '2', use: 'alternator, DC-DC charger and shore charger cables' },
   { g: '6', c: '#EF6C00', w: 5, cls: 'wg-6', name: '6', use: 'air conditioner feed' },
-  { g: '10', c: '#C99A00', w: 4.2, cls: 'wg-10', name: '10', use: 'shore power, 30 A' },
-  { g: '12', c: '#2E7D32', w: 3.4, cls: 'wg-12', name: '12', use: '120 V circuits and the 12 V trunk' },
+  { g: '10', c: '#C99A00', w: 4.2, cls: 'wg-10', name: '10', use: 'shore power (30 A) and the fuse block feed' },
+  { g: '12', c: '#2E7D32', w: 3.4, cls: 'wg-12', name: '12', use: 'the 120 V circuits' },
   { g: '14', c: '#00ACC1', w: 3, cls: 'wg-14', name: '14', use: 'soft LED strip, roof fan, water pump' },
   { g: '16', c: '#1E4FD8', w: 2.6, cls: 'wg-16', name: '16', use: 'lights and light switches' },
   { g: '18', c: '#202124', w: 2.2, cls: 'wg-18', name: '18', use: 'control panel and the dimmer button' },
@@ -35,8 +35,8 @@ function wiresFor(pl, Dl, Pl, ceil) {
     s11: find(Pl, /^Light switch for the ceiling light over the countertop/, 'EP11'), s14: find(Pl, /^Light switch for the two center-row/, 'EP14'),
   };
   const lz = pl.cabBot - .5, RX = 79, ac = ceil.ac, fan = ceil.fan, acY = ac.y - ac.w / 2, fanY = fan.y - fan.w / 2;
-  const ra = k => +(76.5 + (k - 3) * 1.1).toFixed(2);          // the cable bundle in riser A: 0 A/C, 1 120 V, 2 12 V trunk, 3 strip, 4 fan, 5 lights, 6 dimmer button
-  const rb = k => +(72.2 + k * .9).toFixed(2);                // riser B: 0 120 V, 1 12 V trunk, 2 pump, 3 panel, 4 EP11, 5 EP14
+  const ra = k => +(76.5 + (k - 3) * 1.1).toFixed(2);          // the cable bundle in riser A: 0 A/C, 1 120 V, 2 pump, 3 strip, 4 fan, 5 lights, 6 dimmer button, 7 control panel
+  const rb = k => +(72.2 + k * .9).toFixed(2);                // riser B: 0 120 V, 1 pump, 2 control panel, 4 EP11, 5 EP14
   const lt = ceil.lights;                                      // ceiling coordinates: [shower, counter/sink, center rear, center front]
   const aR = ac.x + ac.w / 2 + 1.5, aT = ac.y - ac.w / 2 - 1.5;
   const R0 = 17.5;                                             // the risers start in the free band above S2 (13 3/4 to 19 1/2 up), where they jog away from the hub board
@@ -55,13 +55,12 @@ function wiresFor(pl, Dl, Pl, ceil) {
   add({ g: '12', t: 'ac', n: 'Inverter output to the transfer switch', from: 'inverter', to: 'transfer switch', prot: '20 A at the inverter output (about 17 A at 2000 W)', len: 3, hub: true, T: { D: [[[72.35, 13.4], [73.2, 13.4], [73.2, 10.2]]] }, note: 'my size (the BELTTT manual was not found): 12 AWG carries the 2000 W; follow its manual' });
   add({ g: '10', t: 'ac', n: 'Transfer switch to the AC panel (30 A main)', from: 'transfer switch', to: 'AC panel', prot: '30 A main', len: 2, hub: true, T: { D: [[[73.6, 10], [73.6, 8.5]]] }, tnote: 'Both ends are on the hub board; the order of its parts is yours to choose, so only the board is marked.', note: 'shore or inverter, never both' });
   add({ g: '12', t: 'ac', n: 'AC panel to the shore charger (its own breaker)', from: 'AC panel', to: 'shore charger', prot: '15 A breaker', len: 3, hub: true, T: { D: [[[73.9, 8.5], [73.9, 16.3], [46, 16.3], [46, 15]]] }, note: 'from the shore side only, never from the inverter; the cord needs a loop for the shelf' });
-  // ---- the risers and trunks
+  // ---- the risers (no 12 V trunk: every 12 V circuit has its own wire from the fuse block)
   add({ g: '6', t: 'dc', n: 'A/C feed pair (+ and −), up riser A and across the ceiling', from: 'battery side of the hub (100 A fuse)', to: 'A/C unit', prot: '100 A fuse at the battery', len: 12, T: { D: [[[73, 11], [73, R0], [ra(0), R0]]] }, note: 'in its own loom in riser A; 6 AWG is the maker’s size for 12 ft (4 AWG would lose less)',
     D: [[[ra(0), R0], [ra(0), 75]]], C: [[[RX, 0], [RX, acY], [ac.x, acY]]], lab: { D: [ra(0), 26], C: [RX, 13] } });
   add({ g: '12', t: 'ac', n: '120 V circuits A, B/D and C (three 12 AWG cables in flexible conduit): up riser A, across the ceiling, down riser B', from: 'AC panel', to: 'every 120 V outlet', prot: 'A 15 A GFCI, B/D 20 A, C 15 A', T: { D: [[[73, 11], [73, R0], [ra(1), R0]]] }, note: 'the ceiling run and riser B follow the red dashed trunk of the ceiling diagram; separate from the 12 V loom by 2 in',
     D: [[[ra(1), R0], [ra(1), 75]]], C: [[[RX + 1.2, 0], [RX + 1.2, 68]]], P: [[[rb(0), 75], [rb(0), 8]]], lab: { D: [ra(1), 44], C: [RX + 1.2, 52], P: [rb(0), 40] } });
-  add({ g: '12', t: 'dc', n: '12 V trunk from the fuse block: up riser A, across the ceiling, down riser B', from: 'hub fuse block', to: 'ceiling junction box JB and riser B', prot: 'the fuse block (each circuit fused below it)', T: { D: [[[73, 11], [73, R0], [ra(2), R0]]] }, note: 'the pump and panel branches are drawn as tapping it in riser B (my reading of the riser B note); if each is fused at the hub instead, they run the whole way from riser A and across the ceiling',
-    D: [[[ra(2), R0], [ra(2), 75]]], C: [[[RX - 1.2, 0], [RX - 1.2, 68]]], P: [[[rb(1), 75], [rb(1), 24]]], lab: { D: [ra(2), 31], C: [RX - 1.2, 8], P: [rb(1), 66] } });
+  add({ g: '10', t: 'dc', n: '12 V fuse block feed, + and −: bus to the fuse block', from: 'bus', to: 'hub fuse block', prot: '30 A fuse at the bus', len: 3, hub: true, T: { D: [[[73.2, 6], [73.2, 7.7]]] }, tnote: 'Both ends are on the hub board; the order of its parts is yours to choose, so only the board is marked.', note: 'my size: the 12 V circuits can draw about 20 A all at once (strip 6.4, pump 7, fan 2.7, lights 2.7, panel 1), which would leave 12 AWG at its limit, so 10 AWG with a 30 A fuse; each circuit below it has its own fuse and its own wire (there is no shared 12 V trunk)' });
   add({ g: '14', t: 'dc', n: 'Soft LED strip circuit: up riser A to the junction box, then to the strip’s three feeds', from: 'hub fuse block', to: 'strip along the ceiling edge, three runs', prot: '10 A, its own circuit', T: { D: [[[73, 11], [73, R0], [ra(3), R0]]] }, endsOverride: [['C', [82.5, 1.5]], ['C', [82.5, 66.5]], ['C', [1.9, 3.4]]], note: 'the strip is about 76 W (6.4 A) at full: 14 AWG has plenty of margin; the back run is fed from the driver run’s feed',
     D: [[[ra(3), R0], [ra(3), 75]]], C: [[[82.5, 0], [82.5, 66.5]], [[RX, 34], [82.5, 34]], [[82.5, 3.4], [1.9, 3.4]]], lab: { D: [ra(3), 22], C: [82.5, 12] } });
   add({ g: '14', t: 'dc', n: 'Roof fan feed: up riser A to the junction box, then to the fan', from: 'hub fuse block', to: 'roof fan', prot: '5 A', T: { D: [[[73, 11], [73, R0], [ra(4), R0]]] }, note: 'the fan has no switch: it is controlled at the fan itself',
@@ -98,10 +97,10 @@ function wiresFor(pl, Dl, Pl, ceil) {
     P: [[[P.sel.x, P.sel.z], [P.sel.x, 15.5], [P.ht.x0, 15.5]]], lab: { P: [P.sel.x, 33] } });
   add({ g: '12', t: 'ac', n: 'TV outlet ' + P.tv.id + ', circuit A', from: 'riser B (120 V)', to: P.tv.id + ' outlet under the TV', prot: '15 A GFCI (circuit A)', note: 'behind the TV, above the two-rocker plate',
     P: [[[rb(0), 54.5], [P.tv.x, 54.5], [P.tv.x, P.tv.z + .9]]], lab: { P: [(rb(0) + P.tv.x) / 2 + 6, 54.5] } });
-  add({ g: '14', t: 'dc', n: 'Water pump PL3', from: 'riser B (12 V loom)', to: 'PL3 pump beside the heater', prot: '10 A', note: 'the pump draws about 7 A; through the notches in S2 to S4, along the free band above S3',
-    P: [[[rb(1), 24], [105.5, 24], [105.5, 20.6]]], lab: { P: [88, 24] } });
-  add({ g: '18', t: 'dc', n: 'Control panel ' + P.pan.id + ' (battery monitor, pump switch, tank levels)', from: 'riser B (12 V loom)', to: P.pan.id + ' panel', prot: '3 A', note: 'small 18 AWG',
-    P: [[[rb(1), 47.5], [P.pan.x, 47.5], [P.pan.x, P.pan.z - .8]]], lab: { P: [P.pan.x - 1, 47.5 - 3.6] } });
+  add({ g: '14', t: 'dc', n: 'Water pump PL3: its own wire from the fuse block, up riser A, across the ceiling, down riser B', from: 'hub fuse block (10 A fuse)', to: 'PL3 pump beside the heater', prot: '10 A', T: { D: [[[73, 11], [73, R0], [ra(2), R0]]] }, note: 'the pump draws about 7 A; in riser B it leaves the loom at 24 in up and goes along the free band above S3 (through the notches in S2 to S4); about 16 ft longer than a tap would have been, so each wire is protected by its own fuse',
+    D: [[[ra(2), R0], [ra(2), 75]]], C: [[[77.8, 0], [77.8, 68]]], P: [[[rb(1), 75], [rb(1), 24], [105.5, 24], [105.5, 20.6]]], lab: { D: [ra(2), 33], C: [77.8, 6], P: [88, 24] } });
+  add({ g: '18', t: 'dc', n: 'Control panel ' + P.pan.id + ' (battery monitor, pump switch, tank levels): its own wire from the fuse block', from: 'hub fuse block (3 A fuse)', to: P.pan.id + ' panel', prot: '3 A', T: { D: [[[73, 11], [73, R0], [ra(7), R0]]] }, note: 'small 18 AWG, up riser A, across the ceiling and down riser B with the pump wire',
+    D: [[[ra(7), R0], [ra(7), 75]]], C: [[[76.7, 0], [76.7, 68]]], P: [[[rb(2), 75], [rb(2), 47.5], [P.pan.x, 47.5], [P.pan.x, P.pan.z - .8]]], lab: { D: [ra(7), 48], C: [76.7, 17], P: [P.pan.x - 1, 47.5 - 3.6] } });
   add({ g: '16', t: 'dc', n: 'Switch ' + P.s11.id + ' to the counter and sink light ' + P.cl.id, from: P.s11.id + ' left rocker', to: P.cl.id + ' light', prot: '5 A (lights circuit)', flow: ['P', 'C'], note: '16 AWG pair behind the covering to riser B (about 27 in), up to the ceiling, then along the slat to the light',
     P: [[[P.s11.x, P.s11.z], [P.s11.x, 61.3], [rb(4), 61.3], [rb(4), 75]]], C: [[[81.8, 68], [81.8, lt[1].y], [lt[1].x, lt[1].y]]], lab: { P: [88, 61.3], C: [88, lt[1].y] } });
   add({ g: '16', t: 'dc', n: 'Switch ' + P.s14.id + ' to the two center-row ceiling lights', from: P.s14.id + ' right rocker', to: 'center row lights, rear and front', prot: '5 A (lights circuit)', flow: ['P', 'C'], endsOverride: [['C', [lt[2].x, lt[2].y]], ['C', [lt[3].x, lt[3].y]]], note: 'up riser B, across to the center slat, then along it, round the A/C opening, to both lights',
@@ -198,7 +197,7 @@ function wallWires(side, items, base, furn, W, symbol, fr, esc, INK) {
   // the hub board and the gear shelf: their short runs are on the one-line diagram
   let call = '';
   if (!flip) { const hubItem = items.find(e => /^Power hub/.test(e.n)); if (hubItem) { const tx = (y, t) => `<text x="${X(40) - 10}" y="${Y(y)}" text-anchor="end" style="font-size:10.5px;font-weight:700;fill:#6A1B9A;paint-order:stroke;stroke:#fff;stroke-width:3px">${t}</text>`;
-    call = `<rect x="${X(40) - 4}" y="${Y(16.4)}" width="${X(75) - X(40) + 8}" height="${Y(0) - Y(16.4)}" fill="none" stroke="#6A1B9A" stroke-width="1.6" stroke-dasharray="3 4"/>` + tx(8, 'hub board and gear shelf (dotted box):') + tx(5.4, 'WR1, WR2, WR3, WR5, WR6, WR8 to WR10') + tx(2.8, 'are short runs inside it: see 5a'); } }
+    call = `<rect x="${X(40) - 4}" y="${Y(16.4)}" width="${X(75) - X(40) + 8}" height="${Y(0) - Y(16.4)}" fill="none" stroke="#6A1B9A" stroke-width="1.6" stroke-dasharray="3 4"/>` + tx(8, 'hub board and gear shelf (dotted box):') + tx(5.4, 'WR1 to WR3, WR5, WR6, WR8 to WR10, WR13') + tx(2.8, 'are short runs inside it: see 5a'); } }
   // arrows where the risers go on to the ceiling
   const arrows = W.filter(w => w[view] && w.C).map(w => { const top = w[view].map(p => p[p.length - 1]).filter(p => p[1] >= 74.9)[0]; return top ? `<path d="M${X(top[0]) - 4} ${Y(75) - 2} L${X(top[0])} ${Y(75) - 9} L${X(top[0]) + 4} ${Y(75) - 2}" fill="${gc(w.g)}" stroke="#fff" stroke-width=".8"/>` : ''; }).join('');
   const inner = base.inner.replace(/ id="[^"]*"/g, '');
