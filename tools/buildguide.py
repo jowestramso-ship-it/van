@@ -161,7 +161,7 @@ def pages(root):
         kick='Heavy things go in before the cabinets that would block the way.',
         intro=f'<p>{H.escape(body("heavy"))}</p>' + table(['^Battery$', 'Wheel well', 'Fresh water tank', 'Hot water tank', 'Grey water tank']),
         steps=['<b>Battery</b> on the floor next to the driver-side wheel well, on its aisle side, 1 in from the closet (52 to 73 in from the back), with room over it for the gear shelf (the battery top at 9 1/2 in); the two side panels of the gear cabinet stand on the floor either side of it.',
-               '<b>The hot water tank and the fresh water tank</b> on the floor at their places on the passenger side (see the table), before the counter and the sink cabinet go up.',
+               '<b>The fresh water tank</b> on the floor at its place on the passenger side (see the table), then the hot water tank sitting on top of it (on a 3/4 in board that spreads its weight: it is very light empty), before the counter and the sink cabinet go up.',
                '<b>Then the gear cabinet</b> (next page), then the couch frame that sits on it, then the couch bed and cushions, then the counter and the drawers.'],
         blocks=[]))
     P.append(dict(slug='gear-cabinet', nav='Gear cabinet', title='The gear cabinet and its sliding shelf',
@@ -201,7 +201,7 @@ def pages(root):
                '<b>Stand W4</b> (58 to 58 3/4 in) and the fridge platform, then the tall fridge (36 to 58 in) and the shelf over it for the microwave.',
                '<b>Build the counter cabinet</b> from 58 in to the sink (the angled front) with the drawers and the trash can pull-out, and the sink cabinet over the fresh water tank.',
                '<b>Counter top, sink and faucet,</b> then the nook for the jars (76 to 93 1/4 in), the TV, the paper towel holder and the dish towel hook.',
-               '<b>Fit the pump</b> under the sink, then connect the supply lines (two 1/2 in PEX lines to the shower valve).'],
+               '<b>Fit the pump</b> under the sink, close to the water heater (on the inside of the sink cabinet\'s rear end panel), then connect the supply lines (two 1/2 in PEX lines to the shower valve).'],
         blocks=[E]))
     P.append(dict(slug='closet-dinette', nav='Closet and dinette', title='Closet and dinette',
         kick='Driver side, cab end of the couch.',
