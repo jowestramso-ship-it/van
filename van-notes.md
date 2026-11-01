@@ -866,3 +866,9 @@ Previous: two closet rods were added (one above the other, along the wall, upper
 - User: 'Let's do one complete wire run at a time. I put in wr16 now what'. Read as: WR16 (the lights feed) is run, so the next wire is the one that finishes the first working circuit: WR20 (ED21 to the switch ED19 and the right couch light ED18, about 1 3/4 ft), then the other branches from ED21.
 - The Wiring rough-in page of the build guide now says the passenger-wall switches are fed by WR35 and that WR16 stops at ED21 in the couch cabinet top. Changed: `tools/buildguide.py`.
 
+## 2026-11-01: WR23 (shower light) no longer runs through the roof fan opening
+
+- Found while showing WR23: its ceiling route went straight across from the driver wall at 9.45 in (from the rear doors) to the shower light, which crosses the 14 x 14 fan opening (6 1/4 to 20 1/4 in from the rear doors, 27 to 41 in across). It was like that since the wire list was made.
+- New route: up the rear corner as before, then east along the ceiling edge to 26 1/2 in (clear of the fan), through the web of the rib at 21 3/4 (one grommet), then across the ceiling at 26 1/2 in to the light. The same length as before (8.4 ft in all), since both routes are square.
+- Changed: `tools/elwires.js` (WR23's ceiling route and note).
+
