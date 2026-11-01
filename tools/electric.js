@@ -7,6 +7,7 @@
 const {chromium} = require(process.env.NODE_PATH + '/playwright');
 const fs = require('fs');
 const EW = require('./elwires.js');
+const { hubSVG } = require('./elhub.js');
 const fr = v => { let w = Math.floor(v + 1e-9), r = Math.round((v - w) * 16); if (r === 16){w++;r=0;} let n=r,d=16; while(n&&n%2===0){n/=2;d/=2;} return (n? (w?w+' ':'')+n+'/'+d : ''+w); };
 const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 
@@ -404,6 +405,9 @@ function loadTable(d) {
   <div class="figwrap">${selectorSVG()}</div>
   <h2>1a. High-current cables and fuses to buy</h2>
   ${cableTable()}
+  <h2>1b. The hub board: where the parts go</h2>
+  <p class="lead">The hub board of the plan (a thin board on the closet\u2019s end panel, 10 in tall) is too small for your parts, and the panel cannot be made bigger because the battery, the inverter and the gear shelf stand in front of it. The room is on the driver wall under the couch: so the plan is two boards. A bigger one on the wall (the AC panel, the TS-30 and the fuse block) and a small DC one by the battery (the Class T holder, the shunt and the two bus bars). The wire drawings below still show the hub at 72 to 74 in; they change once you choose.</p>
+  <div class="figwrap">${hubSVG(plan, esc)}</div>
   <h2>2. Driver side wall</h2>
   ${tog('elecD', 'furr', 'Show the electrical items')}
   <div class="figwrap">${Dw.svg}</div>
