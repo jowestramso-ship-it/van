@@ -4,7 +4,7 @@ links to the other pages point at the artifacts). Usage: python3 tools/artfrag.p
 import re, sys
 MAIN = 'https://claude.ai/artifact/PoTZ5J5BkcwXAr5J2RBTjs'     # Transit Van Plan
 WMAP = 'https://claude.ai/artifact/1quE178yLUJmgmSuhm626H'     # Wall Marking Map
-WIRES = ''                                                      # Wire by Wire (set when it is published)
+WIRES = 'https://claude.ai/artifact/BdeQjDUz81GmC4gZNWdysd'                                                      # Wire by Wire (set when it is published)
 TITLE = {'3d': 'Van Interior 3D', 'electric': 'Electrical Layout', 'wallmap': 'Wall Marking Map'}
 LINK = lambda u, t: f'<a href="{u}" target="_blank" rel="noopener">{t}</a>'
 
