@@ -23,7 +23,7 @@ function hubSVG(pl, esc) {
     part(19, 25, 2.6, 6.1, ['10-way fuse block', '6 x 3 1/2 (typical)', '2 deep'], false, '#EDEDED');
     o.push(rect(10.5, 25, 12.6, 16.2, 'fill="none" stroke="#2E7D32" stroke-width="2" stroke-dasharray="7 4"')); o.push(ctr(10.5, 25, 12.6, 16.2, ['room for breakers, a wire', 'gutter or the shore cable'], 'fill:#2E7D32;font-size:10px'));
     // the holes to the tray
-    o.push(`<circle cx="${PX(9.7)}" cy="${PZ(13.8)}" r="9" fill="#fff" stroke="${INK}" stroke-width="1.6" stroke-dasharray="3 2"/>`); o.push(txt(PX(9.7) - 24, PZ(13.8) - 14, 'grommet hole to the tray', 'font-size:9.5px'));
+    o.push(`<circle cx="${PX(9.7)}" cy="${PZ(13.8)}" r="9" fill="#fff" stroke="${INK}" stroke-width="1.6" stroke-dasharray="3 2"/>`); o.push(txt(PX(9.7) - 62, PZ(13.8) + 24, 'grommet hole to the tray', 'font-size:9.5px'));
     for (let y = 0; y <= 25; y += 5) o.push(`<line x1="${PX(y)}" y1="${Z0}" x2="${PX(y)}" y2="${Z0 + 6}" stroke="${INK}"/>` + txt(PX(y) - 5, Z0 + 20, String(y)));
     o.push(txt(PX(5), Z0 + 38, 'inches out from the driver wall (left) toward the aisle (right)', 'fill:#5F5E5A'));
     for (let z = 0; z <= 15; z += 5) o.push(`<line x1="${X0 - 6}" y1="${PZ(z)}" x2="${X0}" y2="${PZ(z)}" stroke="${INK}"/>` + txt(X0 - 30, PZ(z) + 4, String(z)));
@@ -75,7 +75,7 @@ function trayTopSVG(pl, esc) {
   const ctr = (x0, x1, y0, y1, lines, st = '') => lines.map((t, i) => `<text x="${PX((x0 + x1) / 2)}" y="${PY((y0 + y1) / 2) + 4 + (i - (lines.length - 1) / 2) * 13}" text-anchor="middle" style="font-size:11px;font-weight:${i ? 400 : 700};fill:#1b1a17;${st}">${esc(t)}</text>`).join('');
   o.push(`<defs><pattern id="trhat" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="7" stroke="#9a9a94" stroke-width="2"/></pattern><marker id="trar" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 Z" fill="#1b1a17"/></marker></defs>`);
   o.push(txt(24, 28, '1c. Your real board on the pull-out tray, seen from above (rear doors on the left, the driver wall at the top, the aisle at the bottom)', 'font-weight:700;font-size:13px'));
-  o.push(txt(24, 46, 'Positions come from your photo, scaled with the inverter and the shore charger as rulers: good to about 2 in. The dashed grey box is the battery under the tray. Left of the divider: the TS-30, the AC panel and the fuse block on its outer face.', 'fill:#5F5E5A'));
+  o.push(txt(24, 46, 'Positions come from your photo, scaled with the inverter and the shore charger as rulers: good to about 2 in. The dashed grey box is the battery under the tray.', 'fill:#5F5E5A'));
   o.push(rect(31, 78, 0, 26.5, 'fill="#F3EFE4" stroke="none"'));
   o.push(`<line x1="${PX(31)}" y1="${PY(0)}" x2="${PX(78)}" y2="${PY(0)}" stroke="#1b1a17" stroke-width="3"/>`); o.push(txt(PX(31) + 4, PY(0) - 6, 'driver wall', 'font-weight:700'));
   o.push(rect(42, 76, 0, 7, 'fill="url(#trhat)" stroke="#6b6b66" stroke-width="1.5"'));
