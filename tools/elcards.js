@@ -4,9 +4,9 @@ const EW = require('./elwires.js');
 
 // ---- the chain of parts that power each wire. Tokens: 'Name|second line' is a box; 'WR12' is a wire (drawn in its gauge colour on the arrow); '-' is a plain
 //      link (a cord or a plug); 'f:text' is the fuse or breaker on the arrow that follows.
-const BAT = 'Battery|280 Ah', BUS = 'Bus bar|and shunt', FB = 'Fuse block|12 V circuits';
+const BAT = 'Battery|280 Ah', BUS = 'Bus bar|and shunt', FB = 'Fuse block|10-way, 5 ways used';
 const DCB = [BAT, 'WR1', 'f:Class T 250 A', BUS, 'WR13', 'f:30 A fuse', FB];       // battery to the 12 V fuse block
-const ACP = ['Shore power|inlet ED6', 'WR7', 'f:30 A breaker', 'Transfer switch|30 A', 'WR9', 'f:30 A main', 'AC panel|120 V'];
+const ACP = ['Shore power|inlet ED6', 'WR7', 'f:30 A breaker', 'Transfer switch|TS-30, 30 A', 'WR9', 'f:30 A main', 'AC panel|120 V'];
 const ALT_AC = 'On the inverter instead of shore power: Battery → WR1 → Bus bar → WR3 → Inverter → WR8 → Transfer switch → WR9 → AC panel. The transfer switch passes one or the other, never both.';
 const CHAINS = {
   WR1: [BAT, 'WR1', 'f:Class T 250 A', 'Bus bar|+ side'],
@@ -14,10 +14,10 @@ const CHAINS = {
   WR3: [BAT, 'WR1', 'f:Class T 250 A', BUS, 'WR3', 'f:250 A', 'Inverter|BELTTT 2000 W'],
   WR4: ['Starter battery|and alternator', 'WR4', 'f:80 A at the starter battery', 'DC-DC charger|LiTime 60 A'],
   WR5: ['Starter battery|and alternator', 'WR4', 'f:80 A', 'DC-DC charger|LiTime 60 A', 'WR5', 'f:80 A at the bus', BUS, 'WR1', 'f:Class T 250 A', 'Battery|being charged'],
-  WR6: ['Shore power|inlet ED6', 'WR7', 'f:30 A breaker', 'Transfer switch|30 A', 'WR9', 'f:30 A main', 'AC panel|120 V', 'WR10', 'f:15 A breaker', 'Shore charger|VEVOR 80 A', 'WR6', 'f:100 A at the bus', 'Bus bar|and shunt'],
-  WR7: ['Shore power|campground pedestal', '-', 'Shore inlet ED6|30 A', 'WR7', 'f:30 A breaker', 'Transfer switch|30 A'],
-  WR8: [BAT, 'WR1', 'f:Class T 250 A', BUS, 'WR3', 'f:250 A', 'Inverter|BELTTT 2000 W', 'WR8', 'f:20 A', 'Transfer switch|30 A'],
-  WR9: ['Shore power|inlet ED6', 'WR7', 'f:30 A breaker', 'Transfer switch|30 A', 'WR9', 'f:30 A main', 'AC panel|120 V'],
+  WR6: ['Shore power|inlet ED6', 'WR7', 'f:30 A breaker', 'Transfer switch|TS-30, 30 A', 'WR9', 'f:30 A main', 'AC panel|120 V', 'WR10', 'f:15 A breaker', 'Shore charger|VEVOR 80 A', 'WR6', 'f:100 A at the bus', 'Bus bar|and shunt'],
+  WR7: ['Shore power|campground pedestal', '-', 'Shore inlet ED6|30 A', 'WR7', 'f:30 A breaker', 'Transfer switch|TS-30, 30 A'],
+  WR8: [BAT, 'WR1', 'f:Class T 250 A', BUS, 'WR3', 'f:250 A', 'Inverter|BELTTT 2000 W', 'WR8', 'f:20 A', 'Transfer switch|TS-30, 30 A'],
+  WR9: ['Shore power|inlet ED6', 'WR7', 'f:30 A breaker', 'Transfer switch|TS-30, 30 A', 'WR9', 'f:30 A main', 'AC panel|120 V'],
   WR10: ACP.concat(['WR10', 'f:15 A breaker', 'Shore charger|VEVOR 80 A']),
   WR11: [BAT, 'WR11', 'f:100 A fuse at the battery', 'A/C|on the roof'],
   WR12: ACP.concat(['WR12', 'f:A 15 A GFCI, B/D 20 A, C 15 A', 'Outlets|through riser A, the ceiling, riser B']),
