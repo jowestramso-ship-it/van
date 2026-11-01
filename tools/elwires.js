@@ -168,7 +168,7 @@ function wireGroup(w, view, X, Y, placed) {
 }
 
 // ------------------------------------------------------------------ the wall views: the steel and furring faint, every wire on top
-function wallWires(side, items, base, furn, W, symbol, fr, esc, INK) {
+function wallLayers(side, items, base, furn, symbol, esc, INK) {
   const flip = side === 'P', view = flip ? 'P' : 'D';
   const X = x => +(flip ? 1020 - 6 * x : 50 + 6 * x).toFixed(1), Y = z => +(544 - 6 * z).toFixed(1);
   const fu = furn.map(it => { const xa = X(it.x0), xb = X(it.x1); return it.win
@@ -190,7 +190,6 @@ function wallWires(side, items, base, furn, W, symbol, fr, esc, INK) {
     const [g, cx, cy] = symbol(e, X, Y);
     smalls.push(g + `<text x="${cx + 9}" y="${cy + 15}" style="font-size:8.5px;font-weight:700;fill:#5F5E5A;paint-order:stroke;stroke:#fff;stroke-width:2.5px">${e.id}</text>`);
   });
-  const placed = [], wg = W.filter(w => w[view]).map(w => wireGroup(w, view, X, Y, placed)), wires = wg.map(g => g.l).join('') + wg.map(g => g.p).join('');
   // riser A leaves the hub board through a short conduit and jogs over to its bundle
   const stub = flip ? '' : `<polyline points="${X(73)},${Y(11)} ${X(73)},${Y(17.5)} ${X(76.5)},${Y(17.5)}" fill="none" stroke="#fff" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/><polyline points="${X(73)},${Y(11)} ${X(73)},${Y(17.5)} ${X(76.5)},${Y(17.5)}" fill="none" stroke="#9a9a94" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>`;
   const pump = flip ? `<rect x="${X(107)}" y="${Y(20)}" width="${X(104) - X(107)}" height="${6 * 8}" rx="6" fill="#D9E2EC" fill-opacity=".9" stroke="#475569" stroke-width="2.2"/><text x="${(X(104) + X(107)) / 2}" y="${Y(16) + 3}" text-anchor="middle" style="font-size:9.5px;font-weight:700;fill:#475569">pump</text>` : '';
@@ -198,10 +197,15 @@ function wallWires(side, items, base, furn, W, symbol, fr, esc, INK) {
   let call = '';
   if (!flip) { const hubItem = items.find(e => /^Power hub/.test(e.n)); if (hubItem) { const tx = (y, t) => `<text x="${X(40) - 10}" y="${Y(y)}" text-anchor="end" style="font-size:10.5px;font-weight:700;fill:#6A1B9A;paint-order:stroke;stroke:#fff;stroke-width:3px">${t}</text>`;
     call = `<rect x="${X(40) - 4}" y="${Y(16.4)}" width="${X(75) - X(40) + 8}" height="${Y(0) - Y(16.4)}" fill="none" stroke="#6A1B9A" stroke-width="1.6" stroke-dasharray="3 4"/>` + tx(8, 'hub board and gear shelf (dotted box):') + tx(5.4, 'WR1 to WR3, WR5, WR6, WR8 to WR10, WR13') + tx(2.8, 'are short runs inside it: see 5a'); } }
+  const inner = base.inner.replace(/ id="[^"]*"/g, '');
+  return { flip, view, X, Y, fu, bigs, smalls, stub, pump, call, inner };
+}
+function wallWires(side, items, base, furn, W, symbol, fr, esc, INK) {
+  const L = wallLayers(side, items, base, furn, symbol, esc, INK), { flip, view, X, Y } = L;
+  const placed = [], wg = W.filter(w => w[view]).map(w => wireGroup(w, view, X, Y, placed)), wires = wg.map(g => g.l).join('') + wg.map(g => g.p).join('');
   // arrows where the risers go on to the ceiling
   const arrows = W.filter(w => w[view] && w.C).map(w => { const top = w[view].map(p => p[p.length - 1]).filter(p => p[1] >= 74.9)[0]; return top ? `<path d="M${X(top[0]) - 4} ${Y(75) - 2} L${X(top[0])} ${Y(75) - 9} L${X(top[0]) + 4} ${Y(75) - 2}" fill="${gc(w.g)}" stroke="#fff" stroke-width=".8"/>` : ''; }).join('');
-  const inner = base.inner.replace(/ id="[^"]*"/g, '');
-  return `<svg viewBox="0 0 1070 636" role="img" aria-label="${flip ? 'Passenger' : 'Driver'} wall: every wire, coloured by gauge"><g class="wbase" id="wbase${side}" opacity=".33">${inner}</g>${fu}${bigs.join('')}${pump}${stub}${wires}${smalls.join('')}${arrows}${call}${W.map(w => traceLayer(w, view, X, Y)).join('')}</svg>`;
+  return `<svg viewBox="0 0 1070 636" role="img" aria-label="${flip ? 'Passenger' : 'Driver'} wall: every wire, coloured by gauge"><g class="wbase" id="wbase${side}" opacity=".33">${L.inner}</g>${L.fu}${L.bigs.join('')}${L.pump}${L.stub}${wires}${L.smalls.join('')}${arrows}${L.call}${W.map(w => traceLayer(w, view, X, Y)).join('')}</svg>`;
 }
 
 // ------------------------------------------------------------------ the key, the gauge boxes and the table
@@ -219,4 +223,4 @@ function tableHTML(W, fr) {
   function esc2(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
 }
 
-module.exports = { AWG, byG, gc, gw, wiresFor, wireLine, wirePill, wireGroup, wallWires, keyHTML, tableHTML, traceLayer, viewsOf, endsOf };
+module.exports = { AWG, byG, gc, gw, wiresFor, wireLine, wirePill, wireGroup, wallLayers, wallWires, keyHTML, tableHTML, traceLayer, viewsOf, endsOf, allIn, marker, arrows };

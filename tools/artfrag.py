@@ -4,6 +4,7 @@ links to the other pages point at the artifacts). Usage: python3 tools/artfrag.p
 import re, sys
 MAIN = 'https://claude.ai/artifact/PoTZ5J5BkcwXAr5J2RBTjs'     # Transit Van Plan
 WMAP = 'https://claude.ai/artifact/1quE178yLUJmgmSuhm626H'     # Wall Marking Map
+WIRES = ''                                                      # Wire by Wire (set when it is published)
 TITLE = {'3d': 'Van Interior 3D', 'electric': 'Electrical Layout', 'wallmap': 'Wall Marking Map'}
 LINK = lambda u, t: f'<a href="{u}" target="_blank" rel="noopener">{t}</a>'
 
@@ -13,6 +14,7 @@ def convert(kind, s):
     s = re.sub(r'\s*</body>\s*</html>\s*\Z', '\n', s)
     s = s.replace('<a href="interactive.html">Back to the interactive plan</a>', LINK(MAIN, 'Back to the interactive plan'))
     s = s.replace('<a href="wall-map.html">Wall marking map</a>', LINK(WMAP, 'Wall marking map'))
+    if WIRES: s = s.replace('<a href="wires.html">Wire by wire</a>', LINK(WIRES, 'Wire by wire'))
     return s
 
 if __name__ == '__main__':
