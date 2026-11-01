@@ -861,3 +861,8 @@ Previous: two closet rods were added (one above the other, along the wall, upper
 - Found a gap while doing it: nothing fed the two passenger-wall light switches EP11 and EP14 (they used to be fed from the 12 V trunk, which was dropped; WR33 and WR34 start at the switches). New wire WR35, 16 AWG pair on the 5 A lights fuse: from ED21 up through the cabinet top, across the ceiling at 84 1/2 in, down riser B to the two switches (about 11 ft). WR33 and WR34 chains now go fuse block, WR16, ED21, WR35, switch, then the light. 'WR1 to WR35' in CLAUDE.md.
 - Changed: `tools/electric.js` (ED21, the ceiling drawing), `tools/elwires.js`, `tools/elcards.js`, `CLAUDE.md`.
 
+## 2026-11-01: build guide wiring step knows the junction box ED21 and WR35
+
+- User: 'Let's do one complete wire run at a time. I put in wr16 now what'. Read as: WR16 (the lights feed) is run, so the next wire is the one that finishes the first working circuit: WR20 (ED21 to the switch ED19 and the right couch light ED18, about 1 3/4 ft), then the other branches from ED21.
+- The Wiring rough-in page of the build guide now says the passenger-wall switches are fed by WR35 and that WR16 stops at ED21 in the couch cabinet top. Changed: `tools/buildguide.py`.
+
