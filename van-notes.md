@@ -848,3 +848,8 @@ Previous: two closet rods were added (one above the other, along the wall, upper
 - The wire cards on wires.html: WR# A is the power chain, WR# B and C the route drawings.
 - Changed: `tools/electric.js` (the `fig()` helper, `.fid` and `.figtag` styles), `tools/elhub.js` (titles), `tools/elcards.js`, `CLAUDE.md`.
 
+## 2026-11-01: the ceiling is drawn once on the electric page (EF8 retired)
+
+- User: 'is the info in EF8 also in EF12? they seem repetitive'. Yes: EF12 (5d) has the same ceiling (ribs, fan, A/C, stall, junction box, four lights, LED strip, risers) and every ceiling wire from the wire list, with gauge, fuse and note for each in the wire list (5e). The only thing EF8 said that EF12 did not was one sentence (one slat per row; the center row goes round the A/C opening in the gap between slats), now in the section 4 text.
+- Section 4 keeps its heading and text and points to EF12; the by-type drawing is gone. EF8 is not reused. The other pairs (EF1 and EF9, EF6 and EF10, EF7 and EF11) are not changed: the walls' first drawings carry the item tables and the furring toggle.
+
