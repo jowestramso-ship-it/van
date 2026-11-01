@@ -12,7 +12,7 @@ function hubSVG(pl, esc) {
   { const X0 = 120, Z0 = 450, PX = y => X0 + s * y, PZ = z => Z0 - s * z;       // y = out from the driver wall (left to right), z = up
     const rect = (y0, y1, z0, z1, a) => `<rect x="${PX(y0)}" y="${PZ(z1)}" width="${s * (y1 - y0)}" height="${s * (z1 - z0)}" ${a}/>`;
     const ctr = (y0, y1, z0, z1, lines, st = '') => lines.map((t, i) => `<text x="${PX((y0 + y1) / 2)}" y="${PZ((z0 + z1) / 2) + 4 + (i - (lines.length - 1) / 2) * 13}" text-anchor="middle" style="font-size:11px;font-weight:${i ? 400 : 700};fill:${INK};${st}">${esc(t)}</text>`).join('');
-    o.push(txt(24, 30, '1. The TS-30, the AC panel and the fuse block go on the divider panel, the tray’s rear side wall: its outer face, seen from the rear doors (driver wall on the left)', 'font-weight:700;font-size:13px'));
+    o.push(txt(24, 30, 'EF3 · The TS-30, the AC panel and the fuse block go on the divider panel, the tray’s rear side wall: its outer face, seen from the rear doors (driver wall on the left)', 'font-weight:700;font-size:13px'));
     o.push(txt(24, 48, 'The divider is 26 in wide and 17 in tall (floor to the couch deck), the board the tray’s rear slide bolts to. Its outer face looks into open space under the couch.', 'fill:#5F5E5A'));
     o.push(rect(0, 26, 0, 17, 'fill="#D9B47A" stroke="#8a6a3a" stroke-width="2.4"'));
     o.push(txt(PX(0.4), PZ(17) - 6, 'the divider (3/4 in plywood), outer face. The slide and the tray are on its other face, so screws here must not go through.', 'font-size:10.5px;fill:#5a3a10'));
@@ -33,7 +33,7 @@ function hubSVG(pl, esc) {
   { const X0 = 60, Z0 = 1040, PX = y => X0 + s * y, PZ = z => Z0 - s * z;
     const rect = (y0, y1, z0, z1, a) => `<rect x="${PX(y0)}" y="${PZ(z1)}" width="${s * (y1 - y0)}" height="${s * (z1 - z0)}" ${a}/>`;
     const ctr = (y0, y1, z0, z1, lines, st = '') => lines.map((t, i) => `<text x="${PX((y0 + y1) / 2)}" y="${PZ((z0 + z1) / 2) + 4 + (i - (lines.length - 1) / 2) * 13}" text-anchor="middle" style="font-size:11px;font-weight:${i ? 400 : 700};fill:${INK};${st}">${esc(t)}</text>`).join('');
-    o.push(txt(24, 590, '2. The DC parts stay by the battery: the closet’s end panel (the east side of the gear cabinet, at 74 in), seen from the battery side looking toward the cab', 'font-weight:700;font-size:13px'));
+    o.push(txt(24, 590, 'EF4 · The DC parts stay by the battery: the closet’s end panel (the east side of the gear cabinet, at 74 in), seen from the battery side looking toward the cab', 'font-weight:700;font-size:13px'));
     o.push(txt(24, 608, 'Driver wall on the left, aisle on the right. 26 in wide, 17 in tall. This panel cannot be made bigger: what stands in front of it leaves only the green zones.', 'fill:#5F5E5A'));
     o.push(rect(0, 26, 0, 17, 'fill="#F3E6CC" stroke="#8a6a3a" stroke-width="2.2"'));
     o.push(rect(0, 7, 0, 7.5, 'fill="url(#hubhat)" stroke="#6b6b66" stroke-width="1.6"')); o.push(ctr(0, 7, 0, 7.5, ['wheel well']));
@@ -52,7 +52,7 @@ function hubSVG(pl, esc) {
     for (let y = 0; y <= 25; y += 5) o.push(`<line x1="${PX(y)}" y1="${Z0}" x2="${PX(y)}" y2="${Z0 + 6}" stroke="${INK}"/>` + txt(PX(y) - 5, Z0 + 20, String(y)));
     o.push(txt(PX(8), Z0 + 38, 'inches out from the driver wall', 'fill:#5F5E5A'));
     for (let z = 0; z <= 15; z += 5) o.push(`<line x1="54" y1="${PZ(z)}" x2="60" y2="${PZ(z)}" stroke="${INK}"/>` + txt(24, PZ(z) + 4, String(z)));
-    const side = ['Why not one big board on this panel:', 'the battery ends 1 in off the panel, the inverter 1 5/8 in,', 'and the shelf (z 10 1/2 to 11) and its end rail slide along the', 'face (the rail is within 5/8 in of it), so', 'most of the face has 0 to 1 5/8 in in front of it. The', 'free space is zone A (9 x 10 1/2, deep, beside the battery),', 'zone C (7 3/4 x 9 1/2, deep, above the wheel well) and a', '1 3/8 in slot across the top, above the gear, for flat parts.', '', 'So: the DC parts that must be near the battery post stay', 'here (the Class T holder within 7 in of it, the shunt, the', 'two bus bars if they are 1 3/8 in tall or less); the TS-30,', 'the AC panel and the fuse block go on the divider (view 1).'];
+    const side = ['Why not one big board on this panel:', 'the battery ends 1 in off the panel, the inverter 1 5/8 in,', 'and the shelf (z 10 1/2 to 11) and its end rail slide along the', 'face (the rail is within 5/8 in of it), so', 'most of the face has 0 to 1 5/8 in in front of it. The', 'free space is zone A (9 x 10 1/2, deep, beside the battery),', 'zone C (7 3/4 x 9 1/2, deep, above the wheel well) and a', '1 3/8 in slot across the top, above the gear, for flat parts.', '', 'So: the DC parts that must be near the battery post stay', 'here (the Class T holder within 7 in of it, the shunt, the', 'two bus bars if they are 1 3/8 in tall or less); the TS-30,', 'the AC panel and the fuse block go on the divider (EF3).'];
     side.forEach((t, i) => o.push(txt(640, 665 + i * 15, t, i === 0 ? 'font-weight:700' : 'font-size:11px')));
     o.push(txt(24, 1108, 'Dashed parts use typical sizes (the TS-30 is from its listing): send me the real ones.', 'font-size:10.5px;fill:#5F5E5A'));
   }
@@ -74,7 +74,7 @@ function trayTopSVG(pl, esc) {
   const txt = (x, y, t, st = '') => `<text x="${x}" y="${y}" style="font-size:11.5px;fill:#1b1a17;${st}">${esc(t)}</text>`;
   const ctr = (x0, x1, y0, y1, lines, st = '') => lines.map((t, i) => `<text x="${PX((x0 + x1) / 2)}" y="${PY((y0 + y1) / 2) + 4 + (i - (lines.length - 1) / 2) * 13}" text-anchor="middle" style="font-size:11px;font-weight:${i ? 400 : 700};fill:#1b1a17;${st}">${esc(t)}</text>`).join('');
   o.push(`<defs><pattern id="trhat" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="7" stroke="#9a9a94" stroke-width="2"/></pattern><marker id="trar" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 Z" fill="#1b1a17"/></marker></defs>`);
-  o.push(txt(24, 28, '1c. Your real board on the pull-out tray, seen from above (rear doors on the left, the driver wall at the top, the aisle at the bottom)', 'font-weight:700;font-size:13px'));
+  o.push(txt(24, 28, 'EF5 · 1c. Your real board on the pull-out tray, seen from above (rear doors on the left, the driver wall at the top, the aisle at the bottom)', 'font-weight:700;font-size:13px'));
   o.push(txt(24, 46, 'Positions come from your photo, scaled with the inverter and the shore charger as rulers: good to about 2 in. The dashed grey box is the battery under the tray.', 'fill:#5F5E5A'));
   o.push(rect(31, 78, 0, 26.5, 'fill="#F3EFE4" stroke="none"'));
   o.push(`<line x1="${PX(31)}" y1="${PY(0)}" x2="${PX(78)}" y2="${PY(0)}" stroke="#1b1a17" stroke-width="3"/>`); o.push(txt(PX(31) + 4, PY(0) - 6, 'driver wall', 'font-weight:700'));

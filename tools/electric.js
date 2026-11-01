@@ -173,6 +173,7 @@ function wallSVG(list, side, base, furn, plumb) {
   return { svg, table: `<div class="tw"><table><thead><tr><th>#</th><th>Item</th><th>Where (in from the back mark, up from the floor)</th><th>Notes</th></tr></thead><tbody>${rows.join('')}</tbody></table></div>`, ptable, legend: base.legend };
 }
 
+const fig = (id, text) => `<div class="figtag"><span class="fid">${id}</span>${text}</div>`;
 function ceilingSVG(d, WR, baseOnly) {
   const G = !!WR && !baseOnly;                                   // gauge mode: the wires are drawn from the wire list, coloured by gauge
   const S = 6, X = x => 50 + S * x, Y = y => 56 + S * y, W = 1070, H = 56 + S * 68 + 140 + (G ? 60 : 0);
@@ -360,6 +361,8 @@ function loadTable(d) {
   .wrap { max-width: 1180px; margin: 0 auto; padding-block: 16px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
   h1 { font-size: 24px; margin: 6px 0 2px; } h2 { font-size: 19px; margin: 28px 0 6px; } h3 { font-size: 16px; margin: 14px 0 4px; }
   .lead { color: #5F5E5A; margin: 4px 0 10px; font-size: 15px; }
+  .fid { display: inline-block; font-weight: 700; font-size: 12px; letter-spacing: .04em; background: #2b2a26; color: #fff; border-radius: 5px; padding: 1px 7px; margin-right: 6px; vertical-align: 1px; }
+  .figtag { font-size: 14px; margin: 10px 0 0; color: #3d3b34; }
   .figwrap { overflow-x: auto; border: 1px solid #D3D1C7; border-radius: 10px; padding: 6px; margin: 6px 0; background: #fff; }
   .figwrap svg { min-width: 820px; }
   .tog { display: flex; flex-wrap: wrap; gap: 8px 22px; font-size: 14px; margin: 6px 0; }
@@ -402,28 +405,28 @@ function loadTable(d) {
   <li>The hot water heater (1440 W) and the microwave (about 1500 W) must not run together: that is more than a 2000 W inverter can supply. Your 30 A SPDT rocker (KCD3, ON-OFF-ON: microwave, off, heater) on one shared 20 A breaker makes it impossible: see item ${selId} on the passenger wall.</li>
   <li>All 120 V work is for an electrician to check; I give layout and sizes, not a code review.</li></ul></div>
   <h2>1. One-line diagram</h2>
-  <div class="figwrap">${oneLineSVG()}</div>
+  ${fig('EF1', 'The one-line diagram: every part and the cable between them')}<div class="figwrap">${oneLineSVG()}</div>
   <h3>The heater or microwave selector, wired (your 30 A SPDT rocker)</h3>
-  <div class="figwrap">${selectorSVG()}</div>
+  ${fig('EF2', 'The heater or microwave selector, wired')}<div class="figwrap">${selectorSVG()}</div>
   <h2>1a. High-current cables and fuses to buy</h2>
   ${cableTable()}
   <h2>1b. The hub board: where the parts go</h2>
-  <p class="lead">The hub board of the plan (a thin board on the closet\u2019s end panel, 10 in tall) is too small for your parts, and that panel cannot be made bigger because the battery, the inverter and the gear shelf stand in front of it. So the parts are split by where there is room. The TS-30, the AC panel and the fuse block go on the outer face of the divider panel (the tray\u2019s rear side wall, view 1), right beside the tray. The DC parts that have to be near the battery post, the Class T holder, the shunt and the two bus bars, stay on the closet\u2019s end panel (view 2). The wire drawings below still show the hub at 72 to 74 in; they change once you choose.</p>
-  <div class="figwrap">${hubSVG(plan, esc)}</div>
+  <p class="lead">The hub board of the plan (a thin board on the closet\u2019s end panel, 10 in tall) is too small for your parts, and that panel cannot be made bigger because the battery, the inverter and the gear shelf stand in front of it. So the parts are split by where there is room. The TS-30, the AC panel and the fuse block go on the outer face of the divider panel (the tray\u2019s rear side wall, EF3), right beside the tray. The DC parts that have to be near the battery post, the Class T holder, the shunt and the two bus bars, stay on the closet\u2019s end panel (EF4). The wire drawings below still show the hub at 72 to 74 in; they change once you choose.</p>
+  <p class="figtag"><span class="fid">EF3</span><span class="fid">EF4</span>Two drawings below: EF3 the divider panel, EF4 the closet\u2019s end panel</p><div class="figwrap">${hubSVG(plan, esc)}</div>
   <h2>1c. Your real board on the pull-out tray</h2>
   <p class="lead">From your photo of the board as built (IMG_0143): the inverter, the DC-DC charger, the shore charger, the two bus bars and the 100 A breaker on one plywood board. This is how it sits on the plan\u2019s pull-out tray, and where the other parts go. The sizes are scaled from the photo, so check them.</p>
-  <div class="figwrap">${trayTopSVG(plan, esc)}</div>
+  ${fig('EF5', 'Your real board on the pull-out tray, from above')}<div class="figwrap">${trayTopSVG(plan, esc)}</div>
   <h2>2. Driver side wall</h2>
   ${tog('elecD', 'furr', 'Show the electrical items')}
-  <div class="figwrap">${Dw.svg}</div>
+  ${fig('EF6', 'Driver side wall, the electrical items')}<div class="figwrap">${Dw.svg}</div>
   ${key}${Dw.table}
   <h2>3. Passenger side wall</h2>
   ${tog('elecP', 'furrP', 'Show the electrical items', 'P')}
-  <div class="figwrap">${Pw.svg}</div>
+  ${fig('EF7', 'Passenger side wall, the electrical items')}<div class="figwrap">${Pw.svg}</div>
   ${key}${Pw.table}${Pw.ptable}
   <h2>4. Ceiling: lights, fan, A/C and the wire runs</h2>
   <p class="lead">Four ceiling lights in two rows (positions from the plan): the shower light and the countertop and sink light on one slat, the two center-row lights on another, so each row is on its own slat. The soft LED strip runs round the edge. Risers A and B stand at 79 in from the rear-door edge (73 on the wall maps), in the bay between the ribs at 61 and 97. Every rib the cables cross needs a grommeted hole: use any factory holes first, and keep to the web of the rib, not the flange.</p>
-  <div class="figwrap">${ceilingSVG(plan)}</div>
+  ${fig('EF8', 'Ceiling: lights, fan, A/C and the runs by type')}<div class="figwrap">${ceilingSVG(plan)}</div>
   <div id="wsec">
   <h2>5. All the wires, colored by gauge</h2>
   <p class="lead wlead">Every wire in the van, drawn on the same steel and furring rails (faint) and the same items as the sections above. The colour and the thickness show the gauge (AWG, the bigger the number the thinner the wire); the key sets which ones to show. The routes are my proposal, drawn between the items already on this page, straight along the free bands between the furring rails and up the two risers: the real path follows the notches and grommets. The sizes and fuses are the ones in the one-line diagram and the cable table; the few places where I chose a size are marked in the wire list. <b>To follow one wire from where it starts to where it goes, use the wire box just below the key, or open <a href="wires.html">Wire by wire</a>: one diagram for each wire, from the power to its end.</b></p>
@@ -432,15 +435,15 @@ function loadTable(d) {
     <div class="wt-row"><button type="button" onclick="wtStep(-1)">\u25C0 Previous</button><select id="wtSel" onchange="wtr(this.value)" aria-label="Pick one wire"><option value="">All wires</option>${WR.map(w => `<option value="${w.id}">${w.id} \u00B7 ${EW.byG[w.g].name} AWG \u00B7 ${esc(w.n.length > 72 ? w.n.slice(0, 70) + '\u2026' : w.n)}</option>`).join('')}</select><button type="button" onclick="wtStep(1)">Next \u25B6</button><button type="button" onclick="wtr('')">Show all wires</button></div>
     <div class="wt-card" id="wtCard">All the wires are showing. Pick one (or press Next) and only that wire stays: a green START mark where it begins, a black END mark where it ends, and arrows along the way. The drawings that do not have it are hidden.</div>
   </div>
-  <div class="wview" data-title="the one-line diagram" data-nozoom="1"><h3>5a. One-line diagram, by gauge</h3>
+  <div class="wview" data-title="the one-line diagram" data-nozoom="1"><h3><span class="fid">EF9</span>5a. One-line diagram, by gauge</h3>
   <div class="figwrap">${oneLineSVG(WR)}</div></div>
-  <div class="wview" data-title="the driver side wall"><h3>5b. Driver side wall</h3>
+  <div class="wview" data-title="the driver side wall"><h3><span class="fid">EF10</span>5b. Driver side wall, by gauge</h3>
   <div class="tog"><label><input type="checkbox" checked onchange="document.getElementById('wbaseD').style.display=this.checked?'':'none'"> Show the steel, furring rails and furniture (faint)</label></div>
   <div class="figwrap">${wDw}</div></div>
-  <div class="wview" data-title="the passenger side wall"><h3>5c. Passenger side wall</h3>
+  <div class="wview" data-title="the passenger side wall"><h3><span class="fid">EF11</span>5c. Passenger side wall, by gauge</h3>
   <div class="tog"><label><input type="checkbox" checked onchange="document.getElementById('wbaseP').style.display=this.checked?'':'none'"> Show the steel, furring rails and furniture (faint)</label></div>
   <div class="figwrap">${wPw}</div></div>
-  <div class="wview" data-title="the ceiling"><h3>5d. Ceiling</h3>
+  <div class="wview" data-title="the ceiling"><h3><span class="fid">EF12</span>5d. Ceiling, by gauge</h3>
   <div class="figwrap">${ceilingSVG(plan, WR)}</div></div>
   </div>
   <h3>5e. The wire list</h3>

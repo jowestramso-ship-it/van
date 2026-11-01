@@ -130,10 +130,10 @@ function cardsPage(WR, ctx, helpers) {
     <h3>${esc(w.n)}</h3>
     <div class="wc-l"><span class="wt-s">START</span>${esc(w.from)}</div>
     <div class="wc-l"><span class="wt-e">END</span>${esc(w.to)}</div>
-    <h4>Power to the end of the wire</h4>
+    <h4><span class="fid">${w.id} A</span>Power to the end of the wire</h4>
     <div class="figwrap">${chainSVG(w, byId)}</div>
     ${ac ? `<p class="kd">${esc(ALT_AC)}</p>` : ''}
-    ${views.map(v => `<h4>${VIEW_NAME[v]} <span class="kd">(${VIEW_NOTE[v]})</span></h4><div class="figwrap">${routeSVG(w, v, ctx)}</div>`).join('')}
+    ${views.map((v, vi) => `<h4><span class="fid">${w.id} ${String.fromCharCode(66 + vi)}</span>${VIEW_NAME[v]} <span class="kd">(${VIEW_NOTE[v]})</span></h4><div class="figwrap">${routeSVG(w, v, ctx)}</div>`).join('')}
     <p class="kd">${esc(w.note || '')}${w.tnote ? ' ' + esc(w.tnote) : ''}</p>
     </section>`;
   }).join('');

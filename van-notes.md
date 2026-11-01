@@ -839,3 +839,12 @@ Previous: two closet rods were added (one above the other, along the wall, upper
 - Headroom in the bath is 66.5 in. A taller roof vent dome or pop-up helps if that is too low.
 - Standard RV jackknife sofa beds open to about 59-69 in x 42 in, which would block the aisle here. The 74 x 27 fold-up bench keeps the aisle. A rock-and-roll bed was suggested as an alternative.
 - A/C Summit 2: which way the mounting brackets run, the length of the supplied rods, and the indoor panel's size and depth (the pasted text stopped before it). They decide whether the 3/4 in frame sides need doubling (outside 17 1/4 x 17 1/4) and whether the frame can be deeper than 2 in.
+
+## 2026-11-01: every diagram on the electric page has a reference label (EF#)
+
+- User: 'why is there the first diagram in 4. and 5d? Also please label each diagram for reference.'
+- Why two ceilings: section 4 is the original ceiling drawing (the runs by type: 12 V, 120 V, A/C, lights, LED strip) and section 5d is the same ceiling with the wires drawn from the wire list and colored by gauge. Each of the drawings in sections 1, 2, 3 and 4 has a by-gauge twin in section 5 (5a to 5d); the section 4 runs are an older sketch that does not follow the wire list.
+- New prefix EF# (electric figure), a black tag by each diagram: EF1 one-line diagram, EF2 heater/microwave selector, EF3 hub board view 1 (divider panel), EF4 hub board view 2 (closet end panel), EF5 real board on the tray, EF6 driver wall, EF7 passenger wall, EF8 ceiling by type, EF9 to EF12 = 5a to 5d (by gauge). The text that said 'view 1' and 'view 2' now says EF3 and EF4. Numbers are not reused or shifted; a new diagram takes the next number.
+- The wire cards on wires.html: WR# A is the power chain, WR# B and C the route drawings.
+- Changed: `tools/electric.js` (the `fig()` helper, `.fid` and `.figtag` styles), `tools/elhub.js` (titles), `tools/elcards.js`, `CLAUDE.md`.
+
