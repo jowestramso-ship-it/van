@@ -22,5 +22,6 @@ python3 wtemplate.py
 node wallmap.js 2>/dev/null || echo 'wall-map.html not rebuilt (node + playwright needed)'
 node electric.js 2>/dev/null || echo 'electric.html not rebuilt (node + playwright needed)'
 node interior.js 2>/dev/null || echo 'interior.html not rebuilt (node + playwright needed)'
+node tray3d.js 2>/dev/null || echo 'tray3d.html not rebuilt (node needed)'
 cd ..
 python3 make-site.py
