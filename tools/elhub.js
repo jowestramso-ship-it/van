@@ -64,4 +64,56 @@ function hubSVG(pl, esc) {
   }
   return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Hub board space: a bigger board on the driver wall under the couch, and the closet end panel with its free zones"><style>text{font-family:-apple-system,"Segoe UI",sans-serif}</style>${o.join('')}</svg>`;
 }
-module.exports = { hubSVG };
+
+// ---------------------------------------------------------------- section 1c: the user's real board (photo IMG_0143) on the pull-out tray, seen from above
+function trayTopSVG(pl, esc) {
+  const g = pl.gear, s = 19, X0 = 70, Y0 = 118, W = 1070, H = 900, o = [];
+  const PX = x => X0 + s * (x - 36), PY = y => Y0 + s * y;
+  const rect = (x0, x1, y0, y1, a) => `<rect x="${PX(x0)}" y="${PY(y0)}" width="${s * (x1 - x0)}" height="${s * (y1 - y0)}" ${a}/>`;
+  const txt = (x, y, t, st = '') => `<text x="${x}" y="${y}" style="font-size:11.5px;fill:#1b1a17;${st}">${esc(t)}</text>`;
+  const ctr = (x0, x1, y0, y1, lines, st = '') => lines.map((t, i) => `<text x="${PX((x0 + x1) / 2)}" y="${PY((y0 + y1) / 2) + 4 + (i - (lines.length - 1) / 2) * 13}" text-anchor="middle" style="font-size:11px;font-weight:${i ? 400 : 700};fill:#1b1a17;${st}">${esc(t)}</text>`).join('');
+  o.push(`<defs><pattern id="trhat" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="7" stroke="#9a9a94" stroke-width="2"/></pattern><marker id="trar" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 Z" fill="#1b1a17"/></marker></defs>`);
+  o.push(txt(24, 28, '1c. Your real board on the pull-out tray, seen from above (rear doors on the left, the driver wall at the top, the aisle at the bottom)', 'font-weight:700;font-size:13px'));
+  o.push(txt(24, 46, 'Positions come from your photo, scaled with the inverter and the shore charger as rulers: good to about 2 in. The dashed grey box is the battery under the tray.', 'fill:#5F5E5A'));
+  o.push(rect(36, 78, 0, 26.5, 'fill="#F3EFE4" stroke="none"'));
+  o.push(`<line x1="${PX(36)}" y1="${PY(0)}" x2="${PX(78)}" y2="${PY(0)}" stroke="#1b1a17" stroke-width="3"/>`); o.push(txt(PX(36) + 4, PY(0) - 6, 'driver wall', 'font-weight:700'));
+  o.push(rect(42, 76, 0, 7, 'fill="url(#trhat)" stroke="#6b6b66" stroke-width="1.5"'));
+  o.push(rect(52, 73, 7, 17, 'fill="#E4E4E0" fill-opacity=".9" stroke="#6b6b66" stroke-width="1.6" stroke-dasharray="6 4"'));
+  o.push(rect(38.65, 39.4, 0, 26, 'fill="#8a5a2b"')); o.push(txt(PX(38.65) - 4, PY(26) + 16, 'divider', 'font-size:10.5px;fill:#6b3a00'));
+  o.push(rect(74, 74.8, 0, 26, 'fill="#8a5a2b"')); o.push(txt(PX(72), PY(26) + 16, 'closet end panel', 'font-size:10.5px;fill:#6b3a00'));
+  o.push(rect(g.sh.x0, g.sh.x1, g.sh.y0, g.sh.y1, 'fill="#E7D3A8" fill-opacity=".6" stroke="#8a6a3a" stroke-width="2.2" stroke-dasharray="7 4"'));
+  o.push(txt(PX(40.3), PY(g.sh.y1) + 14, 'the tray (a 1/2 in plywood tray on two 18 in slides): 33 x 17 1/2 in, 7 3/4 to 25 1/4 in out', 'font-size:10.5px;font-weight:700;fill:#6b3a00'));
+  // the parts, mapped from the photo: van x = 49.4 + board x, van y = 9.05 + board y
+  const part = (x0, x1, y0, y1, lines, col) => { o.push(rect(x0, x1, y0, y1, `fill="${col}" fill-opacity=".93" stroke="#1b1a17" stroke-width="2"`)); o.push(ctr(x0, x1, y0, y1, lines)); };
+  part(48.3, 56.3, 9.75, 23.55, ['BELTTT', 'inverter', '2000 W'], '#FFD9A8');
+  part(59.9, 71.1, 8.55, 15.15, ['LiTime 60 A DC-DC', '(turned end for end:', 'input on the right)'], '#CFE3FA');
+  part(62.2, 72.5, 17.45, 25.05, ['VEVOR 80 A', 'shore charger'], '#D5EFD9');
+  part(57.0, 59.2, 9.85, 14.65, ['red', 'bus'], '#F6C9C9');
+  part(57.1, 58.9, 20.65, 24.95, ['black', 'bus'], '#CFCFD9');
+  part(71.1, 73.3, 7.75, 10.25, ['100 A', 'brkr'], '#E6D2F2');
+  o.push(rect(40.05, 48.0, 7.75, 25.25, 'fill="#2E7D32" fill-opacity=".08" stroke="#2E7D32" stroke-width="2" stroke-dasharray="8 4"')); o.push(ctr(40.05, 48.0, 7.75, 25.25, ['spare tray', '8 x 17 1/2 in', '', 'room for', 'loops or', 'later parts']));
+  // the fixed parts on the end panel, and the wall board
+  o.push(rect(72.2, 74, 1, 6.6, 'fill="#EDEDED" stroke="#1b1a17" stroke-width="1.6" stroke-dasharray="4 3"'));
+  o.push(`<rect x="${PX(55.4)}" y="${PY(1.2)}" width="${s * 15.6}" height="${s * 4.4}" rx="5" fill="#fff" fill-opacity=".93" stroke="#1b1a17" stroke-width="1.2"/>`);
+  o.push(txt(PX(55.8), PY(2.9), 'Class T holder and shunt: fixed on the end panel,', 'font-size:10.5px')); o.push(txt(PX(55.8), PY(4.6), 'above the wheel well (zone C in section 1b)', 'font-size:10.5px'));
+  o.push(`<path d="M${PX(71.1)} ${PY(3.4)} L${PX(72.1)} ${PY(3.4)}" stroke="#1b1a17" stroke-width="1.5" marker-end="url(#trar)"/>`);
+  o.push(`<rect x="${PX(40)}" y="${PY(0.7)}" width="${s * 15.2}" height="${s * 2.8}" rx="5" fill="#fff" fill-opacity=".93" stroke="#B45309" stroke-width="1.2"/>`);
+  o.push(txt(PX(40.4), PY(2.0), '← the AC and 12 V board is on the wall at 21 to 38 in:', 'font-size:10.5px;font-weight:700;fill:#B45309')); o.push(txt(PX(40.4), PY(3.1), 'TS-30, AC panel and fuse block (section 1b)', 'font-size:10.5px;font-weight:700;fill:#B45309'));
+  for (let x = 40; x <= 75; x += 5) o.push(`<line x1="${PX(x)}" y1="${PY(26.5)}" x2="${PX(x)}" y2="${PY(26.5) + 5}" stroke="#1b1a17"/>` + txt(PX(x) - 7, PY(26.5) + 36, String(x)));
+  o.push(txt(PX(48), PY(26.5) + 54, 'inches along the wall from the back mark', 'fill:#5F5E5A'));
+  const notes = [
+    'What this shows',
+    '1. Your arrangement fits the tray: about 24 x 17 1/2 in (the photo’s board with the parts hanging over its edges) against the tray’s 33 x 17 1/2,',
+    '    with 8 in spare at the rear end. Mount the parts on the tray itself (cut your plywood down to it).',
+    '2. The red bus bar lands over the battery, so the battery cables are a few inches long, as the plan wanted (the tray is 1 in over the battery top).',
+    '3. Not on the tray: the Class T fuse and the shunt (fixed on the end panel by the battery, so the Class T stays within 7 in of the post),',
+    '    and the TS-30, the AC panel and the fuse block (the wall board).',
+    '4. Everything that runs to the tray needs a slack loop of about 24 in so it can slide 18 in: the two battery cables, the starter battery cable',
+    '    (with its 100 A breaker), the shore AC to the shore charger, the inverter AC out, the 12 V feed (WR13) and the remote cable.',
+    '    The bus bars now slide with the tray, so the two battery cables need the most slack.',
+    '5. To check: the board size (measure it), the real size of the DC-DC (the plan had 16 x 9, the photo looks closer to 11 x 6 1/2),',
+    '    the cable (the photo shows 1/0 where the plan has 2/0), and the weight on the slides.'];
+  notes.forEach((t, i) => o.push(txt(24, 690 + i * 16, t, i === 0 ? 'font-weight:700;font-size:13px' : 'font-size:11.5px')));
+  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Your real board on the pull-out tray, seen from above"><style>text{font-family:-apple-system,"Segoe UI",sans-serif}</style>${o.join('')}</svg>`;
+}
+module.exports = { hubSVG, trayTopSVG };
