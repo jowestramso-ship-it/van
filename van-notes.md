@@ -879,3 +879,9 @@ Previous: two closet rods were added (one above the other, along the wall, upper
 - The drawn length goes from 14 ft to about 15 3/4 ft; cut about 18 ft in all (about 8 1/2 ft and 9 1/2 ft). The 16 AWG spool: about 68 ft for the lights still on 16.
 - Changed: `tools/elwires.js` (WR34 route and note).
 
+## 2026-11-01: WR35 goes to one box, not two switches
+
+- User: 'How does wr35 split to both switches?' It does not split in the wall: the two rockers EP11 and EP14 are on one two-rocker plate (2 in apart), so WR35 is one 16 AWG pair to the box behind that plate. The drawing had it branching at 63 in up, above the plate, which would be a splice hidden behind the covering. It now runs to one point at the middle of the plate.
+- In the box: WR35's + goes by two short jumpers (about 4 in, 16 AWG) to the two rockers' input terminals; its − joins the − of WR33 and WR34 in a 3-port lever connector. Each rocker's other terminal takes the switched + of WR33 or WR34.
+- Changed: `tools/elwires.js` (WR35's wall route and note).
+
