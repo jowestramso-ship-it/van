@@ -61,7 +61,7 @@ function wiresFor(pl, Dl, Pl, ceil) {
   add({ g: '12', t: 'ac', n: '120 V circuits A, B/D and C (three 12 AWG cables in flexible conduit): up riser A, across the ceiling, down riser B', from: 'AC panel', to: 'every 120 V outlet', prot: 'A 15 A GFCI, B/D 20 A, C 15 A', T: { D: [[[73, 11], [73, R0], [ra(1), R0]]] }, note: 'the ceiling run and riser B follow the red dashed trunk of the ceiling diagram; separate from the 12 V loom by 2 in',
     D: [[[ra(1), R0], [ra(1), 75]]], C: [[[RX + 1.2, 0], [RX + 1.2, 68]]], P: [[[rb(0), 75], [rb(0), 8]]], lab: { D: [ra(1), 44], C: [RX + 1.2, 52], P: [rb(0), 40] } });
   add({ g: '10', t: 'dc', n: '12 V fuse block feed, + and −: bus to the fuse block', from: 'bus', to: 'hub fuse block', prot: '30 A fuse at the bus', len: 3, hub: true, T: { D: [[[73.2, 6], [73.2, 7.7]]] }, tnote: 'Both ends are on the hub board; the order of its parts is yours to choose, so only the board is marked.', note: 'my size: the 12 V circuits can draw about 20 A all at once (strip 6.4, pump 7, fan 2.7, lights 2.7, panel 1), which would leave 12 AWG at its limit, so 10 AWG with a 30 A fuse; each circuit below it has its own fuse and its own wire (there is no shared 12 V trunk); it feeds your 10-way blade fuse block (check that its input terminal takes a 10 AWG ring lug)' });
-  add({ g: '14', t: 'dc', n: 'Soft LED strip circuit: up riser A to the junction box ' + D.jb.id + ', then to the strip’s three feeds', from: 'hub fuse block', to: 'strip along the ceiling edge, three runs', prot: '10 A, its own circuit', T: { D: [[[73, 11], [73, R0], [ra(3), R0]]] }, endsOverride: [['C', [82.5, 1.5]], ['C', [82.5, 66.5]], ['C', [1.9, 3.4]]], note: 'the strip is about 76 W (6.4 A) at full: 14 AWG has plenty of margin; the back run is fed from the driver run’s feed; the dimming controller is in ' + D.jb.id + ', in the couch cabinet, and the strip’s driver-side feed is a few inches from it. Built as four cables: one 14 AWG pair from the fuse block to the controller (about 11 ft cut), then three from the controller, one to each strip feed: the driver run (about 2 ft cut), the passenger run across the ceiling at 82 1/2 in (about 7 1/2 ft) and the back run along the ceiling edge, through the ribs at 58 3/8, 37 7/8 and 21 3/4 (a grommet in each web; about 8 1/2 ft). The three output cables carry 2.6, 2.6 and 1.1 A, so 16 AWG is enough for them if the 14 AWG runs short',
+  add({ g: '14', t: 'dc', n: 'Soft LED strip circuit: up riser A to the junction box ' + D.jb.id + ', then to the strip’s three feeds', from: 'hub fuse block', to: 'strip along the ceiling edge, three runs', prot: '10 A, its own circuit', T: { D: [[[73, 11], [73, R0], [ra(3), R0]]] }, endsOverride: [['C', [82.5, 1.5], 'feed 1: driver run'], ['C', [82.5, 66.5], 'feed 2: passenger run'], ['C', [1.9, 3.4], 'feed 3: back run']], note: 'the strip is about 76 W (6.4 A) at full: 14 AWG has plenty of margin; the back run is fed from the driver run’s feed; the dimming controller is in ' + D.jb.id + ', in the couch cabinet, and the strip’s driver-side feed is a few inches from it. Built as four cables: one 14 AWG pair from the fuse block to the controller (about 11 ft cut), then three from the controller, one to each strip feed: the driver run (about 2 ft cut), the passenger run across the ceiling at 82 1/2 in (about 7 1/2 ft) and the back run along the ceiling edge, through the ribs at 58 3/8, 37 7/8 and 21 3/4 (a grommet in each web; about 8 1/2 ft). The three output cables carry 2.6, 2.6 and 1.1 A, so 16 AWG is enough for them if the 14 AWG runs short',
     D: [[[ra(3), R0], [ra(3), 72.6], [D.jb.x1, 72.6]]], C: [[[jbc + 6, 2.5], [82.5, 2.5]], [[82.5, 0], [82.5, 66.5]], [[82.5, 3.4], [1.9, 3.4]]], lab: { D: [ra(3), 22], C: [82.5, 12] } });
   add({ g: '14', t: 'dc', n: 'Roof fan feed: up riser A and across the ceiling to the fan', from: 'hub fuse block', to: 'roof fan', prot: '5 A', T: { D: [[[73, 11], [73, R0], [ra(4), R0]]] }, note: 'the fan has no switch: it is controlled at the fan itself',
     D: [[[ra(4), R0], [ra(4), 75]]], C: [[[83.6, 0], [83.6, 20.5], [fan.x, 20.5], [fan.x, fanY]]], lab: { D: [ra(4), 38], C: [50, 20.5] } });
@@ -131,7 +131,7 @@ function allIn(w, v) { return ((w.T && w.T[v]) || []).concat(w[v] || []); }
 function endsOf(w) {
   const vs = viewsOf(w); if (!vs.length) return null;
   const first = allIn(w, vs[0]), last = allIn(w, vs[vs.length - 1]);
-  return { start: { v: vs[0], pt: first[0][0] }, ends: w.endsOverride ? w.endsOverride.map(e => ({ v: e[0], pt: e[1] })) : [{ v: vs[vs.length - 1], pt: last[last.length - 1][last[last.length - 1].length - 1] }] };
+  return { start: { v: vs[0], pt: first[0][0] }, ends: w.endsOverride ? w.endsOverride.map(e => ({ v: e[0], pt: e[1], tag: e[2] })) : [{ v: vs[vs.length - 1], pt: last[last.length - 1][last[last.length - 1].length - 1] }] };
 }
 function arrows(pts, X, Y, g) {
   let o = '';
@@ -144,7 +144,17 @@ function arrows(pts, X, Y, g) {
   }
   return o;
 }
-function marker(label, pt, X, Y, col, up) {
+function marker(label, pt, X, Y, col, up, tag) {
+  const core = markerCore(label, pt, X, Y, col, up);
+  if (!tag) return core;
+  const x = X(pt[0]), y = Y(pt[1]), w = label === 'START' ? 48 : 36;
+  let by = up ? y - 40 : y + 36; if (by < 34) by = y + 36; if (by > 600) by = y - 40;
+  const bx = Math.min(1040 - w / 2, Math.max(30 + w / 2, x));
+  const st = 'font-size:11px;font-weight:700;fill:#111;paint-order:stroke;stroke:#fff;stroke-width:3.2px';
+  if (x < 200) return core + `<text x="${bx}" y="${by > y ? by + 25 : by - 15}" text-anchor="middle" style="${st}">${tag}</text>`;
+  return core + `<text x="${x + 12}" y="${y > 400 ? y - 22 : y + 34}" text-anchor="start" style="${st}">${tag}</text>`;
+}
+function markerCore(label, pt, X, Y, col, up) {
   const x = X(pt[0]), y = Y(pt[1]), w = label === 'START' ? 48 : 36;
   let by = up ? y - 40 : y + 36; if (by < 34) by = y + 36; if (by > 600) by = y - 40;
   const bx = Math.min(1040 - w / 2, Math.max(30 + w / 2, x));
@@ -157,7 +167,7 @@ function traceLayer(w, view, X, Y) {
   ((w.T && w.T[view]) || []).forEach(p => parts.push(wireLine(p, X, Y, w.g, w.t)));
   allIn(w, view).forEach(p => parts.push(arrows(p, X, Y, w.g)));
   if (e.start.v === view) parts.push(marker('START', e.start.pt, X, Y, '#1B7F3B', true));
-  e.ends.filter(x => x.v === view).forEach(x => parts.push(marker('END', x.pt, X, Y, '#111', false)));
+  e.ends.filter(x => x.v === view).forEach(x => parts.push(marker('END', x.pt, X, Y, '#111', false, x.tag)));
   return parts.length ? `<g class="wtr" data-wr="${w.id}">${parts.join('')}</g>` : '';
 }
 
