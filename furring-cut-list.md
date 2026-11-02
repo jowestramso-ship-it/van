@@ -78,7 +78,7 @@ The nook behind the couch is an opening in the wall covering, 5 to 74 in along t
 
 The passenger furring rails stop at the sliding door opening (104 in); only S8 carries on above the door. S5 is cut away at the two nooks, so it is three short pieces with no joint.
 
-### Nook frames and cross pieces, passenger side (7 pieces)
+### Nook frames and cross pieces, passenger side (9 pieces)
 
 | Cut | Piece | What it is | Length | Where |
 |---|---|---|---|---|
@@ -89,12 +89,14 @@ The passenger furring rails stop at the sliding door opening (104 in); only S8 c
 | E05 | X1 | cross piece, shower nook floor | **17 1/4** | between V1 and V2, top edge at 38 in up |
 | E06 | X2 | cross piece, shower nook top | **17 1/4** | between V1 and V2, bottom edge at 54 in up |
 | E07 | X3 | cross piece, counter nook top | **17 1/4** | between V3 and V4, bottom edge at 54 in up |
+| E08 | VD1 | valve door cab-side jamb, between S4 and S5, no spacer blocks (the hinge and the cab-side screws go into it) | **9 3/4** | 33 1/2 to 35 in from the back, 32 to 41 3/4 in up |
+| E09 | VD2 | valve door rear jamb, in line under V2, no spacer blocks | **6** | 24 to 25 1/2 in from the back, 32 to 38 in up |
 
 ## Totals
 
 - Driver side furring rails: 1037 1/8 in (86.4 ft), 17 pieces; window frame 130 5/8 in, 4 pieces; couch nook frames 47 in, 2 pieces.
-- Passenger side furring rails: 812 3/4 in (67.7 ft), 17 pieces; frames and cross pieces 130 3/4 in, 7 pieces.
-- Everything: **2158 1/4 in (180 ft), 47 pieces**. Packed onto 8 ft sticks with a 1/8 in saw kerf: the 34 furring rails S1 to S8 are **23 sticks of 1x4**, buy about 27; the 13 frame and cross pieces are **4 sticks of 1x2**, buy about 5 (some spare for bad boards and cutting mistakes).
+- Passenger side furring rails: 812 3/4 in (67.7 ft), 17 pieces; frames and cross pieces 146 1/2 in, 9 pieces.
+- Everything: **2174 in (181 ft), 49 pieces**. Packed onto 8 ft sticks with a 1/8 in saw kerf: the 34 furring rails S1 to S8 are **23 sticks of 1x4**, buy about 27; the 15 frame and cross pieces are **4 sticks of 1x2**, buy about 5 (some spare for bad boards and cutting mistakes).
 - The wall diagrams say about 97 ft for the driver side alone; this list agrees (1167 3/4 in is 97.3 ft).
 
 ## Also cut: spacer blocks (not furring rails), and what holds them

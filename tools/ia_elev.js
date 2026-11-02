@@ -336,7 +336,7 @@ function drawPass(L, V) {
     o.push(GB('liner', 'Waterproof liner'));
     o.push(box(ln.x0, ln.x1, ln.z0, ln.z1, { fill: '#2A9D8F', fo: .1, stroke: '#1F7A70', sw: 1.4, dash: '2 3' }));
     (ln.joints || []).forEach(jx => o.push(Ln(X(jx), Y(ln.z0), X(jx), Y(ln.z1), { stroke: '#1F7A70', so: .5, sw: 1, dash: '1 4' })));
-    o.push(LBL(X(ln.x0 + 5.4), Y(31.5), 'Liner', `PVC paneling (${fmt(P.linerT)} in thick planks, ${ln.planks} of them stood on end) over the plywood on the back wall of the stall only, ${fmt(ln.x0)} to ${fmt(ln.x1)} in along it and ${fmt(ln.z0)} to ${fmt(ln.z1)} up (it stops ${fmt(P.linerGap)} in above the pan edge, the gap filled with flexible sealant), with the nook cut out of the planks and lined; the other three sides are curtains; about ${Math.round(ln.lbs)} lb`, { size: 10.5, fill: '#1F7A70' }));
+    o.push(LBL(X(ln.x0 + 5.4), Y(31.5), 'Liner', `PVC paneling (${ln.sheet ? 'ONE solid 4 x 8 ft sheet, no joints, ' : 'planks, ' + ln.planks + ' of them stood on end, '}${fmt(P.linerT)} in thick) over the plywood on the back wall of the stall only, ${fmt(ln.x0)} to ${fmt(ln.x1)} in along it and ${fmt(ln.z0)} to ${fmt(ln.z1)} up (it stops ${fmt(P.linerGap)} in above the pan edge, the gap filled with flexible sealant), with the nook cut out and lined; the other three sides are curtains; about ${Math.round(ln.lbs)} lb`, { size: 10.5, fill: '#1F7A70' }));
     o.push(GE());
   }
   if (L.toilet) {
@@ -592,6 +592,18 @@ function drawPass(L, V) {
   o.push(Ln(X(P.cab - P.cabSeatOut), Y(P.cabSeatH), X(P.cab + 7), Y(P.cabSeatH), { stroke: '#534AB7', sw: 3 }));
   o.push(LBL(X(P.cab + 3.5), Y(P.cabSeatH) - 5, 'Cab seat', `${fmt(P.cabSeatH)} up, sticks out ${fmt(P.cabSeatOut)}`, { size: 9, fill: '#534AB7' }));
   o.push(GE());
+  // the valve door, drawn last: its own group on top of the shower and the liner (a new numbered label goes at the end, so the numbers of the other items stay as they were)
+  if (L.liner && L.liner.door) {
+    const vd = L.liner.door, dots = [[vd.dx0 + .5, vd.dz0 + .5], [vd.dx1 - .5, vd.dz0 + .5], [vd.dx0 + .5, vd.dz1 - .5], [vd.dx1 - .5, vd.dz1 - .5]];
+    o.push(GB('vdoor', 'Valve door'));
+    o.push(box(vd.dx0, vd.dx1, vd.dz0, vd.dz1, { fill: '#9EC9E8', fo: .35, stroke: '#185FA5', sw: 1.5 }));
+    o.push(box(vd.x0, vd.x1, vd.z0, vd.z1, { fill: 'none', stroke: '#185FA5', sw: .8, dash: '2 2' }));
+    o.push(Ln(X(vd.dx1), Y(vd.dz0 + .4), X(vd.dx1), Y(vd.dz1 - .4), { stroke: '#444', sw: 3.2 }));
+    dots.forEach(q => o.push(`<circle cx="${f1(X(q[0]))}" cy="${f1(Y(q[1]))}" r="2.2" fill="#E0E3E6" stroke="#444" stroke-width="1"/>`));
+    if (P.showerOn) o.push(`<circle cx="${f1(X(P.valveX))}" cy="${f1(Y(P.valveZ))}" r="${f1(S * 1.6)}" fill="#DCEAF6" fill-opacity=".95" stroke="#185FA5" stroke-width="1.8"/><line x1="${f1(X(P.valveX))}" y1="${f1(Y(P.valveZ))}" x2="${f1(X(P.valveX) + S * 1.1)}" y2="${f1(Y(P.valveZ) - S * 1.1)}" stroke="#185FA5" stroke-width="2.2" stroke-linecap="round"/>`);   // the valve is on the door
+    o.push(LBL(X(vd.dx0 - 4.2), Y(vd.dz1 + 2.2), 'Valve door', `a small hinged door in the paneling that carries the shower valve: the opening is ${fmt(vd.w)} x ${fmt(vd.h)} in (${fmt(vd.x0)} to ${fmt(vd.x1)} in along, ${fmt(vd.z0)} to ${fmt(vd.z1)} up, between the furring rails S4 and S5, starting 1 1/2 in past the nook); the door is ${fmt(vd.dw)} x ${fmt(vd.dh)} in and overlaps it ${fmt(vd.ov)} in on a foam gasket; ${vd.screws} stainless screws at its corners hold it shut; the hinge (thick line) is on the cab side, screwed through the paneling into the wood jamb VD1 at ${fmt(vd.x1)} to ${fmt(vd.jx1)} in. Back out the screws and swing it open to see the back of the valve, its two elbows and the PEX lines`, { size: 10.5, fill: '#185FA5', dy: 13, size2: 9.5 }));
+    o.push(GE());
+  }
   o.push(elevTail(E, L, 'inches from where you start measuring at the back'));
   // things you can drag (this view runs right to left, so a drag to the right moves toward the rear; up is up): the drawers and boards, then the shelves in the nook and over the fridge, then the tanks
   {

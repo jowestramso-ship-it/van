@@ -64,7 +64,9 @@ PASS_SHIMS = len(PAP['S7']) + len(PAP['S8'])
 # the totals for the cut list and the build guide
 import math as _m
 FRAME_LEN = {nm: max(z1 - z0, x1 - x0) for nm, x0, x1, z0, z1 in WIN_FRAME}
-NOOK_LEN = [t - b for nm, x0, x1, b, t, sp in VFR] + [17.25] * 3 + [t - b for nm, x0, x1, b, t, sp in VFR_D]
+# the valve door's frame (passenger side, behind the shower wall, user 2026-11-02: one 4 x 8 PVC sheet with a small door for the valve): two short 1x2 jambs in the layer of the furring rails, with no spacer blocks (they are screwed to S4 and S5): VD1 the cab-side jamb (the hinge and the cab-side screws go into it) and VD2 a short piece under the nook frame V2 (the door's rear edge)
+VDJ = (('VD1', VD_X1, VD_X1 + FRAME_W, VD_Z0, VD_Z1), ('VD2', SN_X1, SN_X1 + FRAME_W, VD_Z0, SN_Z0))
+NOOK_LEN = [t - b for nm, x0, x1, b, t, sp in VFR] + [17.25] * 3 + [t - b for nm, x0, x1, b, t, sp in VFR_D] + [z1 - z0 for nm, x0, x1, z0, z1 in VDJ]
 ALL_LENGTHS = [p[3] - p[2] for p in DRV_PIECES + PASS_PIECES] + list(FRAME_LEN.values()) + NOOK_LEN
 N_PIECES = len(ALL_LENGTHS)
 def pack_sticks(lengths, stick=96, kerf=.125):

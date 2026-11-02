@@ -21,9 +21,10 @@ efr = [f'| E{i + 1:02d} | {nm} | vertical, {["shower nook rear end", "shower noo
 efr += ['| E05 | X1 | cross piece, shower nook floor | **17 1/4** | between V1 and V2, top edge at 38 in up |',
         '| E06 | X2 | cross piece, shower nook top | **17 1/4** | between V1 and V2, bottom edge at 54 in up |',
         '| E07 | X3 | cross piece, counter nook top | **17 1/4** | between V3 and V4, bottom edge at 54 in up |']
+efr += [f'| E{8 + i:02d} | {nm} | {["valve door cab-side jamb, between S4 and S5, no spacer blocks (the hinge and the cab-side screws go into it)", "valve door rear jamb, in line under V2, no spacer blocks"][i]} | **{fr16(z1 - z0)}** | {fr16(x0)} to {fr16(x1)} in from the back, {fr16(z0)} to {fr16(z1)} in up |' for i, (nm, x0, x1, z0, z1) in enumerate(VDJ)]
 d_len = sum(p[3] - p[2] for p in DRV_PIECES); p_len = sum(p[3] - p[2] for p in PASS_PIECES)
-f_len = sum(frame_len.values()); e_len = sum(t - b for nm, x0, x1, b, t, sp in VFR[:4]) + 3 * 17.25
-allp = [p[3] - p[2] for p in DRV_PIECES + PASS_PIECES] + list(frame_len.values()) + [t - b for nm, x0, x1, b, t, sp in VFR] + [17.25] * 3 + [t - b for nm, x0, x1, b, t, sp in VFR_D]
+f_len = sum(frame_len.values()); e_len = sum(t - b for nm, x0, x1, b, t, sp in VFR[:4]) + 3 * 17.25 + sum(z1 - z0 for nm, x0, x1, z0, z1 in VDJ)
+allp = [p[3] - p[2] for p in DRV_PIECES + PASS_PIECES] + list(frame_len.values()) + [t - b for nm, x0, x1, b, t, sp in VFR] + [17.25] * 3 + [t - b for nm, x0, x1, b, t, sp in VFR_D] + [z1 - z0 for nm, x0, x1, z0, z1 in VDJ]
 total_len = sum(allp); npieces = len(allp)
 stk = N_STICKS
 spare = N_BUY

@@ -133,7 +133,7 @@
 "head 29, valve 29 (the stall is 0 to 36; \"around 30 in along the wall\", you said)",
 "head on a 6 in arm, pointing into the stall",
 "head 70 up, valve 36 up (the pan is fixed, with a 3 in curb)",
-"the shower plumbing is to the left of the shower nook in the passenger-wall view (user), so on the cab side of it, over the toilet end: the valve is under the head, between furring rails S4 and S5; the hot and cold lines run along at 27 1/2 up and rise at 27 1/2 in between the blocks of S4 (at 17 3/4 and 31 1/4), through S4 (drilled, not notched), and the feed to the head rises straight up from the valve through S5, S6 and S7 in the same gap (drilled, not notched); positions are adjustable in the interactive plan"
+"the shower plumbing is to the left of the shower nook in the passenger-wall view (user), so on the cab side of it, over the toilet end: the valve is under the head, between furring rails S4 and S5, mounted on a small hinged door in the paneling (the valve door row below) so its back can be reached; the hot and cold lines run along at 27 1/2 up and rise at 27 1/2 in between the blocks of S4 (at 17 3/4 and 31 1/4), through S4 (drilled, not notched), and the feed to the head rises straight up from the valve through S5, S6 and S7 in the same gap (drilled, not notched); 8 to 12 in of spare line is left behind the door so the valve can be pulled forward; positions are adjustable in the interactive plan"
 ],
 [
 "Passenger",
@@ -141,7 +141,7 @@
 "12 to 24 (centered on the 36 in pan)",
 "12 long x 4.5 deep (about 4 1/4 clear inside its lining; it was 17 1/4, the user asked for it narrower)",
 "38 to 54 up (16 tall), open at the front with no lip; a bungee cord across the front, about 5 1/2 in above the shelf board, keeps the bottles in",
-"recess in the shower wall: the pans are the body (0 deep) and the planks sit 4.5 in off the body; lined with PVC paneling (the cut-outs of the wall planks are its back) and a slight slope to the front so water runs out over the open edge (no lip, no notch); two screw eyes, one at each end of the nook, hold the cord; its frames V1 (10 1/2 to 12) and V2 (24 to 25 1/2) stand on the full-depth steel"
+"recess in the shower wall: the pans are the body (0 deep) and the paneling sits 4.5 in off the body; lined with PVC paneling (the cut-out of the wall sheet is its back) and a slight slope to the front so water runs out over the open edge (no lip, no notch); two screw eyes, one at each end of the nook, hold the cord; its frames V1 (10 1/2 to 12) and V2 (24 to 25 1/2) stand on the full-depth steel"
 ],
 [
 "Passenger",
@@ -155,9 +155,17 @@
 "Passenger",
 "Shower wall paneling (PVC, waterproof)",
 "0 to 36 on the back wall (no end wall); inside the nook (12 to 24)",
-"PVC tongue and groove planks, 5/16 in (8 mm), 10 in wide (about 9 3/4 covering), 8 ft long: 4 of them stood on end on the wall from the cab end, joints at 6 3/4, 16 1/2 and 26 1/4, the nook cut out of planks 2 and 3 (lengthwise at 12 and 24) and lined from the cut-outs and offcuts",
+"ONE solid PVC paneling sheet, 4 x 8 ft (48 x 96 in), 5/16 in (8 mm) thick, stood on end on the wall (36 of its 48 in width, 70 of its 96 in length: no joints); the nook cut out of it (12 to 24 in along, 38 to 54 up) and lined from the cut-out and the offcuts; the valve door cut out of it (below)",
 "4 1/16 to 74 up (it stops 1/4 in above the pan edge at 3.8 up; flexible sealant fills the gap)",
-"glued over the 3/8 in plywood with the panel maker's adhesive (you chose plywood with a waterproof lining over it, and PVC paneling for the lining); about 9 lb of planks; 1/8 in expansion gaps at the ends and the top, end trim at the rear edge and the cab edge, a flexible sealant joint at the pan, every screw and hole below the splash line sealed; holes through it for the shower arm (1 1/8 in) and the valve (2 1/4 in), both in plank 4 (the cab-end plank) and clear of the joint at 26 1/4, both placeholders until you measure the real parts, each hidden under its flange or plate with a ring of sealant behind; the maker and the adhesive are not chosen yet"
+"glued over the 3/8 in plywood with the panel maker's adhesive (you chose plywood with a waterproof lining over it, and PVC paneling for the lining); about 9 lb of sheet; 1/8 in expansion gaps at the ends and the top, end trim at the rear edge and the cab edge, a flexible sealant joint at the pan, every screw and hole below the splash line sealed; the hole for the shower arm (1 1/8 in) is in the sheet, the hole for the valve (2 1/4 in) is in the valve door; both are placeholders until you measure the real parts, each hidden under its flange or plate with a ring of sealant behind; the maker and the adhesive are not chosen yet"
+],
+[
+"Passenger",
+"Shower valve door (in the paneling)",
+"opening 25 1/2 to 33 1/2 (8 wide, starting 1 1/2 in past the nook so the nook frame V2 is its rear jamb); door 25 to 34 (9 wide)",
+"opening 8 x 9 3/4 in; door 9 x 10 3/4 in, a rigid 1/2 in board (PVC board, or plywood skinned with PVC), overlapping the opening 1/2 in all round on a closed-cell foam gasket",
+"opening 32 to 41 3/4 up (the top of furring rail S4 to the bottom of S5, so both rails back the sheet's edges); door 31 1/2 to 42 1/4 up",
+"the shower valve is mounted on the door, and its back, the two swivel elbows and the PEX lines are behind it in the gap between the rails (a leak fix needs no demolition); four stainless screws at the door's corners hold it shut (not latches); a piano hinge on the cab side, its wall leaf screwed through the paneling and the plywood into a 3/4 x 1 1/2 in wood jamb (33 1/2 to 35 in, screwed to S4 and S5); the opening is cut through the plywood and the sheet; 8 to 12 in of spare PEX behind it; a shutoff on each line in the sink cabinet; pressure-test the lines with the door open before it is closed up"
 ],
 [
 "Passenger",

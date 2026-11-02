@@ -106,7 +106,10 @@ const PD = [
   { k: 'snCord', g: 'Shower nook contents', l: 'Bungee cord across the nook front: height above the shelf board (0 for none; it keeps the bottles from falling out)', d: 5.5, s: .25, a: 0, b: 9 },
   { k: 'snShelf', g: 'Shower nook contents', l: 'Shelf board: its top, up from the floor (toilet paper under it, bottles on it)', d: 43.75, s: .25, a: 38, b: 54 },
   { k: 'linerT', g: 'Shower liner and drain', l: 'Liner thickness (PVC paneling planks are 8 mm, which is 5/16 in: a placeholder, measure yours)', d: .3125, s: .005, a: .05, b: .5 },
-  { k: 'pvcW', g: 'Shower liner and drain', l: 'PVC plank width, as it covers on the wall (a 10 in plank with its tongue covers about 9 3/4: measure yours)', d: 9.75, s: .25, a: 4, b: 16 },
+  { k: 'pvcSheet', g: 'Shower liner and drain', l: 'The back wall is ONE solid 4 x 8 ft PVC paneling sheet stood on end (you chose it: no joints; untick for tongue and groove planks)', d: true, t: 'c' },
+  { k: 'vdoorOn', g: 'Shower liner and drain', l: 'Small hinged door in the paneling that carries the shower valve, so the back of the valve and its two elbows and lines can be reached (4 stainless screws, hinge on the cab side)', d: true, t: 'c' },
+  { k: 'vdoorW', g: 'Shower liner and drain', l: 'Valve door opening: width (starts 1 1/2 in past the nook so that the nook frame V2, with a short piece under it, is its rear jamb; the door is 1 in bigger each way and overlaps the opening 1/2 in all round)', d: 8, s: .25, a: 6, b: 12 },
+  { k: 'pvcW', g: 'Shower liner and drain', l: 'PVC plank width, as it covers on the wall (planks only: a 10 in plank with its tongue covers about 9 3/4: measure yours)', d: 9.75, s: .25, a: 4, b: 16 },
   { k: 'curIn', g: 'Shower liner and drain', l: 'Shower curtain rail: how far it runs inside the pan\'s edge (the curtains hang inside the 3 in curb, 6 in overlap in the middle of the front)', d: 1.5, s: .25, a: .5, b: 6 },
   { k: 'linerTop', g: 'Shower liner and drain', l: 'Liner top, up from the floor (the finished ceiling at the wall is about 74 1/2; the head is at 70)', d: 74, s: .5, a: 40, b: 75 },
   { k: 'linerGap', g: 'Shower liner and drain', l: 'Liner: the gap it leaves above the pan edge against the wall, filled with flexible sealant (the pan top is 3.8 up with the 3 in curb; a stiff panel cannot lap over the pan lip)', d: .25, s: .0625, a: 0, b: 1 },
@@ -492,15 +495,23 @@ function layout(P0) {
     sn.bottlesEnd = bx0 - .5; sn.rollClear = sn.shelfTop - .75 - bot - 4.5; sn.bottleClear = top - sn.shelfTop;
     L.sn = P.snItemsOn ? sn : null;
   }
-  // the waterproof liner: PVC paneling (tongue and groove planks stood on end, 8 ft long) over the plywood on the back wall of the stall, 0 to the pan length, and lining the nook (the cut-outs are the nook's back);
-  // the other three sides of the stall are curtains, so there is no end wall and no corner. The planks start at the cab end (the nook's edges are cut lengthwise out of the planks they fall in); it stops a little above the pan edge
+  // the waterproof liner: PVC paneling over the plywood on the back wall of the stall, 0 to the pan length, and lining the nook (the cut-outs are the nook's back). Stood on end, 8 ft long.
+  // pvcSheet (default): ONE solid 4 x 8 ft sheet (48 wide), so the whole 36 in wall is one piece with no joints and 12 in of the sheet's width is left over; otherwise tongue and groove planks that start at the cab end (the nook's edges are cut lengthwise out of the planks they fall in).
+  // the other three sides of the stall are curtains, so there is no end wall and no corner; the paneling stops a little above the pan edge
+  // the valve door: a small hinged door in the paneling carries the shower valve; its opening runs from the top of furring rail S4 to the bottom of S5 (so both rails back the sheet's edges) and from 1 1/2 in past the nook (the nook frame V2 is its rear jamb) vdoorW wide; the door overlaps the opening by 1/2 in all round on a gasket,
+  // is held shut by 4 stainless screws at its corners, and hangs on a hinge on the cab side, screwed through the paneling into a wood jamb behind the sheet
   { const x1 = P.panW, pz = 3.8, z0 = pz + P.linerGap, z1 = Math.min(P.linerTop, L.ceilF || P.linerTop), hh = z1 - z0;
     const nk0 = L.snx[0], nkx = L.snx[1], nb = P.snookTop - P.snookH, nt = P.snookTop;
-    const joints = []; for (let k = 1; x1 - k * P.pvcW > .5; k++) joints.unshift(x1 - k * P.pvcW);      // the planks start at the cab end: full planks, the rear one cut (the head and the valve sit in the middle of the full cab-end plank)
+    const sheet = !!P.pvcSheet;
+    const joints = []; if (!sheet) for (let k = 1; x1 - k * P.pvcW > .5; k++) joints.unshift(x1 - k * P.pvcW);      // planks start at the cab end: full planks, the rear one cut; a solid sheet has no joints
     const planks = joints.length + 1;
-    const pieces = x1 * hh, nookSides = 2 * 4.5 * (nt - nb) + 2 * P.snookLen * 4.5;   // the wall planks' cut-outs are the nook's back; its floor, ceiling and two sides come out of the offcuts
+    const pieces = x1 * hh, nookSides = 2 * 4.5 * (nt - nb) + 2 * P.snookLen * 4.5;   // the wall's cut-outs are the nook's back; its floor, ceiling and two sides come out of the offcuts
     const plankLen = hh <= 96 ? 96 : 0;
-    L.liner = P.linerOn ? { x0: 0, x1, z0, z1, h: hh, t: P.linerT, nook: { x0: nk0, x1: nkx, z0: nb, z1: nt }, planks: plankLen ? planks : 99, joints, left: planks * P.pvcW * 96 - pieces - nookSides, nookSides, lbs: (pieces + nookSides) / 144 * .4 } : null;
+    const vd = P.vdoorOn && P.showerOn && P.linerOn ? { x0: nkx + 1.5, x1: nkx + 1.5 + P.vdoorW, z0: 32, z1: 41.75, ov: .5, jx1: nkx + 1.5 + P.vdoorW + 1.5, screws: 4, hinge: 'cab' } : null;   // z: the top of S4 (30 1/4 + 1 3/4) to the bottom of S5 (43 1/2 - 1 3/4)
+    if (vd) { vd.w = vd.x1 - vd.x0; vd.h = vd.z1 - vd.z0; vd.dw = vd.w + 2 * vd.ov; vd.dh = vd.h + 2 * vd.ov; vd.rj = { x0: nkx, x1: nkx + 1.5, z0: vd.z0, z1: nb }; vd.cj = { x0: vd.x1, x1: vd.jx1, z0: vd.z0, z1: vd.z1 }; vd.dx0 = vd.x0 - vd.ov; vd.dx1 = vd.x1 + vd.ov; vd.dz0 = vd.z0 - vd.ov; vd.dz1 = vd.z1 + vd.ov; }
+    const total = sheet ? 48 * 96 : planks * P.pvcW * 96;
+    L.liner = P.linerOn ? { x0: 0, x1, z0, z1, h: hh, t: P.linerT, nook: { x0: nk0, x1: nkx, z0: nb, z1: nt }, sheet, sheetOk: sheet ? (plankLen > 0 && x1 <= 48) : true, planks: plankLen && (!sheet || x1 <= 48) ? (sheet ? 1 : planks) : 99, joints, left: total - pieces - nookSides, nookSides, lbs: sheet ? (pieces + nookSides) * P.linerT * .05 : (pieces + nookSides) / 144 * .4, door: vd } : null;
+    L.vdoor = L.liner ? vd : null;
     L.pdr = { x: P.pdrX, y: P.pdrY }; }
   // the shower curtains: two flexible curtains hang from one bent rail on the ceiling that runs round the three open sides, curIn inside the pan's edge (so the hems hang inside the curb); they overlap 6 in in the middle of the front
   L.curtain = P.showerOn ? { x0: P.curIn, x1: P.panW - P.curIn, y: P.panD - P.curIn, z: (L.ceilF || 74.5) - .5, over: 6, len: (L.ceilF || 74.5) - 1.5 } : null;
