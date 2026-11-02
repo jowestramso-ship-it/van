@@ -938,3 +938,7 @@ Previous: two closet rods were added (one above the other, along the wall, upper
 - The hand shower hose is about 2 1/2 ft (30 in): too short for a standing shower with the valve at 36 in up (the head would only reach about 56 to 58 in up). Suggested: a standard 59 to 72 in replacement hose (1/2-14 NPSM ends, not verified) and the hand shower on a wall holder about 62 to 66 in up, about 18 in along; this would replace the fixed head at 70 in and its feed (PL5). Not changed yet, awaiting the user's yes.
 - Changed: `tools/electric.js` (PL4's note).
 
+## 2026-11-02: the hand shower hose is parked
+
+- User: 'Leave the hand shower hose for now.' Nothing changes: the plan keeps the fixed head at 70 in with its feed (PL5), and the 2 1/2 ft hose, the wall holder and the longer hose are not drawn. Open when the user comes back to it: a 6 ft hose (1/2-14 NPSM ends, not verified), a wall holder at about 62 to 66 in up and 18 in along, and dropping the fixed head and PL5.
+
