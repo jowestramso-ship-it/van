@@ -891,3 +891,8 @@ Previous: two closet rods were added (one above the other, along the wall, upper
 - Fixed by swapping the two positions, so the text is right: EP11, the left rocker (nearer the cab), at 102 1/4 in along; EP14, the right rocker (nearer the sink and the rear), at 100 1/4. The plate itself (99 to 103 1/2 in along, 51 to 53 1/2 up) does not move. WR33 gets about 2 in longer and WR34 about 2 in shorter.
 - Changed: `tools/electric.js` (the two items' x).
 
+## 2026-11-01: WR17 note: the cabinet has an open back
+
+- Showing WR17 (the dimmer button ED14 to the controller in ED21): the note said the cable enters the cabinet 'through a grommet in its back', but the wall cabinets have open backs (the 'cabBackIn' size is 0). It now says the cable comes out through a grommeted hole in the wall covering, inside the cabinet. Nothing else about the route changed (about 1 1/3 ft drawn, cut about 3 ft of 18 AWG).
+- Changed: `tools/elwires.js` (WR17's note).
+
