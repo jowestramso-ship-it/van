@@ -961,3 +961,9 @@ Previous: two closet rods were added (one above the other, along the wall, upper
 - Open questions for the user: the sheet (a single PVC sheet cut from a 4 x 8, or the planks glued up into one panel; the plan's planks, joints and liner weight would change), the latch (screws or quarter-turn latches), and the hinge side.
 - The one-off page valve3d.html ('Shower Valve Access') now shows this (the door opens). Changed: `tools/valve3d.js`.
 
+## 2026-11-02: the door attaches to a wood frame, not the thin sheet (valve 3D updated)
+
+- User: 'but the door looks like its just attached to the flimzy PVC sheet around the door?' Right: the 5/16 in sheet cannot carry the hinge, the latches and the valve's weight and twisting. Fix in the proposal: the opening is made the whole gap between furring rails S4 and S5 (32 to 41 3/4 in up, 25 to 33 in along), so the sheet along its top and bottom edges is backed by those rails, and a wood jamb (3/4 x 1 1/2 in, screwed to both rails) stands behind the sheet on each side (23 1/2 to 25 and 33 to 34 1/2 in along), like the plan's 1x2 window and nook frames; the cab-side hinge and the four screws or latches go through the sheet into that frame (rails above and below, jambs at the sides). The door is a rigid 1/2 in board (PVC board, or plywood skinned with the wall sheet), 9 x 10 3/4 in, overlapping the opening by 1/2 in on the gasket; the valve (at 36 in up) sits a little below the door's middle.
+- Still not in the plan or the pages: the user has not answered the sheet (a PVC sheet or the planks glued up), the latch and the hinge side.
+- Changed: `tools/valve3d.js` (the frame, the jambs, the opening and the door sizes, the labels and the note).
+

@@ -37,7 +37,7 @@ const body = `<div class="wrap">
   <div class="bar"><label><input type="checkbox" id="cSteel" checked> van steel</label><label><input type="checkbox" id="cFur" checked> furring rails and spacer blocks</label><label><input type="checkbox" id="cLab" checked> labels</label></div>
   <div class="stage" id="stage"><canvas id="c"></canvas><div id="labels"></div></div>
   <div class="key"><span><i class="sw" style="background:#cfe0f2"></i>the small door, with the valve on it</span><span><i class="sw" style="background:#ece9df"></i>the one-piece back wall</span><span><i class="sw" style="background:#caa468"></i>furring rails, spacer blocks and the backing plate</span><span><i class="sw" style="background:#d93025"></i>hot PEX</span><span><i class="sw" style="background:#1a73e8"></i>cold PEX</span><span><i class="sw" style="background:#c9a24a"></i>brass elbows</span></div>
-  <p class="note">Drawn from the plan: a one-piece back wall (5/16 in thick, as the planks were; the sheet type is not chosen) on rails 3/4 in thick standing 3 5/8 in off the steel on the spacer blocks (rails S3 to S6 at 21 1/4, 30 1/4, 43 1/2 and 57 1/4 in up; only the two spacer blocks of S4 near the valve are drawn). The opening is 8 x 8 in, between rails S4 and S5, 25 to 33 in along and 32 to 40 up, so the rails stay whole; the door is 9 x 9 in and overlaps the opening by 1/2 in, on a gasket, held by four stainless screws or quarter-turn latches, hinged on the cab side. The valve is at 29 in along and 36 in up on the door, two handles with the hot and cold inlets 4 in apart. How deep the valve sits behind the door and the size of the elbows (two SharkBite UC532LFA) are my estimates: check them with your valve in hand. The cold side of the valve is the rear one (on the right here) and the hot the cab one (on the left): an assumption, check the valve. The hot line, dropping at 31 in along, passes through the S4 spacer block at 29 1/2 to 33 in, which gets a 3/4 in hole drilled through it. Leave 8 to 12 in of extra PEX behind the valve, loose, so the door can swing open on its lines.</p>
+  <p class="note">Drawn from the plan: a one-piece back wall (5/16 in thick, as the planks were; the sheet type is not chosen) on rails 3/4 in thick standing 3 5/8 in off the steel on the spacer blocks (rails S3 to S6 at 21 1/4, 30 1/4, 43 1/2 and 57 1/4 in up; only the two spacer blocks of S4 near the valve are drawn). The door does not hang on the thin sheet: the opening runs the whole gap between rails S4 and S5 (32 to 41 3/4 in up, 25 to 33 in along), so the sheet around its top and bottom edges is backed by those rails, and a wood jamb (3/4 in by 1 1/2 in, screwed to both rails) stands behind the sheet on each side. The hinge, on the cab side, and the four screws or quarter-turn latches go through the sheet into that frame. The door is a rigid 1/2 in board (PVC board, or plywood skinned with the wall sheet), 9 x 10 3/4 in, overlapping the opening by 1/2 in on a gasket. The valve is at 29 in along and 36 in up on the door, two handles with the hot and cold inlets 4 in apart. How deep the valve sits behind the door and the size of the elbows (two SharkBite UC532LFA) are my estimates: check them with your valve in hand. The cold side of the valve is the rear one (on the right here) and the hot the cab one (on the left): an assumption, check the valve. The hot line, dropping at 31 in along, passes through the S4 spacer block at 29 1/2 to 33 in, which gets a 3/4 in hole drilled through it. Leave 8 to 12 in of extra PEX behind the valve, loose, so the door can swing open on its lines.</p>
 </div>`;
 
 const script = `
@@ -78,17 +78,20 @@ const script = `
   // the back wall: ONE sheet (5/16 in), with an 8 x 8 in opening between rails S4 and S5, and the wall to the fridge at the cab end
   const SHEET = { transparent: true, opacity: .55, depthWrite: false };
   box(15, 25, 19, 63, 4.5, 4.8125, PVC, null, SHEET); box(33, 36, 19, 63, 4.5, 4.8125, PVC, null, SHEET);
-  box(25, 33, 19, 32, 4.5, 4.8125, PVC, null, SHEET); box(25, 33, 40, 63, 4.5, 4.8125, PVC, null, SHEET);
+  box(25, 33, 19, 32, 4.5, 4.8125, PVC, null, SHEET); box(25, 33, 41.75, 63, 4.5, 4.8125, PVC, null, SHEET);
   box(36, 36.75, 19, 63, 0, 14, 0xd9c8a3);
-  // a gasket round the opening, and the hinge strip on the cab side
+  // the frame behind the sheet: rails S4 below and S5 above the opening, and a wood jamb on each side screwed to them: the hinge and the screws go into this, not into the sheet
+  box(23.4, 25, 32, 41.75, 3.75, 4.5, 0xb98f5a, furG); box(33, 34.6, 32, 41.75, 3.75, 4.5, 0xb98f5a, furG);
+  // a gasket round the opening, and the hinge strip on the cab side (over the jamb)
   const GK = 0x2b2d31, DZ0 = 4.95, DZ1 = 5.45;
-  box(24.5, 25.5, 31.5, 40.5, 4.8125, DZ0, GK); box(32.5, 33.5, 31.5, 40.5, 4.8125, DZ0, GK); box(25.5, 32.5, 31.5, 32.5, 4.8125, DZ0, GK); box(25.5, 32.5, 39.5, 40.5, 4.8125, DZ0, GK);
-  box(33.6, 34.3, 31.5, 40.5, 4.8125, 5.2, 0xb9bec4);
+  box(24.5, 25.4, 31.5, 42.25, 4.8125, DZ0, GK); box(32.6, 33.5, 31.5, 42.25, 4.8125, DZ0, GK); box(25.4, 32.6, 31.5, 32.4, 4.8125, DZ0, GK); box(25.4, 32.6, 41.35, 42.25, 4.8125, DZ0, GK);
+  box(33.6, 34.3, 31.5, 42.25, 4.8125, 5.2, 0xb9bec4);
+  [33, 37, 41].forEach(y => cylZ(33.95, y, 5.2, 5.4, .22, 0x5d6268, null, 8));
   // the small door (9 x 9 in, over the opening) with everything that rides on it; it swings open like a cabinet door on its cab-side edge
   const hinge = new THREE.Group(); scene.add(hinge); hinge.position.set(SX(33.5), 0, DZ0);
   const svc = new THREE.Group(); hinge.add(svc); svc.position.set(-SX(33.5), 0, -DZ0);
-  box(24.5, 33.5, 31.5, 40.5, DZ0, DZ1, SVC, svc);
-  [[25.1, 32.1], [32.9, 32.1], [25.1, 39.9], [32.9, 39.9]].forEach(q => cylZ(q[0], q[1], DZ1, DZ1 + .3, .3, STEEL, svc, 10));   // stainless screws, or quarter-turn latches
+  box(24.5, 33.5, 31.5, 42.25, DZ0, DZ1, SVC, svc);
+  [[25.1, 32.1], [32.9, 32.1], [25.1, 41.65], [32.9, 41.65]].forEach(q => cylZ(q[0], q[1], DZ1, DZ1 + .3, .3, STEEL, svc, 10));   // stainless screws, or quarter-turn latches
   const inl = [{ x: 31, line: 0xd93025, name: 'hot' }, { x: 27, line: 0x1a73e8, name: 'cold' }];
   inl.forEach(i => {
     cylZ(i.x, 36, 2.8, DZ0, .95, 0x555a60, svc);                         // the cartridge behind the door, through the opening
@@ -122,11 +125,11 @@ const script = `
   const V = (x, y, z) => new THREE.Vector3(SX(x), y, z);
   const W = (x, y, z) => wp(x, y, z);
   const LAB = [
-    ['small door: 9 x 9 in over an 8 x 8 in opening, with the valve on it', 'svc', () => W(29, 41.6, 5.5), true], ['valve: two handles, inlets 4 in apart', 'svc', () => W(29, 38.6, 7.1), true],
+    ['small rigid door (1/2 in board): 9 x 10 3/4 in over an 8 x 9 3/4 in opening, with the valve on it', 'svc', () => W(29, 43.2, 5.5), true], ['valve: two handles, inlets 4 in apart', 'svc', () => W(29, 38.6, 7.1), true],
     ['2 swivel elbows (UC532LFA)', 'svc', () => W(29, 33.6, 1.5), true], ['4 stainless screws or latches', 'svc', () => W(33, 31, 5.8), true],
     ['hot PEX (cab side)', 'hot', () => V(32.5, 26.5, 1.3), false], ['cold PEX', 'cold', () => V(24.5, 26.5, 1.3), false],
     ['loose S-bend: 8 to 12 in of extra PEX', 'fix', () => V(29, 22.2, 1.6), false], ['S4 spacer block, drilled for the hot line', 'fix', () => V(31, 28.6, 1.8), false],
-    ['gasket round the opening', 'fix', () => V(25.2, 41.2, 4.9), false], ['hinge on the cab side', 'fix', () => V(34, 41.2, 5.2), false],
+    ['gasket round the opening', 'fix', () => V(25.2, 43, 4.9), false], ['hinge, screwed through the sheet into the jamb', 'fix', () => V(34.8, 44.6, 5.2), false], ['wood jamb behind the sheet (frame with S4 and S5)', 'fix', () => V(23.9, 30.6, 4.1), false],
     ['furring rail S4', 'fix', () => V(36, 28.2, 4.5), false], ['furring rail S5', 'fix', () => V(36, 43.8, 4.5), false], ['one-piece back wall', 'fix', () => V(20, 56, 4.9), false],
     ['van steel', 'fix', () => V(18, 49, -.5), false], ['wall to the fridge', 'fix', () => V(36.4, 60, 5), false]
   ].map(a => { const d = document.createElement('div'); d.className = 'lbl ' + a[1]; d.textContent = a[0]; labelsEl.appendChild(d); return { el: d, get: a[2], mv: a[3] }; });
