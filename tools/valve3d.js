@@ -36,8 +36,8 @@ const body = `<div class="wrap">
   </div>
   <div class="bar"><label><input type="checkbox" id="cSteel" checked> van steel</label><label><input type="checkbox" id="cFur" checked> furring rails and spacer blocks</label><label><input type="checkbox" id="cLab" checked> labels</label></div>
   <div class="stage" id="stage"><canvas id="c"></canvas><div id="labels"></div></div>
-  <div class="key"><span><i class="sw" style="background:#cfe0f2"></i>the small door, with the valve on it</span><span><i class="sw" style="background:#ece9df"></i>the one-piece back wall</span><span><i class="sw" style="background:#caa468"></i>furring rails, spacer blocks and the backing plate</span><span><i class="sw" style="background:#d93025"></i>hot PEX</span><span><i class="sw" style="background:#1a73e8"></i>cold PEX</span><span><i class="sw" style="background:#c9a24a"></i>brass elbows</span></div>
-  <p class="note">Drawn from the plan: a one-piece back wall (5/16 in thick, as the planks were; the sheet type is not chosen) on rails 3/4 in thick standing 3 5/8 in off the steel on the spacer blocks (rails S3 to S6 at 21 1/4, 30 1/4, 43 1/2 and 57 1/4 in up; only the two spacer blocks of S4 near the valve are drawn). The door does not hang on the thin sheet: the opening runs the whole gap between rails S4 and S5 (32 to 41 3/4 in up, 25 to 33 in along), so the sheet around its top and bottom edges is backed by those rails, and a wood jamb (3/4 in by 1 1/2 in, screwed to both rails) stands behind the sheet on each side. The hinge, on the cab side, and the four screws or quarter-turn latches go through the sheet into that frame. The door is a rigid 1/2 in board (PVC board, or plywood skinned with the wall sheet), 9 x 10 3/4 in, overlapping the opening by 1/2 in on a gasket. The valve is at 29 in along and 36 in up on the door, two handles with the hot and cold inlets 4 in apart. How deep the valve sits behind the door and the size of the elbows (two SharkBite UC532LFA) are my estimates: check them with your valve in hand. The cold side of the valve is the rear one (on the right here) and the hot the cab one (on the left): an assumption, check the valve. The hot line, dropping at 31 in along, passes through the S4 spacer block at 29 1/2 to 33 in, which gets a 3/4 in hole drilled through it. Leave 8 to 12 in of extra PEX behind the valve, loose, so the door can swing open on its lines.</p>
+  <div class="key"><span><i class="sw" style="background:#cfe0f2"></i>the small door, with the valve on it</span><span><i class="sw" style="background:#ece9df"></i>the PVC sheet and the plywood wall</span><span><i class="sw" style="background:#caa468"></i>furring rails, spacer blocks and the backing plate</span><span><i class="sw" style="background:#d93025"></i>hot PEX</span><span><i class="sw" style="background:#1a73e8"></i>cold PEX</span><span><i class="sw" style="background:#c9a24a"></i>brass elbows</span></div>
+  <p class="note">Drawn from the plan: the shower back wall is the 3/8 in plywood wall on the furring rails (rails S3 to S6 at 21 1/4, 30 1/4, 43 1/2 and 57 1/4 in up, 3/4 in thick, standing 3 5/8 in off the steel on the spacer blocks; only the two spacer blocks of S4 near the valve are drawn) with the PVC lining glued on it. The lining here is one 4 x 8 ft PVC sheet (drawn 1/8 in; the sheet is not chosen: measure yours), not planks. The door does not hang on the thin PVC: the opening runs the whole gap between rails S4 and S5 (32 to 41 3/4 in up, 25 to 33 in along) through the plywood and the PVC, so the wall around its top and bottom edges is backed by those rails, and a wood jamb (3/4 in by 1 1/2 in, screwed to both rails) stands behind the plywood on each side. The hinge, on the cab side, and the four screws or quarter-turn latches go through the wall into that frame. The door is a rigid 1/2 in board (PVC board, or plywood skinned with the PVC), 9 x 10 3/4 in, overlapping the opening by 1/2 in on a gasket. The valve is at 29 in along and 36 in up on the door, two handles with the hot and cold inlets 4 in apart. How deep the valve sits behind the door and the size of the elbows (two SharkBite UC532LFA) are my estimates: check them with your valve in hand. The cold side of the valve is the rear one (on the right here) and the hot the cab one (on the left): an assumption, check the valve. The hot line, dropping at 31 in along, passes through the S4 spacer block at 29 1/2 to 33 in, which gets a 3/4 in hole drilled through it. Leave 8 to 12 in of extra PEX behind the valve, loose, so the door can swing open on its lines.</p>
 </div>`;
 
 const script = `
@@ -75,18 +75,18 @@ const script = `
   const blk1 = box(16, 19.5, 29.5, 31, 0, 3.75, WOOD, furG, { transparent: true, opacity: .55 });
   const blk2 = box(29.5, 33, 29.5, 31, 0, 3.75, WOOD, furG, { transparent: true, opacity: .55 });
   cylY(31, 30.9, 31.1, 3.75, .5, 0x222222, furG);       // the 3/4 in hole drilled through the block for the hot line, seen on its top
-  // the back wall: ONE sheet (5/16 in), with an 8 x 8 in opening between rails S4 and S5, and the wall to the fridge at the cab end
+  // the back wall as the plan has it: the 3/8 in plywood wall on the rails, with ONE PVC sheet (1/8 in here: the sheet is not chosen) glued on it; one 8 x 9 3/4 in opening through both, between rails S4 and S5
   const SHEET = { transparent: true, opacity: .55, depthWrite: false };
-  box(15, 25, 19, 63, 4.5, 4.8125, PVC, null, SHEET); box(33, 36, 19, 63, 4.5, 4.8125, PVC, null, SHEET);
-  box(25, 33, 19, 32, 4.5, 4.8125, PVC, null, SHEET); box(25, 33, 41.75, 63, 4.5, 4.8125, PVC, null, SHEET);
+  const PLYC = 0xe8cf9c;
+  [[15, 25, 19, 63], [33, 36, 19, 63], [25, 33, 19, 32], [25, 33, 41.75, 63]].forEach(r => { box(r[0], r[1], r[2], r[3], 4.5, 4.875, PLYC, null, SHEET); box(r[0], r[1], r[2], r[3], 4.875, 5.0, PVC, null, SHEET); });
   box(36, 36.75, 19, 63, 0, 14, 0xd9c8a3);
   // the frame behind the sheet: rails S4 below and S5 above the opening, and a wood jamb on each side screwed to them: the hinge and the screws go into this, not into the sheet
   box(23.4, 25, 32, 41.75, 3.75, 4.5, 0xb98f5a, furG); box(33, 34.6, 32, 41.75, 3.75, 4.5, 0xb98f5a, furG);
   // a gasket round the opening, and the hinge strip on the cab side (over the jamb)
-  const GK = 0x2b2d31, DZ0 = 4.95, DZ1 = 5.45;
-  box(24.5, 25.4, 31.5, 42.25, 4.8125, DZ0, GK); box(32.6, 33.5, 31.5, 42.25, 4.8125, DZ0, GK); box(25.4, 32.6, 31.5, 32.4, 4.8125, DZ0, GK); box(25.4, 32.6, 41.35, 42.25, 4.8125, DZ0, GK);
-  box(33.6, 34.3, 31.5, 42.25, 4.8125, 5.2, 0xb9bec4);
-  [33, 37, 41].forEach(y => cylZ(33.95, y, 5.2, 5.4, .22, 0x5d6268, null, 8));
+  const GK = 0x2b2d31, DZ0 = 5.14, DZ1 = 5.64;
+  box(24.5, 25.4, 31.5, 42.25, 5.0, DZ0, GK); box(32.6, 33.5, 31.5, 42.25, 5.0, DZ0, GK); box(25.4, 32.6, 31.5, 32.4, 5.0, DZ0, GK); box(25.4, 32.6, 41.35, 42.25, 5.0, DZ0, GK);
+  box(33.6, 34.3, 31.5, 42.25, 5.0, 5.4, 0xb9bec4);
+  [33, 37, 41].forEach(y => cylZ(33.95, y, 5.4, 5.6, .22, 0x5d6268, null, 8));
   // the small door (9 x 9 in, over the opening) with everything that rides on it; it swings open like a cabinet door on its cab-side edge
   const hinge = new THREE.Group(); scene.add(hinge); hinge.position.set(SX(33.5), 0, DZ0);
   const svc = new THREE.Group(); hinge.add(svc); svc.position.set(-SX(33.5), 0, -DZ0);
@@ -129,8 +129,8 @@ const script = `
     ['2 swivel elbows (UC532LFA)', 'svc', () => W(29, 33.6, 1.5), true], ['4 stainless screws or latches', 'svc', () => W(33, 31, 5.8), true],
     ['hot PEX (cab side)', 'hot', () => V(32.5, 26.5, 1.3), false], ['cold PEX', 'cold', () => V(24.5, 26.5, 1.3), false],
     ['loose S-bend: 8 to 12 in of extra PEX', 'fix', () => V(29, 22.2, 1.6), false], ['S4 spacer block, drilled for the hot line', 'fix', () => V(31, 28.6, 1.8), false],
-    ['gasket round the opening', 'fix', () => V(25.2, 43, 4.9), false], ['hinge, screwed through the sheet into the jamb', 'fix', () => V(34.8, 44.6, 5.2), false], ['wood jamb behind the sheet (frame with S4 and S5)', 'fix', () => V(23.9, 30.6, 4.1), false],
-    ['furring rail S4', 'fix', () => V(36, 28.2, 4.5), false], ['furring rail S5', 'fix', () => V(36, 43.8, 4.5), false], ['one-piece back wall', 'fix', () => V(20, 56, 4.9), false],
+    ['gasket round the opening', 'fix', () => V(25.2, 43, 4.9), false], ['hinge, screwed through the wall into the jamb', 'fix', () => V(34.8, 44.6, 5.4), false], ['wood jamb behind the plywood (frame with S4 and S5)', 'fix', () => V(23.9, 30.6, 4.1), false],
+    ['furring rail S4', 'fix', () => V(36, 28.2, 4.5), false], ['furring rail S5', 'fix', () => V(36, 43.8, 4.5), false], ['PVC sheet on the 3/8 in plywood wall', 'fix', () => V(20, 56, 5.1), false],
     ['van steel', 'fix', () => V(18, 49, -.5), false], ['wall to the fridge', 'fix', () => V(36.4, 60, 5), false]
   ].map(a => { const d = document.createElement('div'); d.className = 'lbl ' + a[1]; d.textContent = a[0]; labelsEl.appendChild(d); return { el: d, get: a[2], mv: a[3] }; });
   // camera: orbit around a target

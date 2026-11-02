@@ -967,3 +967,9 @@ Previous: two closet rods were added (one above the other, along the wall, upper
 - Still not in the plan or the pages: the user has not answered the sheet (a PVC sheet or the planks glued up), the latch and the hinge side.
 - Changed: `tools/valve3d.js` (the frame, the jambs, the opening and the door sizes, the labels and the note).
 
+## 2026-11-02: the user will use one solid 4 x 8 ft PVC paneling sheet, not planks (decision; plan not yet converted)
+
+- User: 'I haven't bought the planks yet, I was gonna get a solid piece 4 x 8 of PVC paneling' (after asking what 'planks glued up into one panel' meant). So the shower back-wall lining is ONE PVC sheet, not four tongue-and-groove planks: no joints, a 36 in wide piece (about 69 15/16 in tall) cut from the 4 x 8 ft sheet, the offcuts for the nook's floor, ceiling and sides. Thickness not chosen (thin sheets are floppy: measure and choose). It is glued to the 3/8 in plywood wall that the plan already has under the lining (the pan page: 'PVC paneling over the 3/8 in plywood'), which my 3D had left out: the door is screwed through the plywood and the PVC into the wood frame (rails S4 and S5, a jamb each side), not into the PVC alone.
+- NOT converted yet in the plan and the pages (the user has not said to): the Shower pan page (drawings D to I and the parts and steps still say four planks, joints at 6 3/4, 16 1/2 and 26 1/4, plank 4, the tongue and groove joint), the interactive plan (`pvcW`, the joints, the plank count and the liner weight in `ia_core.js`, the checks in `ia_ui.js`, the wall drawing in `ia_elev.js`), `shelfdata.py` (`PVC_W`, `PVC_JOINTS`), the wall map and the build guide steps; none has the valve's small door either. Defaults to use when it is done: hinge on the cab side, four stainless screws (the user has not chosen between screws and quarter-turn latches).
+- The valve 3D (`valve3d.html`) now shows the plywood wall under the PVC sheet. Changed: `tools/valve3d.js`.
+
