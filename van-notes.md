@@ -901,3 +901,10 @@ Previous: two closet rods were added (one above the other, along the wall, upper
 - User: 'Is ed21 the junction box?' then 'Call it JB.' The box is named JB everywhere: its label on the drawings and in the driver wall table, the wire names and notes (WR14, WR16, WR17, WR20, WR21, WR24, WR35), the power chains on the cards ('Junction box JB, couch cabinet'), the ceiling legend and the build guide's wiring step. It is the only named (not numbered) driver wall item; the ED21 number is not reused, so the next new driver wall item will be ED22.
 - Nothing about where it is or what it holds changed (inside the couch cabinet at its cab end, 69 1/2 to 73 in along, 71 to 73 in up; the light splices and the strip's dimming controller). Changed: `tools/electric.js` (the item's `name`, the label code, the ceiling legend), `tools/elcards.js`, `tools/buildguide.py`, `CLAUDE.md`.
 
+## 2026-11-01: a second dimmer button for the LED strip (ED22, WR36)
+
+- User: 'I want the ceiling light strip to be controlled from 2 switches. where is the dimmer switch currently?' (it is ED14, on furring rail S6 at 68 in along, 57 1/4 up, next to the couch outlet ED10), then 'put the second behind the driver seat wall, where the switch for the dinettes is'.
+- New item ED22 (driver wall, added last): the second momentary push button, in the same shallow surface-mount box on W2 as the dinette light switch ED12, made a two-gang box (ED12 above, the button 3 1/4 in under it, 44 3/4 in up, about 3 in out from the driver wall). It is wired in parallel with ED14 on the controller's button input in JB, so either button works the strip.
+- New wire WR36: 2-conductor 18 AWG from ED22 up the corner behind the planks (about 2 in toward the rear of WR24's), then along the cabinet top (70 3/8 in up) to JB: about 8 2/3 ft drawn, cut about 10 1/2 ft. WR17's note says the first button has a second one in parallel.
+- Changed: `tools/electric.js` (ED22), `tools/elwires.js`, `tools/elcards.js`, `CLAUDE.md` (WR1 to WR36).
+

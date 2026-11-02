@@ -43,6 +43,7 @@ const CHAINS = {
   WR32: DCB.concat(['WR32', 'f:3 A fuse', 'Control panel|EP5']),
   WR33: DCB.concat(['WR16', 'f:5 A fuse', 'Junction box JB|couch cabinet', 'WR35', 'Switch EP11', 'WR33', 'Light EP2']),
   WR34: DCB.concat(['WR16', 'f:5 A fuse', 'Junction box JB|couch cabinet', 'WR35', 'Switch EP14', 'WR34', 'Lights EP12, EP13']),
+  WR36: DCB.concat(['WR14', 'f:10 A fuse', 'JB|dimming controller', 'WR36', 'Dimmer button ED22|with the dinette switch']),
   WR35: DCB.concat(['WR16', 'f:5 A fuse', 'Junction box JB|couch cabinet', 'WR35', 'Switches EP11|and EP14']),
 };
 const ALT_WIRES = new Set(['WR6', 'WR9', 'WR10', 'WR12', 'WR18', 'WR19', 'WR26', 'WR27', 'WR28', 'WR29', 'WR30']);   // the cards that show the inverter as the other source
