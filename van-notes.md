@@ -908,3 +908,8 @@ Previous: two closet rods were added (one above the other, along the wall, upper
 - New wire WR36: 2-conductor 18 AWG from ED22 up the corner behind the planks (about 2 in toward the rear of WR24's), then along the cabinet top (70 3/8 in up) to JB: about 8 2/3 ft drawn, cut about 10 1/2 ft. WR17's note says the first button has a second one in parallel.
 - Changed: `tools/electric.js` (ED22), `tools/elwires.js`, `tools/elcards.js`, `CLAUDE.md` (WR1 to WR36).
 
+## 2026-11-01: WR14 (the LED strip circuit) is built as four cables
+
+- Showing WR14: the card draws one wire with three ends, but it is one cable from the fuse block to the dimming controller in JB (14 AWG, about 11 ft cut with the fuse block on the divider) and three cables from the controller to the strip's three feeds: the driver run (a few inches away, about 2 ft cut), the passenger run across the ceiling at 82 1/2 in (about 7 1/2 ft) and the back run along the ceiling edge to the rear corner (about 8 1/2 ft; through the ribs at 58 3/8, 37 7/8 and 21 3/4, a grommet in each web). About 29 ft in all, not the 23 ft I said before. The strip is about 2.6 A on each long run and 1.1 A on the back run, so the three outputs can be 16 AWG if the 14 AWG spool runs short.
+- Changed: `tools/elwires.js` (WR14's note only; the drawing is unchanged).
+
