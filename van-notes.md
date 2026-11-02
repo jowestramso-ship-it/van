@@ -932,3 +932,9 @@ Previous: two closet rods were added (one above the other, along the wall, upper
 - Open: the user's PEX type; whether the hand shower hangs on a wall bracket instead of the fixed head and its feed (PL5) at 70 in (the valve comes with a hose and hand shower), and the hose length.
 - Changed: `tools/electric.js` (PL4's note).
 
+## 2026-11-02: the shower valve elbows are two SharkBite UC532LFA; the hand shower hose is about 2 1/2 ft
+
+- User: 'push to connect pex' (the rest of the plumbing), then 'head hangs with about 2 1/2 feet on hose', then 'I'll use 2 of the [Home Depot] 1/2 in x 1/2 in PEX Barb Brass 90 degree FIP Swivel Elbow Fitting UC532LFA'. My earlier 'brass, not plastic' rule was too strong for a washer-sealed swivel nut (plastic push-to-connect is fine if not overtightened); I found no push-to-connect brass 90 degree elbow with a female swivel NPSM end, so the user chose the UC532LFA: a barb, not push-to-connect, so the PEX at the valve end goes on with a stainless cinch clamp (5/8 in for 1/2 in PEX, one per barb, 2 in all) and a cinch tool, or a copper crimp ring and crimp tool. The rest of the lines stay push-to-connect.
+- The hand shower hose is about 2 1/2 ft (30 in): too short for a standing shower with the valve at 36 in up (the head would only reach about 56 to 58 in up). Suggested: a standard 59 to 72 in replacement hose (1/2-14 NPSM ends, not verified) and the hand shower on a wall holder about 62 to 66 in up, about 18 in along; this would replace the fixed head at 70 in and its feed (PL5). Not changed yet, awaiting the user's yes.
+- Changed: `tools/electric.js` (PL4's note).
+
