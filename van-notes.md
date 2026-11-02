@@ -872,3 +872,10 @@ Previous: two closet rods were added (one above the other, along the wall, upper
 - New route: up the rear corner as before, then east along the ceiling edge to 26 1/2 in (clear of the fan), through the web of the rib at 21 3/4 (one grommet), then across the ceiling at 26 1/2 in to the light. The same length as before (8.4 ft in all), since both routes are square.
 - Changed: `tools/elwires.js` (WR23's ceiling route and note).
 
+## 2026-11-01: WR34 is two cables, so no splice is hidden above the ceiling
+
+- Found while showing WR34: the drawing ran one cable from the switch to a T at 82 3/4 in across the ceiling, with one branch to each center-row light. A splice above the plywood cannot be reached later.
+- Now: cable 1 goes from the switch EP14 up riser B and across to the front center light (the cab-side one); cable 2 goes from that light back along the center slat, round the A/C opening (above it) to the rear center light. The three meet in the front light's cutout, where the lights come down for service. Rib crossings (a grommet in each web): 97 3/8 (both cables can share the hole), 58 3/8 and 37 7/8.
+- The drawn length goes from 14 ft to about 15 3/4 ft; cut about 18 ft in all (about 8 1/2 ft and 9 1/2 ft). The 16 AWG spool: about 68 ft for the lights still on 16.
+- Changed: `tools/elwires.js` (WR34 route and note).
+
