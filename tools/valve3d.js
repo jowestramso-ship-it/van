@@ -28,16 +28,16 @@ h1 { font-size: 24px; margin: 4px 0 2px; } .lead { color: var(--mut); margin: 4p
 `;
 
 const body = `<div class="wrap">
-  <h1>The shower valve and its removable plank, in 3D</h1>
-  <p class="lead">The shower back wall at the cab end, seen from inside the stall (cab on the left). The valve is on the cab-end PVC plank (26 1/4 to 36 in along), which is screwed on, not glued, so it comes off. Drag to look around, scroll or pinch to zoom, and take the plank off to see the two swivel elbows and the lines behind the valve.</p>
+  <h1>The shower valve behind a small door, in 3D</h1>
+  <p class="lead">The shower back wall at the cab end, seen from inside the stall (cab on the left). The back wall is one piece, with a small door over the valve: the valve is mounted on the door, which swings open like a cabinet door and shows the two swivel elbows and the lines behind it. Drag to look around, scroll or pinch to zoom, and open the door.</p>
   <div class="bar">
-    <button id="bPlank" type="button">Take the plank off</button>
+    <button id="bPlank" type="button">Open the door</button>
     <button data-v="wall" type="button" class="on">From the stall</button><button data-v="above" type="button">From above</button><button data-v="close" type="button">Close up</button>
   </div>
   <div class="bar"><label><input type="checkbox" id="cSteel" checked> van steel</label><label><input type="checkbox" id="cFur" checked> furring rails and spacer blocks</label><label><input type="checkbox" id="cLab" checked> labels</label></div>
   <div class="stage" id="stage"><canvas id="c"></canvas><div id="labels"></div></div>
-  <div class="key"><span><i class="sw" style="background:#cfe0f2"></i>the removable cab-end plank, with the valve on it</span><span><i class="sw" style="background:#ece9df"></i>glued planks</span><span><i class="sw" style="background:#caa468"></i>furring rails, spacer blocks and the backing plate</span><span><i class="sw" style="background:#d93025"></i>hot PEX</span><span><i class="sw" style="background:#1a73e8"></i>cold PEX</span><span><i class="sw" style="background:#c9a24a"></i>brass elbows</span></div>
-  <p class="note">Drawn from the plan: planks 9 3/4 in wide and 5/16 in thick on rails 3/4 in thick, standing 3 5/8 in off the steel on the spacer blocks (rails S3 to S6 at 21 1/4, 30 1/4, 43 1/2 and 57 1/4 in up; only the two spacer blocks of S4 near the valve are drawn). The valve is at 29 in along and 36 in up, two handles with the hot and cold inlets 4 in apart. How deep the valve sits behind the plank and the size of the elbows (two SharkBite UC532LFA) are my estimates: check them with your valve in hand. The cold side of the valve is the rear one (on the right here) and the hot the cab one (on the left): an assumption, check the valve. The line on the cab side passes through the S4 spacer block at 29 1/2 to 33 in, so that block gets a 3/4 in hole drilled through it, as the plan does for the other rails. Leave 8 to 12 in of extra PEX behind the valve, loose, so the plank can come forward on its lines.</p>
+  <div class="key"><span><i class="sw" style="background:#cfe0f2"></i>the small door, with the valve on it</span><span><i class="sw" style="background:#ece9df"></i>the one-piece back wall</span><span><i class="sw" style="background:#caa468"></i>furring rails, spacer blocks and the backing plate</span><span><i class="sw" style="background:#d93025"></i>hot PEX</span><span><i class="sw" style="background:#1a73e8"></i>cold PEX</span><span><i class="sw" style="background:#c9a24a"></i>brass elbows</span></div>
+  <p class="note">Drawn from the plan: a one-piece back wall (5/16 in thick, as the planks were; the sheet type is not chosen) on rails 3/4 in thick standing 3 5/8 in off the steel on the spacer blocks (rails S3 to S6 at 21 1/4, 30 1/4, 43 1/2 and 57 1/4 in up; only the two spacer blocks of S4 near the valve are drawn). The opening is 8 x 8 in, between rails S4 and S5, 25 to 33 in along and 32 to 40 up, so the rails stay whole; the door is 9 x 9 in and overlaps the opening by 1/2 in, on a gasket, held by four stainless screws or quarter-turn latches, hinged on the cab side. The valve is at 29 in along and 36 in up on the door, two handles with the hot and cold inlets 4 in apart. How deep the valve sits behind the door and the size of the elbows (two SharkBite UC532LFA) are my estimates: check them with your valve in hand. The cold side of the valve is the rear one (on the right here) and the hot the cab one (on the left): an assumption, check the valve. The hot line, dropping at 31 in along, passes through the S4 spacer block at 29 1/2 to 33 in, which gets a 3/4 in hole drilled through it. Leave 8 to 12 in of extra PEX behind the valve, loose, so the door can swing open on its lines.</p>
 </div>`;
 
 const script = `
@@ -75,30 +75,35 @@ const script = `
   const blk1 = box(16, 19.5, 29.5, 31, 0, 3.75, WOOD, furG, { transparent: true, opacity: .55 });
   const blk2 = box(29.5, 33, 29.5, 31, 0, 3.75, WOOD, furG, { transparent: true, opacity: .55 });
   cylY(31, 30.9, 31.1, 3.75, .5, 0x222222, furG);       // the 3/4 in hole drilled through the block for the hot line, seen on its top
-  // the glued plank next to the service plank, and the wall to the fridge at the cab end
-  box(16.5, 26.25, 19, 63, 4.5, 4.8125, PVC, null, { transparent: true, opacity: .55, depthWrite: false });
+  // the back wall: ONE sheet (5/16 in), with an 8 x 8 in opening between rails S4 and S5, and the wall to the fridge at the cab end
+  const SHEET = { transparent: true, opacity: .55, depthWrite: false };
+  box(15, 25, 19, 63, 4.5, 4.8125, PVC, null, SHEET); box(33, 36, 19, 63, 4.5, 4.8125, PVC, null, SHEET);
+  box(25, 33, 19, 32, 4.5, 4.8125, PVC, null, SHEET); box(25, 33, 40, 63, 4.5, 4.8125, PVC, null, SHEET);
   box(36, 36.75, 19, 63, 0, 14, 0xd9c8a3);
-  // the service plank with everything that rides on it
-  const hinge = new THREE.Group(); scene.add(hinge); hinge.position.set(SX(36), 0, 4.8125);   // the plank swings like a door on its cab-end edge
-  const svc = new THREE.Group(); hinge.add(svc); svc.position.set(-SX(36), 0, -4.8125);
-  box(26.25, 36, 19, 63, 4.5, 4.8125, SVC, svc, { transparent: true, opacity: .55, depthWrite: false });
-  [30.25, 43.5].forEach(y => { [27, 35.2].forEach(x => cylZ(x, y, 4.8125, 5.15, .3, STEEL, svc, 10)); });   // stainless screws into the rails
-  box(26.75, 31.25, 33, 39, 4.0, 4.5, 0xb98f5a, svc);   // the backing plate behind the plank that carries the valve
+  // a gasket round the opening, and the hinge strip on the cab side
+  const GK = 0x2b2d31, DZ0 = 4.95, DZ1 = 5.45;
+  box(24.5, 25.5, 31.5, 40.5, 4.8125, DZ0, GK); box(32.5, 33.5, 31.5, 40.5, 4.8125, DZ0, GK); box(25.5, 32.5, 31.5, 32.5, 4.8125, DZ0, GK); box(25.5, 32.5, 39.5, 40.5, 4.8125, DZ0, GK);
+  box(33.6, 34.3, 31.5, 40.5, 4.8125, 5.2, 0xb9bec4);
+  // the small door (9 x 9 in, over the opening) with everything that rides on it; it swings open like a cabinet door on its cab-side edge
+  const hinge = new THREE.Group(); scene.add(hinge); hinge.position.set(SX(33.5), 0, DZ0);
+  const svc = new THREE.Group(); hinge.add(svc); svc.position.set(-SX(33.5), 0, -DZ0);
+  box(24.5, 33.5, 31.5, 40.5, DZ0, DZ1, SVC, svc);
+  [[25.1, 32.1], [32.9, 32.1], [25.1, 39.9], [32.9, 39.9]].forEach(q => cylZ(q[0], q[1], DZ1, DZ1 + .3, .3, STEEL, svc, 10));   // stainless screws, or quarter-turn latches
   const inl = [{ x: 31, line: 0xd93025, name: 'hot' }, { x: 27, line: 0x1a73e8, name: 'cold' }];
   inl.forEach(i => {
-    cylZ(i.x, 36, 2.8, 4.0, .95, 0x555a60, svc);                        // the cartridge behind the plank
-    cylZ(i.x, 36, 4.8125, 5.05, 1.5, BLACK, svc, 28);                    // the escutcheon on the front
-    cylZ(i.x, 36, 5.05, 6.3, .5, BLACK, svc);                            // the handle shaft
-    box(i.x - 1.1, i.x + 1.1, 35.75, 36.25, 5.9, 6.4, BLACK, svc);       // the lever
+    cylZ(i.x, 36, 2.8, DZ0, .95, 0x555a60, svc);                         // the cartridge behind the door, through the opening
+    cylZ(i.x, 36, DZ1, DZ1 + .25, 1.5, BLACK, svc, 28);                  // the escutcheon on the front
+    cylZ(i.x, 36, DZ1 + .25, DZ1 + 1.45, .5, BLACK, svc);                // the handle shaft
+    box(i.x - 1.1, i.x + 1.1, 35.75, 36.25, DZ1 + 1.05, DZ1 + 1.55, BLACK, svc);   // the lever
     cylZ(i.x, 36, 1.95, 2.8, .42, BRASS, svc);                           // the inlet stub
     cylZ(i.x, 36, 1.6, 2.45, .62, BRASS, svc, 6);                        // the swivel nut of the elbow
     ball(i.x, 36, 1.3, .5, BRASS, svc);                                  // the elbow's corner
     cylY(i.x, 33.55, 36, 1.3, .42, BRASS, svc);                          // the elbow turned down
     cylY(i.x, 32.95, 33.55, 1.3, .33, BRASS, svc);                       // the barb
-    const ring = cylY(i.x, 33.1, 33.4, 1.3, .44, 0xd5d8dc, svc);        // the cinch clamp
+    cylY(i.x, 33.1, 33.4, 1.3, .44, 0xd5d8dc, svc);                      // the cinch clamp
   });
   cylX(27, 31, 36, 3.2, .55, 0x555a60, svc);                            // the manifold between the two cartridges
-  // the PEX lines: fixed at the bottom (24 in up), loose S-bend, up to the barb of the elbow, which moves with the plank
+  // the PEX lines: fixed at the bottom (24 in up), loose S-bend, up to the barb of the elbow, which moves with the door
   const lines = new THREE.Group(); scene.add(lines);
   let slide = 0, slideTarget = 0;
   const wp = (x, y, z) => svc.localToWorld(new THREE.Vector3(SX(x), y, z));      // a point on the plank, in the scene now
@@ -117,15 +122,17 @@ const script = `
   const V = (x, y, z) => new THREE.Vector3(SX(x), y, z);
   const W = (x, y, z) => wp(x, y, z);
   const LAB = [
-    ['service plank: screwed on, silicone edges', 'svc', () => W(31, 56, 4.9), true], ['valve: two handles, inlets 4 in apart', 'svc', () => W(29, 39.4, 6.4), true],
-    ['2 swivel elbows (UC532LFA)', 'svc', () => W(29, 33.6, 1.5), true], ['hot PEX (cab side)', 'hot', () => V(32.5, 26.5, 1.3), false], ['cold PEX', 'cold', () => V(24.5, 26.5, 1.3), false],
+    ['small door: 9 x 9 in over an 8 x 8 in opening, with the valve on it', 'svc', () => W(29, 41.6, 5.5), true], ['valve: two handles, inlets 4 in apart', 'svc', () => W(29, 38.6, 7.1), true],
+    ['2 swivel elbows (UC532LFA)', 'svc', () => W(29, 33.6, 1.5), true], ['4 stainless screws or latches', 'svc', () => W(33, 31, 5.8), true],
+    ['hot PEX (cab side)', 'hot', () => V(32.5, 26.5, 1.3), false], ['cold PEX', 'cold', () => V(24.5, 26.5, 1.3), false],
     ['loose S-bend: 8 to 12 in of extra PEX', 'fix', () => V(29, 22.2, 1.6), false], ['S4 spacer block, drilled for the hot line', 'fix', () => V(31, 28.6, 1.8), false],
-    ['furring rail S4', 'fix', () => V(36, 28.2, 4.5), false], ['furring rail S5', 'fix', () => V(36, 41.4, 4.5), false], ['glued plank', 'fix', () => V(20, 56, 4.9), false],
+    ['gasket round the opening', 'fix', () => V(25.2, 41.2, 4.9), false], ['hinge on the cab side', 'fix', () => V(34, 41.2, 5.2), false],
+    ['furring rail S4', 'fix', () => V(36, 28.2, 4.5), false], ['furring rail S5', 'fix', () => V(36, 43.8, 4.5), false], ['one-piece back wall', 'fix', () => V(20, 56, 4.9), false],
     ['van steel', 'fix', () => V(18, 49, -.5), false], ['wall to the fridge', 'fix', () => V(36.4, 60, 5), false]
   ].map(a => { const d = document.createElement('div'); d.className = 'lbl ' + a[1]; d.textContent = a[0]; labelsEl.appendChild(d); return { el: d, get: a[2], mv: a[3] }; });
   // camera: orbit around a target
   const view = { yaw: 18, pitch: 16, dist: 62, tx: 0, ty: 36, tz: 4 }, goal = Object.assign({}, view);
-  const PRESET = { wall: { yaw: 18, pitch: 16, dist: 62, tx: 0, ty: 36, tz: 4 }, above: { yaw: 8, pitch: 74, dist: 60, tx: -2, ty: 36, tz: 8 }, close: { yaw: 30, pitch: 22, dist: 30, tx: 0, ty: 35, tz: 3 } };
+  const PRESET = { wall: { yaw: 18, pitch: 16, dist: 62, tx: 0, ty: 36, tz: 4 }, above: { yaw: 8, pitch: 72, dist: 46, tx: -1, ty: 36, tz: 7 }, close: { yaw: 34, pitch: 20, dist: 26, tx: 0, ty: 35, tz: 4 } };
   function setCam() {
     const yaw = view.yaw * Math.PI / 180, pit = view.pitch * Math.PI / 180;
     camera.position.set(view.tx + view.dist * Math.cos(pit) * Math.sin(yaw), view.ty + view.dist * Math.sin(pit), view.tz + view.dist * Math.cos(pit) * Math.cos(yaw));
@@ -136,7 +143,7 @@ const script = `
   function frame() {
     let moving = false;
     if (Math.abs(slideTarget - slide) > .003) { slide += (slideTarget - slide) * .1; moving = true; } else if (slide !== slideTarget) { slide = slideTarget; moving = true; }
-    if (moving) { hinge.rotation.y = -slide * 1.75; buildLines(); }
+    if (moving) { hinge.rotation.y = -slide * 1.85; buildLines(); }
     ['yaw', 'pitch', 'dist', 'tx', 'ty', 'tz'].forEach(k => { if (Math.abs(goal[k] - view[k]) > .01) { view[k] += (goal[k] - view[k]) * .18; moving = true; } else view[k] = goal[k]; });
     if (moving || dirty) {
       setCam(); renderer.render(scene, camera); dirty = false;
@@ -157,7 +164,7 @@ const script = `
   stage.addEventListener('pointerup', up); stage.addEventListener('pointercancel', up);
   stage.addEventListener('wheel', e => { e.preventDefault(); goal.dist = Math.max(18, Math.min(180, goal.dist * (1 + Math.sign(e.deltaY) * .08))); }, { passive: false });
   document.querySelectorAll('[data-v]').forEach(b => b.addEventListener('click', () => { Object.assign(goal, PRESET[b.dataset.v]); document.querySelectorAll('[data-v]').forEach(x => x.classList.toggle('on', x === b)); }));
-  document.getElementById('bPlank').addEventListener('click', e => { slideTarget = slideTarget ? 0 : 1; e.target.textContent = slideTarget ? 'Put the plank back' : 'Take the plank off'; e.target.classList.toggle('on', !!slideTarget); if (slideTarget) { Object.assign(goal, PRESET.above); document.querySelectorAll('[data-v]').forEach(x => x.classList.toggle('on', x.dataset.v === 'above')); } });
+  document.getElementById('bPlank').addEventListener('click', e => { slideTarget = slideTarget ? 0 : 1; e.target.textContent = slideTarget ? 'Close the door' : 'Open the door'; e.target.classList.toggle('on', !!slideTarget); if (slideTarget) { Object.assign(goal, PRESET.above); document.querySelectorAll('[data-v]').forEach(x => x.classList.toggle('on', x.dataset.v === 'above')); } });
   document.getElementById('cSteel').addEventListener('change', e => { steelG.visible = e.target.checked; dirty = true; });
   document.getElementById('cFur').addEventListener('change', e => { furG.visible = e.target.checked; dirty = true; });
   document.getElementById('cLab').addEventListener('change', () => { dirty = true; });
