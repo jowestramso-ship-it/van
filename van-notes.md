@@ -885,3 +885,9 @@ Previous: two closet rods were added (one above the other, along the wall, upper
 - In the box: WR35's + goes by two short jumpers (about 4 in, 16 AWG) to the two rockers' input terminals; its − joins the − of WR33 and WR34 in a 3-port lever connector. Each rocker's other terminal takes the switched + of WR33 or WR34.
 - Changed: `tools/elwires.js` (WR35's wall route and note).
 
+## 2026-11-01: EP11 is now really the left rocker (EP11 and EP14 swapped on the plate)
+
+- User: 'show me ep11'. Zooming the passenger wall onto the plate showed the drawing had EP11 (counter and sink light) at 100 1/4 in along and EP14 (center row) at 102 1/4. Seen from inside the van facing the passenger wall (cab on your left) the larger number is nearer the cab, so EP14 was the LEFT rocker, while every text said EP11 is the left rocker and EP14 the right.
+- Fixed by swapping the two positions, so the text is right: EP11, the left rocker (nearer the cab), at 102 1/4 in along; EP14, the right rocker (nearer the sink and the rear), at 100 1/4. The plate itself (99 to 103 1/2 in along, 51 to 53 1/2 up) does not move. WR33 gets about 2 in longer and WR34 about 2 in shorter.
+- Changed: `tools/electric.js` (the two items' x).
+
