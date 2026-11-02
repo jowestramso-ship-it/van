@@ -942,3 +942,10 @@ Previous: two closet rods were added (one above the other, along the wall, upper
 
 - User: 'Leave the hand shower hose for now.' Nothing changes: the plan keeps the fixed head at 70 in with its feed (PL5), and the 2 1/2 ft hose, the wall holder and the longer hose are not drawn. Open when the user comes back to it: a 6 ft hose (1/2-14 NPSM ends, not verified), a wall holder at about 62 to 66 in up and 18 in along, and dropping the fixed head and PL5.
 
+## 2026-11-02: the grey tank is the WT-5544 behind the spare tire; the kitchen faucet is already set up
+
+- User: 'I have this for the grey tank. it'll sit behind the spare tire. 12 Gallon RV Fresh Water Tank ... Cube Shape, 24" x 15" x 9" (WT-5544)'. It is a drinking-water tank used for grey water: 24 x 15 x 9 in (about 14 gal gross, 12 gal rated), so it fits the old 30 x 17 x 8 space's length and width but is 1 in too tall for it, which no longer matters because it goes behind the spare tire (the exact place and the clearance under the floor are not set). Half the fresh tank (24 gal): empty it often.
+- To check on the tank: its ports (a drinking-water tank usually has small ones; the shower drain is 1 1/2 in, so it needs a 1 1/2 in inlet, a bulkhead fitting drilled into it if it has none, plus a vent and an outlet with a valve), the height of its bottom above the road, and straps and a skid plate under the van. The tank must be lower than the pan; the sink drain (at about 111 in along, about 9 ft forward of the rear) runs back under the floor to it with a slope.
+- User: 'I already have the kitchen faucet set up': taken off the open plumbing list; nothing was drawn for it and nothing changes.
+- Changed: `tools/plan.py` (the grey tank row: place, size, notes, and no black water because the toilet is a bag), `tools/electric.js` (the drain note).
+
