@@ -919,3 +919,8 @@ Previous: two closet rods were added (one above the other, along the wall, upper
 - The strip itself starts at the cab end of the driver side (about 153 in along the wall), runs rearward along the driver side, across the back and forward along the passenger side, and ends at the cab end of the passenger side: about 31 ft in all. The ceiling drawing now says 'strip starts here' and 'strip ends here' at those two cab ends. Both cab ends are dead ends: nothing feeds them.
 - Changed: `tools/elwires.js` (END markers can carry a label; WR14's three ends), `tools/electric.js` (the two labels on the ceiling drawing).
 
+## 2026-11-02: no toilet plumbing: the toilet is a bag (a decision, no page changed)
+
+- User: 'no toilet.' then 'the contents just go in a bag'. Confirms the plan's toilet, the Reliance Fold-To-Go (a folding frame that holds a bag, left set up in the stall), has no plumbing at all: no water, no vent, no drain and no black water tank. This answers the old open question 'Toilet waste (black water) is not covered: ask if there is a toilet and where its waste goes' and the 'composting toilet vent' idea in the plumbing routes entry: neither is needed. Nothing was changed in the plan or the pages. (I had listed 'which toilet' as still open; it was not.)
+- Grey water is the only waste tank: 30 x 17 x 8 in under the van (about 17.7 US gal gross, about 15 to 16 usable), taking the shower and sink drains. The fresh tank is 35 x 16 x 10 (about 24 gal gross), so the grey tank is smaller than the fresh one: it has to be emptied before all the fresh water is used. Tank model and position still to choose.
+
