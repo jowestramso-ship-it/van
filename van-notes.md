@@ -896,3 +896,8 @@ Previous: two closet rods were added (one above the other, along the wall, upper
 - Showing WR17 (the dimmer button ED14 to the controller in ED21): the note said the cable enters the cabinet 'through a grommet in its back', but the wall cabinets have open backs (the 'cabBackIn' size is 0). It now says the cable comes out through a grommeted hole in the wall covering, inside the cabinet. Nothing else about the route changed (about 1 1/3 ft drawn, cut about 3 ft of 18 AWG).
 - Changed: `tools/elwires.js` (WR17's note).
 
+## 2026-11-01: the lights junction box is called JB
+
+- User: 'Is ed21 the junction box?' then 'Call it JB.' The box is named JB everywhere: its label on the drawings and in the driver wall table, the wire names and notes (WR14, WR16, WR17, WR20, WR21, WR24, WR35), the power chains on the cards ('Junction box JB, couch cabinet'), the ceiling legend and the build guide's wiring step. It is the only named (not numbered) driver wall item; the ED21 number is not reused, so the next new driver wall item will be ED22.
+- Nothing about where it is or what it holds changed (inside the couch cabinet at its cab end, 69 1/2 to 73 in along, 71 to 73 in up; the light splices and the strip's dimming controller). Changed: `tools/electric.js` (the item's `name`, the label code, the ceiling legend), `tools/elcards.js`, `tools/buildguide.py`, `CLAUDE.md`.
+
