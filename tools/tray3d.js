@@ -1,6 +1,6 @@
 /* Builds ../tray3d.html: a 3D picture of the pull-out gear tray with the user's real board on it (section 1c of the electric page), the parts fixed on the closet's end
-   panel, and the wall board for the AC parts, with the tray slid in or out. It is its own small page: the interior 3D view (interior.js, interior_scene.js, interior.html)
-   is still on hold and is not touched. The page loads three.js r128 from cdnjs. Units are inches: X along the wall from the back mark, Y up, Z out from the driver wall.
+   panel, and the TS-30, the AC panel and the fuse block on the divider panel (the tray's rear side wall), with the tray slid in or out. It is its own small page next to the interior 3D view
+   (interior.js, interior_scene.js, interior.html). The page loads three.js r128 from cdnjs. Units are inches: X along the wall from the back mark, Y up, Z out from the driver wall.
    Run:  node tools/tray3d.js     (with SC set it also writes SC/three3d/tray3d_local.html, which loads a local three.js for stills, and SC/tray3d/index.html for the artifact) */
 const fs = require('fs');
 const { TRAY_PARTS } = require('./elhub.js');
@@ -28,15 +28,15 @@ h1 { font-size: 24px; margin: 4px 0 2px; } .lead { color: var(--mut); margin: 4p
 
 const body = `<div class="wrap">
   <h1>The pull-out tray in 3D</h1>
-  <p class="lead">The plan's gear tray with your real board on it, as in section 1c of the electrical page, and where the other parts go. Drag to look around, scroll or pinch to zoom, and slide the tray out to see the cables stretch.</p>
+  <p class="lead">The plan's gear tray with your real board on it, as in section 1c of the electrical page, and where the other parts go: the TS-30, the AC panel and the fuse block are on the divider panel behind the tray. Drag to look around, scroll or pinch to zoom, and slide the tray out to see the cables stretch.</p>
   <div class="bar">
     <button id="bSlide" type="button">Slide the tray out</button>
-    <button data-v="aisle" type="button" class="on">From the aisle</button><button data-v="above" type="button">From above</button><button data-v="rear" type="button">From the rear doors</button><button data-v="close" type="button">Close up</button>
+    <button data-v="aisle" type="button" class="on">From the aisle</button><button data-v="above" type="button">From above</button><button data-v="rear" type="button">From the rear doors</button><button data-v="close" type="button">Close up</button><button data-v="divider" type="button">The divider panel</button>
   </div>
   <div class="bar"><label><input type="checkbox" id="cDeck"> couch deck</label><label><input type="checkbox" id="cCab" checked> cables</label><label><input type="checkbox" id="cLab" checked> labels</label></div>
   <div class="stage" id="stage"><canvas id="c"></canvas><div id="labels"></div></div>
-  <div class="key"><span><i class="sw" style="background:#e2c48a"></i>the sliding tray and what is on it</span><span><i class="sw" style="background:#cbd0d6"></i>fixed on the closet's end panel</span><span><i class="sw" style="background:#6fa8dc"></i>fixed on the wall (the AC and 12 V board)</span><span><i class="sw" style="background:#2f3a46"></i>battery under the tray</span></div>
-  <p class="note">Positions of the parts on the tray are read from your photo (good to about 2 in). The Class T holder, shunt, AC panel and fuse block use typical sizes; the TS-30 is from its listing. The loops of the two battery cables are drawn to show how much slack the tray needs: they pull tight at the far end of the slide. The interior 3D view of the van is not changed.</p>
+  <div class="key"><span><i class="sw" style="background:#e2c48a"></i>the sliding tray and what is on it</span><span><i class="sw" style="background:#cbd0d6"></i>fixed on the closet's end panel</span><span><i class="sw" style="background:#6fa8dc"></i>fixed on the divider panel (the TS-30, the AC panel and the fuse block)</span><span><i class="sw" style="background:#2f3a46"></i>battery under the tray</span></div>
+  <p class="note">Positions of the parts on the tray are read from your photo (good to about 2 in). The Class T holder, shunt, AC panel and fuse block use typical sizes; the TS-30 is from its listing. The loops of the two battery cables are drawn to show how much slack the tray needs: they pull tight at the far end of the slide. The TS-30, the AC panel and the fuse block are on the outer face of the divider panel (the tray's rear side wall), as in section 1b of the electrical page; look at it from the rear doors.</p>
 </div>`;
 
 const script = `
@@ -69,9 +69,10 @@ const PARTS = ${JSON.stringify(TRAY_PARTS.map(q => ({ k: q.k, n: q.n, x0: q.x0, 
   box(40.05, 40.8, 11, 13, 7.75, 25.25, 0xc9a56a, tray); box(72.6, 73.35, 11, 13, 7.75, 25.25, 0xc9a56a, tray);
   box(39.9, 40.05, 10.2, 11.4, 8, 25.3, 0x40454b, tray); box(73.35, 73.5, 10.2, 11.4, 8, 25.3, 0x40454b, tray);
   PARTS.forEach(q => box(q.x0, q.x1, 11, 11 + q.h, q.z0, q.z1, q.c, tray));
-  // parts fixed on the closet's end panel (above the wheel well) and the wall board
+  // parts fixed on the closet's end panel (above the wheel well)
   box(71.4, 74, 9.6, 12.3, 1, 6.5, 0x30343a); box(72, 74, 12.8, 15.9, 1, 6.3, 0xc9803f);
-  box(21.3, 38.1, 1.3, 13.2, 0, .75, 0xe7d3a8); box(21.6, 28.88, 2.3, 11.95, .75, 5.5, 0x6fa8dc); box(29.4, 36.4, 7.6, 12.6, .75, 3.75, 0xbfc5cc); box(29.4, 35.4, 2.6, 6.1, .75, 2.75, 0x2a2d33);
+  // the TS-30, the AC panel and the fuse block on the divider panel's outer face (the face at x = 38.65 that looks toward the rear doors; the positions are those of section 1b, drawing EF3)
+  box(33.9, 38.65, 2.5, 12.15, 1.5, 8.78, 0x6fa8dc); box(35.65, 38.65, 6.4, 11.4, 10.5, 17.5, 0xbfc5cc); box(36.65, 38.65, 2.6, 6.1, 19, 25, 0x2a2d33);
   // the two battery cables: battery post to the fixed part (Class T / shunt) to the bus bar on the tray, with the slack the tray needs
   const red = PARTS.find(q => q.k === 'rb'), blk = PARTS.find(q => q.k === 'bb');
   const cables = new THREE.Group(); scene.add(cables);
@@ -96,13 +97,13 @@ const PARTS = ${JSON.stringify(TRAY_PARTS.map(q => ({ k: q.k, n: q.n, x0: q.x0, 
     ['BELTTT inverter', 'tray', () => cen('inv', 1), true], ['LiTime DC-DC', 'tray', () => cen('dc', 1), true], ['shore charger (VEVOR)', 'tray', () => cen('ch', 1), true],
     ['red bus bar', 'tray', () => cen('rb', 1.6), true], ['black bus bar', 'tray', () => cen('bb', 1.6), true], ['100 A breaker', 'tray', () => cen('br', 1), true],
     ['battery (under the tray)', 'fixed', () => new THREE.Vector3(60, 4, 17.2), false], ['Class T fuse and shunt', 'fixed', () => new THREE.Vector3(73, 16.2, 3.6), false],
-    ['TS-30 transfer switch', 'wall', () => new THREE.Vector3(25.2, 12.2, 3), false], ['AC panel', 'wall', () => new THREE.Vector3(32.9, 12.8, 2), false], ['10-way fuse block', 'wall', () => new THREE.Vector3(32.4, 6.3, 1.7), false],
+    ['TS-30 transfer switch', 'wall', () => new THREE.Vector3(36.3, 13.1, 5.1), false], ['AC panel', 'wall', () => new THREE.Vector3(37.2, 12.3, 14), false], ['10-way fuse block', 'wall', () => new THREE.Vector3(37.6, 6.9, 22), false], ['divider panel', 'fixed', () => new THREE.Vector3(38.9, 17.6, 13), false],
     ['closet end panel', 'fixed', () => new THREE.Vector3(74.4, 17.4, 24), false]
   ].map(a => { const d = document.createElement('div'); d.className = 'lbl ' + a[1]; d.textContent = a[0]; labelsEl.appendChild(d); return { el: d, get: a[2], mv: a[3] }; });
   function cen(k, up) { const q = PARTS.find(p => p.k === k); return new THREE.Vector3((q.x0 + q.x1) / 2, 11 + q.h + up, (q.z0 + q.z1) / 2); }
   // camera: orbit around a target
   const view = { yaw: 0, pitch: 38, dist: 100, tx: 56, ty: 9, tz: 13 }, goal = Object.assign({}, view);
-  const PRESET = { aisle: { yaw: 0, pitch: 38, dist: 100, tx: 56, ty: 9, tz: 13 }, above: { yaw: 0, pitch: 84, dist: 100, tx: 56, ty: 6, tz: 13 }, rear: { yaw: -72, pitch: 28, dist: 100, tx: 56, ty: 9, tz: 13 }, close: { yaw: 14, pitch: 42, dist: 56, tx: 62, ty: 11, tz: 16 } };
+  const PRESET = { aisle: { yaw: 0, pitch: 38, dist: 100, tx: 56, ty: 9, tz: 13 }, above: { yaw: 0, pitch: 84, dist: 100, tx: 56, ty: 6, tz: 13 }, rear: { yaw: -72, pitch: 28, dist: 100, tx: 56, ty: 9, tz: 13 }, close: { yaw: 14, pitch: 42, dist: 56, tx: 62, ty: 11, tz: 16 }, divider: { yaw: -68, pitch: 16, dist: 58, tx: 38, ty: 8, tz: 13 } };
   function setCam() {
     const yaw = view.yaw * Math.PI / 180, pit = view.pitch * Math.PI / 180;
     camera.position.set(view.tx + view.dist * Math.cos(pit) * Math.sin(yaw), view.ty + view.dist * Math.sin(pit), view.tz + view.dist * Math.cos(pit) * Math.cos(yaw));

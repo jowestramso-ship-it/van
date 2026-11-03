@@ -56,6 +56,7 @@
     pillow: std({ map: fabricTex(0x8fa596), roughness: .95 }),
     pillow2: std({ map: fabricTex(0xb78f6b), roughness: .95 }),
     white: std({ color: 0xeceeef, roughness: .45 }),
+    sheet: std({ color: 0xf1f3f2, roughness: .35 }),                          // the PVC paneling sheet in the stall
     fridge: std({ color: 0xe3e6e9, roughness: .34, metalness: .12 }),
     black: std({ color: 0x1d1f22, roughness: .55 }),
     greyFront: std({ color: 0x8b8e93, roughness: .38, metalness: .3 }),
@@ -135,7 +136,7 @@
   { // passenger wall with the sliding door opening and the nook recess cut out
     const sh = new THREE.Shape(); sh.moveTo(XB, 0); sh.lineTo(P.doorX, 0); sh.lineTo(P.doorX, P.slideH); sh.lineTo(WEND, P.slideH); sh.lineTo(WEND, hw); sh.lineTo(XB, hw); sh.lineTo(XB, 0);
     const nk = D.nook; const hole = new THREE.Path(); hole.moveTo(nk[0], P.counterH); hole.lineTo(nk[1], P.counterH); hole.lineTo(nk[1], P.counterH + P.nookH); hole.lineTo(nk[0], P.counterH + P.nookH); hole.lineTo(nk[0], P.counterH); sh.holes.push(hole);
-    { const sx1 = Math.min(29.75, P.panW - 6.25), sx0 = sx1 - P.snookLen, sy0 = P.snookTop - P.snookH, sy1 = P.snookTop, h2 = new THREE.Path(); h2.moveTo(sx0, sy0); h2.lineTo(sx1, sy0); h2.lineTo(sx1, sy1); h2.lineTo(sx0, sy1); h2.lineTo(sx0, sy0); sh.holes.push(h2); }
+    { const sx0 = L.snx[0], sx1 = L.snx[1], sy0 = P.snookTop - P.snookH, sy1 = P.snookTop, h2 = new THREE.Path(); h2.moveTo(sx0, sy0); h2.lineTo(sx1, sy0); h2.lineTo(sx1, sy1); h2.lineTo(sx0, sy1); h2.lineTo(sx0, sy0); sh.holes.push(h2); }
     const g = new THREE.ShapeGeometry(sh), pos = g.attributes.position, uv = g.attributes.uv; for (let i = 0; i < pos.count; i++) uv.setXY(i, pos.getX(i) / 48, pos.getY(i) / 48);
     const m = new THREE.Mesh(g, Object.assign(MT.wall.clone(), { side: THREE.DoubleSide })); m.position.z = VW; m.castShadow = true; m.receiveShadow = true; add(m);
   }
@@ -175,6 +176,7 @@
     bxIn(frameG, 0, .75, DU - BH, DU, .75, P.bedD - .75, MT.wood, 36); bxIn(frameG, cm.west / 2, cm.west / 2 + .75, DU - BH, DU, .75, P.bedD - .75, MT.wood, 36);   // the end rail and the cross rail
     cm.posts.forEach(px => { bxIn(frameG, px, px + 1.5, .6, DU - BH, P.bedD - 1.5, P.bedD, MT.wood, 36); bxIn(frameG, px + .15, px + 1.35, 0, .6, P.bedD - 1.35, P.bedD - .15, MT.black, 6); });   // the posts with their screw-out feet
     bxIn(frameG, cb.x0 + .75, cb.x1, DU - BH, DU, .75, 1.5, MT.wood, 36);     // the back rail doubled over the cabinet
+    if (cm.fr) bxIn(frameG, cm.fr.x0, cm.fr.x1, cm.fr.z0, cm.fr.z1, cm.fr.y0, cm.fr.y1, MT.wood, 36);   // the 3/4 in front rail across the cabinet's front, between the posts' rail and the closet's side
     bx(cb.x0 + .75, cb.x0 + 1.5, DU - BH - 1.5, DU - BH, 0, 3, MT.wood, 36); bx(cb.x1 - .75, cb.x1, DU - BH - 1.5, DU - BH, 0, 3, MT.wood, 36);   // a ledger on each panel under the doubled part
     bx(cb.x0, cb.x0 + .75, 0, DU, 0, P.bedD, MT.wood, 36);                    // the cabinet's west panel
     bx(cb.x0 - 1.5, cb.x0, 0, .75, 0, P.bedD, MT.wood, 36);                   // its floor cleat
@@ -193,7 +195,7 @@
   const legs = (() => { const k = (P.bedLen - 3.25) / 3, xs = [1, 1 + k, 1 + 2 * k, P.bedLen - 2.25];
     return xs.map(lx => { const g = new THREE.Group(); g.position.set(lx + .625, .375, -(LWd - 3)); leafG.add(g);
       const bar = new THREE.Mesh(new THREE.BoxGeometry(1.25, .375, 12.625), MT.steel); bar.position.set(0, 0, 6.3125); bar.castShadow = true; g.add(bar);
-      const foot = new THREE.Mesh(new THREE.CylinderGeometry(.5, .5, 3.7, 14), MT.black); foot.rotation.x = Math.PI / 2; foot.position.set(0, 0, 12.625 + 1.85); foot.visible = false; g.add(foot);
+      const FL = Math.max(2, DT - .625 - 12.625 + .2), foot = new THREE.Mesh(new THREE.CylinderGeometry(.5, .5, FL, 14), MT.black); foot.rotation.x = Math.PI / 2; foot.position.set(0, 0, 12.625 + FL / 2); foot.visible = false; g.add(foot);
       return { g, foot }; }); })();
   // the cushions: they come off for the night, and go back in their night places (the seat cushion on the deck, the back cushion lying on the leaf)
   const seatMat = MT.fabric.clone(), backMat = MT.fabric.clone(); seatMat.transparent = backMat.transparent = true;
@@ -280,10 +282,13 @@
   /* ---------- passenger side: stall, fridge, counter, sink, nook, TV ---------- */
   const zf = d => VW - d;                          // z of a face that is d in out from the passenger wall
   { // wet bath: curtain along the front of the stall, rod above
-    const zc = zf(P.panD), gw = 9; const cur = new THREE.Mesh(new THREE.PlaneGeometry(gw, hw - 8, 36, 1), MT.curtain); cur.position.set(gw / 2, (hw - 8) / 2 + 2, zc); cur.rotation.y = 0;   // the curtain is pulled to the rear end so the stall is visible
-    const cp = cur.geometry.attributes.position; for (let i = 0; i < cp.count; i++) cp.setZ(i, Math.sin(cp.getX(i) * 2.6) * 1.5); cur.geometry.computeVertexNormals(); cur.castShadow = true; cur.receiveShadow = true; add(cur);
-    const rod = new THREE.Mesh(new THREE.CylinderGeometry(.5, .5, P.panW, 12), MT.steel); rod.rotation.z = Math.PI / 2; rod.position.set(P.panW / 2, hw - 5.5, zc); add(rod);
-    bx(0, P.panW, 0, 3, zc - .2, zc + .2, MT.white, 12);
+    const zc = zf(P.panD), ci = P.curIn, zr = zf(P.panD - ci), yR = hw - .7;   // the pan's front edge, and the curtain rail 1 1/2 in inside it
+    // one curtain rail bent to a U on the ceiling round the three open sides, with two curtains on it, pulled aside to the two front corners so the stall shows
+    { const rail = (x0, x1, z0, z1) => { const len = Math.hypot(x1 - x0, z1 - z0), r = new THREE.Mesh(new THREE.CylinderGeometry(.4, .4, len, 12), MT.steel); r.position.set((x0 + x1) / 2, yR, (z0 + z1) / 2); if (x1 !== x0) r.rotation.z = Math.PI / 2; else r.rotation.x = Math.PI / 2; add(r); };
+      rail(ci, P.panW - ci, zr, zr); rail(ci, ci, zr, VW); rail(P.panW - ci, P.panW - ci, zr, VW);
+      const gw = 7, ch = yR - 3.5;
+      [ci + 1, P.panW - ci - 1 - gw].forEach(cx => { const cur = new THREE.Mesh(new THREE.PlaneGeometry(gw, ch, 30, 1), MT.curtain); cur.position.set(cx + gw / 2, 2.6 + ch / 2, zr); const cp = cur.geometry.attributes.position; for (let i = 0; i < cp.count; i++) cp.setZ(i, Math.sin(cp.getX(i) * 2.6) * 1.4); cur.geometry.computeVertexNormals(); cur.castShadow = true; cur.receiveShadow = true; add(cur); }); }
+    bx(0, P.panW, 0, 3, zc - .2, zc + .2, MT.white, 12);          // the pan's 3 in curb across the front
     bx(0, P.panW, 0, .8, zc, VW, MT.white, 24, { cast: false });   // the fixed pan
     const T0 = D.L.toilet;
     if (T0) { // the toilet: a Reliance Fold-To-Go set up sideways at the cab end, facing the rear, back against the wall to the fridge (four legs, a seat, a bag in the frame)
@@ -294,24 +299,43 @@
       const bowl = new THREE.Mesh(new THREE.CylinderGeometry(Math.min(4.8, (z1 - z0) / 2.6), Math.min(4.8, (z1 - z0) / 2.6), .2, 28), MT.dark); bowl.position.set(xm, H + .02, zm); add(bowl);
       const bag = new THREE.Mesh(new THREE.CylinderGeometry(Math.min(4.6, (z1 - z0) / 2.7), Math.min(3.6, (z1 - z0) / 3.6), H - 5, 20, 1, true), std({ color: 0x4a4d52, roughness: .8, side: THREE.DoubleSide })); bag.position.set(xm, H - 2.5 - (H - 5) / 2 + 2.5, zm); add(bag);   // the bag hanging in the frame
     }
-    if (P.showerOn) { // head on its arm, valve below it
-      bx(P.headX - .3, P.headX + .3, P.headZ - .3, P.headZ + .3, VW - P.headOut, VW, MT.steel, 4, { cast: false });
-      const hd = new THREE.Mesh(new THREE.CylinderGeometry(2.6, 2.6, .5, 24), MT.steel); hd.position.set(P.headX, P.headZ - .3, VW - P.headOut); add(hd);
-      const vv = new THREE.Mesh(new THREE.CylinderGeometry(1.5, 1.5, .8, 20), MT.steel); vv.rotation.x = Math.PI / 2; vv.position.set(P.valveX, P.valveZ, VW - .4); add(vv);
-      bx(P.valveX - .2, P.valveX + 1.5, P.valveZ - .2, P.valveZ + .2, VW - 1.3, VW - .9, MT.steel, 4, { cast: false });
+    { // the PVC paneling: ONE sheet on the plywood wall (the nook and the valve opening cut out of it), the head on its arm, the valve on its small hinged door
+      const LN = L.liner, t = LN ? LN.t : 0;
+      if (LN) {
+        const sh = new THREE.Shape(); sh.moveTo(LN.x0, LN.z0); sh.lineTo(LN.x1, LN.z0); sh.lineTo(LN.x1, LN.z1); sh.lineTo(LN.x0, LN.z1); sh.closePath();
+        const hs = [[L.snx[0], L.snx[1], LN.nook.z0, LN.nook.z1]]; if (LN.door) hs.push([LN.door.x0, LN.door.x1, LN.door.z0, LN.door.z1]);
+        hs.forEach(h => { const p = new THREE.Path(); p.moveTo(h[0], h[2]); p.lineTo(h[1], h[2]); p.lineTo(h[1], h[3]); p.lineTo(h[0], h[3]); p.closePath(); sh.holes.push(p); });
+        const m = new THREE.Mesh(new THREE.ExtrudeGeometry(sh, { depth: t, bevelEnabled: false }), MT.sheet); m.position.z = VW - t; m.castShadow = true; m.receiveShadow = true; add(m);
+      }
+      if (P.showerOn) {
+        bx(P.headX - .3, P.headX + .3, P.headZ - .3, P.headZ + .3, VW - P.headOut, VW - t, MT.steel, 4, { cast: false });
+        const hd = new THREE.Mesh(new THREE.CylinderGeometry(2.6, 2.6, .5, 24), MT.steel); hd.position.set(P.headX, P.headZ - .3, VW - P.headOut); add(hd);
+        const dr = LN && LN.door, zb = dr ? VW - t - .125 : VW, zf0 = dr ? zb - .5 : VW;   // the door's back and front faces
+        if (dr) { // a 1/2 in board overlapping the opening by 1/2 in on a foam gasket, four stainless screws at its corners, the hinge between it and the sheet on the cab side
+          bx(dr.dx0, dr.dx1, dr.dz0, dr.dz1, zf0, zb, MT.sheet, 12);
+          [[dr.dx0, dr.x0, dr.dz0, dr.dz1], [dr.x1, dr.dx1, dr.dz0, dr.dz1], [dr.x0, dr.x1, dr.dz0, dr.z0], [dr.x0, dr.x1, dr.z1, dr.dz1]].forEach(g => bx(g[0], g[1], g[2], g[3], zb, VW - t, MT.dark, 8, { cast: false }));   // the gasket under the overlap
+          const hg = new THREE.Mesh(new THREE.CylinderGeometry(.11, .11, 6, 10), MT.steel); hg.position.set(dr.dx1 + .05, (dr.dz0 + dr.dz1) / 2, VW - t - .0625); add(hg);
+          [[dr.dx0 + .25, dr.dz0 + .25], [dr.dx1 - .25, dr.dz0 + .25], [dr.dx0 + .25, dr.dz1 - .25], [dr.dx1 - .25, dr.dz1 - .25]].forEach(q => { const sc = new THREE.Mesh(new THREE.CylinderGeometry(.2, .2, .14, 12), MT.steel); sc.rotation.x = Math.PI / 2; sc.position.set(q[0], q[1], zf0 - .06); add(sc); });
+        }
+        const vv = new THREE.Mesh(new THREE.CylinderGeometry(1.5, 1.5, .8, 20), MT.steel); vv.rotation.x = Math.PI / 2; vv.position.set(P.valveX, P.valveZ, zf0 - .4); add(vv);
+        bx(P.valveX - .2, P.valveX + 1.5, P.valveZ - .2, P.valveZ + .2, zf0 - 1.3, zf0 - .9, MT.steel, 4, { cast: false });
+      }
     }
     { // the shower nook: lined recess in the wall, towel bar, shelf, toilet paper and bottles
-      const sx1 = Math.min(29.75, P.panW - 6.25), sx0 = sx1 - P.snookLen, sy0 = P.snookTop - P.snookH, sy1 = P.snookTop, dd = 4.5, n = D.L.sn;
+      const sx0 = L.snx[0], sx1 = L.snx[1], sy0 = P.snookTop - P.snookH, sy1 = P.snookTop, dd = 4.5, n = D.L.sn;
       bx(sx0, sx1, sy0, sy1, VW + dd - .1, VW + dd, MT.white, 12, { cast: false }); bx(sx0, sx1, sy1 - .05, sy1, VW, VW + dd, MT.white, 12); bx(sx0, sx0 + .4, sy0, sy1, VW - .1, VW + dd, MT.white, 12); bx(sx1 - .4, sx1, sy0, sy1, VW - .1, VW + dd, MT.white, 12);
       bx(sx0, sx1, sy0, sy0 + .5, VW - .1, VW + dd, MT.white, 12); if (P.snookLip > 0) bx(sx0, sx1, sy0, sy0 + P.snookLip, VW - P.snookLip * 0 - .35, VW - .05, MT.white, 12);
       if (n) {
         const cyl = (r, h, x, y, z, mat, o) => { const m = new THREE.Mesh(new THREE.CylinderGeometry(r, r, h, 20), mat); m.position.set(x, y, z); m.castShadow = true; add(m); return m; };
+        if (n.barOn) {
         const bar = new THREE.Mesh(new THREE.CylinderGeometry(.4, .4, n.bar.x1 - n.bar.x0, 12), MT.steel); bar.rotation.z = Math.PI / 2; bar.position.set((n.bar.x0 + n.bar.x1) / 2, n.bar.z, VW + 2.2); add(bar);
         bx(n.bar.x0 - .1, n.bar.x0 + .3, n.bar.z - .6, n.bar.z + .6, VW + 1.4, VW + 3.0, MT.steel, 4, { cast: false }); bx(n.bar.x1 - .3, n.bar.x1 + .1, n.bar.z - .6, n.bar.z + .6, VW + 1.4, VW + 3.0, MT.steel, 4, { cast: false });
         bx(n.bar.x0 + .3, n.bar.x1 - .3, n.bar.z - 9, n.bar.z + .5, VW + 2.65, VW + 3.05, MT.pillow, 12);   // a hand towel folded in thirds, hung on the bar
+        }
         bx(n.bay, n.x1, n.shelfTop - .75, n.shelfTop, VW - .1, VW + dd - .3, MT.wood, 20);
         n.rolls.forEach(r => cyl(2.25, 4.5, (r.x0 + r.x1) / 2, r.z0 + 2.25, VW + 2.4, MT.white));
         n.bottles.forEach((b, i) => { const r = (b.x1 - b.x0) / 2, cx = (b.x0 + b.x1) / 2; cyl(r, b.z1 - b.z0 - .9, cx, b.z0 + (b.z1 - b.z0 - .9) / 2, VW + 2.4, std({ color: [0x9ec9e8, 0xc7b3e0, 0xa9d3b4][i], roughness: .4 })); cyl(r * .55, .9, cx, b.z1 - .45, VW + 2.4, MT.white); });
+        if (n.cord) { const cd = new THREE.Mesh(new THREE.CylinderGeometry(.14, .14, n.cord.x1 - n.cord.x0, 8), std({ color: 0x1f3f77, roughness: .8 })); cd.rotation.z = Math.PI / 2; cd.position.set((n.cord.x0 + n.cord.x1) / 2, n.cord.z, VW - .35); add(cd); [n.cord.x0, n.cord.x1].forEach(ex => { const e = new THREE.Mesh(new THREE.TorusGeometry(.22, .06, 6, 12), MT.steel); e.position.set(ex, n.cord.z, VW - .2); add(e); }); }   // the bungee cord across the open front, between two screw eyes
       }
     }
   }
@@ -376,6 +400,7 @@
     shower: { n: 'Shower and fridge', p: [90, 63, 33], t: [38, 36, 60] },
     closet: { n: 'Closet', p: [83, 34, 45], t: [82, 30, 0], fov: 95 },
     bath: { n: 'Wet bath', p: [8, 56, 30], t: [24, 36, 68] },
+    valve: { n: 'Shower valve door', p: [17, 44, 36], t: [29.5, 37, 68], fov: 50 },
     fridge: { n: 'Fridge and microwave', p: [47, 50, 20], t: [47, 46, 68] },
     rail: { n: 'Gear cabinet and shelf', p: [12, 36, 39], t: [58, 14, 24], fov: 66 },
     under: { n: 'Under the couch', p: [26, 6, 46], t: [24, 9, 4], fov: 80 },
