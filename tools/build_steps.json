@@ -17,7 +17,7 @@
  {
   "id": "wiring",
   "title": "Rough in the wiring before anything is covered",
-  "body": "12 V DC runs for the fan (up to 2.7 A), the air conditioner (up to 58 A), the 4 ceiling lights and the battery cable; the hot water heater needs about 133 A through the inverter. Decide the battery (280 Ah), inverter and fuses first, since the electrics are still undecided."
+  "body": "12 V DC runs for the fan (up to 2.7 A), the air conditioner (up to 58 A), the 4 ceiling lights and the battery cable; the hot water heater needs about 139 A through the inverter. Decide the battery (280 Ah), inverter and fuses first, since the electrics are still undecided."
  },
  {
   "id": "insulate",
