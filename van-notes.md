@@ -1033,3 +1033,9 @@ Previous: two closet rods were added (one above the other, along the wall, upper
 
 - Showing WR26 I found its run along the passenger wall at 7.4 in up, which is the top edge of the wheel well's box-out (the well is 7 1/2 in tall from 51 1/4 to 66 3/4 in along): a cable cannot go through it. It now runs at 9 in up in the free band between S1 and S2 (4 3/4 to 10 1/4 up), and WR12's circuit C cable comes down riser B to 9 in (it was 8). Drawn length 2.3 ft (it was 2.2). WR26 is the end of circuit C's own cable (the same cable that comes down riser B, no joint), and the fridge outlet is the only outlet on circuit C.
 - Changed: `tools/elwires.js` (WR12's riser B end, WR26's route and note).
+
+## 2026-11-04: WR30 now starts at the couch outlet (the end of WR18), not at the dinette outlet
+
+- User: 'cant wr30 start with end of wr18?'. Yes: circuit A branches at the couch outlet ED10's box, so there are three cables in it: WR18 in from the AC panel, WR19 out to the dinette outlet and WR30 out to the TV outlet, all pigtailed to the outlet (a deep single gang box, 22 1/2 cu in or more: three 14 AWG cables, the ground wires counted once and the outlet counted as two wires come to about 20 cu in). The dinette outlet ED15 and the TV outlet EP6 are now the ends of their own branches, one cable each.
+- WR30 is about 12 ft (it was 13): from the couch box along the free band above S6 to riser A, up it and across the ceiling beside WR12's conduit at 85 3/4 in from the rear-door edge, down riser B and east behind the TV. It no longer goes under the window, up the driver wall at 98 3/4 in or across the ceiling at 104 3/4 in, so it does not pass rails S4 to S7 on the driver wall. Circuit A's cable is about 28 1/2 ft in all (9 + 7 1/2 + 12).
+- Changed: `tools/elwires.js` (WR30, the notes of WR18 and WR19, `XU` and `XP` removed), `tools/elcards.js` (the chain of WR30), `tools/electric.js` (the three outlet notes), `tools/buildguide.py` (the 120 V step).

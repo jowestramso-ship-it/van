@@ -38,7 +38,7 @@ const CHAINS = {
   WR27: ACP.concat(['WR12', 'f:15 A (B/D)', 'Riser B', 'WR27', 'Selector EP9|30 A rocker']),
   WR28: ACP.concat(['WR12', 'f:15 A (B/D)', 'Riser B', 'WR27', 'Selector EP9|30 A rocker', 'WR28', 'Microwave outlet|EP4']),
   WR29: ACP.concat(['WR12', 'f:15 A (B/D)', 'Riser B', 'WR27', 'Selector EP9|30 A rocker', 'WR29', 'Heater outlet EP7|beside the tank']),
-  WR30: ACP.concat(['f:15 A GFCI (A)', 'WR18', 'Couch outlet ED10', 'WR19', 'Dinette outlet ED15', 'WR30', 'TV outlet EP6']),
+  WR30: ACP.concat(['f:15 A GFCI (A)', 'WR18', 'Couch outlet ED10', 'WR30', 'TV outlet EP6']),
   WR31: DCB.concat(['WR31', 'f:10 A fuse', 'Water pump|PL3']),
   WR32: DCB.concat(['WR32', 'f:3 A fuse', 'Control panel|EP5']),
   WR33: DCB.concat(['WR16', 'f:5 A fuse', 'Junction box JB|couch cabinet', 'WR35', 'Switch EP11', 'WR33', 'Light EP2']),
