@@ -1060,3 +1060,9 @@ Previous: two closet rods were added (one above the other, along the wall, upper
 
 - User: 'It can be in the same box.' The fridge outlet EP3 and the microwave outlet EP4 are now in one two gang box on furring rail S7 at 64 up (the microwave one at 60 in along, the fridge one at 61.9, toward the cab: two receptacles 1 7/8 in apart; EP3 was at 64.5). Two separate single receptacles, one for each cable, NOT one duplex receptacle shared between the two circuits: circuit C (the fridge, a plain 15 A breaker) and circuit B/D (the microwave through the selector, the GFCI breaker) are different breakers. Both cables (WR26 and WR28) enter the box from below; a two gang box holds the two cables and the two receptacles easily (about 20 cu in of the box's 30 or more).
 - Changed: `tools/electric.js` (EP3 and EP4 notes, EP3's x), `tools/elwires.js` (the notes of WR26 and WR28).
+
+## 2026-11-04: the microwave and fridge outlet box is at 52 1/2 up, the same height as the TV outlet
+
+- User: 'EP4 is at the same height as the TV outlet'. The shared two gang box (the microwave outlet EP4 at 60 in along and the fridge outlet EP3 at 61.9) moves from 64 up to 52 1/2 up, the height of the TV outlet EP6, on blocking between S5 and S6 (the free band between them is 45 1/4 to 55 1/2 up).
+- Routes: circuit C's cable now leaves riser B at 54 in up (WR12 ends there, about 16 ft drawn); WR26 runs west at 54 up and drops into the box (about 1 ft); WR27 goes on down to the selector from 54 (0.4 ft); WR28 (selector to the microwave outlet) goes up from the selector to 54.9 up, west to 60 and down into the box (1 1/2 ft). WR26 runs just under WR28.
+- Changed: `tools/electric.js` (EP3 and EP4: z and notes), `tools/elwires.js` (WR12, WR26, WR27, WR28).
