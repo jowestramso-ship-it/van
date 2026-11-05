@@ -29,7 +29,7 @@ const E_DRIVER = pl => { const oz = pl.win && pl.win.cz0 - 5 < 36 ? pl.win.cz0 -
   {k:'lt',    n:'Light under the cabinet, dinette rear seat',  x:(pl.bA[0] + pl.bA[1]) / 2 + 6, z:lz, note:'centered over the rear bench seat (' + fr(pl.bA[0]) + ' to ' + fr(pl.bA[1]) + '), then 6 in toward the table; on the dinette switch'},
   {k:'lt',    n:'Light under the cabinet, dinette cab-end seat', x:(pl.bB[0] + pl.bB[1]) / 2 - 6, z:lz, note:'centered over the cab-end bench seat (' + fr(pl.bB[0]) + ' to ' + fr(pl.bB[1]) + '), then 6 in toward the table; on the dinette switch. These two replace the single light I had over the table'},
   {k:'out120',n:'Couch outlet (120 V duplex, two plugs)', x:64, z:57.25, note:'the rear-door end gang of a two gang box on furring rail S6 (57 1/4 up, on the 3 1/2 in rail), above the nook behind the couch (it was 44 up, which is inside the nook now; user: the outlet can be in the same box as the couch light switch ED19, devices about 2 in apart: outlet 64, ED19 66 (the box was a three gang box with the dimmer button ED14, now retired); the box is about 4 1/2 wide, 62 3/4 to 67 1/4, clear of the S6 joint at 71 1/4 and 5 in from the inverter remote ED20): a duplex outlet (two plugs) on circuit A (GFCI), 14 AWG: circuit A\u2019s first outlet and its branching point: the cable from the AC panel comes in here (WR18) and two more leave, one to the dinette outlet (WR19) and one to the counter outlet (WR30), all three pigtailed to the outlet in the box: use a deep two gang box with a divider: 120 V and 12 V must not share a compartment, so the divider goes between this outlet and the switch ED19 next to it; the 120 V side holds the three cables and the outlet (about 18 cu in), the 12 V side the switch and its wires'},
-  {k:'sw',    n:'Switch plate at the rear doors (shower light, rear couch light)', x:1.75,  z:48, note:'2 gang: the wet bath light over the shower (user: ED11 is for the shower light only) and the rear (left) one of the two lights under the cabinet over the couch (user: its switch will be there too). The roof fan has no switch (user: it operates without one): its 12 V feed is straight from the fuse block, fused, and it is controlled at the fan itself. One deep two gang box with the two switches side by side (user, 2026-11-06: 'the switches will be side by side'; she is using a deep two gang box), so the one box holds both switches, the two lever connectors and the jumpers; it was two single gang boxes one over the other. FIT: a two gang box is about 4 in wide, wider than the 3 1/2 in the plan shows at this corner; the user made room for it (2026-11-06), so nothing more to check on the width'},
+  {k:'sw',    n:'Switch plate at the rear doors (shower light, rear couch light)', x:1.75,  z:48, note:'2 gang: the wet bath light over the shower (user: ED11 is for the shower light only) and the rear (left) one of the two lights under the cabinet over the couch (user: its switch will be there too). The roof fan has no switch (user: it operates without one): its 12 V feed is straight from the fuse block, fused, and it is controlled at the fan itself. One deep two gang box with the two switches side by side (user, 2026-11-06: the switches will be side by side; she is using a deep two gang box), so the one box holds both switches, the two lever connectors and the jumpers; it was two single gang boxes one over the other. FIT: a two gang box is about 4 in wide, wider than the 3 1/2 in the plan shows at this corner; the user made room for it (2026-11-06), so nothing more to check on the width'},
   {k:'sw',    n:'Light switch on the dinette\u2019s back wall (W2)', x:pl.cab - 1, z:48, note:'on W2, the 3/4 in floor-to-ceiling wall that separates the dinette from the driver\u2019s seat (user: ED12 is on the back wall of the dinette), on its dinette face, 48 in up (10 in above the bench back at 38) and about 3 in out from the driver wall, so it is seen here at the corner of the driver wall with W2; the two lights under the cabinet over the dinette seats only (user: the switch will only be for the dinette lights; the ceiling light over the countertop and the sink has its own switch on the passenger wall). W2 is solid plywood with no cavity, so the switch goes in a shallow surface-mount box on its face; the wire comes down the corner behind the planks and into the side of the box through a 1/2 in hole in the plank (a grommet in it). Move the box along W2 if you would rather reach it from the middle of the bench'},
   {k:'strip', n:'Soft LED strip, ceiling edge, driver side run (154 in)', x0:1, x1:pl.cab - 1, z:73, note:'one of three runs of the strip you found: BTF-LIGHTING FCOB (flip chip COB, no dots) warm white 2700 K, 12 V, 336 LEDs/m, 8 W/m (about 2.4 W a foot), 8 mm wide, CRI 90+, double-layer copper PCB, 3M adhesive backing, cuttable at the marked spots, with a 5.5 x 2.1 mm DC plug on each end of a 16.4 ft (5 m) reel (the listing says UL listed: look for the UL mark and file number on the package). It sits in an aluminum channel with a frosted diffuser (the channel must take an 8 mm strip), at the ceiling edge, aimed up so it glows off the cedar ceiling. Cut off the plugs and solder the feed wires at the cut spots, since the plugs loosen with vibration. The wall cabinets run up to the ceiling here, so the channel sits on the top front edge of the cabinets behind a 1 in lip. Fed from the strip junction box JB2 by WR40, in the middle of each 154 in side (the user chose the middle feed: the far end stays within about 7 ft of power and the brightness is more even)'},
   {k:'retired', n:'Dimmer push button at the couch (retired)', x:68, z:57.25, note:'retired (user, 2026-11-05: no dimming controller; one slide dimmer on the dinette wall instead, ED22): it was a momentary push button in the box on S6 beside the couch outlet, 68 in along. The number is not reused; its wire, WR17, is retired with it'},
@@ -310,7 +310,7 @@ function ledSVG() {
   return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Wiring of the soft LED strip: the fuse block feeds the strip junction box JB2, a pair goes to the slide dimmer on the dinette wall and the dimmed power comes back to JB2, which feeds the three strips"><style>text{font-family:-apple-system,"Segoe UI",sans-serif}</style>${o.join('')}</svg>`;
 }
 function plateSVG() {
-  const o = [], W = 800, H = 560, RED = '#D32F2F', ORG = '#F57C00', tx = (x, y, t, st = '') => o.push(`<text x="${x}" y="${y}" style="font-size:12px;fill:${INK};${st}">${esc(t)}</text>`);
+  const o = [], W = 800, H = 884, RED = '#D32F2F', ORG = '#F57C00', tx = (x, y, t, st = '') => o.push(`<text x="${x}" y="${y}" style="font-size:12px;fill:${INK};${st}">${esc(t)}</text>`);
   const ln = (x1, y1, x2, y2, col, w = 2.6) => o.push(`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${col}" stroke-width="${w}" stroke-linecap="round"/>`);
   const gray = 'font-size:11px;fill:#5F5E5A', bold = 'font-weight:700';
   tx(20, 22, 'A. What a lever connector is: a small block that joins wires together', bold);
@@ -323,22 +323,34 @@ function plateSVG() {
   ['1  Strip about 1/2 in of insulation off the wire.', '2  Lift the lever up.', '3  Push the wire in all the way.', '4  Press the lever down, then tug the wire gently.'].forEach((t, i) => tx(470, 76 + i * 20, t));
   tx(470, 166, 'Every wire in one connector is joined together.', gray); tx(470, 180, 'To take a wire out, lift its lever.', gray); tx(470, 194, 'Brands look a little different.', gray);
   ln(20, 210, 780, 210, '#cfcbbd', 1.5);
-  tx(20, 232, 'B. At the rear doors plate ED11 (two switches): where the + and the − of WR21 go', bold);
+  tx(20, 232, 'B. Inside the plate ED11: one deep two gang box, seen from the front, the two switches side by side', bold);
+  o.push('<g transform="translate(0,50)">');
+  o.push(`<rect x="230" y="246" width="500" height="286" rx="10" fill="#FAFAF7" stroke="#5F5E5A" stroke-width="2" stroke-dasharray="7 4"/>`);
+  tx(240, 262, 'the deep box', gray);
   const cbox = (x, y, lab, col) => { o.push(`<rect x="${x}" y="${y}" width="120" height="54" rx="7" fill="#EEF1F4" stroke="${col}" stroke-width="2.2"/>`); [x + 22, x + 60, x + 98].forEach(cx => o.push(`<rect x="${cx - 9}" y="${y + 5}" width="18" height="14" rx="3" fill="${ORG}" stroke="#A64F00" stroke-width="1"/>`)); tx(x + 12, y + 42, lab, 'font-size:11px;font-weight:700'); };
-  const swb = (y, lab) => { o.push(`<rect x="470" y="${y}" width="130" height="60" rx="7" fill="#fff" stroke="${INK}" stroke-width="2"/>`); tx(480, y + 20, lab, 'font-size:11.5px;font-weight:700'); tx(480, y + 46, 'IN', gray); tx(566, y + 46, 'OUT', gray); };
-  ln(20, 292, 190, 292, RED, 3.4); tx(24, 284, 'WR21 +', `font-weight:700;fill:${RED}`);
-  cbox(190, 262, '3-port (+)', RED);
-  swb(300, 'Rear couch switch'); swb(390, 'Shower light switch');
-  ln(310, 278, 400, 278, RED); ln(400, 278, 400, 346, RED); ln(400, 346, 470, 346, RED);      // jumper 1 to the rear couch switch IN
-  ln(310, 296, 380, 296, RED); ln(380, 296, 380, 436, RED); ln(380, 436, 470, 436, RED);      // jumper 2 to the shower switch IN
-  tx(420, 268, 'two short jumpers, about 6 in', gray);
-  ln(600, 346, 690, 346, RED); tx(696, 350, 'WR22 +', `font-weight:700;fill:${RED}`); tx(606, 336, 'to light ED7', gray);
-  ln(600, 436, 690, 436, RED); tx(696, 440, 'WR23 +', `font-weight:700;fill:${RED}`); tx(606, 426, 'to shower light EP1', gray);
-  ln(20, 492, 190, 492, INK, 3.4); tx(24, 484, 'WR21 −', bold);
-  cbox(190, 466, '3-port (−)', INK);
-  ln(310, 484, 700, 484, INK); ln(310, 500, 700, 500, INK); tx(318, 476, 'WR22 − and WR23 − come back from the two lights', gray);
-  tx(20, 534, 'The + goes through the switches: a switch only passes power when it is on. The − goes straight through, so each light has its return path.', gray);
-  tx(20, 550, 'ED11 is one deep two gang box with the two switches side by side (drawn one above the other here to keep the wires clear): the connectors, jumpers and wires all sit in that box.', gray);
+  const swb = (x, lab1, lab2) => { o.push(`<rect x="${x}" y="290" width="130" height="64" rx="7" fill="#fff" stroke="${INK}" stroke-width="2"/>`); tx(x + 10, 312, lab1, 'font-size:11.5px;font-weight:700'); tx(x + 10, 328, lab2, 'font-size:11.5px;font-weight:700'); tx(x + 52, 348, 'OUT ↑', gray); tx(x + 52, 370, 'IN ↓', gray); };
+  swb(380, 'Rear couch', 'light switch'); swb(560, 'Shower', 'light switch');
+  // OUT wires leave through the top
+  ln(445, 290, 445, 222, RED, 3); tx(396, 218, 'WR22 + to light ED7', `font-weight:700;fill:${RED};font-size:11px`);
+  ln(625, 290, 625, 222, RED, 3); tx(560, 218, 'WR23 + to shower light', `font-weight:700;fill:${RED};font-size:11px`);
+  // + side
+  ln(20, 410, 250, 410, RED, 3.4); tx(24, 402, 'WR21 +', `font-weight:700;fill:${RED}`);
+  cbox(250, 384, '3-port (+)', RED);
+  ln(370, 396, 445, 396, RED); ln(445, 396, 445, 358, RED); tx(452, 392, 'jumper 1', gray);
+  ln(370, 412, 625, 412, RED); ln(625, 412, 625, 358, RED); tx(560, 428, 'jumper 2', gray);
+  // - side
+  ln(20, 494, 250, 494, INK, 3.4); tx(24, 486, 'WR21 −', bold);
+  cbox(250, 466, '3-port (−)', INK);
+  ln(370, 478, 780, 478, INK); ln(370, 496, 780, 496, INK); tx(450, 470, 'WR22 − and WR23 − come back from the lights', gray);
+  o.push('</g>');
+  ln(20, 600, 780, 600, '#cfcbbd', 1.5);
+  tx(20, 622, 'C. What connects to what', bold);
+  const rows = [['WR21 + (from JB)', '+ connector, port 1'], ['Jumper 1 (red, about 6 in)', '+ connector, port 2  and  the IN of the rear couch light switch'], ['Jumper 2 (red, about 6 in)', '+ connector, port 3  and  the IN of the shower light switch'],
+    ['WR22 +', 'the OUT of the rear couch light switch'], ['WR23 +', 'the OUT of the shower light switch'], ['WR21 − (from JB)', '− connector, port 1'], ['WR22 −', '− connector, port 2'], ['WR23 −', '− connector, port 3']];
+  rows.forEach((r, k) => { const y = 644 + k * 20; if (k % 2 === 0) o.push(`<rect x="20" y="${y - 14}" width="760" height="20" fill="#F6F4EE"/>`); tx(30, y, r[0], 'font-weight:700'); tx(290, y, r[1]); });
+  tx(20, 836, 'The + goes through the switches, so a light is only powered when its switch is on.', gray);
+  tx(20, 852, 'The − passes straight through the box. Which switch is on the left makes no difference.', gray);
+  tx(20, 868, 'The two connectors sit behind the switches, in the same box.', gray);
   return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="How a lever connector works and how the rear doors plate ED11 is wired: WR21 plus goes through a three port connector and two short jumpers to the two switches, and the minus joins WR22 and WR23 in a second connector"><style>text{font-family:-apple-system,"Segoe UI",sans-serif}</style>${o.join('')}</svg>`;
 }
 function oneLineSVG(WR) {
