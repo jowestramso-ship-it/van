@@ -11,6 +11,7 @@ Interior: 160 in long, 68 in wide, 76 in tall. Open `sides.html` (the scaled dia
 - No bulkhead across the van: the cab end stays open on the passenger side (so no cab seat gap measurement needed). Changed later: there is one floor-to-ceiling wall behind the driver seat, 28 in out from the driver wall, which the cab-end dinette back leans on (see the walls entry below).
 - Furring rail and block spacing stays as is (user: 'leave as is', after asking whether the 1x4 rails and 3 1/2 in blocks could be further apart): eight rows S1 to S8 at 8 3/4 to 13 3/4 in between centers and 70 blocks 7 3/4 to 16 in apart on the ribs. Dropping S3 or S7 was offered and declined; no change to any page.
 - Still open: roof width (assumed 68 in), fan and A/C models, electrical details; to be discussed later.
+- To do (user reminder, 2026-11-05: 'remind me i need to rewrite wr21'): rewrite WR21, the 14 AWG feed from JB to the rear doors plate ED11 (two switches), about 7.5 ft, 5 A lights circuit. What to change was not said yet; ask when she raises it, and remind her when she asks what is left or when the WR20 to WR25 cards come up.
 
 ## TS-30, AC panel and fuse block go on the divider; the tray 3D is paused (latest)
 User: 'Put the TS-30 and AC panel on the side wall of the pullout tray', then 'fuse block too', then (mid-turn) 'ok stop doing the 3d version for now'.
