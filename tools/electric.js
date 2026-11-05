@@ -10,6 +10,7 @@ const EW = require('./elwires.js');
 const { hubSVG, trayTopSVG, TRAY_PARTS } = require('./elhub.js');
 const TP = k => TRAY_PARTS.find(q => q.k === k);      // the parts of the user\u2019s real board on the tray (section 1c; read from the photo): the electrical page draws the gear where the board has it
 const fr = v => { let w = Math.floor(v + 1e-9), r = Math.round((v - w) * 16); if (r === 16){w++;r=0;} let n=r,d=16; while(n&&n%2===0){n/=2;d/=2;} return (n? (w?w+' ':'')+n+'/'+d : ''+w); };
+const ITEM_INFO = {};   // id -> {n, where, note}, for the click popups on the electric page
 const esc = s => String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 
 // ------------------------------------------------------------------ the proposal (x = inches from the back mark, z = inches up from the floor)
@@ -155,15 +156,16 @@ function wallSVG(list, side, base, furn, plumb) {
     : `<rect x="${Math.min(xa, xb)}" y="${Y(it.z1)}" width="${Math.abs(xb - xa)}" height="${6 * (it.z1 - it.z0)}" rx="2" fill="none" stroke="${INK}" stroke-opacity=".28" stroke-width="1.2" stroke-dasharray="4 3"/>`); });
   const rows = list.map((e, i) => {
     e.id = e.name || ('E' + side + (i + 1));
-    if (e.k === 'retired') return `<tr><td><b class="id">${e.id}</b></td><td>${esc(e.n)}</td><td>retired</td><td class="kd">${esc(e.note)}</td></tr>`;
-    const [g, cx, cy] = symbol(e, X, Y); o.push(g);
+    if (e.k === 'retired') return `<tr id="item-${e.id}"><td><b class="id">${e.id}</b></td><td>${esc(e.n)}</td><td>retired</td><td class="kd">${esc(e.note)}</td></tr>`;
+    const [g, cx, cy] = symbol(e, X, Y); o.push(`<g class="itm" data-item="${e.id}"><title>${e.id}: ${esc(e.n)}</title>${g}</g>`);
     let bx = cx + (e.k === 'strip' || e.k === 'box' || e.k === 'run' ? 0 : 13), by = cy - (e.k === 'strip' ? 13 : e.k === 'run' ? 0 : 13);
     if (e.k === 'strip') { bx = cx; }
     for (let t = 0; t < 6 && placed.some(q => Math.hypot(q[0] - bx, q[1] - by) < 24); t++) by -= 14;
     placed.push([bx, by]);
-    o.push(`<rect x="${bx-14}" y="${by-8}" width="28" height="16" rx="8" fill="#fff" fill-opacity=".95" stroke="${C120}" stroke-width="1.3"/><text x="${bx}" y="${by+3.8}" text-anchor="middle" style="font-size:9.5px;font-weight:700;fill:${C120}">${e.id}</text>`);
+    o.push(`<g class="itm" data-item="${e.id}"><rect x="${bx-14}" y="${by-8}" width="28" height="16" rx="8" fill="#fff" fill-opacity=".95" stroke="${C120}" stroke-width="1.3"/><text x="${bx}" y="${by+3.8}" text-anchor="middle" style="font-size:9.5px;font-weight:700;fill:${C120}">${e.id}</text></g>`);
     const where = e.k === 'strip' ? `${fr(e.x0)} to ${fr(e.x1)}, at ${fr(e.z)} up` : e.k === 'box' ? `${fr(e.x0)} to ${fr(e.x1)}, ${fr(e.z0)} to ${fr(e.z1)} up` : e.k === 'run' ? `at ${fr(e.x)}, ${fr(e.z0)} to ${fr(e.z1)} up` : `${fr(e.x)} in, ${fr(e.z)} up`;
-    return `<tr><td><b class="id">${e.id}</b></td><td>${esc(e.n)}</td><td>${where}</td><td class="kd">${esc(e.note)}</td></tr>`;
+    ITEM_INFO[e.id] = { n: e.n, where, note: e.note };
+    return `<tr id="item-${e.id}"><td><b class="id" data-go="${e.id}" role="button" tabindex="0" title="Show ${e.id} on the diagram">${e.id}</b></td><td>${esc(e.n)}</td><td>${where}</td><td class="kd">${esc(e.note)}</td></tr>`;
   });
   const pg = [];
   const prow = (plumb || []).map((e, i) => {
@@ -512,7 +514,44 @@ function loadTable(d) {
     card.innerHTML='<div class="wt-h"><span class="wt-id">'+w.id+'</span> <svg width="46" height="14" viewBox="0 0 46 14" style="display:inline-block;width:46px;max-width:46px;min-width:0;height:14px;vertical-align:-3px"><line x1="3" y1="7" x2="43" y2="7" stroke="'+w.c+'" stroke-width="'+w.lw+'" stroke-linecap="round"'+(w.t==='ac'?' stroke-dasharray="8 5"':'')+'/></svg> <b>'+w.g+' AWG</b> \u00B7 '+(w.t==='ac'?'120 V':'12 V or battery')+' \u00B7 about '+w.len+' ft</div><div class="wt-n">'+wesc(w.n)+'</div><div class="wt-l"><span class="wt-s">START</span>'+wesc(w.from)+'</div><div class="wt-l"><span class="wt-e">END</span>'+wesc(w.to)+'</div><div class="wt-m"><b>Fuse or breaker:</b> '+wesc(w.prot)+'</div>'+(w.note?'<div class="wt-m">'+wesc(w.note)+'</div>':'')+'<div class="wt-m"><b>Drawn on:</b> '+shown.join(', ')+'</div>'
   }
   function wtStep(d){var s=document.getElementById('wtSel'),i=s.selectedIndex+d;if(i<0)i=s.options.length-1;if(i>=s.options.length)i=0;wtr(s.options[i].value)}
+  var ITEMS = ${JSON.stringify(ITEM_INFO).replace(/</g, '\\u003c')};
+  (function(){
+  var pop=document.createElement('div');pop.id='ipop';pop.hidden=true;document.body.appendChild(pop);
+  function has(t,id){var i=t.indexOf(id);while(i>=0){var c=t.charAt(i+id.length);if(!(c>='0'&&c<='9'))return true;i=t.indexOf(id,i+1)}return false}
+  function wiresOf(id){var r=[];if(typeof WRD==='undefined')return r;for(var i=0;i<WRD.length;i++){var w=WRD[i];if(has(' '+w.from+' '+w.to+' '+w.n+' ',id))r.push(w.id)}return r}
+  function vis(e){return e.getClientRects().length>0}
+  var shownAt=0;function hide(){pop.hidden=true}
+  window.addEventListener('scroll',function(){if(!pop.hidden&&Date.now()-shownAt>400)hide()},{passive:true});
+  function flash(l){for(var i=0;i<l.length;i++)l[i].classList.add('hl');setTimeout(function(){for(var i=0;i<l.length;i++)l[i].classList.remove('hl')},3000)}
+  function show(id,el){var it=ITEMS[id];if(!it)return;var ws=wiresOf(id),note=it.note||'';if(note.length>420)note=note.slice(0,417)+'...';
+    pop.innerHTML='<div class="ph"><b>'+id+'</b> '+wesc(it.n)+'</div><div class="pw">'+wesc(it.where)+'</div>'+(ws.length?'<div class="pw">Wires: '+ws.join(', ')+'</div>':'')+'<div class="pn">'+wesc(note)+'</div><div class="pa"><a href="#" data-row="'+id+'">Show its table row</a> &middot; <a href="#" data-close="1">Close</a></div>';
+    pop.hidden=false;shownAt=Date.now();var r=el.getBoundingClientRect(),w=pop.offsetWidth,h=pop.offsetHeight;
+    var x=Math.max(8,Math.min(r.left,window.innerWidth-w-8)),y=r.bottom+8;if(y+h>window.innerHeight-8)y=Math.max(8,r.top-h-8);
+    pop.style.left=x+'px';pop.style.top=y+'px'}
+  function pick(id){var l=document.querySelectorAll('[data-item="'+id+'"]');for(var i=0;i<l.length;i++)if(vis(l[i]))return l[i];return null}
+  function row(id){var r=document.getElementById('item-'+id);if(r){r.scrollIntoView({behavior:'smooth',block:'center'});flash([r])}}
+  function go(id){var els=document.querySelectorAll('[data-item="'+id+'"]'),el=pick(id);if(!el){row(id);return}
+    var same=[];for(var i=0;i<els.length;i++)if(els[i].ownerSVGElement===el.ownerSVGElement)same.push(els[i]);
+    el.scrollIntoView({block:'center'});flash(same);setTimeout(function(){show(id,el)},120)}
+  document.addEventListener('click',function(ev){var t=ev.target;if(!t.closest)return;
+    var a=t.closest('[data-row]');if(a){ev.preventDefault();hide();row(a.getAttribute('data-row'));return}
+    if(t.closest('[data-close]')){ev.preventDefault();hide();return}
+    var g=t.closest('[data-go]');if(g){go(g.getAttribute('data-go'));return}
+    var it=t.closest('[data-item]');if(it){show(it.getAttribute('data-item'),it);return}
+    if(!t.closest('#ipop'))hide()});
+  document.addEventListener('keydown',function(ev){if(ev.key==='Escape')hide();var g=ev.target&&ev.target.getAttribute&&ev.target.getAttribute('data-go');if(g&&(ev.key==='Enter'||ev.key===' ')){ev.preventDefault();go(g)}});
+  })();
   </script>
+  <style>
+  .itm{cursor:pointer}
+  .itm.hl{filter:drop-shadow(0 0 3px #ff9800) drop-shadow(0 0 7px #ff9800)}
+  b.id[data-go]{cursor:pointer;text-decoration:underline dotted;text-underline-offset:3px}
+  b.id[data-go]:hover,b.id[data-go]:focus{background:#fff3cd;outline:none}
+  tr.hl td{background:#fff3cd}
+  #ipop{position:fixed;z-index:60;max-width:min(380px,92vw);background:#fff;color:#1b1a17;border:1.5px solid #185FA5;border-radius:10px;padding:10px 12px;box-shadow:0 8px 24px rgba(0,0,0,.28);font-size:13px;line-height:1.4}
+  #ipop[hidden]{display:none}
+  #ipop .ph{font-size:14px;margin-bottom:3px}#ipop .pw{color:#5F5E5A;margin-bottom:3px}#ipop .pn{margin:6px 0;color:#2C2C2A}#ipop .pa{font-size:12px}
+  </style>
   <h2>6. What it adds up to</h2>
   ${loadTable(plan)}
   <h2>7. Order of work</h2>

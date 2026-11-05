@@ -201,7 +201,7 @@ function wallLayers(side, items, base, furn, symbol, esc, INK) {
   const bigs = [], smalls = [];
   items.forEach(e => {
     if (e.k === 'run' || e.k === 'retired') return;
-    if (e.k === 'box' || e.k === 'strip') { const [g] = symbol(e, X, Y); bigs.push(g);
+    if (e.k === 'box' || e.k === 'strip') { const [g] = symbol(e, X, Y); bigs.push(`<g class="itm" data-item="${e.id}"><title>${e.id}: ${esc(e.n)}</title>${g}</g>`);
       if (e.k === 'box') {                       // name the boxes, so a wire can be followed from one to the next
         const xa = X(e.x0), xb = X(e.x1), bx = Math.min(xa, xb), bw = Math.abs(xb - xa), by = Y(e.z1), bh = 6 * (e.z1 - e.z0), nm = e.n.split(/[,(]/)[0].replace(/^Power hub: Class T fuse and shunt$/, 'Class T, shunt').replace(/^TS-30 transfer switch \(30 A\), on the divider panel$/, 'TS-30').replace(/^AC panel \(120 V breakers\), on the divider panel$/, 'AC panel').replace(/^12 V fuse block \(10-way\), on the divider panel$/, 'fuse block').replace(/^Shore charger$/, 'charger').replace(/^Inverter$/, 'inverter').replace(/^Battery$/, 'battery').replace(/^DC-DC charger$/, 'DC-DC').trim();
         const st = 'font-size:9.5px;font-weight:700;fill:#6b3a00;paint-order:stroke;stroke:#fff;stroke-width:2.6px';
@@ -212,7 +212,7 @@ function wallLayers(side, items, base, furn, symbol, esc, INK) {
       }
       return; }
     const [g, cx, cy] = symbol(e, X, Y);
-    smalls.push(g + `<text x="${cx + 9}" y="${cy + 15}" style="font-size:8.5px;font-weight:700;fill:#5F5E5A;paint-order:stroke;stroke:#fff;stroke-width:2.5px">${e.id}</text>`);
+    smalls.push(`<g class="itm" data-item="${e.id}"><title>${e.id}: ${esc(e.n)}</title>` + g + `<text x="${cx + 9}" y="${cy + 15}" style="font-size:8.5px;font-weight:700;fill:#5F5E5A;paint-order:stroke;stroke:#fff;stroke-width:2.5px">${e.id}</text></g>`);
   });
   // the 12 V cables leave the fuse block on the divider panel, go up through the covering into the free band above S2 and run east along it to riser A
   const stub = flip ? '' : `<polyline points="${X(37)},${Y(15.4)} ${X(37)},${Y(17.5)} ${X(76.5)},${Y(17.5)}" fill="none" stroke="#fff" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/><polyline points="${X(37)},${Y(15.4)} ${X(37)},${Y(17.5)} ${X(76.5)},${Y(17.5)}" fill="none" stroke="#9a9a94" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>`;
