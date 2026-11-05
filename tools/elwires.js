@@ -208,6 +208,7 @@ function wallLayers(side, items, base, furn, symbol, esc, INK) {
         if (bw >= 80 && bh >= 40) bigs.push(`<text x="${bx + bw / 2}" y="${by + bh / 2 + 3.5}" text-anchor="middle" style="${st}">${e.id} ${esc(nm)}</text>`);
         else if (bw >= 50) bigs.push(`<text x="${bx + 4}" y="${/charger/.test(nm) ? by + bh - 5 : by + 12}" style="${st}">${e.id} ${esc(nm)}</text>`);
         else if (bh >= 50) bigs.push(`<text transform="rotate(-90 ${bx + bw / 2 + 3.4} ${by + bh / 2})" x="${bx + bw / 2 + 3.4}" y="${by + bh / 2}" text-anchor="middle" style="${st}">${e.id} ${esc(nm)}</text>`);
+        else if (e.id === 'JB2') bigs.push(`<text x="${bx - 4}" y="${by + bh / 2 + 3.5}" text-anchor="end" style="${st}">${e.id}</text>`);   // JB2 has the wires and the START or END marker on its cab side: its label goes on the rear side
         else bigs.push(`<text x="${bx + bw + 4}" y="${by + bh / 2 + 3.5}" style="${st}">${e.id}</text>`);
       }
       return; }
