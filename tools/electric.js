@@ -281,6 +281,35 @@ function selectorSVG() {
   tx(20, 308, 'with heat shrink boots, or put the switch in a plastic box. Turn the microwave off before moving the switch.', 'font-size:11px;fill:#5F5E5A');
   return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Wiring of the heater or microwave selector: the breaker feeds the common pin, the two other pins go to the microwave outlet and the heater"><style>text{font-family:-apple-system,"Segoe UI",sans-serif}</style>${o.join('')}</svg>`;
 }
+function ledSVG() {
+  const o = [], W = 800, H = 400, RED = '#D32F2F', tx = (x, y, t, st = '') => o.push(`<text x="${x}" y="${y}" style="font-size:12px;fill:${INK};${st}">${esc(t)}</text>`);
+  const ln = (x1, y1, x2, y2, col, w = 2.4, d = '') => o.push(`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${col}" stroke-width="${w}" stroke-linecap="round"${d ? ` stroke-dasharray="${d}"` : ''}/>`);
+  const pin = (x, y) => o.push(`<rect x="${x}" y="${y - 5}" width="22" height="10" rx="2" fill="#B9BCC2" stroke="${INK}" stroke-width="1"/>`);
+  const box = (x, y, w, h, a, b, col, fill = '#fff') => { o.push(`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="6" fill="${fill}" stroke="${col}" stroke-width="1.8"/>`); tx(x + 10, y + 19, a, 'font-weight:700'); if (b) tx(x + 10, y + 35, b, 'fill:#5F5E5A;font-size:11px'); };
+  const btn = (x, y, a, b) => { o.push(`<circle cx="${x}" cy="${y}" r="14" fill="#fff" stroke="${INK}" stroke-width="2"/><circle cx="${x}" cy="${y}" r="7" fill="${INK}"/>`); tx(x + 22, y - 2, a, 'font-weight:700'); tx(x + 22, y + 13, b, 'font-size:11px;fill:#5F5E5A'); };
+  tx(20, 22, 'Tap a button: the strip switches on or off. Hold it: the strip dims up or down (check your controller: models differ).', 'fill:#5F5E5A');
+  btn(330, 66, 'ED14', 'couch, box on S6'); btn(560, 66, 'ED22', 'dinette, back wall W2');
+  ln(330, 80, 330, 108, INK, 2.2); ln(560, 80, 560, 108, INK, 2.2); ln(330, 108, 560, 108, INK, 2.2); ln(400, 108, 400, 140, INK, 2.2);
+  tx(412, 124, 'WR17 and WR36, 18 AWG, in parallel: either button works', 'font-size:11px;fill:#5F5E5A');
+  o.push(`<rect x="300" y="140" width="200" height="160" rx="8" fill="#E8F1FB" stroke="${C12}" stroke-width="1.8"/>`);
+  tx(312, 162, 'Dimming controller', 'font-weight:700'); tx(312, 178, 'in JB: 12 V PWM, 10 A or more', 'font-size:11px;fill:#5F5E5A');
+  tx(366, 196, 'button input', 'font-size:11px');
+  box(20, 205, 190, 58, '12 V fuse block, way 2', '10 A fuse', C12);
+  pin(288, 225); pin(288, 251); ln(210, 225, 288, 225, RED); ln(210, 251, 288, 251, INK);
+  tx(214, 218, '+', `font-weight:700;fill:${RED}`); tx(214, 268, '−', 'font-weight:700');
+  tx(316, 229, '+ in', 'font-size:11px'); tx(316, 255, '− in', 'font-size:11px');
+  tx(20, 288, 'WR14: 14 AWG pair, about 11 ft', 'font-size:11px;fill:#5F5E5A');
+  [[168, 'Driver side strip, 154 in', '14 AWG, about 2 ft, 2.6 A'], [224, 'Passenger side strip, 154 in', '14 AWG, about 7 1/2 ft, 2.6 A'], [280, 'Back strip, 68 in', '14 AWG, about 8 1/2 ft, 1.1 A']].forEach(r => {
+    pin(488, r[0]); pin(488, r[0] + 14); ln(500, r[0], 592, r[0], RED); ln(500, r[0] + 14, 592, r[0] + 14, INK);
+    tx(520, r[0] - 5, '+', `font-weight:700;fill:${RED}`); tx(520, r[0] + 26, '−', 'font-weight:700');
+    box(592, r[0] - 16, 190, 44, r[1], r[2], '#B8860B', '#FFF8E1');
+  });
+  tx(20, 336, 'At each strip: + to + and − to −. Join the 14 AWG cable to a short 18 to 20 AWG pigtail with a lever connector,', 'font-size:11px;fill:#5F5E5A');
+  tx(20, 352, 'and solder the pigtail to the strip pads (pads every 1.4 in; cut only at the marked spots).', 'font-size:11px;fill:#5F5E5A');
+  tx(20, 370, 'The strip (BTF-LIGHTING FCOB, 12 V, 8 W/m) is 76 W in all, 6.4 A at full brightness.', 'font-size:11px;fill:#5F5E5A');
+  tx(20, 386, 'The controller must be 12 V DC, rated 10 A or more, and for the heat in the couch cabinet (many are rated only to 40 C).', 'font-size:11px;fill:#5F5E5A');
+  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Wiring of the soft LED strip: the fuse block feeds the dimming controller in the junction box, two push buttons in parallel work it, and three cables go to the three strips"><style>text{font-family:-apple-system,"Segoe UI",sans-serif}</style>${o.join('')}</svg>`;
+}
 function oneLineSVG(WR) {
   const G = !!WR, id = re => ((WR || []).find(w => re.test(w.n)) || {}).id || '';
   const W = 1070, H = 640, o = [];
@@ -415,6 +444,8 @@ function loadTable(d) {
   ${fig('EF1', 'The one-line diagram: every part and the cable between them')}<div class="figwrap">${oneLineSVG()}</div>
   <h3>The heater or microwave selector, wired (your 30 A SPDT rocker)</h3>
   ${fig('EF2', 'The heater or microwave selector, wired')}<div class="figwrap">${selectorSVG()}</div>
+  <h3>The soft LED strip, wired (the controller in JB, the two push buttons, the three feeds)</h3>
+  ${fig('EF13', 'The soft LED strip, wired: fuse block, controller, two push buttons, three strips')}<div class="figwrap">${ledSVG()}</div>
   <h2>1a. High-current cables and fuses to buy</h2>
   ${cableTable()}
   <h2>1b. The hub board: where the parts go</h2>
