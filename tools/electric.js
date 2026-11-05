@@ -309,6 +309,38 @@ function ledSVG() {
   tx(20, 420, 'The old 18 AWG cable (WR36, retired) from the W2 box to the couch cabinet stays in place as the pull line for WR38 and WR39.', gray);
   return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Wiring of the soft LED strip: the fuse block feeds the strip junction box JB2, a pair goes to the slide dimmer on the dinette wall and the dimmed power comes back to JB2, which feeds the three strips"><style>text{font-family:-apple-system,"Segoe UI",sans-serif}</style>${o.join('')}</svg>`;
 }
+function plateSVG() {
+  const o = [], W = 800, H = 560, RED = '#D32F2F', ORG = '#F57C00', tx = (x, y, t, st = '') => o.push(`<text x="${x}" y="${y}" style="font-size:12px;fill:${INK};${st}">${esc(t)}</text>`);
+  const ln = (x1, y1, x2, y2, col, w = 2.6) => o.push(`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${col}" stroke-width="${w}" stroke-linecap="round"/>`);
+  const gray = 'font-size:11px;fill:#5F5E5A', bold = 'font-weight:700';
+  tx(20, 22, 'A. What a lever connector is: a small block that joins wires together', bold);
+  o.push(`<rect x="60" y="60" width="200" height="52" rx="8" fill="#EEF1F4" stroke="#5F5E5A" stroke-width="1.8"/>`);
+  ln(70, 100, 250, 100, '#8a867a', 2);
+  [85, 150, 215].forEach(x => { o.push(`<rect x="${x - 15}" y="66" width="30" height="30" rx="4" fill="${ORG}" stroke="#A64F00" stroke-width="1.5"/>`); ln(x, 112, x, 168, RED, 3); });
+  tx(268, 104, 'metal inside joins every wire', gray);
+  tx(60, 52, 'levers: lift to open, press down to lock', gray);
+  tx(60, 186, 'wires push in from this side, one per port (3 ports = 3 wires)', gray);
+  ['1  Strip about 1/2 in of insulation off the wire.', '2  Lift the lever up.', '3  Push the wire in all the way.', '4  Press the lever down, then tug the wire gently.'].forEach((t, i) => tx(470, 76 + i * 20, t));
+  tx(470, 166, 'Every wire in one connector is joined together.', gray); tx(470, 180, 'To take a wire out, lift its lever.', gray); tx(470, 194, 'Brands look a little different.', gray);
+  ln(20, 210, 780, 210, '#cfcbbd', 1.5);
+  tx(20, 232, 'B. At the rear doors plate ED11 (two switches): where the + and the − of WR21 go', bold);
+  const cbox = (x, y, lab, col) => { o.push(`<rect x="${x}" y="${y}" width="120" height="54" rx="7" fill="#EEF1F4" stroke="${col}" stroke-width="2.2"/>`); [x + 22, x + 60, x + 98].forEach(cx => o.push(`<rect x="${cx - 9}" y="${y + 5}" width="18" height="14" rx="3" fill="${ORG}" stroke="#A64F00" stroke-width="1"/>`)); tx(x + 12, y + 42, lab, 'font-size:11px;font-weight:700'); };
+  const swb = (y, lab) => { o.push(`<rect x="470" y="${y}" width="130" height="60" rx="7" fill="#fff" stroke="${INK}" stroke-width="2"/>`); tx(480, y + 20, lab, 'font-size:11.5px;font-weight:700'); tx(480, y + 46, 'IN', gray); tx(566, y + 46, 'OUT', gray); };
+  ln(20, 292, 190, 292, RED, 3.4); tx(24, 284, 'WR21 +', `font-weight:700;fill:${RED}`);
+  cbox(190, 262, '3-port (+)', RED);
+  swb(300, 'Rear couch switch'); swb(390, 'Shower light switch');
+  ln(310, 278, 400, 278, RED); ln(400, 278, 400, 346, RED); ln(400, 346, 470, 346, RED);      // jumper 1 to the rear couch switch IN
+  ln(310, 296, 380, 296, RED); ln(380, 296, 380, 436, RED); ln(380, 436, 470, 436, RED);      // jumper 2 to the shower switch IN
+  tx(420, 268, 'two short jumpers, about 6 in', gray);
+  ln(600, 346, 690, 346, RED); tx(696, 350, 'WR22 +', `font-weight:700;fill:${RED}`); tx(606, 336, 'to light ED7', gray);
+  ln(600, 436, 690, 436, RED); tx(696, 440, 'WR23 +', `font-weight:700;fill:${RED}`); tx(606, 426, 'to shower light EP1', gray);
+  ln(20, 492, 190, 492, INK, 3.4); tx(24, 484, 'WR21 −', bold);
+  cbox(190, 466, '3-port (−)', INK);
+  ln(310, 484, 700, 484, INK); ln(310, 500, 700, 500, INK); tx(318, 476, 'WR22 − and WR23 − come back from the two lights', gray);
+  tx(20, 534, 'The + goes through the switches: a switch only passes power when it is on. The − goes straight through, so each light has its return path.', gray);
+  tx(20, 550, 'ED11 is two single gang boxes, one over the other: the jumpers and the − wire pass between the two boxes.', gray);
+  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="How a lever connector works and how the rear doors plate ED11 is wired: WR21 plus goes through a three port connector and two short jumpers to the two switches, and the minus joins WR22 and WR23 in a second connector"><style>text{font-family:-apple-system,"Segoe UI",sans-serif}</style>${o.join('')}</svg>`;
+}
 function oneLineSVG(WR) {
   const G = !!WR, id = re => ((WR || []).find(w => re.test(w.n)) || {}).id || '';
   const W = 1070, H = 640, o = [];
@@ -445,6 +477,8 @@ function loadTable(d) {
   ${fig('EF2', 'The heater or microwave selector, wired')}<div class="figwrap">${selectorSVG()}</div>
   <h3>The soft LED strip, wired (one slide dimmer on the dinette wall, power through JB2, the three feeds)</h3>
   ${fig('EF13', 'The soft LED strip, wired: fuse block, JB2, slide dimmer on W2, three strips')}<div class="figwrap">${ledSVG()}</div>
+  <h3>The rear doors plate ED11, wired (lever connectors and short jumpers)</h3>
+  ${fig('EF14', 'The rear doors plate ED11: what a lever connector is, and where WR21, WR22 and WR23 connect')}<div class="figwrap">${plateSVG()}</div>
   <h2>1a. High-current cables and fuses to buy</h2>
   ${cableTable()}
   <h2>1b. The hub board: where the parts go</h2>
