@@ -7,6 +7,7 @@
 const {chromium} = require(process.env.NODE_PATH + '/playwright');
 const fs = require('fs');
 const EW = require('./elwires.js');
+const { cheatHTML } = require('./wirecheat.js');
 const { hubSVG, trayTopSVG, TRAY_PARTS } = require('./elhub.js');
 const TP = k => TRAY_PARTS.find(q => q.k === k);      // the parts of the user\u2019s real board on the tray (section 1c; read from the photo): the electrical page draws the gear where the board has it
 const fr = v => { let w = Math.floor(v + 1e-9), r = Math.round((v - w) * 16); if (r === 16){w++;r=0;} let n=r,d=16; while(n&&n%2===0){n/=2;d/=2;} return (n? (w?w+' ':'')+n+'/'+d : ''+w); };
@@ -583,6 +584,7 @@ function loadTable(d) {
   ${cards}
   <p class="lead" style="margin-top:14px"><a href="electric.html">Back to the electrical layout</a> &middot; <a href="interactive.html">The interactive plan</a></p>
   </div>`;
+    fs.writeFileSync(__dirname + '/../cheatsheet.html', cheatHTML(WRall));   // the printable one-page list of every wire
     fs.writeFileSync(__dirname + '/../wires.html', `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Wire by wire</title><style>${wstyle}</style></head><body>${hidden}${wbody}</body></html>`);
     if (process.env.SC) { fs.mkdirSync(process.env.SC + '/wires', { recursive: true }); fs.writeFileSync(process.env.SC + '/wires/index.html', `<meta name="claude:viewport-fit-sides" content="cover">\n<title>Wire by Wire</title>\n<style>${wstyle}</style>\n${hidden}${wbody.replace('<a href="electric.html">electrical layout page</a>', '<a href="https://claude.ai/artifact/8PUd9dBRmRp6NNH54L33bZ" target="_blank" rel="noopener">electrical layout page</a>').replace('<a href="electric.html">Back to the electrical layout</a>', '<a href="https://claude.ai/artifact/8PUd9dBRmRp6NNH54L33bZ" target="_blank" rel="noopener">Back to the electrical layout</a>').replace('<a href="interactive.html">The interactive plan</a>', '<a href="https://claude.ai/artifact/PoTZ5J5BkcwXAr5J2RBTjs" target="_blank" rel="noopener">The interactive plan</a>')}\n`); }
   }

@@ -70,6 +70,7 @@ PAGES = [('index.html', 'Home', 'Start here: every page in one place.'),
          ('wall-map.html', 'Wall map', 'The steel and the furring strips on each wall with every item almost transparent on top, to mark the walls from.'),
          ('electric.html', 'Electrical', 'The electrical and lighting layout: one-line diagram, outlets, switches and lights on each wall, the ceiling plan and the load table.'),
          ('wires.html', 'Wire by wire', 'One diagram for each wire: the chain of parts from the power to its end, and its whole run on the walls and the ceiling.'),
+         ('cheatsheet.html', 'Wire cheat sheet', 'One printable page: every wire number with its from and to in short words, and a box to tick when the wire is in.'),
          ('install.html', 'Fan and A/C', 'Step by step with drawings: cutting, framing and mounting the roof fan and the air conditioner.'),
          ('window.html', 'Side window', 'Step by step with drawings: installing the side window.'),
          ('window-template.html', 'Window template', 'The side window measured from the photos, with the cutout numbers for a cardboard template.')]
@@ -104,7 +105,7 @@ def put(name, html, cur=None, guide=None):
 GUIDE, BUILD_PAGES = buildguide.pages(HERE)
 GUIDE_OF = {g['file']: g['slug'] for g in GUIDE if g['ext']}
 for name, src in (('diagrams.html', 'sides.html'), ('interactive.html', 'interactive.html'), ('install.html', 'install.html'), ('window.html', 'window.html'),
-                  ('window-template.html', 'window-template.html'), ('wall-map.html', 'wall-map.html'), ('electric.html', 'electric.html'), ('wires.html', 'wires.html'), ('interior.html', 'interior.html')):
+                  ('window-template.html', 'window-template.html'), ('wall-map.html', 'wall-map.html'), ('electric.html', 'electric.html'), ('wires.html', 'wires.html'), ('cheatsheet.html', 'cheatsheet.html'), ('interior.html', 'interior.html')):
     if os.path.exists(os.path.join(HERE, src)):
         put(name, open(os.path.join(HERE, src)).read(), guide=GUIDE_OF.get(name) or ('window' if name == 'window-template.html' else None))
 for name, doc in BUILD_PAGES.items():
