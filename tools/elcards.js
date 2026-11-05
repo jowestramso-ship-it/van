@@ -22,10 +22,9 @@ const CHAINS = {
   WR11: [BAT, 'WR11', 'f:100 A fuse at the battery', 'A/C|on the roof'],
   WR12: ACP.concat(['WR12', 'f:B/D 15 A GFCI, C 15 A', 'Circuits B/D and C|through riser A, the ceiling, riser B']),
   WR13: [BAT, 'WR1', 'f:Class T 250 A', BUS, 'WR13', 'f:30 A fuse', FB],
-  WR14: DCB.concat(['WR14', 'f:10 A fuse', 'Junction box JB|dimming controller', '-', 'LED strip|three runs']),
+  WR14: DCB.concat(['WR14', 'f:10 A fuse', 'Junction box JB|splices']),
   WR15: DCB.concat(['WR15', 'f:5 A fuse', 'Roof fan']),
   WR16: DCB.concat(['WR16', 'f:5 A fuse', 'Junction box JB|in the couch cabinet']),
-  WR17: DCB.concat(['WR14', 'f:10 A fuse', 'JB|dimming controller', 'WR17', 'Dimmer button ED14']),
   WR18: ACP.concat(['f:15 A GFCI (A)', 'WR18', 'Couch outlet ED10']),
   WR19: ACP.concat(['f:15 A GFCI (A)', 'WR18', 'Couch outlet ED10', 'WR19', 'Dinette outlet ED15']),
   WR20: DCB.concat(['WR16', 'f:5 A fuse', 'Junction box JB|couch cabinet', 'WR20', 'Switch ED19|then light ED18']),
@@ -43,8 +42,10 @@ const CHAINS = {
   WR32: DCB.concat(['WR32', 'f:3 A fuse', 'Control panel|EP5']),
   WR33: DCB.concat(['WR16', 'f:5 A fuse', 'Junction box JB|couch cabinet', 'WR35', 'Switch EP11', 'WR33', 'Light EP2']),
   WR34: DCB.concat(['WR16', 'f:5 A fuse', 'Junction box JB|couch cabinet', 'WR35', 'Switch EP14', 'WR34', 'Lights EP12, EP13']),
-  WR36: DCB.concat(['WR14', 'f:10 A fuse', 'JB|dimming controller', 'WR36', 'Dimmer button ED22|with the dinette switch']),
   WR37: ACP.concat(['f:15 A GFCI (A)', 'WR18', 'Couch outlet ED10', 'WR30', 'Counter outlet EP15', 'WR37', 'TV outlet EP6']),
+  WR38: DCB.concat(['WR14', 'f:10 A fuse', 'Junction box JB|splices', 'WR38', 'Slide dimmer ED22|on W2']),
+  WR39: DCB.concat(['WR14', 'f:10 A fuse', 'Junction box JB|splices', 'WR38', 'Slide dimmer ED22|on W2', 'WR39', 'Junction box JB|splices']),
+  WR40: DCB.concat(['WR14', 'f:10 A fuse', 'Junction box JB|splices', 'WR38', 'Slide dimmer ED22|on W2', 'WR39', 'Junction box JB|splices', 'WR40', 'LED strip|three runs']),
   WR35: DCB.concat(['WR16', 'f:5 A fuse', 'Junction box JB|couch cabinet', 'WR35', 'Switches EP11|and EP14']),
 };
 const ALT_WIRES = new Set(['WR6', 'WR9', 'WR10', 'WR12', 'WR18', 'WR19', 'WR26', 'WR27', 'WR28', 'WR29', 'WR30']);   // the cards that show the inverter as the other source
@@ -123,8 +124,9 @@ const VIEW_NOTE = { D: 'seen from inside the van, rear doors on the left; inches
 function cardsPage(WR, ctx, helpers) {
   const byId = Object.fromEntries(WR.map(w => [w.id, w]));
   const sw = (w, wd) => `<svg width="${wd}" height="14" viewBox="0 0 ${wd} 14" style="display:inline-block;width:${wd}px;max-width:${wd}px;min-width:0;height:14px;vertical-align:-3px"><line x1="3" y1="7" x2="${wd - 3}" y2="7" stroke="${EW.gc(w.g)}" stroke-width="${EW.gw(w.g)}" stroke-linecap="round"${w.t === 'ac' ? ' stroke-dasharray="8 5"' : ''}/></svg>`;
-  const index = `<div class="tw"><table><thead><tr><th>#</th><th>AWG</th><th>Wire</th><th>Length</th></tr></thead><tbody>${WR.map(w => `<tr><td><a href="#${w.id.toLowerCase()}"><b class="wid">${w.id}</b></a></td><td style="white-space:nowrap">${sw(w, 40)} <b>${EW.byG[w.g].name}</b></td><td>${esc(w.n.length > 110 ? w.n.slice(0, 108) + '…' : w.n)}</td><td class="num">${w.len >= 10 ? Math.round(w.len) : Math.round(w.len * 10) / 10} ft</td></tr>`).join('')}</tbody></table></div>`;
+  const index = `<div class="tw"><table><thead><tr><th>#</th><th>AWG</th><th>Wire</th><th>Length</th></tr></thead><tbody>${WR.map(w => `<tr><td><a href="#${w.id.toLowerCase()}"><b class="wid">${w.id}</b></a></td><td style="white-space:nowrap">${sw(w, 40)} <b>${EW.byG[w.g].name}</b></td><td>${esc(w.n.length > 110 ? w.n.slice(0, 108) + '…' : w.n)}</td><td class="num">${w.retired ? 'retired' : (w.len >= 10 ? Math.round(w.len) : Math.round(w.len * 10) / 10) + ' ft'}</td></tr>`).join('')}</tbody></table></div>`;
   const cards = WR.map(w => {
+    if (w.retired) return `<section class="wcard" id="${w.id.toLowerCase()}"><div class="wc-h"><b class="wid">${w.id}</b> retired · the number is not reused</div><h3>${esc(w.n)}</h3><p class="kd">${esc(w.note || '')}</p></section>`;
     const e = EW.endsOf(w), views = EW.viewsOf(w);
     const len = w.len >= 10 ? Math.round(w.len) : Math.round(w.len * 10) / 10;
     const ac = ALT_WIRES.has(w.id);
