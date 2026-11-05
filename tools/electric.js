@@ -300,8 +300,8 @@ function ledSVG() {
   ln(640, 150, 500, 150, RED); ln(640, 164, 500, 164, INK); tx(506, 144, 'WR39 dimmed power', gray); tx(506, 184, 'about 8 3/4 ft', gray);
   ln(330, 240, 330, 258, RED); ln(340, 240, 340, 266, INK); ln(200, 258, 600, 258, RED); ln(200, 266, 600, 266, INK);
   [200, 400, 600].forEach(cx => { ln(cx - 5, 258, cx - 5, 300, RED); ln(cx + 5, 266, cx + 5, 300, INK); });
-  tx(612, 262, 'WR40: three 14 AWG feeds', gray);
-  box(105, 300, 190, 44, 'Driver side strip, 154 in', 'about 2 ft, 2.6 A', '#B8860B', '#FFF8E1'); box(305, 300, 190, 44, 'Passenger side strip, 154 in', 'about 7 1/2 ft, 2.6 A', '#B8860B', '#FFF8E1'); box(505, 300, 190, 44, 'Back strip, 68 in', 'about 8 1/2 ft, 1.1 A', '#B8860B', '#FFF8E1');
+  tx(612, 262, 'WR40: three 14 AWG feeds, F1 to F3', gray);
+  box(105, 300, 190, 44, 'Driver side strip, 154 in', 'F1: about 2 ft, 2.6 A', '#B8860B', '#FFF8E1'); box(305, 300, 190, 44, 'Passenger side strip, 154 in', 'F2: about 7 1/2 ft, 2.6 A', '#B8860B', '#FFF8E1'); box(505, 300, 190, 44, 'Back strip, 68 in', 'F3: about 8 1/2 ft, 1.1 A', '#B8860B', '#FFF8E1');
   tx(20, 372, 'Slide it or push it: the dimmer switches the strips on or off and sets their brightness, from this one place.', gray);
   tx(20, 388, 'All 6.4 A of the strip runs through the dimmer, so it must be made for 12 V DC and rated 10 A or more.', gray);
   tx(20, 404, 'At each strip: + to + and − to −. Join the 14 AWG cable to a short 18 to 20 AWG pigtail with a lever connector, then solder the pigtail to the pads.', gray);
