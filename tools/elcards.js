@@ -22,7 +22,7 @@ const CHAINS = {
   WR11: [BAT, 'WR11', 'f:100 A fuse at the battery', 'A/C|on the roof'],
   WR12: ACP.concat(['WR12', 'f:B/D 15 A GFCI, C 15 A', 'Circuits B/D and C|through riser A, the ceiling, riser B']),
   WR13: [BAT, 'WR1', 'f:Class T 250 A', BUS, 'WR13', 'f:30 A fuse', FB],
-  WR14: DCB.concat(['WR14', 'f:10 A fuse', 'Junction box JB|splices']),
+  WR14: DCB.concat(['WR14', 'f:10 A fuse', 'Junction box JB2|strip splices']),
   WR15: DCB.concat(['WR15', 'f:5 A fuse', 'Roof fan']),
   WR16: DCB.concat(['WR16', 'f:5 A fuse', 'Junction box JB|in the couch cabinet']),
   WR18: ACP.concat(['f:15 A GFCI (A)', 'WR18', 'Couch outlet ED10']),
@@ -43,9 +43,9 @@ const CHAINS = {
   WR33: DCB.concat(['WR16', 'f:5 A fuse', 'Junction box JB|couch cabinet', 'WR35', 'Switch EP11', 'WR33', 'Light EP2']),
   WR34: DCB.concat(['WR16', 'f:5 A fuse', 'Junction box JB|couch cabinet', 'WR35', 'Switch EP14', 'WR34', 'Lights EP12, EP13']),
   WR37: ACP.concat(['f:15 A GFCI (A)', 'WR18', 'Couch outlet ED10', 'WR30', 'Counter outlet EP15', 'WR37', 'TV outlet EP6']),
-  WR38: DCB.concat(['WR14', 'f:10 A fuse', 'Junction box JB|splices', 'WR38', 'Slide dimmer ED22|on W2']),
-  WR39: DCB.concat(['WR14', 'f:10 A fuse', 'Junction box JB|splices', 'WR38', 'Slide dimmer ED22|on W2', 'WR39', 'Junction box JB|splices']),
-  WR40: DCB.concat(['WR14', 'f:10 A fuse', 'Junction box JB|splices', 'WR38', 'Slide dimmer ED22|on W2', 'WR39', 'Junction box JB|splices', 'WR40', 'LED strip|three runs']),
+  WR38: DCB.concat(['WR14', 'f:10 A fuse', 'Junction box JB2|strip splices', 'WR38', 'Slide dimmer ED22|on W2']),
+  WR39: DCB.concat(['WR14', 'f:10 A fuse', 'Junction box JB2|strip splices', 'WR38', 'Slide dimmer ED22|on W2', 'WR39', 'Junction box JB2|strip splices']),
+  WR40: DCB.concat(['WR14', 'f:10 A fuse', 'Junction box JB2|strip splices', 'WR38', 'Slide dimmer ED22|on W2', 'WR39', 'Junction box JB2|strip splices', 'WR40', 'LED strip|three runs']),
   WR35: DCB.concat(['WR16', 'f:5 A fuse', 'Junction box JB|couch cabinet', 'WR35', 'Switches EP11|and EP14']),
 };
 const ALT_WIRES = new Set(['WR6', 'WR9', 'WR10', 'WR12', 'WR18', 'WR19', 'WR26', 'WR27', 'WR28', 'WR29', 'WR30']);   // the cards that show the inverter as the other source
