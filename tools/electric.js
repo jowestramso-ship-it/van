@@ -17,7 +17,7 @@ const BOXES = {   // every box you wire by hand has a short name: BX1 to BX9 (JB
   BX3: { n: 'Dinette table outlet box', where: 'driver wall, 121 1/2 in along, 34 up, over the dinette table', what: 'the outlet ED15 (120 V duplex)', wires: 'WR19 in', s: 'dinette table outlet (ED15)', fig: 'not drawn yet' },
   BX4: { n: 'Dinette back wall box (W2)', where: 'driver wall, on W2, 153 in along, 44 3/4 to 48 up', what: 'the dinette light switch ED12 and the slide dimmer ED22 for the soft LED strip', wires: 'WR24 in; WR25 out; WR38 in and WR39 out for the dimmer', s: 'dinette back wall, W2 (ED12, ED22)', fig: 'EF13' },
   BX5: { n: 'Fridge and microwave outlet box', where: 'passenger wall, centered on 55 in along (54 to 56), 60 up, just above S6, above the microwave', what: 'two gang box: the microwave outlet EP4 and the fridge outlet EP3 (120 V)', wires: 'WR37 in (circuit A, the end of that branch); WR28 in (from the selector)', s: 'fridge and microwave outlets (EP3, EP4)', fig: 'not drawn yet' },
-  BX6: { n: 'Selector and counter outlet box', where: 'passenger wall, 71 to 73 in along, 50 up', what: 'two gang box: the heater or microwave selector EP9 and the counter outlet EP15 (120 V)', wires: 'WR27 in; WR28 and WR29 out; WR41 in (the end of circuit A)', s: 'selector and counter outlet (EP9, EP15)', fig: 'EF22' },
+  BX6: { n: 'Selector and counter outlet box', where: 'passenger wall, 71 to 73 in along, 50 up', what: 'two gang box: the heater or microwave selector EP9 and the counter outlet EP15 (120 V)', wires: 'WR27 in; WR28 and WR29 out; WR41 in (the end of circuit A)', s: 'selector and counter outlet (EP9, EP15)', fig: 'EF22 and EF23' },
   BX7: { n: 'Heater outlet box', where: 'passenger wall, 85 to 87 in along, 12 to 18 up', what: 'the heater outlet EP7 (120 V, 15 A)', wires: 'WR29 in', s: 'heater outlet (EP7)', fig: 'not drawn yet' },
   BX8: { n: 'TV outlet box', where: 'passenger wall, 92 in along, 60 up, above the cab-side end of the kitchen nook (the nook is 76 to 93 1/4), just above S6, behind the TV', what: 'the TV outlet EP6 (120 V), a single gang box', wires: 'WR30 in; WR37 and WR41 out', s: 'TV outlet (EP6), above the kitchen nook', fig: 'EF20' },
   BX9: { n: 'Switch plate next to the sliding door', where: 'passenger wall, 100 1/4 to 102 1/4 in along, 52 1/4 up, under the TV; the sliding door opening starts at 104', what: 'two 12 V rockers on one plate: EP11 (left, the ceiling light over the counter and sink) and EP14 (right, the two center-row ceiling lights)', wires: 'WR35 in; WR33 and WR34 out', s: 'switch plate by the sliding door (EP11, EP14)', fig: 'EF19' },
@@ -515,6 +515,34 @@ function box6SVG() {
    'in each end position the common beeps to one end pin only. Label the switch: microwave, off, heater.', '15 A is enough because only one of the two runs at a time.'].forEach((t, k) => tx(20, 968 + k * 16, t, gray));
   return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Inside the selector and counter outlet box BX6: the one circuit A cable WR41 goes straight to the counter outlet EP15; on circuit B/D the three hot wires WR27, WR28 and WR29 go to the three pins of the selector EP9 and the neutrals and grounds are joined in connectors"><style>text{font-family:-apple-system,"Segoe UI",sans-serif}</style>${o.join('')}</svg>`;
 }
+function pinsSVG() {
+  const o = [], W = 800, H = 840, COP = '#C77D2E', BLK = '#1b1a17', BLU = '#2F6FBF', MET = '#B9BDC2', TUBE = '#2b2b2b';
+  const tx = (x, y, t, st = '') => `<text x="${x}" y="${y}" style="font-size:11px;fill:${INK};${st}">${esc(t)}</text>`;
+  const r = (x, y, w, h, fill, stroke, rx = 3, extra = '') => `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${rx}" fill="${fill}"${stroke ? ` stroke="${stroke}" stroke-width="1.2"` : ''} ${extra}/>`;
+  const ln = (x1, y1, x2, y2, col, w = 2) => `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${col}" stroke-width="${w}" stroke-linecap="round"/>`;
+  const strands = (x, y) => [-6, -3, 0, 3, 6].map(d => ln(x, y + d * .6, x + 42, y + d * 1.5, COP, 2.2)).join('');
+  const sw = (pins) => r(30, 36, 300, 34, '#E8E6DE', '#5F5E5A', 6) + tx(40, 57, 'KCD3 30 A rocker, ON-OFF-ON') + [84, 180, 276].map(x => r(x - 7, 70, 14, 34, MET, '#777', 2)).join('');
+  const term = (cx, shrink) => r(cx - 12, 76, 24, 28, '#D6D9DC', '#777', 3) + r(cx - 9, 104, 18, 8, MET, '#777', 2) + r(cx - 12, 112, 24, 18, BLU, '#1B4F93', 5) + r(cx - 4, 130, 8, 18, BLK, null, 3) + (shrink ? r(cx - 17, 70, 34, 66, TUBE, '#000', 11, 'fill-opacity=".62"') : '');
+  const P = [
+    ['Strip the wire', r(20, 78, 200, 18, BLK, null, 4) + strands(220, 87) + ln(220, 64, 262, 64, '#5F5E5A', 1.6) + ln(220, 59, 220, 69, '#5F5E5A', 1.6) + ln(262, 59, 262, 69, '#5F5E5A', 1.6) + tx(120, 56, 'bare copper 1/4 in (6 mm)'),
+      ['Strip 1/4 in (6 mm) of insulation off each of the three', 'black wires: WR27, WR28 and WR29 (14 AWG).', 'Twist the strands so none stick out.']],
+    ['Slide the heat shrink on first', r(20, 78, 200, 18, BLK, null, 4) + strands(220, 87) + r(60, 68, 90, 38, TUBE, '#000', 9, 'fill-opacity=".6"') + ln(142, 122, 66, 122, '#C0392B', 3) + `<polygon points="60,122 70,116 70,128" fill="#C0392B"/>` + tx(76, 138, 'slide it well back from the end'),
+      ['Cut three pieces of 1/2 in heat shrink tube, about 1 1/4 in', 'long. Put one on each wire now, before the terminal:', 'it cannot go on afterwards.']],
+    ['Crimp the terminal', r(10, 78, 95, 18, BLK, null, 4) + r(100, 72, 50, 30, BLU, '#1B4F93', 6) + r(150, 76, 40, 22, MET, '#777', 3) + r(190, 80, 60, 14, '#D6D9DC', '#777', 2) + ln(200, 87, 240, 87, '#8a8f95', 1.4) + `<polygon points="146,50 194,50 188,74 152,74" fill="#7a7f85"/><polygon points="146,124 194,124 188,100 152,100" fill="#7a7f85"/>` + ln(146, 50, 112, 26, '#7a7f85', 7) + ln(146, 124, 112, 148, '#7a7f85', 7) + tx(206, 56, 'crimp here (the metal barrel)'),
+      ['Blue female 1/4 in spade terminal (16 to 14 AWG): the', 'bare copper goes in the metal barrel. Squeeze the blue-jaw', 'crimper until it clicks open. Give the wire a firm tug.']],
+    ['Test, then push it onto the pin', sw() + term(180, false) + tx(68, 122, 'WR28') + tx(262, 122, 'WR29') + tx(198, 142, 'WR27 on the common', 'font-size:10px'),
+      ['Before you shrink anything, check the pins and wires with', 'the tester (a boot cannot be taken off again). Push each', 'terminal fully on: WR27 middle, WR28 and WR29 the ends.']],
+    ['Slide the tube over and heat it', sw() + term(180, true) + `<path d="M204,112 q6,-8 12,0 t12,0" fill="none" stroke="#E5532D" stroke-width="2.4"/><path d="M204,124 q6,-8 12,0 t12,0" fill="none" stroke="#E5532D" stroke-width="2.4"/><path d="M204,136 q6,-8 12,0 t12,0" fill="none" stroke="#E5532D" stroke-width="2.4"/>` + `<polygon points="268,116 242,120 242,138 268,142" fill="#7a7f85"/>` + r(268, 112, 62, 34, '#D9822B', '#8a4b10', 7) + r(290, 146, 18, 24, '#D9822B', '#8a4b10', 4) + tx(318, 166, 'heat gun'),
+      ['Slide the tube up over the terminal and the pin. Heat it', 'with a heat gun until it hugs tight. Keep the gun moving', 'and the heat off the switch body.']],
+    ['Check it', sw() + [84, 180, 276].map(x => term(x, true)).join('') + `<path d="M326,24 l9,11 l18,-22" fill="none" stroke="#2E7D32" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>`,
+      ['No bare metal showing, and each wire gives a gentle tug.', 'Label the switch: microwave, off, heater. The neutrals and', 'grounds do not touch the switch.']]
+  ];
+  o.push(tx(20, 22, 'You need: three blue female 1/4 in spade terminals (16 to 14 AWG), a ratcheting crimper, three pieces of 1/2 in heat shrink,', 'font-size:12px;font-weight:700'));
+  o.push(tx(20, 40, 'wire strippers and a heat gun. The pins of the selector EP9 carry 120 V, so every pin gets a terminal and a boot.', 'font-size:12px'));
+  P.forEach((p, k) => { const x = 20 + (k % 2) * 390, y = 56 + Math.floor(k / 2) * 260;
+    o.push(`<g transform="translate(${x},${y})"><rect x="0" y="0" width="370" height="246" rx="8" fill="#FAFAF7" stroke="#cfcbbd" stroke-width="1.4"/><circle cx="22" cy="22" r="12" fill="${INK}"/><text x="22" y="26.5" text-anchor="middle" style="font-size:12px;font-weight:700;fill:#fff">${k + 1}</text>${tx(42, 27, p[0], 'font-size:13px;font-weight:700')}<g transform="translate(10,34)">${p[1]}</g>${p[2].map((t, i) => tx(14, 210 + i * 15, t)).join('')}</g>`); });
+  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Six steps for the selector pins: strip the wire, slide on the heat shrink, crimp the terminal, push it onto the pin, shrink the tube and check it"><style>text{font-family:-apple-system,"Segoe UI",sans-serif}</style>${o.join('')}</svg>`;
+}
 function jbSVG() {
   const o = [], W = 800, H = 640, RED = '#D32F2F', ORG = '#F57C00', tx = (x, y, t, st = '') => o.push(`<text x="${x}" y="${y}" style="font-size:12px;fill:${INK};${st}">${esc(t)}</text>`);
   const ln = (x1, y1, x2, y2, col, w = 2.6) => o.push(`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${col}" stroke-width="${w}" stroke-linecap="round"/>`);
@@ -789,6 +817,8 @@ function loadTable(d) {
   ${fig('EF21', 'The couch box BX2 (outlet ED10 and switch ED19) wired: what connects to what')}<div class="figwrap">${box2SVG()}</div>
   <h3>The selector and counter outlet box BX6</h3>
   ${fig('EF22', 'The selector and counter outlet box BX6 (EP9 and EP15) wired: what connects to what')}<div class="figwrap">${box6SVG()}</div>
+  <h3>The selector\u2019s pins: terminals and heat shrink</h3>
+  ${fig('EF23', 'The selector EP9: crimping the terminals and shrinking the boots on its three pins')}<div class="figwrap">${pinsSVG()}</div>
   <h2>1a. High-current cables and fuses to buy</h2>
   ${cableTable()}
   <h2>1b. The hub board: where the parts go</h2>
