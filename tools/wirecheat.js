@@ -5,15 +5,15 @@ const SHORT = {
   WR5: ['DC-DC charger', 'Bus bars'], WR6: ['Shore charger', 'Bus bars'], WR7: ['Shore inlet (ED6)', 'TS-30'], WR8: ['Inverter', 'TS-30'],
   WR9: ['TS-30', 'AC panel'], WR10: ['AC panel', 'Shore charger'], WR11: ['Bus (100 A fuse)', 'A/C unit'], WR12: ['AC panel', 'Riser B (B/D and C)'],
   WR13: ['Bus bars', 'Fuse block'], WR14: ['Fuse block', 'JB2'], WR15: ['Fuse block', 'Roof fan'], WR16: ['Fuse block', 'JB'],
-  WR18: ['AC panel', 'Couch outlet (ED10)'], WR19: ['Couch outlet', 'Dinette outlet (ED15)'], WR20: ['JB', 'Couch light, right (ED18)'], WR21: ['JB', 'Rear plate (ED11)'],
-  WR22: ['Rear plate ED11', 'Rear couch light (ED7)'], WR23: ['Rear plate ED11', 'Shower light (EP1)'], WR24: ['JB', 'Dinette switch (ED12)'], WR25: ['Dinette switch ED12', 'Dinette lights (ED8, ED9)'],
-  WR26: ['Riser B', 'Fridge outlet (EP3)'], WR27: ['Riser B', 'Selector (EP9)'], WR28: ['Selector', 'Microwave outlet (EP4)'], WR29: ['Selector', 'Heater outlet (EP7)'],
-  WR30: ['Couch outlet', 'Counter outlet (EP15)'], WR31: ['Fuse block', 'Water pump (PL3)'], WR32: ['Fuse block', 'Control panel (EP5)'], WR33: ['Switch EP11', 'Counter light (EP2)'],
-  WR34: ['Switch EP14', 'Ceiling lights (EP12, EP13)'], WR35: ['JB', 'Switches EP11, EP14'], WR37: ['Counter outlet', 'TV outlet (EP6)'],
-  WR38: ['JB2', 'Slide dimmer (ED22)'], WR39: ['Slide dimmer ED22', 'JB2'], WR40: ['JB2', '3 strips (F1, F2, F3)'],
+  WR18: ['AC panel', 'Couch outlet BX2 (ED10)'], WR19: ['Couch outlet BX2', 'Dinette outlet BX3 (ED15)'], WR20: ['JB', 'Couch light ED18, switch in BX2 (ED19)'], WR21: ['JB', 'Rear plate BX1 (ED11)'],
+  WR22: ['Rear plate BX1', 'Rear couch light (ED7)'], WR23: ['Rear plate BX1', 'Shower light (EP1)'], WR24: ['JB', 'Dinette switch BX4 (ED12)'], WR25: ['Dinette switch BX4', 'Dinette lights (ED8, ED9)'],
+  WR26: ['Riser B', 'Fridge outlet BX5 (EP3)'], WR27: ['Riser B', 'Selector BX6 (EP9)'], WR28: ['Selector BX6', 'Microwave outlet BX5 (EP4)'], WR29: ['Selector BX6', 'Heater outlet BX7 (EP7)'],
+  WR30: ['Couch outlet BX2', 'Counter outlet BX6 (EP15)'], WR31: ['Fuse block', 'Water pump (PL3)'], WR32: ['Fuse block', 'Control panel (EP5)'], WR33: ['Switch BX9 (EP11)', 'Counter light (EP2)'],
+  WR34: ['Switch BX9 (EP14)', 'Ceiling lights (EP12, EP13)'], WR35: ['JB', 'Switches BX9 (EP11, EP14)'], WR37: ['Counter outlet BX6', 'TV outlet BX8 (EP6)'],
+  WR38: ['JB2', 'Slide dimmer BX4 (ED22)'], WR39: ['Slide dimmer BX4 (ED22)', 'JB2'], WR40: ['JB2', '3 strips (F1, F2, F3)'],
 };
 const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-function cheatHTML(WRall) {
+function cheatHTML(WRall, BOXES) {
   const live = WRall.filter(w => !w.retired), gone = WRall.filter(w => w.retired);
   live.forEach(w => { if (!SHORT[w.id]) throw new Error('wire cheat sheet: no short words for ' + w.id + ' (add it to SHORT in tools/wirecheat.js)'); });
   const kind = w => w.t === 'ac' ? ['120 V', 'k-ac'] : ((['2/0', '2', '6'].includes(w.g) || w.id === 'WR13') ? ['Batt', 'k-bt'] : ['12 V', 'k-dc']);
@@ -25,17 +25,19 @@ function cheatHTML(WRall) {
   .sheet { max-width: 760px; margin: 0 auto; }
   h1 { font-size: 19px; margin: 0 0 2px; } .sub { font-size: 11.5px; color: #4a483f; margin: 0 0 8px; }
   table { border-collapse: collapse; width: 100%; } th { text-align: left; font-size: 10.5px; letter-spacing: .04em; text-transform: uppercase; color: #4a483f; border-bottom: 1.5px solid #1b1a17; padding: 2px 6px; }
-  td { padding: 2.2px 6px; border-bottom: .5px solid #cfcbbd; } tr:nth-child(even) td { background: #f6f4ee; }
-  td.n { font-weight: 700; white-space: nowrap; } td.g { white-space: nowrap; text-align: right; } td.ar { color: #8a867a; text-align: center; padding: 2.2px 0; } td.ck { font-size: 15px; text-align: center; padding: 0 8px; }
+  td { padding: 1.5px 6px; border-bottom: .5px solid #cfcbbd; } tr:nth-child(even) td { background: #f6f4ee; }
+  td.n { font-weight: 700; white-space: nowrap; } td.g { white-space: nowrap; text-align: right; } td.ar { color: #8a867a; text-align: center; padding: 1.5px 0; } td.ck { font-size: 15px; text-align: center; padding: 0 8px; }
   .k-ac { color: #B3261E; font-weight: 600; white-space: nowrap; } .k-dc { color: #185FA5; font-weight: 600; white-space: nowrap; } .k-bt { color: #6A1B9A; font-weight: 600; white-space: nowrap; }
+  .bxk { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px 14px; font-size: 10.5px; margin-top: 3px; } .bxk b { color: #7A4B12; }
   .foot { font-size: 11px; color: #4a483f; margin-top: 8px; } .foot p { margin: 2px 0; }
   @media print { body { padding: 0; } .vannav { display: none !important; } tr { break-inside: avoid; } }
   </style></head><body><div class="sheet">
   <h1>Wire cheat sheet</h1>
   <p class="sub">Tag both ends of every wire with its number and + or −. AWG is the wire size. <b class="k-bt">Batt</b> = battery cables, <b class="k-dc">12 V</b> = lights, fan, pump, strip, <b class="k-ac">120 V</b> = household power. Tick the box when the wire is in.</p>
   <table><thead><tr><th>Wire</th><th style="text-align:right">AWG</th><th>Kind</th><th>From</th><th></th><th>To</th><th>Done</th></tr></thead><tbody>${rows}</tbody></table>
-  <div class="foot"><p>Retired numbers (never reused): ${gone.map(w => w.id).join(', ')}. The old WR36 cable stays in place as the pull line.</p>
-  <p>WR40 is three pairs: F1 driver strip, F2 passenger strip, F3 back strip, each tagged "WR40 F1 +" and "WR40 F1 −" and so on. JB = lights junction box, JB2 = strip junction box, both in the couch cabinet.</p></div>
+  <div class="foot"><p><b>Boxes</b> (each wall box has a name; the drawings are on the electrical layout page):</p><div class="bxk">${Object.keys(BOXES).map(id => `<span><b>${id}</b> ${esc(BOXES[id].s)}</span>`).join('')}</div>
+  <p>Retired numbers (never reused): ${gone.map(w => w.id).join(', ')}. The old WR36 cable stays in place as the pull line.</p>
+  <p>WR40 is three pairs: F1 driver strip, F2 passenger strip, F3 back strip, each tagged "WR40 F1 +" and "WR40 F1 −" and so on. JB and JB2 are the two junction boxes in the couch cabinet.</p></div>
   </div></body></html>`;
 }
 module.exports = { cheatHTML, SHORT };
