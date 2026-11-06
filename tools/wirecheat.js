@@ -8,8 +8,8 @@ const SHORT = {
   WR18: ['AC panel', 'Couch outlet BX2 (ED10)'], WR19: ['Couch outlet BX2', 'Dinette outlet BX3 (ED15)'], WR20: ['JB', 'Couch light ED18, switch in BX2 (ED19)'], WR21: ['JB', 'Rear plate BX1 (ED11)'],
   WR22: ['Rear plate BX1', 'Rear couch light (ED7)'], WR23: ['Rear plate BX1', 'Shower light (EP1)'], WR24: ['JB', 'Dinette switch BX4 (ED12)'], WR25: ['Dinette switch BX4', 'Dinette lights (ED8, ED9)'],
   WR26: ['Riser B', 'Fridge outlet BX5 (EP3)'], WR27: ['Riser B', 'Selector BX6 (EP9)'], WR28: ['Selector BX6', 'Microwave outlet BX5 (EP4)'], WR29: ['Selector BX6', 'Heater outlet BX7 (EP7)'],
-  WR30: ['Couch outlet BX2', 'Counter outlet BX6 (EP15)'], WR31: ['Fuse block', 'Water pump (PL3)'], WR32: ['Fuse block', 'Control panel (EP5)'], WR33: ['Switch BX9 (EP11)', 'Counter light (EP2)'],
-  WR34: ['Switch BX9 (EP14)', 'Ceiling lights (EP12, EP13)'], WR35: ['JB', 'Switches BX9 (EP11, EP14)'], WR37: ['Counter outlet BX6', 'TV outlet BX8 (EP6)'],
+  WR30: ['Couch outlet BX2', 'TV outlet BX8 (EP6)'], WR31: ['Fuse block', 'Water pump (PL3)'], WR32: ['Fuse block', 'Control panel (EP5)'], WR33: ['Switch BX9 (EP11)', 'Counter light (EP2)'],
+  WR34: ['Switch BX9 (EP14)', 'Ceiling lights (EP12, EP13)'], WR35: ['JB', 'Switches BX9 (EP11, EP14)'], WR37: ['TV outlet BX8', 'Counter outlet BX6 (EP15)'],
   WR38: ['JB2', 'Slide dimmer BX4 (ED22)'], WR39: ['Slide dimmer BX4 (ED22)', 'JB2'], WR40: ['JB2', '3 strips (F1, F2, F3)'],
 };
 const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
