@@ -27,7 +27,7 @@ function cheatHTML(WRall, BOXES) {
   h1 { font-size: 19px; margin: 0 0 2px; } .sub { font-size: 11.5px; color: #4a483f; margin: 0 0 5px; }
   table { border-collapse: collapse; width: 100%; } th { text-align: left; font-size: 10.5px; letter-spacing: .04em; text-transform: uppercase; color: #4a483f; border-bottom: 1.5px solid #1b1a17; padding: 2px 6px; }
   td { padding: .7px 6px; border-bottom: .5px solid #cfcbbd; } tr:nth-child(even) td { background: #f6f4ee; }
-  td.n { font-weight: 700; white-space: nowrap; } td.g { white-space: nowrap; text-align: right; } td.ar { color: #8a867a; text-align: center; padding: .7px 0; } td.ck { font-size: 15px; text-align: center; padding: 0 8px; }
+  td.n { font-weight: 700; white-space: nowrap; } td.g { white-space: nowrap; text-align: right; } td.ar { color: #8a867a; text-align: center; padding: .7px 0; } td.ck { font-size: 14px; text-align: center; padding: 0 8px; }
   .k-ac { color: #B3261E; font-weight: 600; white-space: nowrap; } .k-dc { color: #185FA5; font-weight: 600; white-space: nowrap; } .k-bt { color: #6A1B9A; font-weight: 600; white-space: nowrap; }
   .bxk { line-height: 1.15; display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px 14px; font-size: 10.5px; margin-top: 3px; } .bxk b { color: #7A4B12; } .bxk .bw { color: #1b1a17; font-weight: 600; }
   .foot { font-size: 11px; color: #4a483f; margin-top: 5px; } .foot p { margin: 2px 0; }
