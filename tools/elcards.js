@@ -41,7 +41,7 @@ const CHAINS = {
   WR33: DCB.concat(['WR16', 'f:5 A fuse', 'Junction box JB|couch cabinet', 'WR35', 'Switch EP11', 'WR33', 'Light EP2']),
   WR34: DCB.concat(['WR16', 'f:5 A fuse', 'Junction box JB|couch cabinet', 'WR35', 'Switch EP14', 'WR34', 'Lights EP12, EP13']),
   WR37: ACP.concat(['f:15 A GFCI (A)', 'WR18', 'Couch outlet ED10', 'WR30', 'TV outlet EP6', 'WR37', 'Fridge outlet EP3']),
-  WR41: ACP.concat(['f:15 A GFCI (A)', 'WR18', 'Couch outlet ED10', 'WR30', 'TV outlet EP6', 'WR37', 'Fridge outlet EP3', 'WR41', 'Counter outlet EP15']),
+  WR41: ACP.concat(['f:15 A GFCI (A)', 'WR18', 'Couch outlet ED10', 'WR30', 'TV outlet EP6', 'WR41', 'Counter outlet EP15']),
   WR38: DCB.concat(['WR14', 'f:10 A fuse', 'Junction box JB2|strip splices', 'WR38', 'Slide dimmer ED22|on W2']),
   WR39: DCB.concat(['WR14', 'f:10 A fuse', 'Junction box JB2|strip splices', 'WR38', 'Slide dimmer ED22|on W2', 'WR39', 'Junction box JB2|strip splices']),
   WR40: DCB.concat(['WR14', 'f:10 A fuse', 'Junction box JB2|strip splices', 'WR38', 'Slide dimmer ED22|on W2', 'WR39', 'Junction box JB2|strip splices', 'WR40', 'LED strip|three runs']),
