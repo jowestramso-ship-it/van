@@ -44,7 +44,7 @@ const E_DRIVER = pl => { const oz = pl.win && pl.win.cz0 - 5 < 36 ? pl.win.cz0 -
   {k:'box',   n:'TS-30 transfer switch (30 A), on the divider panel', x0:33.9, x1:38.65, z0:2.5, z1:12.15, note:'on the divider panel\u2019s outer face, the face that looks toward the rear doors (the divider is the board at 38 3/4 in that the tray\u2019s rear slide bolts to); 1 1/2 to 8 3/4 in out from the driver wall, 2 1/2 to 12 up, 4 3/4 in deep, on end (EF3). Shore power comes in from the inlet (WR7) along the free band above S2, the inverter\u2019s output through a grommet in the divider (WR8), and the output goes on to the AC panel (WR9)'},
   {k:'box',   n:'AC panel (120 V breakers), on the divider panel', x0:35.65, x1:38.65, z0:6.4, z1:11.4, note:'on the divider panel\u2019s outer face beside the TS-30, 10 1/2 to 17 1/2 in out from the driver wall, 6 1/2 to 11 1/2 up, about 3 in deep (typical size, EF3): the main from the TS-30 (WR9) and the breakers for circuit A (15 A GFCI), B/D (15 A GFCI: the heater is next to water) and C (15 A) and the shore charger (15 A); the circuits leave through the covering above it into the free band above S2 (WR12)'},
   {k:'box',   n:'12 V fuse block (10-way), on the divider panel', x0:36.65, x1:38.65, z0:2.6, z1:6.1, note:'on the divider panel\u2019s outer face, 19 to 25 in out from the driver wall, 2 1/2 to 6 up, about 2 in deep (typical size, EF3): fed from the bus on the tray (WR13); five ways used (lights, strip, fan, pump, control panel), each with its own wire up riser A'},
-  {k:'box', name:'JB2', n:'Strip junction box (the splices for the soft LED strip), under JB', x0:69.5, x1:73, z0:67.4, z1:69.9, note:'user (2026-11-05): a second junction box next to JB for the soft LED strip, so the lights splices (5 cables) and the strip splices (6 cables) are not all in one small box. Same size as JB on the plan (about 3 1/2 x 2 1/2 in; the real box needs room for 14 AWG lever connectors), in the wall cabinet over the couch on the same cab-end side panel, just under JB, 1 in below it (if the panel has no room: on the underside of the top panel just rear of JB). The place is my choice, not the user\u2019s. It holds the 10 A strip circuit: the supply from the fuse block comes in (WR14), goes on to the slide dimmer ED22 on W2 (WR38), comes back dimmed (WR39) and splits to the three strips (WR40). The + and the − each join with lever connectors rated 20 A or more, because the + carries the whole 6.4 A. Added last, so no ED number moved; the name JB2 is used in place of its number. WIRING (drawing EF16, drawn for a dimmer that switches the +): 12 wires meet here. A 2 port connector joins WR14 + and WR38 + (the supply to the dimmer); a 5 port connector joins WR39 + (the dimmed power back) with the three WR40 + feeds F1, F2, F3; a second 5 port connector joins WR14 −, WR38 − and the three WR40 − feeds; WR39 − is a spare, capped. All rated 20 A or more. If the KEYGMA turns out to switch the −, the roles of the + and − swap on the dimmed side'},
+  {k:'box', name:'JB2', n:'Strip junction box (the splices for the soft LED strip), under JB', x0:69.5, x1:73, z0:67.4, z1:69.9, note:'user (2026-11-05): a second junction box next to JB for the soft LED strip, so the lights splices (5 cables) and the strip splices (6 cables) are not all in one small box. Same size as JB on the plan (about 3 1/2 x 2 1/2 in; the real box needs room for 14 AWG lever connectors), in the wall cabinet over the couch on the same cab-end side panel, just under JB, 1 in below it (if the panel has no room: on the underside of the top panel just rear of JB). The place is my choice, not the user\u2019s. It holds the 10 A strip circuit: the supply from the fuse block comes in (WR14), goes on to the slide dimmer ED22 on W2 (WR38), comes back dimmed (WR39) and splits to the three strips (WR40). The + and the − each join with lever connectors rated 20 A or more, because the + carries the whole 6.4 A. Added last, so no ED number moved; the name JB2 is used in place of its number. WIRING (drawing EF16, drawn for a dimmer that switches the +): 12 wires meet here. A 2 port connector joins WR14 + and WR38 + (the supply to the dimmer); a 5 port connector joins WR39 + (the dimmed power back) with the three WR40 + feeds F1, F2, F3; a second 5 port connector joins WR14 −, WR38 − and the three WR40 − feeds; WR39 − is a spare, capped. All rated 20 A or more. If the KEYGMA turns out to switch the −, the roles of the + and − swap on the dimmed side. With 3 port connectors only: drawing EF18 (6 connectors and 3 jumpers)'},
 ]; };
 const E_PASS = pl => { const sl = pl.lights.filter(l => l.x > 6 && l.x < 6 + pl.panW)[0] || { x: 6 + pl.panW / 2, y: pl.P.vanW - pl.panD / 2 }, wbx = sl.x - 6, wby = sl.y, cl = pl.lights.filter(l => l.x - 6 >= pl.panW).sort((a, b) => a.x - b.x); return [
   {k:'lt',    n:'Wet bath light (ceiling, IP65), over the shower', x:wbx, z:pl.ceilF - .5, note:'over the middle of the stall: ' + fr(wbx) + ' in along the wall, ' + fr(wby) + ' in across from the driver wall, on the slat (the exact center, 18 in, is under a rib, so it sits 2 1/2 in toward the cab); a wet-rated (IP65) LED; one of the four ceiling lights (the two others are in the center row, EP12 and EP13). Switched at the rear doors plate'},
@@ -436,6 +436,43 @@ function jb3SVG() {
   ['Each connector uses all 3 ports: A has 2 wires and a jumper, B has 2 jumpers and a wire, C has a jumper and 2 wires.', 'Parts for JB: 6 three-port connectors (3 for the + side, 3 for the − side) and 4 jumpers (2 red, 2 black).', 'The + side and the − side are two separate rows: never connect a red wire to a black one.', 'The jumpers carry only the current of the wires after them, a few amps at most, so 14 AWG is plenty.'].forEach((t, k) => tx(20, 560 + k * 16, t, gray));
   return `<svg viewBox="0 0 ${W} ${H - 40}" role="img" aria-label="Inside the lights junction box JB with three port lever connectors: three connectors for the plus wires and three for the minus wires, each row joined by two short jumpers"><style>text{font-family:-apple-system,"Segoe UI",sans-serif}</style>${o.join('')}</svg>`;
 }
+function jb2c3SVG() {
+  const o = [], W = 800, H = 790, RED = '#D32F2F', ORG = '#F57C00', tx = (x, y, t, st = '') => o.push(`<text x="${x}" y="${y}" style="font-size:12px;fill:${INK};${st}">${esc(t)}</text>`);
+  const ln = (x1, y1, x2, y2, col, w = 2.6) => o.push(`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${col}" stroke-width="${w}" stroke-linecap="round"/>`);
+  const gray = 'font-size:11px;fill:#5F5E5A', bold = 'font-weight:700', sm = 10.5;
+  tx(20, 22, 'A. Inside JB2 with 3-port lever connectors and jumpers (drawn for a dimmer that switches the +)', bold);
+  o.push(`<rect x="150" y="44" width="500" height="478" rx="10" fill="#FAFAF7" stroke="#5F5E5A" stroke-width="2" stroke-dasharray="7 4"/>`);
+  tx(162, 62, 'JB2, the strip junction box (couch cabinet, under JB)', gray);
+  const c3 = (x, y, lab, col) => { o.push(`<rect x="${x}" y="${y}" width="104" height="60" rx="7" fill="#EEF1F4" stroke="${col}" stroke-width="2.2"/>`); [0, 1, 2].forEach(i => o.push(`<rect x="${x + 14 + i * 30}" y="${y + 5}" width="18" height="14" rx="3" fill="${ORG}" stroke="#A64F00" stroke-width="1"/>`)); tx(x + 8, y + 50, lab, 'font-size:10.5px;font-weight:700'); };
+  const st = (c) => `font-size:${sm}px;font-weight:700;${c === RED ? 'fill:' + RED : ''}`;
+  // row 1: + supply, one connector, one port spare
+  const y1 = 92; c3(330, y1, '+ supply', RED);
+  ln(18, y1 + 22, 330, y1 + 22, RED, 3); tx(22, y1 + 16, 'WR14 + fuse block', st(RED));
+  ln(434, y1 + 22, 782, y1 + 22, RED, 3); tx(660, y1 + 16, 'WR38 + to dimmer', st(RED));
+  tx(340, y1 + 78, 'the third port stays empty', gray);
+  // row 2: + dimmed, two connectors and one jumper
+  const y2 = 232; c3(250, y2, '+ dimmed A', RED); c3(430, y2, '+ dimmed B', RED);
+  ln(354, y2 + 38, 430, y2 + 38, RED, 3.2); tx(366, y2 + 78, 'jumper', gray);
+  ln(18, y2 + 22, 250, y2 + 22, RED, 3); tx(22, y2 + 16, 'WR39 + from dimmer', st(RED));
+  ln(18, y2 + 44, 250, y2 + 44, RED, 3); tx(22, y2 + 38, 'WR40 F1 + driver', st(RED));
+  ln(534, y2 + 22, 782, y2 + 22, RED, 3); tx(660, y2 + 16, 'WR40 F2 + passenger', st(RED));
+  ln(534, y2 + 44, 782, y2 + 44, RED, 3); tx(660, y2 + 38, 'WR40 F3 + back', st(RED));
+  // row 3: minus, three connectors and two jumpers
+  const y3 = 384; c3(180, y3, '3-port ' + '−' + ' A', INK); c3(340, y3, '3-port ' + '−' + ' B', INK); c3(500, y3, '3-port ' + '−' + ' C', INK);
+  ln(284, y3 + 38, 340, y3 + 38, INK, 3.2); tx(290, y3 + 78, 'jumper 1', gray); ln(444, y3 + 38, 500, y3 + 38, INK, 3.2); tx(450, y3 + 78, 'jumper 2', gray);
+  ln(18, y3 + 22, 180, y3 + 22, INK, 3); tx(22, y3 + 16, 'WR14 − fuse block', st()); ln(18, y3 + 44, 180, y3 + 44, INK, 3); tx(22, y3 + 38, 'WR38 − to dimmer', st());
+  ln(392, y3, 392, y3 - 26, INK, 3); tx(300, y3 - 32, 'WR40 F1 − driver strip', st());
+  ln(604, y3 + 22, 782, y3 + 22, INK, 3); tx(660, y3 + 16, 'WR40 F2 − passenger', st()); ln(604, y3 + 44, 782, y3 + 44, INK, 3); tx(660, y3 + 38, 'WR40 F3 − back', st());
+  tx(162, 490, 'Every wire is 14 AWG: red +, black −. Tag both ends of every wire.', gray);
+  tx(162, 506, 'WR39 − is a spare: put a wire cap on it.', gray);
+  ln(20, 540, 780, 540, '#cfcbbd', 1.5);
+  tx(20, 562, 'B. What connects to what', bold);
+  const rows = [['+ supply connector', 'WR14 +, WR38 + and one spare port'], ['+ dimmed connector A', 'WR39 + (from the dimmer), WR40 F1 + and the jumper'], ['+ dimmed connector B', 'the jumper, WR40 F2 + and WR40 F3 +'],
+    ['− connector A', 'WR14 −, WR38 − and jumper 1'], ['− connector B', 'jumper 1, WR40 F1 − and jumper 2'], ['− connector C', 'jumper 2, WR40 F2 − and WR40 F3 −']];
+  rows.forEach((r, k) => { const y = 586 + k * 20; if (k % 2 === 0) o.push(`<rect x="20" y="${y - 14}" width="760" height="20" fill="#F6F4EE"/>`); tx(30, y, r[0], 'font-weight:700'); tx(250, y, r[1]); });
+  ['Parts for JB2: 6 three-port connectors and 3 jumpers (1 red for the dimmed +, 2 black for the −), all rated 20 A or more.', 'With 3 connectors you can do the whole + side now (the supply and the dimmed + take 3); the − side needs 3 more.', 'All 6.4 A of the strip passes through the dimmed + connectors and their jumper: 14 AWG, about 3 to 4 in long.', 'If the KEYGMA switches the − instead of the +, the roles on the dimmed side swap and I redraw this.'].forEach((t, k) => tx(20, 726 + k * 16, t, gray));
+  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Inside the strip junction box JB2 with three port lever connectors: one for the supply plus, two joined by a jumper for the dimmed plus, and three joined by two jumpers for the minus"><style>text{font-family:-apple-system,"Segoe UI",sans-serif}</style>${o.join('')}</svg>`;
+}
 function oneLineSVG(WR) {
   const G = !!WR, id = re => ((WR || []).find(w => re.test(w.n)) || {}).id || '';
   const W = 1070, H = 640, o = [];
@@ -580,6 +617,8 @@ function loadTable(d) {
   ${fig('EF16', 'The strip junction box JB2: what connects to what')}<div class="figwrap">${jb2SVG()}</div>
   <h3>The lights junction box JB with 3-port lever connectors and jumpers</h3>
   ${fig('EF17', 'The lights junction box JB with 3 port connectors and jumpers: what connects to what')}<div class="figwrap">${jb3SVG()}</div>
+  <h3>The strip junction box JB2 with 3-port lever connectors and jumpers</h3>
+  ${fig('EF18', 'The strip junction box JB2 with 3 port connectors and jumpers: what connects to what')}<div class="figwrap">${jb2c3SVG()}</div>
   <h2>1a. High-current cables and fuses to buy</h2>
   ${cableTable()}
   <h2>1b. The hub board: where the parts go</h2>
