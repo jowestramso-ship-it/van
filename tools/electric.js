@@ -218,14 +218,14 @@ function ceilingSVG(d, WR, baseOnly) {
   // the soft LED strip around the ceiling edge: driver side, across the back, passenger side (about 31 ft in all, fed in three sections)
   { const e = 1.5, cabX = d.P.cab + 6;
     o.push(`<polyline points="${X(cabX)},${Y(e)} ${X(e)},${Y(e)} ${X(e)},${Y(68 - e)} ${X(cabX)},${Y(68 - e)}" fill="none" stroke="#F4C95D" stroke-width="9" stroke-opacity=".55" stroke-linejoin="round"/><polyline points="${X(cabX)},${Y(e)} ${X(e)},${Y(e)} ${X(e)},${Y(68 - e)} ${X(cabX)},${Y(68 - e)}" fill="none" stroke="#B8860B" stroke-width="1.6" stroke-linejoin="round"/>`);
-    o.push(`<text x="${G ? X(16) : X(e) + 8}" y="${Y(e) + (G ? 38 : 20)}" style="font-size:10.5px;font-weight:700;fill:#8a6a00">soft LED strip around the edge</text>`)
+    o.push(`<text x="${G ? X(16) : X(e) + 8}" y="${Y(e) + (G ? 38 : 32)}" style="font-size:10.5px;font-weight:700;fill:#8a6a00">soft LED strip around the edge</text>`)
     o.push(`<text x="${X(cabX) - 4}" y="${Y(e) + 22}" text-anchor="end" style="font-size:10.5px;font-weight:700;fill:#8a6a00">strip starts here (cab end, driver side)</text><text x="${X(cabX) - 4}" y="${Y(68 - e) - 12}" text-anchor="end" style="font-size:10.5px;font-weight:700;fill:#8a6a00">strip ends here (cab end, passenger side)</text>`); }
   // lights
   d.lights.forEach((l, i) => { const wet = l.y > d.P.vanW - d.panD && l.x < 6 + d.panW && l.x > 6; o.push(`<circle cx="${X(l.x)}" cy="${Y(l.y)}" r="${Math.max(6, S * d.P.lightD / 2)}" fill="#FFD84A" stroke="${wet && !G ? C12 : CLT}" stroke-width="${wet ? 3 : 1.8}"/>`); if (wet) o.push(`<text x="${X(l.x) + 12}" y="${Y(l.y) + 16}" style="font-size:10.5px;font-weight:700;fill:${G ? '#5F5E5A' : C12}">wet-rated (IP65)</text>`); });
   if (G) { const placed = [], wg = WR.filter(w => w.C).map(w => EW.wireGroup(w, 'C', X, Y, placed)); wg.forEach(g => o.push(g.l));
     wg.forEach(g => o.push(g.p)); WR.forEach(w => o.push(EW.traceLayer(w, 'C', X, Y))); }
   // where the risers meet the walls
-  o.push(`<text x="${X(RX) + 16}" y="${Y(0) + 14}" style="font-size:11px;font-weight:700;fill:${INK}">riser A (A/C, 12 V) at ${RX + 3.5}</text><text x="${X(RX) + 16}" y="${Y(68) - 8}" style="font-size:11px;font-weight:700;fill:${INK}">riser B (120 V, branches) at ${RX}</text>`);
+  o.push(`<text x="${X(RX + 3.5) + 14}" y="${Y(0) + 14}" style="font-size:11px;font-weight:700;fill:${INK}">riser A (A/C, 12 V) at ${RX + 3.5}</text><text x="${X(RX + 3.5) + 14}" y="${Y(68) - 8}" style="font-size:11px;font-weight:700;fill:${INK}">riser B (120 V, branches) at ${RX}</text>`);
   // legend
   if (baseOnly) return o.join('');
   const ly = Y(68) + 66;

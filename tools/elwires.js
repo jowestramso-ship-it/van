@@ -117,7 +117,7 @@ function wiresFor(pl, Dl, Pl, ceil) {
     D: [[[D.jb2.x1, 69.5], [D.dim2.x - .8, 69.5], [D.dim2.x - .8, D.dim2.z + .8]]], lab: { D: [124, 69.5] } });
   add({ g: '14', t: 'dc', n: 'Soft LED strip: the dimmed power from the slide dimmer ' + D.dim2.id + ' back to ' + D.jb2.id, from: D.dim2.id + ' slide dimmer (output)', to: 'strip junction box ' + D.jb2.id + ' (the splice for the three feeds)', prot: '10 A, its own circuit (fuse block way 2)', note: 'a second 14 AWG pair, the same way as the supply pair (WR38) and tied to it: the dimmed power goes back to ' + D.jb2.id + ', where it splits to the three strips (WR40). A pair, so it works with a dimmer that switches the + (high-side) or the − (low-side); a high-side dimmer leaves the − spare. The old 18 AWG cable (WR36, retired) left in place from W2 to the couch cabinet is the pull line for both',
     D: [[[D.dim2.x - 1.6, D.dim2.z + .8], [D.dim2.x - 1.6, 68.9], [D.jb2.x1, 68.9]]], lab: { D: [100, 68.9] } });
-  add({ g: '14', t: 'dc', n: 'Soft LED strip: the three feeds from ' + D.jb2.id + ' to the strips', from: 'strip junction box ' + D.jb2.id + ' (dimmed power)', to: 'strip along the ceiling edge, three runs', prot: '10 A, its own circuit (fuse block way 2)', endsOverride: [['C', [82.5, 1.5], 'F1: driver run'], ['C', [82.5, 66.5], 'F2: passenger run'], ['C', [1.9, 3.4], 'F3: back run']], note: 'LABELS (user, 2026-11-06): tag both ends of every wire 3 in from the end: WR40 F1 +, WR40 F1 − (driver run), WR40 F2 +, WR40 F2 − (passenger run), WR40 F3 +, WR40 F3 − (back run), red for + and black for −, and write the strip name on the strip-end tags. Three 14 AWG cables from the splice in ' + D.jb2.id + ', one to each strip feed: the driver run (about 2 ft cut), the passenger run across the ceiling at 82 1/2 in (about 7 1/2 ft) and the back run along the ceiling edge, through the ribs at 58 3/8, 37 7/8 and 21 3/4 (a grommet in each web; about 8 1/2 ft); the back run is fed from the driver run side. They carry 2.6, 2.6 and 1.1 A (6.4 A in all, through the dimmer). They were part of WR14 before the dimmer moved to W2',
+  add({ g: '14', t: 'dc', n: 'Soft LED strip: the three feeds from ' + D.jb2.id + ' to the strips', from: 'strip junction box ' + D.jb2.id + ' (dimmed power)', to: 'strip along the ceiling edge, three runs', prot: '10 A, its own circuit (fuse block way 2)', startOpt: { dx: 0, dy: -38 }, endsOverride: [['C', [82.5, 1.5], 'F1: driver run', { dx: 44, dy: 34, t: 'r' }], ['C', [82.5, 66.5], 'F2: passenger run', { dx: -52, dy: -8, t: 'l' }], ['C', [1.9, 3.4], 'F3: back run', { dx: 6, dy: 44, t: 'r' }]], note: 'LABELS (user, 2026-11-06): tag both ends of every wire 3 in from the end: WR40 F1 +, WR40 F1 − (driver run), WR40 F2 +, WR40 F2 − (passenger run), WR40 F3 +, WR40 F3 − (back run), red for + and black for −, and write the strip name on the strip-end tags. Three 14 AWG cables from the splice in ' + D.jb2.id + ', one to each strip feed: the driver run (about 2 ft cut), the passenger run across the ceiling at 82 1/2 in (about 7 1/2 ft) and the back run along the ceiling edge, through the ribs at 58 3/8, 37 7/8 and 21 3/4 (a grommet in each web; about 8 1/2 ft); the back run is fed from the driver run side. They carry 2.6, 2.6 and 1.1 A (6.4 A in all, through the dimmer). They were part of WR14 before the dimmer moved to W2',
     C: [[[jbc + 6, 2.5], [82.5, 2.5]], [[82.5, 0], [82.5, 66.5]], [[82.5, 3.4], [1.9, 3.4]]], lab: { C: [82.5, 12] } });
   W.forEach((w, i) => { w.id = 'WR' + (i + 1); });
   W.forEach(w => { if (w.len == null) { let d = 0; const seg = pl_ => { for (let i = 1; i < pl_.length; i++) d += Math.hypot(pl_[i][0] - pl_[i - 1][0], pl_[i][1] - pl_[i - 1][1]); }; ['D', 'P', 'C'].forEach(v => (w[v] || []).forEach(seg)); Object.keys(w.T || {}).forEach(v => (w.T[v] || []).forEach(seg)); w.len = d / 12; } });   // the drawn route, its lead-in from the gear area (T) included
@@ -141,7 +141,7 @@ function allIn(w, v) { return ((w.T && w.T[v]) || []).concat(w[v] || []); }
 function endsOf(w) {
   const vs = viewsOf(w); if (!vs.length) return null;
   const first = allIn(w, vs[0]), last = allIn(w, vs[vs.length - 1]);
-  return { start: { v: vs[0], pt: first[0][0] }, ends: w.endsOverride ? w.endsOverride.map(e => ({ v: e[0], pt: e[1], tag: e[2] })) : [{ v: vs[vs.length - 1], pt: last[last.length - 1][last[last.length - 1].length - 1] }] };
+  return { start: { v: vs[0], pt: first[0][0], opt: w.startOpt }, ends: w.endsOverride ? w.endsOverride.map(e => ({ v: e[0], pt: e[1], tag: e[2], opt: e[3] })) : [{ v: vs[vs.length - 1], pt: last[last.length - 1][last[last.length - 1].length - 1] }] };
 }
 function arrows(pts, X, Y, g) {
   let o = '';
@@ -154,7 +154,14 @@ function arrows(pts, X, Y, g) {
   }
   return o;
 }
-function marker(label, pt, X, Y, col, up, tag) {
+function markerAt(label, pt, X, Y, col, tag, opt) {                 // hand placement: opt = {dx, dy} offset of the pill from the point, t = 'l' or 'r' side of the tag text
+  const x = X(pt[0]), y = Y(pt[1]), w = label === 'START' ? 48 : 36, px = x + (opt.dx || 0), py = y + (opt.dy || 0);
+  const st = 'font-size:11px;font-weight:700;fill:#111;paint-order:stroke;stroke:#fff;stroke-width:3.2px';
+  const t = !tag ? '' : opt.t === 'l' ? `<text x="${px - w / 2 - 6}" y="${py + 4}" text-anchor="end" style="${st}">${tag}</text>` : `<text x="${px + w / 2 + 6}" y="${py + 4}" text-anchor="start" style="${st}">${tag}</text>`;
+  return `<line x1="${x}" y1="${y}" x2="${px}" y2="${py}" stroke="${col}" stroke-width="2.4"/><circle cx="${x}" cy="${y}" r="6.5" fill="#fff" fill-opacity=".85" stroke="${col}" stroke-width="3"/><circle cx="${x}" cy="${y}" r="2.2" fill="${col}"/><rect x="${px - w / 2}" y="${py - 9}" width="${w}" height="18" rx="9" fill="${col}" stroke="#fff" stroke-width="1.5"/><text x="${px}" y="${py + 4}" text-anchor="middle" style="font-size:10.5px;font-weight:700;fill:#fff;letter-spacing:.4px">${label}</text>` + t;
+}
+function marker(label, pt, X, Y, col, up, tag, opt) {
+  if (opt) return markerAt(label, pt, X, Y, col, tag, opt);
   const core = markerCore(label, pt, X, Y, col, up);
   if (!tag) return core;
   const x = X(pt[0]), y = Y(pt[1]), w = label === 'START' ? 48 : 36;
@@ -176,8 +183,8 @@ function traceLayer(w, view, X, Y) {
   const parts = [];
   ((w.T && w.T[view]) || []).forEach(p => parts.push(wireLine(p, X, Y, w.g, w.t)));
   allIn(w, view).forEach(p => parts.push(arrows(p, X, Y, w.g)));
-  if (e.start.v === view) parts.push(marker('START', e.start.pt, X, Y, '#1B7F3B', true));
-  e.ends.filter(x => x.v === view).forEach(x => parts.push(marker('END', x.pt, X, Y, '#111', false, x.tag)));
+  if (e.start.v === view) parts.push(marker('START', e.start.pt, X, Y, '#1B7F3B', true, undefined, e.start.opt));
+  e.ends.filter(x => x.v === view).forEach(x => parts.push(marker('END', x.pt, X, Y, '#111', false, x.tag, x.opt)));
   return parts.length ? `<g class="wtr" data-wr="${w.id}">${parts.join('')}</g>` : '';
 }
 
