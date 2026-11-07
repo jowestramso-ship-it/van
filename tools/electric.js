@@ -15,7 +15,7 @@ const BOXES = {   // every box you wire by hand has a short name: BX1 to BX9 (JB
   BX1: { n: 'Rear doors plate', where: 'driver wall, 1 3/4 in along, 48 up', what: 'two switches side by side in one deep two gang box: the rear couch light (ED7) and the shower light (ED11)', wires: 'WR21 in; WR22 and WR23 out', s: 'rear doors plate (ED11)', fig: 'EF14' },
   BX2: { n: 'Couch box on S6', where: 'driver wall, on furring rail S6, 64 to 66 in along, 57 1/4 up', what: 'a deep two gang box with a divider: the couch outlet ED10 (120 V, left) and the switch ED19 (12 V, right) for the right couch light ED18', wires: 'WR18 in; WR19 and WR30 on (120 V); WR20 (12 V)', s: 'couch box on S6 (ED10, ED19)', fig: 'EF21' },
   BX3: { n: 'Dinette table outlet box', where: 'driver wall, 121 1/2 in along, 34 up, over the dinette table', what: 'the outlet ED15 (120 V duplex)', wires: 'WR19 in', s: 'dinette table outlet (ED15)', fig: 'not drawn yet' },
-  BX4: { n: 'Dinette back wall box (W2)', where: 'driver wall, on W2, 153 in along, 44 3/4 to 48 up', what: 'the dinette light switch ED12 and the slide dimmer ED22 for the soft LED strip', wires: 'WR24 in; WR25 out; WR38 in and WR39 out for the dimmer', s: 'dinette back wall, W2 (ED12, ED22)', fig: 'EF13' },
+  BX4: { n: 'Dinette back wall box (W2)', where: 'driver wall, on W2, 153 in along, 44 3/4 to 48 up', what: 'the dinette light switch ED12 and the slide dimmer ED22 for the soft LED strip', wires: 'WR24 in; WR25 out; WR38 in and WR39 out for the dimmer', s: 'dinette back wall, W2 (ED12, ED22)', fig: 'EF13 and EF24' },
   BX5: { n: 'Fridge and microwave outlet box', where: 'passenger wall, centered on 55 in along (54 to 56), 60 up, just above S6, above the microwave', what: 'two gang box: the microwave outlet EP4 and the fridge outlet EP3 (120 V)', wires: 'WR37 in (circuit A, the end of that branch); WR28 in (from the selector)', s: 'fridge and microwave outlets (EP3, EP4)', fig: 'not drawn yet' },
   BX6: { n: 'Selector and counter outlet box', where: 'passenger wall, 71 to 73 in along, 50 up', what: 'two gang box: the heater or microwave selector EP9 and the counter outlet EP15 (120 V)', wires: 'WR27 in; WR28 and WR29 out; WR41 in (the end of circuit A)', s: 'selector and counter outlet (EP9, EP15)', fig: 'EF22 and EF23' },
   BX7: { n: 'Heater outlet box', where: 'passenger wall, 85 to 87 in along, 12 to 18 up', what: 'the heater outlet EP7 (120 V, 15 A)', wires: 'WR29 in', s: 'heater outlet (EP7)', fig: 'not drawn yet' },
@@ -543,6 +543,41 @@ function pinsSVG() {
     o.push(`<g transform="translate(${x},${y})"><rect x="0" y="0" width="370" height="246" rx="8" fill="#FAFAF7" stroke="#cfcbbd" stroke-width="1.4"/><circle cx="22" cy="22" r="12" fill="${INK}"/><text x="22" y="26.5" text-anchor="middle" style="font-size:12px;font-weight:700;fill:#fff">${k + 1}</text>${tx(42, 27, p[0], 'font-size:13px;font-weight:700')}<g transform="translate(10,34)">${p[1]}</g>${p[2].map((t, i) => tx(14, 210 + i * 15, t)).join('')}</g>`); });
   return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Six steps for the selector pins: strip the wire, slide on the heat shrink, crimp the terminal, push it onto the pin, shrink the tube and check it"><style>text{font-family:-apple-system,"Segoe UI",sans-serif}</style>${o.join('')}</svg>`;
 }
+function box4SVG() {
+  const o = [], W = 800, H = 880, RED = '#D32F2F', ORG = '#F57C00', tx = (x, y, t, st = '') => o.push(`<text x="${x}" y="${y}" style="font-size:12px;fill:${INK};${st}">${esc(t)}</text>`);
+  const gray = 'font-size:11px;fill:#5F5E5A', bold = 'font-weight:700', sm = 'font-size:10.5px;font-weight:700', rd = `font-size:11px;font-weight:700;fill:${RED}`;
+  const wire = (pts, col, w = 3.4) => o.push(`<polyline points="${pts.map(p => p.join(',')).join(' ')}" fill="none" stroke="${col}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round"/>`);
+  const conn = (x, y, lab) => { o.push(`<rect x="${x}" y="${y}" width="120" height="56" rx="7" fill="#EEF1F4" stroke="${INK}" stroke-width="2.2"/>`); for (let i = 0; i < 3; i++) o.push(`<rect x="${x + 22 + i * 36}" y="${y + 5}" width="18" height="14" rx="3" fill="${ORG}" stroke="#A64F00" stroke-width="1"/>`); tx(x + 10, y + 48, lab, sm); };
+  const box = (y, h, lab) => { o.push(`<rect x="190" y="${y}" width="420" height="${h}" rx="10" fill="#FAFAF7" stroke="#5F5E5A" stroke-width="2" stroke-dasharray="7 4"/>`); tx(200, y + 16, lab, gray); };
+  tx(20, 22, 'A. The dinette lights in BX4: the switch ED12 (WR24 comes in, WR25 goes to the lights ED8 and ED9)', bold);
+  box(40, 208, 'BX4, 12 V, the dinette back wall box on W2');
+  wire([[20, 100], [300, 100]], RED); tx(22, 90, 'WR24 + feed from JB', rd);
+  o.push(`<rect x="300" y="70" width="120" height="60" rx="7" fill="#fff" stroke="${INK}" stroke-width="2"/>`);
+  tx(310, 90, 'Switch ED12', 'font-size:11.5px;font-weight:700'); tx(310, 106, 'dinette lights', 'font-size:11px;font-weight:700'); tx(306, 124, 'IN', gray); tx(386, 124, 'OUT', gray);
+  wire([[420, 100], [780, 100]], RED); tx(616, 90, 'WR25 + to ED8, ED9', rd);
+  wire([[20, 190], [300, 190]], INK); tx(22, 180, 'WR24 ' + '−' + ' feed from JB', 'font-size:11px;font-weight:700');
+  conn(300, 162, '3-port (−)'); tx(306, 232, 'third port empty', gray);
+  wire([[420, 190], [780, 190]], INK); tx(616, 180, 'WR25 ' + '−' + ' to ED8, ED9', 'font-size:11px;font-weight:700');
+  o.push(`<line x1="20" y1="264" x2="780" y2="264" stroke="#cfcbbd" stroke-width="1.5"/>`);
+  tx(20, 286, 'B. The soft LED strip dimmer in BX4: the slide dimmer ED22 (WR38 comes in, WR39 goes back to JB2)', bold);
+  box(302, 262, 'BX4, 12 V, the same box');
+  o.push(`<rect x="300" y="330" width="150" height="78" rx="7" fill="#fff" stroke="${INK}" stroke-width="2"/>`);
+  tx(310, 352, 'Slide dimmer ED22', 'font-size:11.5px;font-weight:700'); tx(310, 368, 'KEYGMA 12-24 V, 10 A', gray); tx(306, 402, 'IN', gray); tx(412, 402, 'OUT', gray);
+  wire([[20, 372], [300, 372]], RED); tx(22, 362, 'WR38 + from JB2', rd);
+  wire([[450, 372], [780, 372]], RED); tx(616, 362, 'WR39 + back to JB2', rd);
+  wire([[20, 484], [375, 484], [375, 408]], INK); tx(22, 474, 'WR38 ' + '−' + ' from JB2', 'font-size:11px;font-weight:700');
+  o.push(`<circle cx="375" cy="408" r="5.5" fill="#C9CDD2" stroke="#444" stroke-width="1.4"/>`); tx(386, 428, '− terminal, if it has one', 'font-size:10.5px;fill:#5F5E5A');
+  wire([[780, 520], [560, 520]], INK); o.push(`<rect x="540" y="508" width="26" height="24" rx="8" fill="#9aa0a6" stroke="#555" stroke-width="1.4"/>`); tx(616, 510, 'WR39 ' + '−' + ' to JB2: a spare,', 'font-size:11px;font-weight:700'); tx(616, 540, 'capped with a wire cap', gray);
+  o.push(`<line x1="20" y1="584" x2="780" y2="584" stroke="#cfcbbd" stroke-width="1.5"/>`);
+  tx(20, 606, 'C. What connects to what', bold);
+  const rows = [['WR24 + (from JB)', 'the IN of the switch ED12'], ['WR25 + (to ED8, ED9)', 'the OUT of the switch ED12'], ['WR24 − and WR25 −', 'one connector: the − passes straight through the box'], ['WR38 + (from JB2)', 'the IN of the slide dimmer ED22'], ['WR39 + (back to JB2)', 'the OUT of the slide dimmer'],
+    ['WR38 − (from JB2)', 'the dimmer’s − terminal, if it has one (if not, cap it like WR39 −)'], ['WR39 − (to JB2)', 'capped: a spare']];
+  rows.forEach((r, k) => { const y = 628 + k * 20; if (k % 2 === 0) o.push(`<rect x="20" y="${y - 14}" width="760" height="20" fill="#F6F4EE"/>`); tx(30, y, r[0], 'font-weight:700'); tx(290, y, r[1]); });
+  ['All four cables (WR24, WR25, WR38, WR39) are 12 V, 14 AWG, so this two gang box needs no divider.', 'The KEYGMA dimmer is on order and its terminals are not known yet. This drawing assumes an IN, an OUT and a − terminal, and that it',
+   'switches the + (the same assumption as EF18). Check its wiring diagram when it arrives and tell me if it differs.', 'Parts: one 2 port lever connector (or a 3 port with a port empty), one wire cap, and whatever terminals the dimmer takes for 14 AWG.',
+   'WR25 splits to the two lights inside the wall cabinet, one drop to each. Tag both ends of every wire.'].forEach((t, k) => tx(20, 794 + k * 16, t, gray));
+  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Inside the dinette back wall box BX4: the cables WR24 and WR25 go through the light switch ED12 and a connector for the minus, and WR38 and WR39 go to the slide dimmer ED22"><style>text{font-family:-apple-system,"Segoe UI",sans-serif}</style>${o.join('')}</svg>`;
+}
 function jbSVG() {
   const o = [], W = 800, H = 640, RED = '#D32F2F', ORG = '#F57C00', tx = (x, y, t, st = '') => o.push(`<text x="${x}" y="${y}" style="font-size:12px;fill:${INK};${st}">${esc(t)}</text>`);
   const ln = (x1, y1, x2, y2, col, w = 2.6) => o.push(`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${col}" stroke-width="${w}" stroke-linecap="round"/>`);
@@ -819,6 +854,8 @@ function loadTable(d) {
   ${fig('EF22', 'The selector and counter outlet box BX6 (EP9 and EP15) wired: what connects to what')}<div class="figwrap">${box6SVG()}</div>
   <h3>The selector\u2019s pins: terminals and heat shrink</h3>
   ${fig('EF23', 'The selector EP9: crimping the terminals and shrinking the boots on its three pins')}<div class="figwrap">${pinsSVG()}</div>
+  <h3>The dinette back wall box BX4 on W2</h3>
+  ${fig('EF24', 'The dinette back wall box BX4 (light switch ED12 and slide dimmer ED22) wired: what connects to what')}<div class="figwrap">${box4SVG()}</div>
   <h2>1a. High-current cables and fuses to buy</h2>
   ${cableTable()}
   <h2>1b. The hub board: where the parts go</h2>
