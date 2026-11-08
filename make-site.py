@@ -10,6 +10,8 @@ site/window-template.html  the measured window and its cardboard template
 site/wall-map.html     the wall marking map
 site/electric.html     the electrical and lighting layout
 site/interior.html     the 3D view of the inside of the van
+site/tray3d.html, site/valve3d.html  the pull-out tray and the shower valve in 3D
+van-site.zip           the whole of site/ in one zip (index.html at the top), ready to upload to a web host: see PUBLISH.md
 Every page gets the same navigation bar across the top and a noindex tag (search engines are asked to leave the site alone).
 site/photos/driver/    the driver side photos with all metadata (GPS location, camera, date) removed;
                        only the orientation tag is kept, so the pictures still turn the right way up
@@ -67,6 +69,8 @@ PAGES = [('index.html', 'Home', 'Start here: every page in one place.'),
          ('interactive.html', 'Plan', 'The adjustable plan: drag things around, open the doors, and see right away what does not fit.'),
          ('diagrams.html', 'Diagrams', 'The static diagrams of both walls, the bed, the ceiling and the roof, the photos and every measurement.'),
          ('interior.html', '3D view', 'Walk around the inside of the van in 3D: light wood stain walls and cabinets, a medium grey countertop, and a light grey plywood ceiling under light wood planks.'),
+         ('tray3d.html', 'Tray 3D', 'The pull-out tray in 3D: the inverter, the chargers and the bus bars on it, and the parts on the divider panel and the closet end panel.'),
+         ('valve3d.html', 'Valve 3D', 'The shower valve behind its little door in 3D: the PVC sheet, the door with its screws, the valve, the elbows and the PEX lines.'),
          ('wall-map.html', 'Wall map', 'The steel and the furring strips on each wall with every item almost transparent on top, to mark the walls from.'),
          ('electric.html', 'Electrical', 'The electrical and lighting layout: one-line diagram, outlets, switches and lights on each wall, the ceiling plan and the load table.'),
          ('wires.html', 'Wire by wire', 'One diagram for each wire: the chain of parts from the power to its end, and its whole run on the walls and the ceiling.'),
@@ -105,7 +109,7 @@ def put(name, html, cur=None, guide=None):
 GUIDE, BUILD_PAGES = buildguide.pages(HERE)
 GUIDE_OF = {g['file']: g['slug'] for g in GUIDE if g['ext']}
 for name, src in (('diagrams.html', 'sides.html'), ('interactive.html', 'interactive.html'), ('install.html', 'install.html'), ('window.html', 'window.html'),
-                  ('window-template.html', 'window-template.html'), ('wall-map.html', 'wall-map.html'), ('electric.html', 'electric.html'), ('wires.html', 'wires.html'), ('cheatsheet.html', 'cheatsheet.html'), ('interior.html', 'interior.html')):
+                  ('window-template.html', 'window-template.html'), ('wall-map.html', 'wall-map.html'), ('electric.html', 'electric.html'), ('wires.html', 'wires.html'), ('cheatsheet.html', 'cheatsheet.html'), ('interior.html', 'interior.html'), ('tray3d.html', 'tray3d.html'), ('valve3d.html', 'valve3d.html')):
     if os.path.exists(os.path.join(HERE, src)):
         put(name, open(os.path.join(HERE, src)).read(), guide=GUIDE_OF.get(name) or ('window' if name == 'window-template.html' else None))
 for name, doc in BUILD_PAGES.items():
@@ -125,4 +129,26 @@ home = ('<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="
         '<div class="wrap"><h1>Ford Transit 350 van build</h1><p class="lead">The plan, the diagrams, the install steps and the layouts, all in one place. Use the bar across the top of any page to move between them.</p>'
         f'<div class="grid">{cards}</div></div></body></html>')
 put('index.html', home, 'index.html')
+# the whole of site/ in one zip, ready to upload to any web host (index.html at the top of the zip)
+import zipfile
+with zipfile.ZipFile(os.path.join(HERE, 'van-site.zip'), 'w', zipfile.ZIP_DEFLATED) as z:
+    for root, dirs, files in os.walk(SITE):
+        for f in sorted(files):
+            fp = os.path.join(root, f)
+            z.write(fp, os.path.relpath(fp, SITE))
+# every link and picture inside site/ must point at a file that is there
+bad = []
+for root, dirs, files in os.walk(SITE):
+    for f in files:
+        if f.endswith('.html'):
+            fp = os.path.join(root, f)
+            for m in re.finditer(r'(?:href|src)="([^"#?][^"]*)"', open(fp, encoding='utf-8').read()):
+                u = m.group(1)
+                if re.match(r'(https?:|mailto:|data:|javascript:|tel:)', u):
+                    continue
+                u = u.split('#')[0].split('?')[0]
+                if u and not os.path.exists(os.path.normpath(os.path.join(root, u))):
+                    bad.append((os.path.relpath(fp, SITE), u))
 print('site/ rebuilt:', sorted(os.listdir(SITE)))
+print('van-site.zip written;', 'every link in site/ works' if not bad else 'BROKEN LINKS: %s' % bad)
+assert not bad, bad

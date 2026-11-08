@@ -1,0 +1,134 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Pull-out tray in 3D</title><style>
+:root { --bg: #f6f4ee; --fg: #23211c; --mut: #5f5e5a; --card: #fff; --line: #d3d1c7; --acc: #185FA5; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg: #1d1f23; --fg: #ecebe6; --mut: #a8a79f; --card: #272a30; --line: #3d4047; --acc: #7db4ff; color-scheme: dark; } }
+:root[data-theme="dark"] { --bg: #1d1f23; --fg: #ecebe6; --mut: #a8a79f; --card: #272a30; --line: #3d4047; --acc: #7db4ff; color-scheme: dark; }
+body { margin: 0; background: var(--bg); color: var(--fg); font: 15px/1.5 -apple-system, "Segoe UI", system-ui, sans-serif; }
+.wrap { max-width: 1180px; margin: 0 auto; padding-block: 16px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+h1 { font-size: 24px; margin: 4px 0 2px; } .lead { color: var(--mut); margin: 4px 0 12px; max-width: 70ch; }
+.bar { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; margin: 8px 0; }
+.bar button { font: inherit; padding: 6px 12px; border: 1px solid var(--line); border-radius: 8px; background: var(--card); color: var(--fg); cursor: pointer; }
+.bar button.on { border-color: var(--acc); color: var(--acc); font-weight: 600; }
+.bar label { display: inline-flex; gap: 6px; align-items: center; }
+.stage { position: relative; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: #e9eef3; touch-action: none; }
+.stage canvas { display: block; width: 100%; height: 100%; }
+.lbl { position: absolute; transform: translate(-50%, -100%); padding: 0 5px; font-size: 11px; line-height: 1.3; font-weight: 600; background: rgba(255,255,255,.92); color: #1b1a17; border: 1px solid #555; border-radius: 6px; white-space: nowrap; pointer-events: none; }
+.lbl.fixed { border-color: #B45309; } .lbl.wall { border-color: #185FA5; } .lbl.tray { border-color: #2E7D32; }
+.key { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 13px; color: var(--mut); margin: 8px 0; }
+.sw { display: inline-block; width: 12px; height: 12px; border-radius: 3px; vertical-align: -1px; margin-right: 5px; border: 1px solid #555; }
+.note { font-size: 13.5px; color: var(--mut); max-width: 80ch; }
+</style><meta name="robots" content="noindex, nofollow"><style>.vannav{display:flex;flex-wrap:wrap;gap:4px 6px;align-items:center;margin:0;padding:8px max(12px,env(safe-area-inset-left,0px));font:14px/1.3 -apple-system,"Segoe UI",system-ui,sans-serif;background:#f3f1ea;border-bottom:1px solid #cfcbbd;color:#26241f}.vannav a{color:#185FA5;text-decoration:none;padding:4px 9px;border-radius:14px;white-space:nowrap}.vannav a:hover{background:#e3e0d4}.vannav a[aria-current=page]{background:#26241f;color:#fff;font-weight:600}@media (prefers-color-scheme:dark){.vannav{background:#26241f;border-bottom-color:#4a473e;color:#ece9e0}.vannav a{color:#8fc2f0}.vannav a:hover{background:#3a372f}.vannav a[aria-current=page]{background:#ece9e0;color:#1b1a17}}</style></head><body><nav class="vannav" aria-label="All pages"><a href="index.html">Home</a><a href="build/index.html">Build guide</a><a href="interactive.html">Plan</a><a href="diagrams.html">Diagrams</a><a href="interior.html">3D view</a><a href="tray3d.html" aria-current="page">Tray 3D</a><a href="valve3d.html">Valve 3D</a><a href="wall-map.html">Wall map</a><a href="electric.html">Electrical</a><a href="wires.html">Wire by wire</a><a href="cheatsheet.html">Wire cheat sheet</a><a href="install.html">Fan and A/C</a><a href="window.html">Side window</a><a href="window-template.html">Window template</a></nav><div class="wrap">
+  <h1>The pull-out tray in 3D</h1>
+  <p class="lead">The plan's gear tray with your real board on it, as in section 1c of the electrical page, and where the other parts go: the TS-30, the AC panel and the fuse block are on the divider panel behind the tray. Drag to look around, scroll or pinch to zoom, and slide the tray out to see the cables stretch.</p>
+  <div class="bar">
+    <button id="bSlide" type="button">Slide the tray out</button>
+    <button data-v="aisle" type="button" class="on">From the aisle</button><button data-v="above" type="button">From above</button><button data-v="rear" type="button">From the rear doors</button><button data-v="close" type="button">Close up</button><button data-v="divider" type="button">The divider panel</button>
+  </div>
+  <div class="bar"><label><input type="checkbox" id="cDeck"> couch deck</label><label><input type="checkbox" id="cCab" checked> cables</label><label><input type="checkbox" id="cLab" checked> labels</label></div>
+  <div class="stage" id="stage"><canvas id="c"></canvas><div id="labels"></div></div>
+  <div class="key"><span><i class="sw" style="background:#e2c48a"></i>the sliding tray and what is on it</span><span><i class="sw" style="background:#cbd0d6"></i>fixed on the closet's end panel</span><span><i class="sw" style="background:#6fa8dc"></i>fixed on the divider panel (the TS-30, the AC panel and the fuse block)</span><span><i class="sw" style="background:#2f3a46"></i>battery under the tray</span></div>
+  <p class="note">Positions of the parts on the tray are read from your photo (good to about 2 in). The Class T holder, shunt, AC panel and fuse block use typical sizes; the TS-30 is from its listing. The loops of the two battery cables are drawn to show how much slack the tray needs: they pull tight at the far end of the slide. The TS-30, the AC panel and the fuse block are on the outer face of the divider panel (the tray's rear side wall), as in section 1b of the electrical page; look at it from the rear doors.</p>
+</div><script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script><script>
+const PARTS = [{"k":"inv","n":"BELTTT inverter 2000 W","x0":47.5,"x1":55.5,"z0":9.75,"z1":23.55,"h":3.9,"c":16757850},{"k":"dc","n":"LiTime 60 A DC-DC charger","x0":59.1,"x1":70.3,"z0":8.55,"z1":15.15,"h":4.5,"c":5214176},{"k":"ch","n":"VEVOR 80 A shore charger","x0":61.4,"x1":71.7,"z0":17.45,"z1":25.05,"h":4,"c":5025642},{"k":"rb","n":"red (+) bus bar","x0":56.2,"x1":58.4,"z0":9.85,"z1":14.65,"h":1.6,"c":14233637},{"k":"bb","n":"black (−) bus bar","x0":56.3,"x1":58.1,"z0":20.65,"z1":24.95,"h":1.6,"c":2829099},{"k":"br","n":"100 A breaker (the DC-DC’s input)","x0":70.3,"x1":72.5,"z0":7.75,"z1":10.25,"h":3,"c":10244048}];
+(function () {
+  const stage = document.getElementById('stage'), canvas = document.getElementById('c'), labelsEl = document.getElementById('labels');
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, preserveDrawingBuffer: true });
+  const scene = new THREE.Scene(); scene.background = new THREE.Color(0xe9eef3);
+  const camera = new THREE.PerspectiveCamera(38, 1.6, 1, 800);
+  scene.add(new THREE.HemisphereLight(0xffffff, 0x7c8590, .5)); const dl = new THREE.DirectionalLight(0xffffff, .5); dl.position.set(40, 90, 110); scene.add(dl);
+  const mat = (c, o) => new THREE.MeshLambertMaterial(Object.assign({ color: c }, o || {}));
+  function box(x0, x1, y0, y1, z0, z1, c, parent, o) {
+    const g = new THREE.BoxGeometry(x1 - x0, y1 - y0, z1 - z0), m = new THREE.Mesh(g, mat(c, o));
+    m.position.set((x0 + x1) / 2, (y0 + y1) / 2, (z0 + z1) / 2);
+    m.add(new THREE.LineSegments(new THREE.EdgesGeometry(g), new THREE.LineBasicMaterial({ color: 0x22262b, transparent: true, opacity: .5 })));
+    (parent || scene).add(m); return m;
+  }
+  function cyl(x, y0, y1, z, r, c, parent) { const m = new THREE.Mesh(new THREE.CylinderGeometry(r, r, y1 - y0, 16), mat(c)); m.position.set(x, (y0 + y1) / 2, z); (parent || scene).add(m); return m; }
+  // the van around it
+  box(14, 88, -.6, 0, -.6, 36, 0xc9c5bb); box(14, 88, 0, 28, -.6, 0, 0xe0d3b4);
+  box(42, 76, 0, 7.5, 0, 7, 0x8b8f94);
+  const battery = box(52, 73, 0, 9.5, 7, 17, 0x2f3a46);
+  cyl(71.4, 9.5, 10.5, 9.5, .7, 0xd93025); cyl(71.4, 9.5, 10.5, 14.5, .7, 0x1b1b1b);
+  box(38.65, 39.4, 0, 17, 0, 26, 0xcaa468); box(74, 74.75, 0, 17, 0, 26, 0xcaa468);
+  const deck = box(5, 74, 17, 18.5, 0, 26, 0xb98f5a, null, { transparent: true, opacity: .4 }); deck.visible = false;
+  box(39.4, 39.9, 10.2, 11.4, 7.5, 25.5, 0x6d737a); box(73.5, 74, 10.2, 11.4, 7.5, 25.5, 0x6d737a);
+  // the tray (slides out in +Z, toward the aisle)
+  const tray = new THREE.Group(); scene.add(tray);
+  box(40.05, 73.35, 10.5, 11, 7.75, 25.25, 0xe2c48a, tray);
+  box(40.05, 40.8, 11, 13, 7.75, 25.25, 0xc9a56a, tray); box(72.6, 73.35, 11, 13, 7.75, 25.25, 0xc9a56a, tray);
+  box(39.9, 40.05, 10.2, 11.4, 8, 25.3, 0x40454b, tray); box(73.35, 73.5, 10.2, 11.4, 8, 25.3, 0x40454b, tray);
+  PARTS.forEach(q => box(q.x0, q.x1, 11, 11 + q.h, q.z0, q.z1, q.c, tray));
+  // parts fixed on the closet's end panel (above the wheel well)
+  box(71.4, 74, 9.6, 12.3, 1, 6.5, 0x30343a); box(72, 74, 12.8, 15.9, 1, 6.3, 0xc9803f);
+  // the TS-30, the AC panel and the fuse block on the divider panel's outer face (the face at x = 38.65 that looks toward the rear doors; the positions are those of section 1b, drawing EF3)
+  box(33.9, 38.65, 2.5, 12.15, 1.5, 8.78, 0x6fa8dc); box(35.65, 38.65, 6.4, 11.4, 10.5, 17.5, 0xbfc5cc); box(36.65, 38.65, 2.6, 6.1, 19, 25, 0x2a2d33);
+  // the two battery cables: battery post to the fixed part (Class T / shunt) to the bus bar on the tray, with the slack the tray needs
+  const red = PARTS.find(q => q.k === 'rb'), blk = PARTS.find(q => q.k === 'bb');
+  const cables = new THREE.Group(); scene.add(cables);
+  const L0 = (a, e0) => a.distanceTo(e0) + 26;                          // the cable length: the chord with the tray in, plus 26 in
+  const spec = [
+    { col: 0xd93025, fix: [new THREE.Vector3(71.4, 10.5, 9.5), new THREE.Vector3(72.6, 11.4, 6.6), new THREE.Vector3(72.3, 11.2, 4.2)], a: new THREE.Vector3(71.5, 11.2, 3.4), e: new THREE.Vector3((red.x0 + red.x1) / 2, 12.9, (red.z0 + red.z1) / 2) },
+    { col: 0x111111, fix: [new THREE.Vector3(71.4, 10.5, 14.5), new THREE.Vector3(72.8, 12.5, 12), new THREE.Vector3(72.6, 14.0, 5.0)], a: new THREE.Vector3(71.8, 14.3, 3.4), e: new THREE.Vector3((blk.x0 + blk.x1) / 2, 12.9, (blk.z0 + blk.z1) / 2) }];
+  spec.forEach(sp => { sp.L = L0(sp.a, sp.e); });
+  let slide = 0, slideTarget = 0;
+  function buildCables() {
+    while (cables.children.length) { const c = cables.children.pop(); c.geometry.dispose(); }
+    spec.forEach(sp => {
+      const e = sp.e.clone(); e.z += slide;
+      const chord = sp.a.distanceTo(e), slack = Math.max(0, sp.L - chord), amp = Math.min(5, slack * .32), pts = [];
+      for (let i = 0; i <= 8; i++) { const t = i / 8, p = sp.a.clone().lerp(e, t); p.y += amp * Math.sin(Math.PI * t); p.z += amp * .5 * Math.sin(2 * Math.PI * t); pts.push(p); }
+      const curve = new THREE.CatmullRomCurve3(sp.fix.concat(pts));
+      cables.add(new THREE.Mesh(new THREE.TubeGeometry(curve, 90, .55, 8, false), mat(sp.col)));
+    });
+  }
+  // labels
+  const LAB = [
+    ['BELTTT inverter', 'tray', () => cen('inv', 1), true], ['LiTime DC-DC', 'tray', () => cen('dc', 1), true], ['shore charger (VEVOR)', 'tray', () => cen('ch', 1), true],
+    ['red bus bar', 'tray', () => cen('rb', 1.6), true], ['black bus bar', 'tray', () => cen('bb', 1.6), true], ['100 A breaker', 'tray', () => cen('br', 1), true],
+    ['battery (under the tray)', 'fixed', () => new THREE.Vector3(60, 4, 17.2), false], ['Class T fuse and shunt', 'fixed', () => new THREE.Vector3(73, 16.2, 3.6), false],
+    ['TS-30 transfer switch', 'wall', () => new THREE.Vector3(36.3, 13.1, 5.1), false], ['AC panel', 'wall', () => new THREE.Vector3(37.2, 12.3, 14), false], ['10-way fuse block', 'wall', () => new THREE.Vector3(37.6, 6.9, 22), false], ['divider panel', 'fixed', () => new THREE.Vector3(38.9, 17.6, 13), false],
+    ['closet end panel', 'fixed', () => new THREE.Vector3(74.4, 17.4, 24), false]
+  ].map(a => { const d = document.createElement('div'); d.className = 'lbl ' + a[1]; d.textContent = a[0]; labelsEl.appendChild(d); return { el: d, get: a[2], mv: a[3] }; });
+  function cen(k, up) { const q = PARTS.find(p => p.k === k); return new THREE.Vector3((q.x0 + q.x1) / 2, 11 + q.h + up, (q.z0 + q.z1) / 2); }
+  // camera: orbit around a target
+  const view = { yaw: 0, pitch: 38, dist: 100, tx: 56, ty: 9, tz: 13 }, goal = Object.assign({}, view);
+  const PRESET = { aisle: { yaw: 0, pitch: 38, dist: 100, tx: 56, ty: 9, tz: 13 }, above: { yaw: 0, pitch: 84, dist: 100, tx: 56, ty: 6, tz: 13 }, rear: { yaw: -72, pitch: 28, dist: 100, tx: 56, ty: 9, tz: 13 }, close: { yaw: 14, pitch: 42, dist: 56, tx: 62, ty: 11, tz: 16 }, divider: { yaw: -68, pitch: 16, dist: 58, tx: 38, ty: 8, tz: 13 } };
+  function setCam() {
+    const yaw = view.yaw * Math.PI / 180, pit = view.pitch * Math.PI / 180;
+    camera.position.set(view.tx + view.dist * Math.cos(pit) * Math.sin(yaw), view.ty + view.dist * Math.sin(pit), view.tz + view.dist * Math.cos(pit) * Math.cos(yaw));
+    camera.lookAt(view.tx, view.ty, view.tz);
+  }
+  function resize() { const w = stage.clientWidth, h = Math.max(380, Math.min(680, Math.round(w * .62))); stage.style.height = h + 'px'; renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2)); renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix(); }
+  let dirty = true;
+  function frame() {
+    let moving = false;
+    if (Math.abs(slideTarget - slide) > .02) { slide += (slideTarget - slide) * .12; moving = true; } else if (slide !== slideTarget) { slide = slideTarget; moving = true; }
+    if (moving) { tray.position.z = slide; buildCables(); }
+    ['yaw', 'pitch', 'dist', 'tx', 'ty', 'tz'].forEach(k => { if (Math.abs(goal[k] - view[k]) > .01) { view[k] += (goal[k] - view[k]) * .18; moving = true; } else view[k] = goal[k]; });
+    if (moving || dirty) {
+      setCam(); renderer.render(scene, camera); dirty = false;
+      const w = stage.clientWidth, h = stage.clientHeight, show = document.getElementById('cLab').checked;
+      LAB.forEach(l => { const p = l.get(); if (l.mv) p.z += slide; p.project(camera); const ok = show && p.z < 1; l.el.style.display = ok ? '' : 'none'; if (ok) { l.el.style.left = ((p.x + 1) / 2 * w) + 'px'; l.el.style.top = ((1 - p.y) / 2 * h) + 'px'; } });
+    }
+    requestAnimationFrame(frame);
+  }
+  // controls
+  let drag = null, pinch = null;
+  const pts = new Map();
+  stage.addEventListener('pointerdown', e => { stage.setPointerCapture(e.pointerId); pts.set(e.pointerId, [e.clientX, e.clientY]); drag = [e.clientX, e.clientY]; });
+  stage.addEventListener('pointermove', e => {
+    if (!pts.has(e.pointerId)) return; const prev = pts.get(e.pointerId); pts.set(e.pointerId, [e.clientX, e.clientY]);
+    if (pts.size === 2) { const a = [...pts.values()], d = Math.hypot(a[0][0] - a[1][0], a[0][1] - a[1][1]); if (pinch) goal.dist = Math.max(25, Math.min(220, goal.dist * pinch / d)); pinch = d; return; }
+    goal.yaw -= (e.clientX - prev[0]) * .4; goal.pitch = Math.max(4, Math.min(88, goal.pitch + (e.clientY - prev[1]) * .3)); view.yaw = goal.yaw; view.pitch = goal.pitch; dirty = true;
+  });
+  const up = e => { pts.delete(e.pointerId); pinch = null; };
+  stage.addEventListener('pointerup', up); stage.addEventListener('pointercancel', up);
+  stage.addEventListener('wheel', e => { e.preventDefault(); goal.dist = Math.max(25, Math.min(220, goal.dist * (1 + Math.sign(e.deltaY) * .08))); }, { passive: false });
+  document.querySelectorAll('[data-v]').forEach(b => b.addEventListener('click', () => { Object.assign(goal, PRESET[b.dataset.v]); document.querySelectorAll('[data-v]').forEach(x => x.classList.toggle('on', x === b)); }));
+  document.getElementById('bSlide').addEventListener('click', e => { slideTarget = slideTarget ? 0 : 18; e.target.textContent = slideTarget ? 'Slide the tray back in' : 'Slide the tray out'; e.target.classList.toggle('on', !!slideTarget); });
+  document.getElementById('cDeck').addEventListener('change', e => { deck.visible = e.target.checked; dirty = true; });
+  document.getElementById('cCab').addEventListener('change', e => { cables.visible = e.target.checked; dirty = true; });
+  document.getElementById('cLab').addEventListener('change', () => { dirty = true; });
+  window.addEventListener('resize', () => { resize(); dirty = true; });
+  window.__tray = { set: o => { Object.assign(goal, o.view || {}); Object.assign(view, o.view || {}); if (o.slide != null) { slide = slideTarget = o.slide; tray.position.z = slide; } buildCables(); dirty = true; } };
+  resize(); buildCables(); setCam(); frame();
+})();</script></body></html>

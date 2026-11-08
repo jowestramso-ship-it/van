@@ -276,7 +276,7 @@
   // floor-to-ceiling walls: their tops follow the arched ceiling, so they are built of 2 in strips; the passenger ones stand .05 proud of the cabinet fronts so the faces do not flicker
   const colWall = (x0, x1, z0, z1) => { for (let z = z0; z < z1 - 1e-6; z += 2) { const e = Math.min(z1, z + 2); bx(x0, x1, 0, fin((z + e) / 2) - .05, z, e, MT.wall, 48); } };
   L.walls.forEach(w => w.side === 'd' ? colWall(w.x0, w.x1, 0, w.d) : colWall(w.x0, w.x1, VW - w.d - .05, VW));
-  if (L.walls.some(w => w.id === 'W2')) bx(P.cab - .12, P.cab, 46.5, 49.5, 1.2, 3.2, MT.white, 4, { cast: false });   // the dinette light switch plate
+  if (L.walls.some(w => w.id === 'W2')) bx(P.cab - .12, P.cab, 43.0, 49.5, 1.2, 3.2, MT.white, 4, { cast: false });   // the dinette back wall box BX4: the plate over the light switch ED12 (48 up) and the slide dimmer ED22 (44 3/4 up)
   if (L.tableLen > 0) { bx(L.tbl[0], L.tbl[1], P.tableH - 1.4, P.tableH, 0, P.tableD, MT.woodH, 36); const lx = (L.tbl[0] + L.tbl[1]) / 2; const lg = new THREE.Mesh(new THREE.CylinderGeometry(.9, 1.1, P.tableH - 1.4, 16), MT.steel); lg.position.set(lx, (P.tableH - 1.4) / 2, P.tableD - 3); lg.castShadow = true; add(lg); }
 
   /* ---------- passenger side: stall, fridge, counter, sink, nook, TV ---------- */
