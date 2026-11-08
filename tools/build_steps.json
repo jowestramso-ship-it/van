@@ -22,7 +22,7 @@
  {
   "id": "insulate",
   "title": "Insulate between the ribs and in the walls",
-  "body": "The ribs hang 2 in, so the insulation fits between them without going past the ceiling plane. Keep it clear of the openings' frames and the wiring."
+  "body": "The ribs hang 2 in, so the insulation fits between them without going past the ceiling plane. Keep it clear of the openings' frames and the wiring. It is Havelock sheep wool (chosen 2026-11-08) for the walls and the ceiling, about R-3.6 per inch, so about R-7 at the full 2 in between the ribs; none goes in the two nooks."
  },
  {
   "id": "floor",

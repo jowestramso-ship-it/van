@@ -122,8 +122,8 @@ def pages(root):
         blocks=[]))
     P.append(dict(slug='insulate', nav='Insulation and floor', title='Insulation and subfloor',
         kick='After the roof and the window are cut and the wiring is in, before anything covers the walls.',
-        intro=f'<p>{H.escape(body("insulate"))}</p><p>{H.escape(body("floor"))}</p><p class="sug">The plan does not choose the insulation material or the subfloor thickness yet, so there are no numbers for them here; the plan only fixes the depths and the order.</p>',
-        steps=['<b>Insulate between the ribs and in the walls,</b> keeping the insulation clear of the opening frames and the wiring, and not past the ceiling plane.',
+        intro=f'<p>{H.escape(body("insulate"))}</p><p>{H.escape(body("floor"))}</p><p class="sug"><b>Insulation (user, 2026-11-08): Havelock sheep wool for the walls and the ceiling.</b> By the figure Havelock gives it is about R-3.6 per inch, so the ceiling, at most 2 in thick between the ribs, comes to about R-7. None goes in the two nooks (not enough depth). Keep it clear of the opening frames and of the two wall runs, the cable channels at 73 and 76 1/2 in on the walls. The plan does not choose the subfloor thickness yet, so there are no numbers for it here.</p>',
+        steps=['<b>Insulate between the ribs and in the walls with the Havelock wool,</b> keeping the insulation clear of the opening frames and the wiring, and not past the ceiling plane.',
                '<b>Lay the subfloor.</b> Everything else stands on it: the gear cabinet, the couch frame, the counter, the tanks and the battery. Check it is flat before the heavy things go on.'],
         blocks=[]))
     P.append(dict(slug='furring', nav='Furring rails', title='Furring rails, spacer blocks and shims',
