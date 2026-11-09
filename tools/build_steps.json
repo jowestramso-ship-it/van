@@ -21,8 +21,8 @@
  },
  {
   "id": "insulate",
-  "title": "Insulate between the ribs and in the walls",
-  "body": "The ribs hang 2 in, so the insulation fits between them without going past the ceiling plane. Keep it clear of the openings' frames and the wiring. It is Havelock sheep wool (chosen 2026-11-08) for the walls and the ceiling, about R-3.6 per inch, so about R-7 at the full 2 in between the ribs; none of the wool goes in the nooks (not enough depth): they get Siless Liner (chosen 2026-11-09), a 4 mm (157 mil) self-adhesive closed cell foam with a foil face, 36 sq ft, stuck to the clean steel behind each nook lining before the lining goes in."
+  "title": "Line the steel with the Siless Liner",
+  "body": "The insulation is Siless Liner (chosen 2026-11-09, replacing the Havelock wool chosen 2026-11-08): 157 mil (4 mm) self-adhesive closed cell foam with a foil face, 36 sq ft a roll, stuck to the clean steel of the walls, the ceiling between the ribs (the ribs hang 2 in, so it stays inside the ceiling plane) and the nooks. About 230 sq ft of steel (ceiling about 75, the two walls about 135, the nooks about 15), so about 7 rolls in all. It is a thin layer: much less warmth than wool, but it helps keep the steel from sweating and deadens the panels. Keep it clear of the openings' frames and the wiring."
  },
  {
   "id": "floor",

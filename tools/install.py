@@ -708,9 +708,9 @@ def build():
              'Ladder, a board to kneel on across the ribs, a helper',
              'Gloves, safety glasses, hearing protection, a dust mask',
              'Multimeter; garden hose for the leak test']
-    nook = ['OSI Quad Max (paintable hybrid sealant) for a thin bead where the plywood meets the wall covering; leave the top or bottom edge unsealed so the wool can breathe',
-            'Havelock wool for the nook: a pad cut from a batt, about 7/8 in thick when fitted (split the batt into layers if it is thicker), cut about 1/4 in oversize so it stays put',
-            '3/8 in plywood for the back of each nook, two pieces: one for the jar nook (76 to 93 1/4 in from the back, 17 1/4 x 16, cut about 17 1/8 x 15 7/8) and one for the shower nook (12 to 24 in from the back, 12 x 16, cut about 11 7/8 x 15 7/8); both are 38 to 54 in up. With 1 1/4 in spare behind the jars, 3/8 in plywood leaves 7/8 in for the wool',
+    nook = ['OSI Quad Max (paintable hybrid sealant) for a thin bead where the plywood meets the wall covering; leave the top or bottom edge unsealed so the space behind can breathe',
+            'Siless Liner for the nook (it replaces the wool pad, 2026-11-09): a piece cut from the roll, 0.157 in thick, stuck to the clean steel behind the plywood back; the rest of the 7/8 in behind the plywood is an air gap',
+            '3/8 in plywood for the back of each nook, two pieces: one for the jar nook (76 to 93 1/4 in from the back, 17 1/4 x 16, cut about 17 1/8 x 15 7/8) and one for the shower nook (12 to 24 in from the back, 12 x 16, cut about 11 7/8 x 15 7/8); both are 38 to 54 in up. With 1 1/4 in spare behind the jars, 3/8 in plywood leaves 7/8 in behind it: the foam takes 0.157 of it and the rest is an air gap',
             'Water-based polyurethane for the back and every edge of that plywood, two coats, cured for a few days before it goes in',
             'Isopropyl alcohol and rags to wipe the steel, touch-up white paint and rust-inhibiting primer for any chips in the factory paint']
     head = ('<h1>Roof fan and air conditioner: install steps</h1>'
