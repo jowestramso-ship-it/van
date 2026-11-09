@@ -21,7 +21,7 @@ const fs = require('fs');
         cabs: L.cabs, doors: L.doors.map(d => ({x0: f(d.x0), x1: f(d.x1)})), doorZ: L.doorZ.map(f), c0: L.c0, c1: L.c1, bA: L.bA, bB: L.bB, tbl: L.tbl.map(f), tableLen: f(L.tableLen),
         fr: L.fr, microX: L.microX.map(f), microZ: L.microZ.map(f), cabS: L.cabS, angS: L.angS, sinkS: L.sinkS, sinkE: L.sinkE,
         parts: L.parts.map(p => ({id: p.id, kind: p.kind, x0: f(p.x0), x1: f(p.x1), z0: f(p.z0), z1: f(p.z1)})),
-        lights: L.lights.map(l => ({x: f(l.x), y: f(l.y)})), ceilF: f(L.ceilF), lining: f(L.lining), slatY: L.slatY.map(f),
+        lights: L.lights.map(l => ({x: f(l.x), y: f(l.y), k: l.k})), ceilF: f(L.ceilF), lining: f(L.lining), slatY: L.slatY.map(f),
         fan: {x: L.fan.x, y: L.fan.y, w: L.fan.w}, ac: {x: L.ac.x, y: L.ac.y, w: L.ac.w},
         hook: L.hook ? {x: f(L.hook.x), z: f(L.hook.z), z0: f(L.hook.z0)} : null,
         split: f(L.split), cloDr: L.cloDr.map(d => ({z0: f(d.z0), z1: f(d.z1)})), hangBot: f(L.hangBot),

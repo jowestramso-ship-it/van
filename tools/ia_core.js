@@ -219,7 +219,9 @@ const PD = [
   { k: 'lightC1', g: 'Ceiling', l: 'First center-row ceiling light: along the ceiling from the rear-door edge, centered across the van (user: 36; it is moved to 2 in clear of a roof rib)', d: 36, s: .5, a: 6, b: 154 },
   { k: 'lightC2', g: 'Ceiling', l: 'Second center-row ceiling light: along the ceiling from the rear-door edge, centered across the van (user: around 100; it is moved to 2 in clear of a roof rib)', d: 100, s: .5, a: 6, b: 154 },
   { k: 'lightRows', g: 'Ceiling', l: 'Rows of lights along the ceiling', d: 2, s: 1, a: 1, b: 4 },
-  { k: 'lightD', g: 'Ceiling', l: 'Light diameter (mounted on a slat)', d: 2, s: .25, a: 1, b: 8 },
+  { k: 'lightD', g: 'Ceiling', l: 'Light flange diameter (Acegoo 12 V slim puck: 2 3/4 in across, 1/2 in thick, clips into the plywood)', d: 2.75, s: .25, a: 1, b: 8 },
+  { k: 'lightHole', g: 'Ceiling', l: 'Light cutout hole in the plywood (the puck needs 2 1/4 in; two spring clips hold it in thin plywood only, not through a slat)', d: 2.25, s: .125, a: .5, b: 8 },
+  { k: 'lightGap', g: 'Ceiling', l: 'Slat cut away at each light: length along the slat (the flange 2 3/4 in plus 1/8 in each side)', d: 3, s: .25, a: 0, b: 12 },
   { k: 'fanX', g: 'Ceiling', l: 'Roof fan cutout: along the van (from the back)', d: 13.25, s: .5, a: 0, b: 220 },
   { k: 'fanY', g: 'Ceiling', l: 'Fan cutout: across (from the driver wall; 34 is the middle of the van, over the aisle)', d: 34, s: .5, a: 0, b: 90 },
   { k: 'fanUnit', g: 'Ceiling', l: 'Roof fan unit on the roof: square footprint (2012 F36AR exhaust fan: 17.7 x 17.7 x 6.4 tall)', d: 17.75, s: .25, a: 6, b: 40 },
@@ -619,24 +621,30 @@ function layout(P0) {
     const rows = Math.max(1, Math.round(P.lightRows)), N = Math.max(0, Math.round(P.lightN));
     if (P.lightSpots) {
       // lights only over the shower stall, one over the countertop and sink together, and two in the center row (user: 'one around 100 centered, the other 36 centered'): x is from the rear-door edge (the wall numbers + 6), y across from the driver wall;
-      // each sits on the slat nearest the middle of what it lights (ties go toward the passenger wall) and 2 in clear of a rib (on the nearer side), so the wire hole misses it
+      // each sits on the slat nearest the middle of what it lights (ties go toward the passenger wall) and 2 in clear of a rib (on the nearer side), so the hole and the clips miss it; the slat is cut away there (lightGap) and the puck clips into the plywood alone
       const cs = L.cabS + 6, se = L.sinkE + 6;
       const want = [[6 + P.panW / 2, P.vanW - P.panD / 2], [(cs + se) / 2, P.vanW - P.cabD / 2], [P.lightC1, P.vanW / 2], [P.lightC2, P.vanW / 2]].slice(0, N);
       want.forEach(w => {
         let x = w[0], y = w[1];
         L.ribBands.forEach(b => { if (x > b[0] - 2 && x < b[1] + 2) x = (x - (b[0] - 2)) <= ((b[1] + 2) - x) ? b[0] - 2 : b[1] + 2; });
-        if (P.liningOn && n > 0) { let best = 0, bd = 1e9; L.slatY.forEach((sy, k) => { const d = Math.abs(sy + P.slatW / 2 - y); if (d < bd - 1e-9 || (Math.abs(d - bd) < 1e-9 && sy > L.slatY[best])) { bd = d; best = k; } }); y = L.slatY[best] + P.slatW / 2; if (L.chanY.indexOf(y) < 0) L.chanY.push(y); }
-        L.lights.push({ x, y });
+        let sk = -1;
+        if (P.liningOn && n > 0) { let best = 0, bd = 1e9; L.slatY.forEach((sy, k) => { const d = Math.abs(sy + P.slatW / 2 - y); if (d < bd - 1e-9 || (Math.abs(d - bd) < 1e-9 && sy > L.slatY[best])) { bd = d; best = k; } }); y = L.slatY[best] + P.slatW / 2; sk = best; if (L.chanY.indexOf(y) < 0) L.chanY.push(y); }
+        L.lights.push({ x, y, k: sk });
       });
     } else
     for (let r = 0; r < rows; r++) {
       const cnt = Math.floor(N / rows) + (r < N % rows ? 1 : 0); if (cnt < 1) continue;
       const target = L.ceilOff + P.ceilW * (r + 1) / (rows + 1); let y = target;
-      if (P.liningOn && n > 0) { let best = 0, bd = 1e9; L.slatY.forEach((sy, k) => { const d = Math.abs(sy + P.slatW / 2 - target); if (d < bd) { bd = d; best = k; } }); y = L.slatY[best] + P.slatW / 2; L.chanY.push(y); }
-      for (let c = 0; c < cnt; c++) L.lights.push({ x: P.ceilLen * (c + .5) / cnt, y });
+      let sk = -1;
+      if (P.liningOn && n > 0) { let best = 0, bd = 1e9; L.slatY.forEach((sy, k) => { const d = Math.abs(sy + P.slatW / 2 - target); if (d < bd) { bd = d; best = k; } }); y = L.slatY[best] + P.slatW / 2; sk = best; L.chanY.push(y); }
+      for (let c = 0; c < cnt; c++) L.lights.push({ x: P.ceilLen * (c + .5) / cnt, y, k: sk });
     }
     L.fan = { x: P.fanX, y: P.fanY, w: P.fanW, nm: 'roof fan', u: P.fanUnit }; L.ac = { x: P.acX, y: P.acY, w: P.acW, nm: 'A/C', u: P.acUnit };
     L.slatsCut = c => L.slatY.filter((sy, k) => !L.slatOut.has(k) && sy < c.y + c.w / 2 && sy + P.slatW > c.y - c.w / 2).length;
+    // the slat is cut away at each light (the puck clips into the plywood alone; the slat and the plywood together, 15/16 in, are too thick for its clips): the x ranges, from the rear-door edge, by slat
+    L.lightCuts = k => L.lights.filter(l => l.k === k).map(l => [l.x - P.lightGap / 2, l.x + P.lightGap / 2]);
+    // plywood seams across the van: the 8 ft sheets start at the cab wall, so the seam is 64 in from the rear doors, clear of the lights and both openings (from the rear doors the first seam fell at 96, across the countertop light's hole)
+    L.plyX = []; for (let x = P.ceilLen - 96; x > 1; x -= 96) L.plyX.unshift(x);
   }
   // the drawers and shelves under the counter (as planned plus dragged), the jar shelf in the nook and the microwave shelf above the fridge
   L.parts = cabinetParts(L); L.partById = {}; L.parts.forEach(p => { L.partById[p.id] = p; });

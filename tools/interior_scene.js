@@ -101,6 +101,7 @@
     D.L.slatY.forEach((sy, k) => {
       const zc = sy + P.slatW / 2, yb = fin(zc), yt = plyU(zc), sl = (fin(zc + 1) - fin(zc - 1)) / 2, cuts = [];
       [L.fan, L.ac].forEach((c, ci) => { const off = ci ? 3.125 : 0; if (zc + P.slatW / 2 > c.y - c.w / 2 && zc - P.slatW / 2 < c.y + c.w / 2) cuts.push([c.x - c.w / 2 - 6, c.x + c.w / 2 - 6]); });
+      L.lights.forEach(l => { if (l.k === k) cuts.push([l.x - P.lightGap / 2 - 6, l.x + P.lightGap / 2 - 6]); });   // the slat is cut away at each light: the puck clips into the plywood alone
       cuts.sort((a, b) => a[0] - b[0]); let x = XB; const segs = [];
       cuts.forEach(c => { if (c[0] > x) segs.push([x, c[0]]); x = Math.max(x, c[1]); }); if (x < XE) segs.push([x, XE]);
       segs.forEach(s => { const m = bx(s[0], s[1], -P.slatT / 2, P.slatT / 2, -P.slatW / 2, P.slatW / 2, MT.cedar, 30); m.position.set((s[0] + s[1]) / 2, (yb + yt) / 2, zc); m.rotation.x = -Math.atan(sl); });
@@ -385,7 +386,9 @@
   const sun = new THREE.DirectionalLight(0xfff1dc, 1.0); sun.position.set(150, 130, VW + 120); sun.target.position.set(110, 0, 30); sun.castShadow = true;
   sun.shadow.mapSize.set(2048, 2048); Object.assign(sun.shadow.camera, { left: -160, right: 160, top: 160, bottom: -160, near: 20, far: 520 }); sun.shadow.bias = -.0006; scene.add(sun, sun.target);
   const pl = (x, y, z, c, i, dist, shadow) => { const l = new THREE.PointLight(c, i, dist, 2); l.position.set(x, y, z); if (shadow) { l.castShadow = true; l.shadow.mapSize.set(512, 512); l.shadow.bias = -.002; } scene.add(l); return l; };
-  L.lights.forEach(l => { const y = fin(l.y); const d = new THREE.Mesh(new THREE.CylinderGeometry(1, 1, .5, 20), MT.glow); d.position.set(l.x - 6, y - .1, l.y); add(d); pl(l.x - 6, y - 4, l.y, 0xffe1b0, .85, 200, true); });
+  L.lights.forEach(l => {   // each puck sits in the plywood (flange 2 3/4 across, about 1/8 in proud of its underside), behind the slat faces, in the gap cut in the slat
+    const yp = plyU(l.y), sl = (plyU(l.y + 1) - plyU(l.y - 1)) / 2, d = new THREE.Mesh(new THREE.CylinderGeometry(P.lightD / 2, P.lightD / 2, .15, 28), MT.glow);
+    d.position.set(l.x - 6, yp - .07, l.y); d.rotation.x = -Math.atan(sl); add(d); pl(l.x - 6, fin(l.y) - 4, l.y, 0xffe1b0, .85, 200, true); });
   D.cabLights.forEach(x => { const d = new THREE.Mesh(new THREE.CylinderGeometry(1.05, 1.05, .3, 18), MT.glow); d.position.set(x, P.cabBot - .2, P.cabDepth / 2); add(d); pl(x, P.cabBot - 3, P.cabDepth / 2 + 3, 0xffd9a0, .5, 90, false); });
   [[20, 1.5], [95, 1.5], [20, VW - 1.5], [95, VW - 1.5]].forEach(p => pl(p[0], hw - 3, p[1], 0xffcf90, .28, 130, false)); pl(-3, hw - 3, VW / 2, 0xffcf90, .25, 100, false);
 

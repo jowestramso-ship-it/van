@@ -376,9 +376,9 @@ function drawCeiling(L, V) {
   const P = L.P, S = 5, X0 = 70, Y0 = 90, CL = P.ceilLen, CW = P.ceilW, o = [];
   const xx = x => X0 + S * x, yy = y => Y0 + S * y, hits = [];
   o.push(T(X0, 22, 'The ceiling covering seen from above through the roof: rear doors on the left, cab wall on the right, driver side at the top.', { anchor: 'start', size: 14, fill: '#5F5E5A', halo: false }));
-  o.push(T(X0, 40, P.liningOn ? `${fmt(P.plyT)} in plywood against the roof, then ${L.nSlats - L.slatOut.size} ${slatWood(P)} slats (${fmt(P.slatW)} wide x ${fmt(P.slatT)} thick x ${fmt(L.slatLen)} long) with ${fmt(P.slatGap)} in gaps and the lights mounted on the slats. Finished ceiling at ${fmt(L.ceilF)} in.` : 'The covering is turned off (Ceiling sizes on the right).', { anchor: 'start', size: 12, fill: '#5F5E5A', halo: false }));
+  o.push(T(X0, 40, P.liningOn ? `${fmt(P.plyT)} in plywood against the roof, then ${L.nSlats - L.slatOut.size} ${slatWood(P)} slats (${fmt(P.slatW)} wide x ${fmt(P.slatT)} thick x ${fmt(L.slatLen)} long) with ${fmt(P.slatGap)} in gaps, each cut ${fmt(P.lightGap)} in at its light (the ${fmt(P.lightD)} in puck clips into the plywood alone). Finished ceiling at ${fmt(L.ceilF)} in.` : 'The covering is turned off (Ceiling sizes on the right).', { anchor: 'start', size: 12, fill: '#5F5E5A', halo: false }));
   // plywood sheets (4 x 8 ft, long way along the van): pieces
-  const cx = [0], cy = [0]; for (let x = 96; x < CL; x += 96) cx.push(x); cx.push(CL); for (let y = 48; y < CW; y += 48) cy.push(y); cy.push(CW);
+  const cx = [0].concat(L.plyX), cy = [0]; cx.push(CL); for (let y = 48; y < CW; y += 48) cy.push(y); cy.push(CW);   // the 8 ft sheets start at the cab wall (seam at 64 from the rear doors, clear of the lights)
   if (P.liningOn) {
     o.push(GB('ply', 'Plywood sheets'));
     for (let i = 0; i < cx.length - 1; i++) for (let j = 0; j < cy.length - 1; j++) {
@@ -391,13 +391,13 @@ function drawCeiling(L, V) {
     o.push(GB('slats', 'Slats'));
     L.slatY.forEach((y0, k) => {
       if (L.slatOut.has(k)) return;
-      const ex = [L.fan, L.ac].filter(c => y0 < c.y + c.w / 2 && y0 + P.slatW > c.y - c.w / 2).map(c => [c.x - c.w / 2, c.x + c.w / 2]);
+      const ex = [L.fan, L.ac].filter(c => y0 < c.y + c.w / 2 && y0 + P.slatW > c.y - c.w / 2).map(c => [c.x - c.w / 2, c.x + c.w / 2]).concat(L.lightCuts(k));
       for (let x0 = 0; x0 < CL; x0 += L.slatLen + .25) seg(x0, Math.min(CL, x0 + L.slatLen), ex).forEach(([a0, a1]) => o.push(R(xx(a0), yy(y0), S * (a1 - a0), S * P.slatW, { fill: '#9A6B3A', fo: .85, stroke: '#5A3A00', sw: .8 })));
     });
     o.push(T(xx(CL * .62), yy(L.slatY[Math.min(L.slatY.length - 1, 6)] || 4) + 9, `slats ${fmt(P.slatW)} x ${fmt(P.slatT)} x ${fmt(L.slatLen)}`, { size: 11, fill: '#fff', w: 600, halo: false }));
     o.push(GE());
     o.push(GB('lights', 'Ceiling lights'));
-    L.lights.forEach(l => { o.push(`<circle cx="${f1(xx(l.x))}" cy="${f1(yy(l.y))}" r="${f1(S * P.lightD / 2)}" fill="#FFE9A0" stroke="#B8860B" stroke-width="1.4"/>`); });
+    L.lights.forEach(l => { o.push(`<circle cx="${f1(xx(l.x))}" cy="${f1(yy(l.y))}" r="${f1(S * P.lightD / 2)}" fill="#FFE9A0" stroke="#B8860B" stroke-width="1.4"/>`); o.push(`<circle cx="${f1(xx(l.x))}" cy="${f1(yy(l.y))}" r="${f1(S * P.lightHole / 2)}" fill="none" stroke="#8A5A00" stroke-width="1" stroke-dasharray="3 2"/>`); });
     o.push(GE());
     o.push(GB('ac', 'Air conditioner'));
     o.push(R(xx(L.ac.x - L.ac.u / 2), yy(L.ac.y - L.ac.u / 2), S * L.ac.u, S * L.ac.u, { stroke: '#444441', sw: 1.2, dash: '6 4' }));
