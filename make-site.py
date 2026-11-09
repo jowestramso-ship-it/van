@@ -10,7 +10,7 @@ site/window-template.html  the measured window and its cardboard template
 site/wall-map.html     the wall marking map
 site/electric.html     the electrical and lighting layout
 site/interior.html     the 3D view of the inside of the van
-site/tray3d.html, site/valve3d.html, site/cb3d.html  the pull-out tray, the shower valve and the ceiling blocking in 3D
+site/tray3d.html, site/valve3d.html  the pull-out tray and the shower valve in 3D
 van-site.zip           the whole of site/ in one zip (index.html at the top), ready to upload to a web host: see PUBLISH.md
 Every page gets the same navigation bar across the top and a noindex tag (search engines are asked to leave the site alone).
 site/photos/driver/    the driver side photos with all metadata (GPS location, camera, date) removed;
@@ -71,7 +71,6 @@ PAGES = [('index.html', 'Home', 'Start here: every page in one place.'),
          ('interior.html', '3D view', 'Walk around the inside of the van in 3D: light wood stain walls and cabinets, a medium grey countertop, and a light grey plywood ceiling under light wood planks.'),
          ('tray3d.html', 'Tray 3D', 'The pull-out tray in 3D: the inverter, the chargers and the bus bars on it, and the parts on the divider panel and the closet end panel.'),
          ('valve3d.html', 'Valve 3D', 'The shower valve behind its little door in 3D: the PVC sheet, the door with its screws, the valve, the elbows and the PEX lines.'),
-         ('cb3d.html', 'Blocking 3D', 'The ceiling blocking in 3D, step by step: the Sikaflex beads, pressing a piece up between the steel ribs, the plywood and its screws, and the trim.'),
          ('wall-map.html', 'Wall map', 'The steel and the furring strips on each wall with every item almost transparent on top, to mark the walls from.'),
          ('electric.html', 'Electrical', 'The electrical and lighting layout: one-line diagram, outlets, switches and lights on each wall, the ceiling plan and the load table.'),
          ('wires.html', 'Wire by wire', 'One diagram for each wire: the chain of parts from the power to its end, and its whole run on the walls and the ceiling.'),
@@ -110,7 +109,7 @@ def put(name, html, cur=None, guide=None):
 GUIDE, BUILD_PAGES = buildguide.pages(HERE)
 GUIDE_OF = {g['file']: g['slug'] for g in GUIDE if g['ext']}
 for name, src in (('diagrams.html', 'sides.html'), ('interactive.html', 'interactive.html'), ('install.html', 'install.html'), ('window.html', 'window.html'),
-                  ('window-template.html', 'window-template.html'), ('wall-map.html', 'wall-map.html'), ('electric.html', 'electric.html'), ('wires.html', 'wires.html'), ('cheatsheet.html', 'cheatsheet.html'), ('interior.html', 'interior.html'), ('tray3d.html', 'tray3d.html'), ('valve3d.html', 'valve3d.html'), ('cb3d.html', 'cb3d.html')):
+                  ('window-template.html', 'window-template.html'), ('wall-map.html', 'wall-map.html'), ('electric.html', 'electric.html'), ('wires.html', 'wires.html'), ('cheatsheet.html', 'cheatsheet.html'), ('interior.html', 'interior.html'), ('tray3d.html', 'tray3d.html'), ('valve3d.html', 'valve3d.html')):
     if os.path.exists(os.path.join(HERE, src)):
         put(name, open(os.path.join(HERE, src)).read(), guide=GUIDE_OF.get(name) or ('window' if name == 'window-template.html' else None))
 for name, doc in BUILD_PAGES.items():
