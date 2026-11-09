@@ -121,20 +121,28 @@ def fig_window():
 def fig_top():
     import math
     o = []; a = o.append
-    lean = math.tan(math.radians(5)); yCe = 70; xt = 170; h = 150                                                          # the ceiling plywood's underside, the wall face at the ceiling, the part of the wall drawn
+    lean = math.tan(math.radians(5)); yCe = 150; xt = 170; h = 150                                                         # the ceiling plywood's underside, the wall face at the ceiling, the part of the wall drawn
+    S = 40
     a(_r(xt - 40, yCe - 7.5, 560, 7.5, '#D9C7A5', '#8A6B4D', 1)); a(_t(xt + 330, yCe - 14, '3/16 ceiling plywood', 12, 'start', '#5F5E5A'))
     a(_r(xt + 60, yCe, 300, 30, '#DDC397', '#8A6B4D', 1)); a(_t(xt + 370, yCe + 20, 'cedar slat 3/4', 12, 'start', '#5F5E5A'))
     a(_p([(xt - 15, yCe), (xt, yCe), (xt - h * lean, yCe + h), (xt - 15 - h * lean, yCe + h)], PLY))                       # the wall sheet leans in toward the right as it rises
     tw, th = 30, 60
     a(_p([(xt, yCe), (xt + tw, yCe), (xt + tw, yCe + th), (xt - th * lean, yCe + th)], HARD, INK, 1.2))                   # the trim: 3/4 along the ceiling, 1 1/2 down the wall, back edge ripped to the lean
+    # the ceiling blocking CB1/CB2: 1 1/2 x 1 1/2 wood above the plywood edge, between the roof ribs, flush with the rib bottoms; the roof steel above it (the ribs hang 2 in)
+    bk = 1.5 * S; yb = yCe - 7.5 - bk
+    a(_r(xt - 40, yb - .5 * S - 5, 560, 5, '#9AA0A8', INK, 1)); a(_t(xt + 60, yb - .5 * S - 12, 'steel roof: the ribs hang 2 in below it, the blocking is 1 1/2', 12, 'start', '#5F5E5A'))
+    a(_r(xt, yb, bk, bk, '#B8895A', INK, 1.2))
+    a(f'<line x1="{xt + 15}" y1="{yCe + th - 3}" x2="{xt + 15}" y2="{yb + 14}" stroke="{INK}" stroke-width="2.2" stroke-dasharray="6 3"/>')   # the trim's screw: up through the trim and the plywood into the blocking
     cx = xt + tw - 22; cy = yCe + th + 2
     a(_r(cx, cy, 22, 11, '#B9BCC2', INK, 1)); a(_r(cx + 4, cy + 7, 14, 3, LED, '#8A5A00', .6))
     a(_p([(cx + 4, cy + 10), (cx + 18, cy + 10), (cx + 40, cy + 52), (cx - 18, cy + 52)], '#FFE9A8', 'none', 0, 'fill-opacity=".6"'))
-    a(_call(xt + tw / 2, yCe + 30, 330, 170, 'trim 3/4 x 1 1/2, back edge ripped to the 5 degree lean', 'start'))
-    a(_call(cx + 11, cy + 6, 330, 214, 'LED strip in an aluminum channel', 'start', '#8A5A00'))
-    a(_call(xt - 40, yCe + 60, 40, 150, '3/8 wall sheet, leaning in 5 degrees', 'start')); a(_call(xt + 12, yCe - 3, 20, 44, 'screwed to the ceiling blocking, not to the sheet', 'start'))
+    a(_call(xt + tw / 2, yCe + 34, 330, yCe + 116, 'trim 3/4 x 1 1/2, back edge ripped to the 5 degree lean', 'start'))
+    a(_call(cx + 11, cy + 6, 330, yCe + 158, 'LED strip in an aluminum channel', 'start', '#8A5A00'))
+    a(_call(xt - 40, yCe + 60, 40, yCe + 80, '3/8 wall sheet, leaning in 5 degrees', 'start'))
+    a(_call(xt + 15, yCe + 20, 330, yCe + 56, 'screw up through the trim and the plywood', 'start')); a(_t(338, yCe + 74, 'into the blocking (2 1/2 in screw)', 12, 'start', INK))
+    a(_call(xt + bk / 2, yb + bk / 2 - 8, 330, yb + 6, 'ceiling blocking CB1 (CB2 on the other wall)', 'start', '#5A2E0A')); a(_t(338, yb + 26, '1 1/2 x 1 1/2, flush with the rib bottoms,', 12, 'start', '#5A2E0A')); a(_t(338, yb + 42, 'bottom bevelled to the roof tilt (16 degrees)', 12, 'start', '#5A2E0A'))
     a(_t(20, 24, 'Top edge at the ceiling: a section along the wall (the wall on the left)', 14, 'start', INK, 700))
-    return _svg(760, 300, ''.join(o), 'Top edge trim with the LED strip')
+    return _svg(760, 360, ''.join(o), 'Top edge trim with the LED strip and the ceiling blocking')
 
 # ---- 7  the floor edge: a section looking along the wall --------------------------------------------------------------------------------
 def fig_floor():
@@ -155,7 +163,7 @@ FIGS = [
     ('3', 'Outside corners', fig_outside, 'The wheel well box and the ends of the closet, shower and counter walls: a solid hardwood corner post that the sheets stop against, with the outer edges rounded 1/8 in.'),
     ('4', 'Visible plywood edges', fig_edge, 'The sliding door opening, shelf and nook edges: iron on 1/2 in birch veneer tape, trim it flush and sand it, then finish it with the sheets.'),
     ('5', 'The side window', fig_window, 'The cutout is framed with J1 to J4 behind the sheet; line the reveal with 1/4 in strips and mitre a 3/4 x 1 1/2 in picture-frame trim over the sheet\'s cut edge.'),
-    ('6', 'The top edge at the ceiling', fig_top, 'A 3/4 x 1 1/2 in hardwood strip covers the sheet\'s top edge and the 1 1/2 in gap beside the slats; its back edge is ripped to the lean and the LED strip sits in a channel behind its lower edge.'),
+    ('6', 'The top edge at the ceiling', fig_top, 'A 3/4 x 1 1/2 in hardwood strip covers the sheet\'s top edge and the 1 1/2 in gap beside the slats; its back edge is ripped to the lean and the LED strip sits in a channel behind its lower edge. It is screwed up through the plywood into the ceiling blocking (CB1 on the driver side, CB2 on the passenger side), the 1 1/2 in wood between the roof ribs.'),
     ('7', 'The bottom edge at the floor', fig_floor, 'Keep the sheet 1/4 in off the floor and fix a 3/4 in quarter round to the wall, with 1/16 in under it, so the floor can move.')]
 
 CSS = '''<style>.trimgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:16px;margin:12px 0}

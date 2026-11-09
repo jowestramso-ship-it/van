@@ -222,6 +222,10 @@ const PD = [
   { k: 'lightD', g: 'Ceiling', l: 'Light flange diameter (Acegoo 12 V slim puck: 2 3/4 in across, 1/2 in thick, clips into the plywood)', d: 2.75, s: .25, a: 1, b: 8 },
   { k: 'lightHole', g: 'Ceiling', l: 'Light cutout hole in the plywood (the puck needs 2 1/4 in; two spring clips hold it in thin plywood only, not through a slat)', d: 2.25, s: .125, a: .5, b: 8 },
   { k: 'lightGap', g: 'Ceiling', l: 'Slat cut away at each light: length along the slat (the flange 2 3/4 in plus 1/8 in each side)', d: 3, s: .25, a: 0, b: 12 },
+  { k: 'blkOn', g: 'Ceiling', l: 'Ceiling blocking: wood between the roof ribs, flush with their bottoms, under the wall-top trim (CB1, CB2) and under the long plywood seam (CB3); untick to leave it out', d: true, t: 'c' },
+  { k: 'blkW', g: 'Ceiling', l: 'Ceiling blocking: width and height (a 2x2 is 1 1/2 x 1 1/2; the ribs hang 2 in)', d: 1.5, s: .125, a: .75, b: 2 },
+  { k: 'blkGap0', g: 'Ceiling', l: 'Ceiling blocking: the gap for the cables across the van starts at (inches from the rear doors)', d: 76, s: .5, a: 0, b: 160 },
+  { k: 'blkGap1', g: 'Ceiling', l: 'Ceiling blocking: the gap for the cables across the van ends at (inches from the rear doors)', d: 86, s: .5, a: 0, b: 160 },
   { k: 'fanX', g: 'Ceiling', l: 'Roof fan cutout: along the van (from the back)', d: 13.25, s: .5, a: 0, b: 220 },
   { k: 'fanY', g: 'Ceiling', l: 'Fan cutout: across (from the driver wall; 34 is the middle of the van, over the aisle)', d: 34, s: .5, a: 0, b: 90 },
   { k: 'fanUnit', g: 'Ceiling', l: 'Roof fan unit on the roof: square footprint (2012 F36AR exhaust fan: 17.7 x 17.7 x 6.4 tall)', d: 17.75, s: .25, a: 6, b: 40 },
@@ -643,8 +647,22 @@ function layout(P0) {
     L.slatsCut = c => L.slatY.filter((sy, k) => !L.slatOut.has(k) && sy < c.y + c.w / 2 && sy + P.slatW > c.y - c.w / 2).length;
     // the slat is cut away at each light (the puck clips into the plywood alone; the slat and the plywood together, 15/16 in, are too thick for its clips): the x ranges, from the rear-door edge, by slat
     L.lightCuts = k => L.lights.filter(l => l.k === k).map(l => [l.x - P.lightGap / 2, l.x + P.lightGap / 2]);
-    // plywood seams across the van: the 8 ft sheets start at the cab wall, so the seam is 64 in from the rear doors, clear of the lights and both openings (from the rear doors the first seam fell at 96, across the countertop light's hole)
-    L.plyX = []; for (let x = P.ceilLen - 96; x > 1; x -= 96) L.plyX.unshift(x);
+    // plywood seams across the van: each lands on the middle of a roof rib, so the steel is under it and the seam needs no blocking (cut from 4 x 8 ft sheets, so no piece is longer than 96 in): the farthest rib middle within 96 in of the last seam;
+    // 59 3/4 and 127 3/4 with the five ribs measured (pieces 59 3/4, 68 and 32 1/4; from the rear doors the first seam fell at 96, across the countertop light's hole). With no usable rib it falls back to 96 in steps from the cab wall.
+    L.plyX = [];
+    { const rc = L.ribBands.map(b => (b[0] + b[1]) / 2); let x0 = 0, ok = true, g = 0;
+      while (P.ceilLen - x0 > 96 && g++ < 12) { const c = rc.filter(v => v > x0 + 1 && v <= x0 + 96).pop(); if (c === undefined) { ok = false; break; } L.plyX.push(c); x0 = c; }
+      if (!ok) { L.plyX = []; for (let x = P.ceilLen - 96; x > 1; x -= 96) L.plyX.unshift(x); } }
+    // the ceiling blocking: three rails along the van, each in pieces between the ribs (flush with the rib bottoms), with a gap where the cables cross the van: CB1 under the driver side trim, CB2 under the passenger side trim, CB3 under the long plywood seam
+    L.blocks = [];
+    if (P.blkOn && P.liningOn) {
+      const w = P.blkW, y0 = L.ceilOff, y1 = L.ceilOff + P.ceilW, spans = []; let x = 0;
+      L.ribBands.filter(b => b[1] > 0 && b[0] < P.ceilLen).forEach(b => { if (b[0] > x + .01) spans.push([x, b[0]]); x = Math.max(x, b[1]); }); if (x < P.ceilLen - .01) spans.push([x, P.ceilLen]);
+      const pieces = []; spans.forEach(([a, b]) => { if (P.blkGap1 > P.blkGap0 && a < P.blkGap1 && b > P.blkGap0) { if (a < P.blkGap0) pieces.push([a, P.blkGap0]); if (b > P.blkGap1) pieces.push([P.blkGap1, b]); } else pieces.push([a, b]); });
+      const rails = [['CB1', 'driver side wall top, under the trim', y0, y0 + w], ['CB2', 'passenger side wall top, under the trim', y1 - w, y1]];
+      if (P.ceilW > 49) rails.push(['CB3', 'under the long plywood seam', y0 + 48 - w / 2, y0 + 48 + w / 2]);
+      rails.forEach(r => L.blocks.push({ id: r[0], nm: r[1], y0: r[2], y1: r[3], tilt: L.roofTilt((r[2] + r[3]) / 2), pieces }));
+    }
   }
   // the drawers and shelves under the counter (as planned plus dragged), the jar shelf in the nook and the microwave shelf above the fridge
   L.parts = cabinetParts(L); L.partById = {}; L.parts.forEach(p => { L.partById[p.id] = p; });

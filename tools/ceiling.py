@@ -4,15 +4,40 @@ SC=5; X0=70; Y0=46
 CL=160; CW=68
 xx=lambda x: X0+SC*x
 yy=lambda y: Y0+SC*y
+import math
+def fr(v):
+    # inches as a mixed number in sixteenths
+    w=int(v); n=round((v-w)*16)
+    if n==16: w+=1; n=0
+    if n==0: return str(w)
+    from math import gcd
+    g=gcd(n,16); f='%d/%d'%(n//g,16//g)
+    return f if w==0 else '%d %s'%(w,f)
+# the roof ribs (edge nearest the rear doors, 2 3/4 wide) and the ceiling blocking between them
+RIBS=[(21.75,24.5),(37.875,40.625),(58.375,61.125),(97.375,100.125),(126.375,129.125)]
+PLYX=[59.75,127.75]            # the plywood seams across the van: the middle of rib 3 and rib 5 (pieces 59 3/4, 68 and 32 1/4 long)
+BW=1.5; GAP=(76,86)            # blocking 1 1/2 x 1 1/2 (a 2x2); the gap for the cables across the van
+_sp=[]; _x=0
+for _a,_b in RIBS: _sp.append((_x,_a)); _x=_b
+_sp.append((_x,CL))
+PIECES=[]
+for _a,_b in _sp:
+    if _a<GAP[1] and _b>GAP[0]:
+        if _a<GAP[0]: PIECES.append((_a,GAP[0]))
+        if _b>GAP[1]: PIECES.append((GAP[1],_b))
+    else: PIECES.append((_a,_b))
+RAILS=(('CB1','driver side wall top, under the trim',3,3+BW),('CB2','passenger side wall top, under the trim',65-BW,65),('CB3','under the long plywood seam',51-BW/2,51+BW/2))
+_R=109.03   # radius of the roof arc across the van (4 1/2 in crown over 62 in)
+TILT=lambda yc: math.degrees(math.asin(abs(yc-34)/_R))
 def _g():
     o=[]; a=o.append
     W=xx(CL)+90; H=yy(CW)+86
     a(f'<svg viewBox="0 0 {W:.0f} {H:.0f}" role="img"><title>The ceiling covering from above: plywood, slats, lights, roof ribs, fan and air conditioning cutouts</title>')
     a('<defs><marker id="arg" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>')
     a(f'<text x="{X0}" y="26" style="font-size:12px;fill:#5F5E5A">Seen from above through the roof: rear doors on the left, cab wall on the right, driver side at the top. Measured from the rear doors.</text>')
-    # plywood: 4 x 8 ft sheets, long way along the van, in four pieces; the 8 ft sheets start at the cab wall, so the long seam is 64 in from the rear doors (it fell at 96, across the countertop light's hole)
-    cx=[0,64,160]; cy=[3,51,65]
-    for i in range(2):
+    # plywood: 4 x 8 ft sheets, long way along the van, in six pieces; the seams across the van are on the middle of rib 3 and rib 5 (59 3/4 and 127 3/4 from the rear doors: they fell at 96 with sheets from the rear doors, across the countertop light's hole), and the long seam is 51 in across
+    cx=[0]+PLYX+[160]; cy=[3,51,65]
+    for i in range(len(cx)-1):
         for j in range(2):
             a(f'<rect x="{xx(cx[i]):.1f}" y="{yy(cy[j]):.1f}" width="{SC*(cx[i+1]-cx[i]):.1f}" height="{SC*(cy[j+1]-cy[j]):.1f}" fill="#D9C7A5" fill-opacity="0.8" stroke="#8A6B4D" stroke-width="1.2"/>')
     # slats: 15 rows of 3 in with 1 in gaps (1 1/2 in left each side of the 62 in flat part), cut where the openings cross them
@@ -56,6 +81,13 @@ def _g():
         a(f'<circle cx="{xx(lx):.1f}" cy="{yy(ly):.1f}" r="{SC*LD/2:.1f}" fill="#FFE9A0" stroke="#B8860B" stroke-width="1.4"/>')
         a(f'<circle cx="{xx(lx):.1f}" cy="{yy(ly):.1f}" r="{SC*LH/2:.1f}" fill="none" stroke="#8A5A00" stroke-width="1" stroke-dasharray="3 2"/>')
     a(f'<text x="{xx(70):.1f}" y="{yy(58)-9:.1f}" text-anchor="middle" style="font-size:11px;font-weight:600;fill:#fff;paint-order:stroke;stroke:#5A3A00;stroke-width:3px">round lights, 2 3/4 in pucks in 2 1/4 in holes, each in a 3 in gap in its slat: shower, countertop and sink, and two in the center row</text>')
+    # the ceiling blocking: above the plywood, between the ribs (so seen from above it is dashed over the slats)
+    for _i,(_id,_nm,_y0,_y1) in enumerate(RAILS):
+        for p0,p1 in PIECES:
+            a(f'<rect x="{xx(p0):.1f}" y="{yy(_y0):.1f}" width="{SC*(p1-p0):.1f}" height="{SC*(_y1-_y0):.1f}" fill="#3A1E05" fill-opacity="0.5" stroke="#3A1E05" stroke-width="1.1" stroke-dasharray="5 2"/>')
+        _lp=max(PIECES,key=lambda q:q[1]-q[0])
+        a(f'<text x="{xx((_lp[0]+_lp[1])/2):.1f}" y="{(yy(_y0)-3 if _i else yy(_y1)+12):.1f}" text-anchor="middle" style="font-size:10px;font-weight:700;fill:#3A1E05;paint-order:stroke;stroke:#fff;stroke-width:2.6px">{_id} 1 1/2 x 1 1/2</text>')
+    a(f'<text x="{xx(81.5):.1f}" y="{yy(10):.1f}" text-anchor="middle" style="font-size:10px;font-weight:600;fill:#3A1E05;paint-order:stroke;stroke:#fff;stroke-width:2.6px">gap for the cables across the van, 76 to 86</text>')
     # cutouts
     # the units on the roof: fan 17 3/4 square, A/C 28 1/4 square, dashed around their cutouts
     for _c,_u in ((fan,17.75),(ac,28.25)):
@@ -76,16 +108,19 @@ def _g():
     a('</svg>')
     return '\n'.join(o), cutn
 _svg,_cutn=_g()
-_rows=[('Plywood','3/16 in','3 sheets of 4 x 8 ft at least (69 sq ft of ceiling: 160 x 62), cut into pieces 96 x 48, 64 x 48, 96 x 14 and 64 x 14 (the 8 ft pieces start at the cab wall, so the long seam is 64 in from the rear doors, and the cross seam is 51 in from the driver wall: no seam crosses a light hole or an opening)','against the roof bows; about 37 lb'),
+_rows=[('Plywood','3/16 in','3 sheets of 4 x 8 ft at least (69 sq ft of ceiling: 160 x 62), cut into six pieces: 59 3/4, 68 and 32 1/4 long, each 48 wide, and the same three 14 wide (the two seams across the van are on the middle of rib 3 and rib 5, 59 3/4 and 127 3/4 in from the rear doors, so the steel is under them; the long seam is 51 in across from the driver wall, over CB3; no seam crosses a light hole or an opening)','against the roof ribs (steel), screwed up into them and into the blocking about every 8 in; about 37 lb'),
  ('Slats','3 wide x 3/4 thick x 160 long','15, with 1 in gaps (1 1/2 in left at each side of the 62 in flat part); each one is cut where the fan or the A/C opening crosses it: the fan cuts %d, the A/C cuts %d; and each light cuts a 3 in gap in its slat (4 gaps: two in the slat at 58 across, two in the slat at 34 across)'%(_cutn[0],_cutn[1]),'14 ft stock (8 in waste each); about 72 lb in western red cedar (about 23 lb per cubic foot, pine would be about 90); a board sold as 1 x 4 is 3/4 x 3 1/2, so rip it to 3 in wide'),
  ('Round lights','Acegoo 12 V slim pucks, 2 3/4 in across, 1/2 in thick, in 2 1/4 in holes; 4','over the shower (26 1/2 in from the rear doors) and one over the countertop and sink together (95 3/8), both on the slat at 58 in across from the driver wall, and two in the center row on the slat at 34 in across, at 35 7/8 (36 asked for) and 102 1/8 (around 100 asked for) from the rear doors; no other ceiling lights','centered on a 3 in slat and 2 in clear of the ribs (7/8 in from the hole to the rib edge); the slat is cut away 3 in at each light (the flange 2 3/4 plus 1/8 each side), so the puck clips into the 3/16 plywood alone: its two spring clips cannot reach behind the slat and plywood together (15/16 in); the hole is 2 1/4 in; the face sits about 5/8 in behind the slat faces; the shower one is wet rated; the two in the center row share one switch on the passenger wall just rear of the sink'),
+ ('Ceiling blocking','1 1/2 x 1 1/2 in (a 2x2), pine, 21 pieces in three rails: CB1, CB2, CB3 (about 34 ft, 14 lb)','CB1 along the driver side wall top (3 to 4 1/2 in across), CB2 along the passenger side wall top (63 1/2 to 65 in across), CB3 under the long plywood seam (50 1/4 to 51 3/4 in across); each rail is seven pieces cut to fit between the roof ribs, with a gap from 76 to 86 in from the rear doors for the cables across the van; the table below lists the pieces','above the plywood, flush with the bottoms of the ribs (they hang 2 in, the blocking is 1 1/2), the bottom bevelled to the roof\'s tilt there (16 degrees on CB1 and CB2, 9 on CB3); the plywood is screwed up into it about every 8 in, and the trim (CB1, CB2) is screwed up through the plywood into it'),
  ('Roof fan cutout','14 x 14','centered 13 1/4 in from the rear doors (7 1/4 on the datum of the other diagrams: it spans 6 1/4 to 20 1/4 from the rear doors, 1 1/2 in clear of the roof rib that starts at 21 3/4) and 34 in across from the driver wall, the middle of the van (not over the wet bath, as you decided); the fan unit is 17 3/4 square, so it sits on the roof from 4 3/8 to 22 1/8 from the rear doors','the F36AR fan cutout, 356 x 356 mm (14.02 in, drawn 14 x 14); framed between the roof bows'),
  ('Air conditioning cutout','14 1/4 x 14 1/4','centered 49 1/2 in from the rear doors (43 1/2 on the datum of the other diagrams: it spans 42 3/8 to 56 5/8 from the rear doors, inside the 40 to 70 asked for, between the roof ribs at 37 7/8 and 58 3/8) and 34 in across','the usual air conditioner opening; model not chosen; framed between the roof bows; its weight is not modeled')]
-_tbl='<table><tr><th>Part</th><th>Size</th><th>How many and where</th><th>Notes</th></tr>'+''.join('<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>'%r for r in _rows)+'</table>'
+_pt=''.join('<tr><td>%d</td><td>%s to %s</td><td>%s</td></tr>'%(i+1,fr(p0),fr(p1),fr(p1-p0)) for i,(p0,p1) in enumerate(PIECES))
+_cut='<h3>The ceiling blocking: the pieces</h3><p>Each of the three rails, CB1, CB2 and CB3, is the same seven pieces (21 in all), each cut to fit between two ribs. The piece names are the rail and the number: CB1.1 to CB1.7, CB2.1 to CB2.7, CB3.1 to CB3.7. Cut them 1/16 in short so they drop in. The gap (76 to 86) splits the piece between ribs 3 and 4 into 4 and 5.</p><table><tr><th>Piece</th><th>From the rear doors</th><th>Length, in</th></tr>'+_pt+'</table><p>Five 8 ft 2x2 are enough (six to be safe): from one stick cut 30 7/8, 26 1/4, 21 3/4 and 13 3/8 (92 1/4 in), three times; from two more cut 17 3/4, 14 7/8 and 11 3/8 (44 in): two sets fit on one stick and the third set on the other. Bevel the bottom of each piece lengthwise: about %d degrees on CB1 and CB2, about %d on CB3 (the roof is tilted there; the ribs under the plywood follow it). They sit flush with the rib bottoms, so the plywood lies flat on the ribs and the blocking.</p>'%(round(TILT(3.75)),round(TILT(51)))
+_tbl='<table><tr><th>Part</th><th>Size</th><th>How many and where</th><th>Notes</th></tr>'+''.join('<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>'%r for r in _rows)+'</table>'+_cut
 _h=open((ROOT+'/sides.html')).read()
 _blk='''<h2>4. The ceiling covering, seen from above (diagram G)</h2>
 <div class="wide">'''+_svg+'''</div>
-<p>The ceiling is covered with 3/16 in plywood against the roof and 3/4 in thick, 3 in wide cedar slats on it, so the finished ceiling is 15/16 in lower, at 75 1/16 in (the bare ceiling is 76 in). Everything that reached the ceiling stops at the new one: the wall cabinets are 14 1/16 in tall (61 to 75 1/16) and the closet and the wet bath are 75 1/16 in. The covering is the 62 in flat part of the roof, centered in the van (3 in each side of the 68 in inside width), so there are 15 slats. They run the whole length of the ceiling (160 in) for now, except where the fan and air conditioning openings cut them and at the four lights (each slat is cut away 3 in there, so the 2 3/4 in puck clips into the plywood alone). The covering weighs about 109 lb (37 lb of plywood and 72 lb of cedar), all overhead. The five dashed red bands are the roof ribs, 2 3/4 in wide, drawn at the positions you measured (their edge nearest the rear doors: 21 3/4, 37 7/8, 58 3/8, 97 3/8 and 126 3/8 in); both openings sit between ribs, and the dashed blue squares are the fan unit (17 3/4 square) and the air conditioner unit (28 1/4 square) on the roof. Fan and air conditioner are both in the middle of the van, 34 in across. The wall diagrams B and E show the covering, the lights and the cutouts (their positions are 6 in less than the numbers here, because they are measured from the datum 6 in in from the rear edge), and the interactive page has a Ceiling view with the sizes.</p>
+<p>The ceiling is covered with 3/16 in plywood against the roof and 3/4 in thick, 3 in wide cedar slats on it, so the finished ceiling is 15/16 in lower, at 75 1/16 in (the bare ceiling is 76 in). Everything that reached the ceiling stops at the new one: the wall cabinets are 14 1/16 in tall (61 to 75 1/16) and the closet and the wet bath are 75 1/16 in. The covering is the 62 in flat part of the roof, centered in the van (3 in each side of the 68 in inside width), so there are 15 slats. They run the whole length of the ceiling (160 in) for now, except where the fan and air conditioning openings cut them and at the four lights (each slat is cut away 3 in there, so the 2 3/4 in puck clips into the plywood alone). The ceiling blocking (the dashed brown strips, CB1 to CB3) is 1 1/2 in wood between the ribs, above the plywood: two rails under the trim along the wall tops and one under the long plywood seam; the plywood seams across the van are on the middle of rib 3 and rib 5, where the steel rib is under them. The covering weighs about 109 lb (37 lb of plywood and 72 lb of cedar), all overhead. The five dashed red bands are the roof ribs, 2 3/4 in wide, drawn at the positions you measured (their edge nearest the rear doors: 21 3/4, 37 7/8, 58 3/8, 97 3/8 and 126 3/8 in); both openings sit between ribs, and the dashed blue squares are the fan unit (17 3/4 square) and the air conditioner unit (28 1/4 square) on the roof. Fan and air conditioner are both in the middle of the van, 34 in across. The wall diagrams B and E show the covering, the lights and the cutouts (their positions are 6 in less than the numbers here, because they are measured from the datum 6 in in from the rear edge), and the interactive page has a Ceiling view with the sizes.</p>
 '''+_tbl+'\n'
 assert '<h2>Driver side photos</h2>' in _h
 _h=_h.replace('<h2>Driver side photos</h2>',_blk+'<h2>Driver side photos</h2>',1)

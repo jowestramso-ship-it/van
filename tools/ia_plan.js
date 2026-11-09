@@ -376,7 +376,7 @@ function drawCeiling(L, V) {
   const P = L.P, S = 5, X0 = 70, Y0 = 90, CL = P.ceilLen, CW = P.ceilW, o = [];
   const xx = x => X0 + S * x, yy = y => Y0 + S * y, hits = [];
   o.push(T(X0, 22, 'The ceiling covering seen from above through the roof: rear doors on the left, cab wall on the right, driver side at the top.', { anchor: 'start', size: 14, fill: '#5F5E5A', halo: false }));
-  o.push(T(X0, 40, P.liningOn ? `${fmt(P.plyT)} in plywood against the roof, then ${L.nSlats - L.slatOut.size} ${slatWood(P)} slats (${fmt(P.slatW)} wide x ${fmt(P.slatT)} thick x ${fmt(L.slatLen)} long) with ${fmt(P.slatGap)} in gaps, each cut ${fmt(P.lightGap)} in at its light (the ${fmt(P.lightD)} in puck clips into the plywood alone). Finished ceiling at ${fmt(L.ceilF)} in.` : 'The covering is turned off (Ceiling sizes on the right).', { anchor: 'start', size: 12, fill: '#5F5E5A', halo: false }));
+  o.push(T(X0, 40, P.liningOn ? `${fmt(P.plyT)} in plywood against the roof, then ${L.nSlats - L.slatOut.size} ${slatWood(P)} slats (${fmt(P.slatW)} wide x ${fmt(P.slatT)} thick x ${fmt(L.slatLen)} long) with ${fmt(P.slatGap)} in gaps, each cut ${fmt(P.lightGap)} in at its light (the ${fmt(P.lightD)} in puck clips into the plywood alone). Finished ceiling at ${fmt(L.ceilF)} in.${L.blocks.length ? ` Dashed brown: the ceiling blocking CB1 to CB3, ${fmt(P.blkW)} in wood between the ribs.` : ''}` : 'The covering is turned off (Ceiling sizes on the right).', { anchor: 'start', size: 12, fill: '#5F5E5A', halo: false }));
   // plywood sheets (4 x 8 ft, long way along the van): pieces
   const cx = [0].concat(L.plyX), cy = [0]; cx.push(CL); for (let y = 48; y < CW; y += 48) cy.push(y); cy.push(CW);   // the 8 ft sheets start at the cab wall (seam at 64 from the rear doors, clear of the lights)
   if (P.liningOn) {
@@ -399,6 +399,15 @@ function drawCeiling(L, V) {
     o.push(GB('lights', 'Ceiling lights'));
     L.lights.forEach(l => { o.push(`<circle cx="${f1(xx(l.x))}" cy="${f1(yy(l.y))}" r="${f1(S * P.lightD / 2)}" fill="#FFE9A0" stroke="#B8860B" stroke-width="1.4"/>`); o.push(`<circle cx="${f1(xx(l.x))}" cy="${f1(yy(l.y))}" r="${f1(S * P.lightHole / 2)}" fill="none" stroke="#8A5A00" stroke-width="1" stroke-dasharray="3 2"/>`); });
     o.push(GE());
+    if (L.blocks.length) {   // the ceiling blocking: above the plywood (between the roof ribs), so it shows dashed over the slats
+      o.push(GB('blocking', 'Ceiling blocking'));
+      L.blocks.forEach((b, i) => {
+        b.pieces.forEach(([a0, a1]) => o.push(R(xx(a0), yy(b.y0), S * (a1 - a0), S * (b.y1 - b.y0), { fill: '#3A1E05', fo: .45, stroke: '#3A1E05', sw: 1, dash: '5 2' })));
+        const byLen = b.pieces.slice().sort((p, q) => (q[1] - q[0]) - (p[1] - p[0])), lp = byLen[Math.min(1, byLen.length - 1)] || [0, 0];   // the second longest piece: the longest sits under a plywood label
+        o.push(T(xx((lp[0] + lp[1]) / 2), yy(i === 1 ? b.y0 : b.y1) + (i === 1 ? -3 : 12), `${b.id} (${fmt(P.blkW)} x ${fmt(P.blkW)})`, { size: 10, fill: '#3A1E05', w: 700 }));
+      });
+      o.push(GE());
+    }
     o.push(GB('ac', 'Air conditioner'));
     o.push(R(xx(L.ac.x - L.ac.u / 2), yy(L.ac.y - L.ac.u / 2), S * L.ac.u, S * L.ac.u, { stroke: '#444441', sw: 1.2, dash: '6 4' }));
     o.push(T(xx(L.ac.x), yy(L.ac.y + L.ac.u / 2) + 13, `A/C unit on the roof ${fmt(L.ac.u)} x ${fmt(L.ac.u)}`, { size: 10, fill: '#444441', halo: true }));
