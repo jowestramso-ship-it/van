@@ -3,8 +3,8 @@ _path=(ROOT+'/sides.html')
 _h=open(_path).read()
 # letter badges inside each diagram, in page order
 _starts=[m.start() for m in re.finditer(r'<svg viewBox="[^"]*" role="img"',_h)]
-_letters=['A','B','C','C2','C3','C4','C5','D','E','E3','F','G']
-if len(_starts)!=12: print('WARN: expected 12 diagrams, found',len(_starts))
+_letters=['A','B','C','C2','C3','C4','C5','D','E','E3','F','G','H']
+if len(_starts)!=13: print('WARN: expected 13 diagrams, found',len(_starts))
 for _k in range(len(_starts)-1,-1,-1):
     _e=_h.index('</svg>',_starts[_k])
     _w=13 if len(_letters[_k])==1 else 19

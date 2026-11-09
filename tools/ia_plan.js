@@ -383,7 +383,7 @@ function drawCeiling(L, V) {
     o.push(GB('ply', 'Plywood sheets'));
     for (let i = 0; i < cx.length - 1; i++) for (let j = 0; j < cy.length - 1; j++) {
       o.push(R(xx(cx[i]), yy(L.ceilOff + cy[j]), S * (cx[i + 1] - cx[i]), S * (cy[j + 1] - cy[j]), { fill: '#D9C7A5', fo: .7, stroke: '#8A6B4D', sw: 1.2 }));
-      o.push(T(xx((cx[i] + cx[i + 1]) / 2), yy(L.ceilOff + cy[j]) + 12, `plywood ${fmt(cx[i + 1] - cx[i])} x ${fmt(cy[j + 1] - cy[j])}`, { size: 10, fill: '#5A3A00', w: 600 }));
+      o.push(T(xx((cx[i] + cx[i + 1]) / 2), yy(L.ceilOff + cy[j]) + 12, `PW${i * (cy.length - 1) + j + 1}  ${fmt(cx[i + 1] - cx[i])} x ${fmt(cy[j + 1] - cy[j])}`, { size: 10, fill: '#5A3A00', w: 600 }));
     }
     o.push(GE());
     // slats: one row each, as long as the ceiling, cut where the fan and A/C openings cross them; a row is left out where each row of lights goes

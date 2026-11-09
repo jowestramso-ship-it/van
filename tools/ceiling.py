@@ -26,6 +26,7 @@ for _a,_b in _sp:
         if _a<GAP[0]: PIECES.append((_a,GAP[0]))
         if _b>GAP[1]: PIECES.append((GAP[1],_b))
     else: PIECES.append((_a,_b))
+LIGHTS=((26.5,58),(95.375,58),(35.875,34),(102.125,34)); LD=2.75; LH=2.25   # the four lights (from the rear doors, across from the driver wall), the puck and its hole: the same as in the plan's lights
 RAILS=(('CB1','driver side wall top, under the trim',3,3+BW),('CB2','passenger side wall top, under the trim',65-BW,65),('CB3','under the long plywood seam',51-BW/2,51+BW/2))
 _R=109.03   # radius of the roof arc across the van (4 1/2 in crown over 62 in)
 TILT=lambda yc: math.degrees(math.asin(abs(yc-34)/_R))
@@ -117,11 +118,102 @@ _rows=[('Plywood','3/16 in','3 sheets of 4 x 8 ft at least (69 sq ft of ceiling:
 _pt=''.join('<tr><td>%d</td><td>%s to %s</td><td>%s</td></tr>'%(i+1,fr(p0),fr(p1),fr(p1-p0)) for i,(p0,p1) in enumerate(PIECES))
 _cut='<h3>The ceiling blocking: the pieces</h3><p>Each of the three rails, CB1, CB2 and CB3, is the same seven pieces (21 in all), each cut to fit between two ribs. The piece names are the rail and the number: CB1.1 to CB1.7, CB2.1 to CB2.7, CB3.1 to CB3.7. Cut them 1/16 in short so they drop in. The gap (76 to 86) splits the piece between ribs 3 and 4 into 4 and 5.</p><table><tr><th>Piece</th><th>From the rear doors</th><th>Length, in</th></tr>'+_pt+'</table><p>Five 8 ft 2x2 are enough (six to be safe): from one stick cut 30 7/8, 26 1/4, 21 3/4 and 13 3/8 (92 1/4 in), three times; from two more cut 17 3/4, 14 7/8 and 11 3/8 (44 in): two sets fit on one stick and the third set on the other. Bevel the bottom of each piece lengthwise: about %d degrees on CB1 and CB2, about %d on CB3 (the roof is tilted there; the ribs under the plywood follow it). They sit flush with the rib bottoms, so the plywood lies flat on the ribs and the blocking.</p>'%(round(TILT(3.75)),round(TILT(51)))
 _tbl='<table><tr><th>Part</th><th>Size</th><th>How many and where</th><th>Notes</th></tr>'+''.join('<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>'%r for r in _rows)+'</table>'+_cut
+# H: the six plywood pieces, the order they go up, and where they are screwed (seen from above, like G)
+def _hdiag():
+    o=[]; a=o.append
+    W=xx(CL)+90; H=yy(CW)+56
+    a(f'<svg viewBox="0 0 {W:.0f} {H:.0f}" role="img"><title>The six ceiling plywood pieces PW1 to PW6, the order they go up and where they are screwed</title>')
+    a(f'<text x="{X0}" y="22" style="font-size:12px;fill:#5F5E5A">Seen from above, like G. The numbered circles are the order the pieces go up, rear doors to cab wall.</text>')
+    PX=[0]+PLYX+[160]; PY=[3,51,65]
+    tints=['#EAD9B0','#E0CB9B','#F0E1BD','#DFC995','#EBDAB5','#E2CE9F']
+    pcs=[]
+    for i in range(len(PX)-1):
+        for j in range(2):
+            n=i*2+j+1; pcs.append((n,PX[i],PX[i+1],PY[j],PY[j+1]))
+    for n,x0,x1,y0,y1 in pcs:
+        a(f'<rect x="{xx(x0):.1f}" y="{yy(y0):.1f}" width="{SC*(x1-x0):.1f}" height="{SC*(y1-y0):.1f}" fill="{tints[n-1]}" stroke="#8A6B4D" stroke-width="1.6"/>')
+    # the roof ribs (steel) under the pieces, and the blocking rails
+    for k,(r0,r1) in enumerate(RIBS):
+        a(f'<rect x="{xx(r0):.1f}" y="{yy(0):.1f}" width="{SC*(r1-r0):.1f}" height="{SC*CW:.1f}" fill="#A32D2D" fill-opacity="0.13" stroke="#A32D2D" stroke-width="1.1" stroke-dasharray="6 3"/>')
+        a(f'<text x="{xx((r0+r1)/2):.1f}" y="{yy(0)-6:.1f}" text-anchor="middle" style="font-size:10px;font-weight:600;fill:#A32D2D">rib {k+1}</text>')
+    for _id,_nm,_y0,_y1 in RAILS:
+        for p0,p1 in PIECES:
+            a(f'<rect x="{xx(p0):.1f}" y="{yy(_y0):.1f}" width="{SC*(p1-p0):.1f}" height="{SC*(_y1-_y0):.1f}" fill="#3A1E05" fill-opacity="0.4" stroke="#3A1E05" stroke-width="1" stroke-dasharray="5 2"/>')
+        _lp=sorted(PIECES,key=lambda q:q[0]-q[1])[1]
+        a(f'<text x="{xx((_lp[0]+_lp[1])/2):.1f}" y="{(yy(_y0)-3 if _id!="CB1" else yy(_y1)+11):.1f}" text-anchor="middle" style="font-size:9.5px;font-weight:700;fill:#3A1E05;paint-order:stroke;stroke:#fff;stroke-width:2.4px">{_id}</text>')
+    # the openings and light holes cut in the pieces on the floor
+    for (cx_,cy_,w_,nm) in ((13.25,34,14,'fan 14 x 14'),(49.5,34,14.25,'A/C 14 1/4 sq')):
+        a(f'<rect x="{xx(cx_-w_/2):.1f}" y="{yy(cy_-w_/2):.1f}" width="{SC*w_:.1f}" height="{SC*w_:.1f}" fill="#2C2C2A" fill-opacity="0.88" stroke="#000" stroke-width="1.2"/>')
+        a(f'<text x="{xx(cx_):.1f}" y="{yy(cy_)+3:.1f}" text-anchor="middle" style="font-size:9.5px;font-weight:600;fill:#fff">{nm}</text>')
+    for lx,ly in LIGHTS:
+        a(f'<circle cx="{xx(lx):.1f}" cy="{yy(ly):.1f}" r="{SC*LH/2:.1f}" fill="#FFE9A0" stroke="#B8860B" stroke-width="1.4"/>')
+    # the screws: every 8 in along each rib and each rail, one column or row for each piece
+    dots=[]
+    for (r0,r1) in RIBS:
+        c=(r0+r1)/2
+        for n,x0,x1,y0,y1 in pcs:
+            if x0-0.01<=c<=x1+0.01:
+                xd=c+0.7 if abs(c-x0)<0.01 else (c-0.7 if abs(c-x1)<0.01 else c)
+                ys=[y0+4+8*k for k in range(int((y1-y0-6)//8)+1)] if y1-y0>20 else [y0+3.5,y1-3.5]
+                for yv in ys: dots.append((xd,yv))
+    for _id,_nm,_y0,_y1 in RAILS:
+        yc=(_y0+_y1)/2
+        for p0,p1 in PIECES:
+            xv=p0+3
+            while xv<p1-1:
+                if _id=='CB3': dots+= [(xv,yc-0.6),(xv,yc+0.6)]
+                else: dots.append((xv,yc))
+                xv+=8
+    for xv,yv in dots:
+        a(f'<circle cx="{xx(xv):.1f}" cy="{yy(yv):.1f}" r="1.5" fill="#1B1B1B"/>')
+    # the numbered circles and piece labels
+    for n,x0,x1,y0,y1 in pcs:
+        bx_=x0+10; by_=(y0+7) if y1-y0>20 else (y0+4.4)
+        a(f'<circle cx="{xx(bx_):.1f}" cy="{yy(by_):.1f}" r="10" fill="#185FA5" stroke="#fff" stroke-width="1.5"/>')
+        a(f'<text x="{xx(bx_):.1f}" y="{yy(by_)+4.5:.1f}" text-anchor="middle" style="font-size:13px;font-weight:700;fill:#fff">{n}</text>')
+        a(f'<text x="{xx(bx_)+16:.1f}" y="{yy(by_)+4:.1f}" style="font-size:11px;font-weight:700;fill:#2C2C2A;paint-order:stroke;stroke:#fff;stroke-width:2.6px">PW{n}  {fr(x1-x0)} x {fr(y1-y0)}</text>')
+    a(f'<rect x="{xx(0):.1f}" y="{yy(0):.1f}" width="{SC*CL:.1f}" height="{SC*CW:.1f}" fill="none" stroke="#2C2C2A" stroke-width="1.8"/>')
+    # seams
+    a(f'<text x="{xx(PLYX[0]):.1f}" y="{yy(CW)+14:.1f}" text-anchor="middle" style="font-size:10px;font-weight:600;fill:#185FA5">seam on the middle of rib 3 ({fr(PLYX[0])})</text>')
+    a(f'<text x="{xx(PLYX[1]):.1f}" y="{yy(CW)+14:.1f}" text-anchor="middle" style="font-size:10px;font-weight:600;fill:#185FA5">seam on the middle of rib 5 ({fr(PLYX[1])})</text>')
+    a(f'<text x="{xx(CL)+6:.1f}" y="{yy(51)-1:.1f}" style="font-size:10px;font-weight:600;fill:#185FA5">long seam</text><text x="{xx(CL)+6:.1f}" y="{yy(51)+11:.1f}" style="font-size:10px;font-weight:600;fill:#185FA5">over CB3</text>')
+    for xs in PLYX:
+        a(f'<line x1="{xx(xs):.1f}" y1="{yy(0):.1f}" x2="{xx(xs):.1f}" y2="{yy(CW)+4:.1f}" stroke="#185FA5" stroke-width="1" stroke-dasharray="2 2"/>')
+    # legend
+    ly=yy(CW)+34
+    a(f'<rect x="{X0}" y="{ly-9:.1f}" width="16" height="10" fill="#A32D2D" fill-opacity="0.13" stroke="#A32D2D" stroke-dasharray="4 2"/><text x="{X0+22}" y="{ly:.1f}" style="font-size:10.5px;fill:#2C2C2A">steel roof rib</text>')
+    a(f'<rect x="{X0+120}" y="{ly-9:.1f}" width="16" height="10" fill="#3A1E05" fill-opacity="0.4" stroke="#3A1E05" stroke-dasharray="4 2"/><text x="{X0+142}" y="{ly:.1f}" style="font-size:10.5px;fill:#2C2C2A">ceiling blocking CB1 to CB3</text>')
+    a(f'<circle cx="{X0+330}" cy="{ly-4:.1f}" r="1.8" fill="#1B1B1B"/><text x="{X0+340}" y="{ly:.1f}" style="font-size:10.5px;fill:#2C2C2A">a screw, every 8 in</text>')
+    a(f'<rect x="{X0+470}" y="{ly-9:.1f}" width="12" height="10" fill="#2C2C2A"/><text x="{X0+488}" y="{ly:.1f}" style="font-size:10.5px;fill:#2C2C2A">opening, cut in the piece first</text>')
+    a(f'<circle cx="{X0+680}" cy="{ly-4:.1f}" r="5" fill="#FFE9A0" stroke="#B8860B"/><text x="{X0+690}" y="{ly:.1f}" style="font-size:10.5px;fill:#2C2C2A">light hole 2 1/4, cut first</text>')
+    a('</svg>')
+    return '\n'.join(o)
+_hsvg=_hdiag()
+def _rel(x,y,x0,y0): return fr(x-x0)+' along, '+fr(y-y0)+' across'
+_hrows=[
+ ('PW1','1','59 3/4 x 48','0 to 59 3/4 along, 3 to 51 across','fan 14 x 14 at '+_rel(13.25,34,0,3)+'; A/C 14 1/4 square at '+_rel(49.5,34,0,3)+'; light hole 2 1/4 at '+_rel(35.875,34,0,3)),
+ ('PW2','2','59 3/4 x 14','0 to 59 3/4 along, 51 to 65 across','light hole 2 1/4 at '+_rel(26.5,58,0,51)),
+ ('PW3','3','68 x 48','59 3/4 to 127 3/4 along, 3 to 51 across','light hole 2 1/4 at '+_rel(102.125,34,59.75,3)),
+ ('PW4','4','68 x 14','59 3/4 to 127 3/4 along, 51 to 65 across','light hole 2 1/4 at '+_rel(95.375,58,59.75,51)),
+ ('PW5','5','32 1/4 x 48','127 3/4 to 160 along, 3 to 51 across','none'),
+ ('PW6','6','32 1/4 x 14','127 3/4 to 160 along, 51 to 65 across','none')]
+_htab='<table><tr><th>Piece</th><th>Order</th><th>Size, in</th><th>Covers (from the rear doors, and across from the driver wall)</th><th>Cut in it first (measured from the piece\'s rear edge and its driver-side edge)</th></tr>'+''.join('<tr><td><b>%s</b></td><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>'%r for r in _hrows)+'</table>'
+_hsteps="""<h3>How the pieces go up</h3>
+<ol>
+<li><b>Cut the six pieces from three 4 x 8 ft sheets.</b> Sheet 1: PW1 (59 3/4 x 48) and PW5 (32 1/4 x 48), 92 in with the saw cut. Sheet 2: PW3 (68 x 48). Sheet 3: ripped into 14 in strips, one strip for PW2 and PW6 (59 3/4 and 32 1/4) and one for PW4 (68). Number each piece on its back.</li>
+<li><b>Cut the openings and the light holes on the floor</b>, from the table: PW1 has the fan and A/C openings, PW1 to PW4 each have one light hole. Check the two openings against the curbs you built (14 x 14 and 14 1/4 square inside).</li>
+<li><b>Draw the screw lines on the room face of each piece</b>, because the ribs and rails will be hidden once it is up. Rib middles are at 23 1/8, 39 1/4, 59 3/4, 98 3/4 and 127 3/4 in from the rear doors; the rails are at 3 3/4, 51 and 64 1/4 across from the driver wall. At the two seams across the van each piece takes its own half of the rib: put its screw line 3/4 in in from the edge.</li>
+<li><b>Wool first, one bay at a time:</b> fill the bays under a piece with the wool just before that piece goes up (the wool goes in after the blocking, and before the plywood).</li>
+<li><b>Lift PW1 first</b> (rear, driver side: the biggest, with the openings), with a helper and two props (2x4s cut to the ceiling height) in the middle. Push it flat against the ribs and rails, then start screwing at the middle rib and work outward, every 8 in: self-drilling screws with washer heads into the steel ribs, 1 in wood screws with washers into the rails.</li>
+<li><b>PW2 next</b> (the 14 in strip beside it): it butts PW1 over CB3 with a 1/16 in gap; each piece takes half of CB3. Then <b>PW3 and PW4</b> the same way, butting PW1 and PW2 on the middle of rib 3; then <b>PW5 and PW6</b> on the middle of rib 5.</li>
+<li>Leave the 1/16 in gaps at every seam. Do not fill them: the slats, glued across, hold the seams flat.</li>
+</ol>"""
+_hblk='<h2>5. The ceiling plywood: the six pieces and how they go up (diagram H)</h2>\n<div class="wide">'+_hsvg+'</div>\n<p>PW1 to PW6 are the six pieces of 3/16 in plywood. The numbers are the order they go up, from the rear doors to the cab wall. The seams across the van are on the middle of rib 3 and rib 5, so the steel is under both; the long seam is over CB3.</p>\n'+_htab+'\n'+_hsteps+'\n'
 _h=open((ROOT+'/sides.html')).read()
 _blk='''<h2>4. The ceiling covering, seen from above (diagram G)</h2>
 <div class="wide">'''+_svg+'''</div>
 <p>The ceiling is covered with 3/16 in plywood against the roof and 3/4 in thick, 3 in wide cedar slats on it, so the finished ceiling is 15/16 in lower, at 75 1/16 in (the bare ceiling is 76 in). Everything that reached the ceiling stops at the new one: the wall cabinets are 14 1/16 in tall (61 to 75 1/16) and the closet and the wet bath are 75 1/16 in. The covering is the 62 in flat part of the roof, centered in the van (3 in each side of the 68 in inside width), so there are 15 slats. They run the whole length of the ceiling (160 in) for now, except where the fan and air conditioning openings cut them and at the four lights (each slat is cut away 3 in there, so the 2 3/4 in puck clips into the plywood alone). The ceiling blocking (the dashed brown strips, CB1 to CB3) is 1 1/2 in wood between the ribs, above the plywood: two rails under the trim along the wall tops and one under the long plywood seam; the plywood seams across the van are on the middle of rib 3 and rib 5, where the steel rib is under them. The covering weighs about 109 lb (37 lb of plywood and 72 lb of cedar), all overhead. The five dashed red bands are the roof ribs, 2 3/4 in wide, drawn at the positions you measured (their edge nearest the rear doors: 21 3/4, 37 7/8, 58 3/8, 97 3/8 and 126 3/8 in); both openings sit between ribs, and the dashed blue squares are the fan unit (17 3/4 square) and the air conditioner unit (28 1/4 square) on the roof. Fan and air conditioner are both in the middle of the van, 34 in across. The wall diagrams B and E show the covering, the lights and the cutouts (their positions are 6 in less than the numbers here, because they are measured from the datum 6 in in from the rear edge), and the interactive page has a Ceiling view with the sizes.</p>
-'''+_tbl+'\n'
+'''+_tbl+'\n'+_hblk
 assert '<h2>Driver side photos</h2>' in _h
 _h=_h.replace('<h2>Driver side photos</h2>',_blk+'<h2>Driver side photos</h2>',1)
 open((ROOT+'/sides.html'),'w').write(_h)
