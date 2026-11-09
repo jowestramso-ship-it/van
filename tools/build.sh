@@ -9,7 +9,7 @@
 #   wall-map.html     = the see-through wall marking map, read off interactive.html in a headless browser (wallmap.js; needs node + playwright, skipped if they are missing)
 #   electric.html     = the electrical and lighting layout (electric.js, same method as wall-map.html)
 #   interior.html     = the 3D view of the inside of the van, drawn from the plan's sizes (interior.js + interior_scene.js; needs node + playwright, skipped if missing)
-#   tray3d.html, valve3d.html = the pull-out tray in 3D (tray3d.js) and the shower valve behind its door in 3D (valve3d.js)
+#   tray3d.html, valve3d.html, cb3d.html = the pull-out tray in 3D (tray3d.js), the shower valve behind its door in 3D (valve3d.js) and the ceiling blocking attached in 3D (cb3d.js)
 #   site/             = the copy for posting (make-site.py), with the build guide in site/build/ (tools/buildguide.py: one page per part of the build, in order, from sides.html, install.html, window.html, the plan table (tools/plan_rows.json), tools/build_steps.json and furring-cut-list.md)
 set -e
 cd "$(dirname "$0")"
@@ -25,5 +25,6 @@ node electric.js 2>/dev/null || echo 'electric.html not rebuilt (node + playwrig
 node interior.js 2>/dev/null || echo 'interior.html not rebuilt (node + playwright needed)'
 node tray3d.js >/dev/null 2>&1 || echo 'tray3d.html not rebuilt'
 node valve3d.js >/dev/null 2>&1 || echo 'valve3d.html not rebuilt'
+node cb3d.js >/dev/null 2>&1 || echo 'cb3d.html not rebuilt'
 cd ..
 python3 make-site.py

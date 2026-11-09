@@ -130,7 +130,8 @@ def fig_top():
     a(_p([(xt, yCe), (xt + tw, yCe), (xt + tw, yCe + th), (xt - th * lean, yCe + th)], HARD, INK, 1.2))                   # the trim: 3/4 along the ceiling, 1 1/2 down the wall, back edge ripped to the lean
     # the ceiling blocking CB1/CB2: 1 1/2 x 1 1/2 wood above the plywood edge, between the roof ribs, flush with the rib bottoms; the roof steel above it (the ribs hang 2 in)
     bk = 1.5 * S; yb = yCe - 7.5 - bk
-    a(_r(xt - 40, yb - .5 * S - 5, 560, 5, '#9AA0A8', INK, 1)); a(_t(xt + 60, yb - .5 * S - 12, 'steel roof: the ribs hang 2 in below it, the blocking is 1 1/2', 12, 'start', '#5F5E5A'))
+    a(_r(xt - 40, yb - .5 * S - 5, 560, 5, '#9AA0A8', INK, 1)); a(_t(xt + 60, yb - .5 * S - 12, 'steel roof; orange: the Sikaflex bead that bonds the blocking to it', 12, 'start', '#5F5E5A'))
+    a(_r(xt, yb - .5 * S, bk, .5 * S, '#E0842A', '#8A4A10', .8))                                                             # the Sikaflex bead between the roof steel and the blocking
     a(_r(xt, yb, bk, bk, '#B8895A', INK, 1.2))
     a(f'<line x1="{xt + 15}" y1="{yCe + th - 3}" x2="{xt + 15}" y2="{yb + 14}" stroke="{INK}" stroke-width="2.2" stroke-dasharray="6 3"/>')   # the trim's screw: up through the trim and the plywood into the blocking
     cx = xt + tw - 22; cy = yCe + th + 2
@@ -156,7 +157,8 @@ def fig_top_pass():
     tw, th = 30, 60
     a(_p([(M(xt), yCe), (M(xt + tw), yCe), (M(xt + tw), yCe + th), (M(xt - th * lean), yCe + th)], HARD, INK, 1.2))
     bk = 1.5 * S; yb = yCe - 7.5 - bk
-    a(_r(M(xt + 520), yb - .5 * S - 5, 560, 5, '#9AA0A8', INK, 1)); a(_t(M(xt + 60), yb - .5 * S - 12, 'steel roof: the ribs hang 2 in below it, the blocking is 1 1/2', 12, 'end', '#5F5E5A'))
+    a(_r(M(xt + 520), yb - .5 * S - 5, 560, 5, '#9AA0A8', INK, 1)); a(_t(M(xt + 60), yb - .5 * S - 12, 'steel roof; orange: the Sikaflex bead that bonds the blocking to it', 12, 'end', '#5F5E5A'))
+    a(_r(M(xt + bk), yb - .5 * S, bk, .5 * S, '#E0842A', '#8A4A10', .8))
     a(_r(M(xt + bk), yb, bk, bk, '#B8895A', INK, 1.2))
     a(f'<line x1="{M(xt + 15)}" y1="{yCe + th - 3}" x2="{M(xt + 15)}" y2="{yb + 14}" stroke="{INK}" stroke-width="2.2" stroke-dasharray="6 3"/>')
     cx = xt + tw - 22; cy = yCe + th + 2
