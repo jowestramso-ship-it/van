@@ -139,7 +139,7 @@ def _top_edge(mir):
     a(P([(xt - 15, yCe), (xt, yCe), (xt - h * lean, yCe + h), (xt - 15 - h * lean, yCe + h)], PLY))                       # the wall sheet leans in as it rises
     tw, th = 30, 60
     a(P([(xt, yCe), (xt + tw, yCe), (xt + tw, yCe + th), (xt - th * lean, yCe + th)], HARD, INK, 1.2))                      # the trim: 3/4 along the ceiling, 1 1/2 down the wall, back edge ripped to the lean
-    bk = 1.5 * S
+    bk = 2.5 * S
     a(R(xt, yTop, bk, st_t, '#B8895A', INK, 1.2))                                                                           # the furring strip: 1/2 thick, 1 1/2 wide
     a(f'<line x1="{M(xt + 15)}" y1="{yCe + th - 3}" x2="{M(xt + 15)}" y2="{yTop + 8}" stroke="{INK}" stroke-width="2.2" stroke-dasharray="6 3"/>')   # the trim's screw: up through the trim and the plywood into the strip
     cx = xt + tw - 22; cy = yCe + th + 2
@@ -150,7 +150,7 @@ def _top_edge(mir):
     a(_call(M(xt - 13), yCe + 60, 720 if mir else 40, yCe + 175 if mir else yCe + 80, '3/8 wall sheet, leaning in 5 degrees', an))
     a(_call(M(xt + 15), yCe + 20, TX, yCe + 56, 'screw up through the trim and the plywood', an)); a(_t(TT, yCe + 74, 'into the strip (2 in screw)', 12, an, INK))
     a(_call(M(xt + bk / 2), yTop + st_t / 2, TX, yTop - 22, 'furring strip %s (%s on the other wall)' % (('CB2', 'CB1') if mir else ('CB1', 'CB2')), an, '#5A2E0A'))
-    a(_t(TT, yTop - 8, '1/2 x 1 1/2, under the ribs, screwed to the bottom of every rib', 12, an, '#5A2E0A'))
+    a(_t(TT, yTop - 8, '1/2 x 2 1/2, under the ribs, screwed to the bottom of every rib', 12, an, '#5A2E0A'))
     a(_t(20, 24, 'Passenger side top edge (the wall on the right)' if mir else 'Driver side top edge (the wall on the left)', 14, 'start', INK, 700))
     return _svg(760, 400, ''.join(o), 'Top edge trim on the %s side with the furring strip %s' % (('passenger', 'CB2') if mir else ('driver', 'CB1')))
 def fig_top(): return _top_edge(False)
@@ -177,7 +177,7 @@ FIGS = [
     ('5', 'The side window', fig_window, 'The cutout is framed with J1 to J4 behind the sheet; line the reveal with 1/4 in strips and mitre a 3/4 x 1 1/2 in picture-frame trim over the sheet\'s cut edge.'),
     ('6', 'The top edge at the ceiling', fig_top, 'A 3/4 x 1 1/2 in hardwood strip covers the sheet\'s top edge and the 1 1/2 in gap beside the slats; its back edge is ripped to the lean and the LED strip sits in a channel behind its lower edge. It is screwed up through the plywood into the furring strip (CB1 on the driver side, CB2 on the passenger side), the 1/2 in strip under the ribs.'),
     ('7', 'The bottom edge at the floor', fig_floor, 'Keep the sheet 1/4 in off the floor and fix a 3/4 in quarter round to the wall, with 1/16 in under it, so the floor can move.'),
-    ('8', 'The top edge at the ceiling, passenger side', fig_top_pass, 'The same on the passenger side, the mirror of 6: the trim is screwed up through the plywood into the furring strip CB2, centered 64 1/4 in across from the driver wall, with the wall on the right. CB1 is on the driver side (6).')]
+    ('8', 'The top edge at the ceiling, passenger side', fig_top_pass, 'The same on the passenger side, the mirror of 6: the trim is screwed up through the plywood into the furring strip CB2, centered 63 3/4 in across from the driver wall, with the wall on the right. CB1 is on the driver side (6).')]
 
 CSS = '''<style>.trimgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:16px;margin:12px 0}
 .trimgrid figure{margin:0;border:1px solid #d9d5ca;border-radius:8px;padding:10px;background:#fff;min-width:0}
