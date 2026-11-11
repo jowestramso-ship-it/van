@@ -9,7 +9,10 @@ const fs = require('fs');
   const b = await chromium.launch({executablePath: '/opt/pw-browsers/chromium'});
   const page = await b.newPage({viewport: {width: 1400, height: 1000}});
   await page.goto('file://' + __dirname + '/../interactive.html'); await page.waitForTimeout(700);
-  const D = await page.evaluate(() => {
+  // THE NEW COUCH IDEA (user, 2026-11-11): the 3D shows the couch 3 1/4 in taller than the plan, so that the 20 in leaf can hang from its underside (deck top 21 in, seat base 21 3/4): the plan itself is NOT changed, so the layout is worked out again here with the taller seat base
+  const NC = {platform: 21.75};
+  const D = await page.evaluate((NC) => {
+    const L = layout(Object.assign({}, (0, eval)('P'), NC));
     const P = L.P, f = v => Math.round(v * 1000) / 1000, o = {};
     Object.keys(P).forEach(k => { if (typeof P[k] === 'number' || typeof P[k] === 'boolean') o[k] = typeof P[k] === 'number' ? f(P[k]) : P[k]; });
     const roofY = []; for (let y = 0; y <= P.vanW + .001; y += 2) roofY.push(f(L.roofZ(Math.min(y, P.vanW))));
@@ -29,7 +32,7 @@ const fs = require('fs');
         walls: L.walls.map(w => ({id: w.id, side: w.side, x0: f(w.x0), x1: f(w.x1), d: f(w.d)})),
       },
     };
-  });
+  }, NC);
   await b.close();
   const scene = fs.readFileSync(__dirname + '/interior_scene.js', 'utf8');
   const css = `:root{color-scheme:light dark;--bg:#fbfaf7;--card:#fff;--ink:#26241f;--mute:#6a665c;--line:#d9d5ca;--acc:#185FA5}
@@ -50,7 +53,7 @@ const fs = require('fs');
   <div class="bar"><button id="back" type="button">Step back</button><button id="fwd" type="button">Step forward</button></div>
   <div class="bar" id="railbar"><button id="rplay" type="button">Play</button><label class="sl">The gear shelf sliding out of its cabinet <input type="range" id="rs" min="0" max="100" value="0"></label></div>
   <p class="note" id="cap"></p>
-  <div class="bar"><button id="newc" type="button" aria-pressed="true">New couch idea: ON</button><span class="note" style="margin:0">The leaf hangs down over the front of the couch and swings up for the bed; the gear shelf no longer pulls out, it is reached through a loose lid in the deck that you lift off. A proposal, not yet in the plan: the button switches back to the plan as it is.</span></div>
+  <p class="note"><b>The new couch idea (a proposal, not yet in the plan).</b> The couch is 3 1/4 in taller here than in the plan (deck top 21 in, seat top 26 in), so that the 20 in leaf can hang down over the front of the couch from a hinge under the deck and swing up for the bed; the gear shelf no longer pulls out, it is reached through a loose lid in the deck that you lift off. The plan, the diagrams and the other pages still show the couch as it was.</p>
   <div class="bar" id="gearbar"><button id="gplay" type="button">Play</button><label class="sl">Opening the gear lid in the deck <input type="range" id="gs" min="0" max="100" value="0"></label></div>
   <p class="note" id="gcap"></p>
   <div class="bar" id="bedbar"><button id="bplay" type="button">Play</button><label class="sl">The couch becomes a bed <input type="range" id="bs" min="0" max="100" value="0"></label></div>
