@@ -201,15 +201,16 @@ for _px in POST_X: BA(box(_px,_px+POST,0,BR_Z0,f'fill="{G}" fill-opacity="0.35" 
 for _bx in BLK_X: BA(box(_bx-BLK_W/2,_bx+BLK_W/2,BLK_Z0,BLK_Z1,'fill="#5A2E0A" fill-opacity="0.8" stroke="#3E230B" stroke-width="1.2"'))
 BA(f'<text class="ts" x="{X(SH_DIV/2)}" y="{Y(4.4)}" text-anchor="middle" style="fill:#5A2E0A;font-size:9.5px;font-weight:700;paint-order:stroke;stroke:#fff;stroke-width:3px">couch frame (lifts out): front rail on 2 posts,</text><text class="ts" x="{X(SH_DIV/2)}" y="{Y(4.4)+11}" text-anchor="middle" style="fill:#5A2E0A;font-size:9.5px;font-weight:700;paint-order:stroke;stroke:#fff;stroke-width:3px">back rail on wall blocks at 3, 20 and 41 in</text>')
 BG('closet','Closet')
-item(74,89,0,74.5625,G,'Closet','15 in',Y(47))
+item(74,89,0,74.0625,G,'Closet','15 in',Y(47))
 BG('ceil','Ceiling covering')
-BA(box(0,154,75.3125,75.5,'fill="#D9C7A5" stroke="#8A6B4D" stroke-width="0.8"'))
-BA(box(0,154,74.5625,75.3125,'fill="#9A6B3A" fill-opacity="0.85" stroke="#5A3A00" stroke-width="0.8"'))
+BA(box(0,154,75.0,75.5,'fill="#B8895A" stroke="#5A2E0A" stroke-width="0.8"'))                      # the 1/2 in furring strips under the ribs
+BA(box(0,154,74.8125,75.0,'fill="#D9C7A5" stroke="#8A6B4D" stroke-width="0.8"'))                   # the 3/16 plywood
+BA(box(0,154,74.0625,74.8125,'fill="#9A6B3A" fill-opacity="0.85" stroke="#5A3A00" stroke-width="0.8"'))   # the 3/4 cedar slats
 for _x0,_x1,_nm in ((0.25,14.25,'roof fan'),(36.375,50.625,'A/C')):
-    BA(box(_x0,_x1,74.5625,75.5,'fill="#2C2C2A" fill-opacity="0.85"'))
+    BA(box(_x0,_x1,74.0625,75.5,'fill="#2C2C2A" fill-opacity="0.85"'))
     BA(f'<text class="ts" x="{X((_x0+_x1)/2)}" y="{Y(77.4)}" text-anchor="middle" style="font-size:10px;fill:#2C2C2A;paint-order:stroke;stroke:#fff;stroke-width:3px">{_nm}</text>')
-for _lx in (20.67,74,127.33): BA(f'<circle cx="{X(_lx)}" cy="{Y(74.4)}" r="3" fill="#FFD84A" stroke="#B8860B" stroke-width="0.8"/>')
-BA(f'<text class="ts" x="{X(152)}" y="{Y(77.4)}" text-anchor="end" style="font-size:10px;fill:#5A3A00;paint-order:stroke;stroke:#fff;stroke-width:3px">ceiling covering: 3/16 plywood + 3/4 in cedar slats, finished ceiling at 74 9/16</text>')
+for _lx in (20.67,74,127.33): BA(f'<circle cx="{X(_lx)}" cy="{Y(73.9)}" r="3" fill="#FFD84A" stroke="#B8860B" stroke-width="0.8"/>')
+BA(f'<text class="ts" x="{X(152)}" y="{Y(77.4)}" text-anchor="end" style="font-size:10px;fill:#5A3A00;paint-order:stroke;stroke:#fff;stroke-width:3px">ceiling covering: 1/2 strips + 3/16 plywood + 3/4 in cedar slats, finished ceiling at 74 1/16</text>')
 BG('cdoors','Closet door and drawers')
 # one door above the drawers (30.65 to 74.31 up) and four drawer fronts under the hanging clothes (1 to 30 1/2 up, 7 5/16 tall each)
 BA(box(74.125,88.875,30.65,74.3125,f'rx="3" fill="{G}" fill-opacity="0.12" stroke="{G}" stroke-width="1.6"'))
@@ -231,7 +232,7 @@ item(134.5,154,0,17.5,K,'Bench',None,Y(2.5))
 item(151.1,154,17.5,38,K,'',None)
 BG('fwalls','Floor-to-ceiling walls')
 for _w0,_w1,_n in ((88.25,89,'W1'),(154,154.75,'W2')):
-    BA(box(_w0,_w1,0,74.5625,'fill="#8A6B4D" fill-opacity="0.6" stroke="#3E230B" stroke-width="1.2"'))
+    BA(box(_w0,_w1,0,74.0625,'fill="#8A6B4D" fill-opacity="0.6" stroke="#3E230B" stroke-width="1.2"'))
     BA(f'<text class="th" x="{X(_w0)-3}" y="{Y(52)}" text-anchor="end" style="fill:#5A3A00;font-size:10.5px;font-weight:700;paint-order:stroke;stroke:#fff;stroke-width:3px">{_n}</text>')
 BA(f'<text class="ts" x="{X(121.5)}" y="{Y(46)}" text-anchor="middle" style="fill:#5A3A00;font-size:10px;paint-order:stroke;stroke:#fff;stroke-width:3px">W1 and W2: 3/4 in walls, floor to ceiling, 28 out; the dinette backs lean on them</text>')
 BG('table','Table')
@@ -1037,8 +1038,9 @@ def passenger_items(tank=False):
     a('<polygon points="'+' '.join(f'{xx(x):.1f},{yy(h):.1f}' for x,h in WW)+'" fill="#D8B79A" fill-opacity="0.8" stroke="#8A6B4D" stroke-width="1.2"/>')
     a(f'<text class="ts" x="{xx(59):.1f}" y="{yy(3.2):.1f}" text-anchor="middle" style="font-size:10px">wheel well (same as the driver side)</text>')
     grp('ceil','Ceiling covering')
-    a(f'<rect x="{xx(0):.1f}" y="{yy(75.5):.1f}" width="{S*154:.1f}" height="{S*0.1875:.1f}" fill="#D9C7A5" stroke="#8A6B4D" stroke-width="0.8"/>')
-    a(f'<rect x="{xx(0):.1f}" y="{yy(75.3125):.1f}" width="{S*154:.1f}" height="{S*0.75:.1f}" fill="#9A6B3A" fill-opacity="0.85" stroke="#5A3A00" stroke-width="0.8"/>')
+    a(f'<rect x="{xx(0):.1f}" y="{yy(75.5):.1f}" width="{S*154:.1f}" height="{S*0.5:.1f}" fill="#B8895A" stroke="#5A2E0A" stroke-width="0.8"/>')
+    a(f'<rect x="{xx(0):.1f}" y="{yy(75.0):.1f}" width="{S*154:.1f}" height="{S*0.1875:.1f}" fill="#D9C7A5" stroke="#8A6B4D" stroke-width="0.8"/>')
+    a(f'<rect x="{xx(0):.1f}" y="{yy(74.8125):.1f}" width="{S*154:.1f}" height="{S*0.75:.1f}" fill="#9A6B3A" fill-opacity="0.85" stroke="#5A3A00" stroke-width="0.8"/>')
     for _x0,_x1,_nm in ((0.25,14.25,'roof fan'),(36.375,50.625,'A/C')):
         a(f'<rect x="{xx(_x0):.1f}" y="{yy(75.5):.1f}" width="{S*(_x1-_x0):.1f}" height="{S*0.9375:.1f}" fill="#2C2C2A" fill-opacity="0.85"/>')
         a(f'<text class="ts" x="{xx((_x0+_x1)/2):.1f}" y="{yy(77.4):.1f}" text-anchor="middle" style="font-size:10px;fill:#2C2C2A;paint-order:stroke;stroke:#fff;stroke-width:3px">{_nm}</text>')
@@ -1046,12 +1048,12 @@ def passenger_items(tank=False):
     grp('bath','Wet bath (shower pan)')
     if tank:
         TK='#6D6A62'
-        box(0,36,9.5,74.5625,T,'Wet bath','shower floor at 9.5 up, 65 9/16 in headroom',yy(68),0.08)
+        box(0,36,9.5,74.0625,T,'Wet bath','shower floor at 9.5 up, 64 9/16 in headroom',yy(68),0.08)
         box(0,30,0,9.5,TK,'Grey water tank','30 x 15 x 9.5 in, about 15 gal',yy(6.2),0.3)
         a(f'<line x1="{xx(0):.1f}" y1="{yy(9.5):.1f}" x2="{xx(36):.1f}" y2="{yy(9.5):.1f}" stroke="{T}" stroke-width="4"/>')
         a(f'<line x1="{xx(29):.1f}" y1="{yy(9.5):.1f}" x2="{xx(29):.1f}" y2="{yy(6.5):.1f}" stroke="#A32D2D" stroke-width="2" marker-end="url(#arq)"/><text class="ts" x="{xx(29):.1f}" y="{yy(11.6):.1f}" text-anchor="middle" style="font-size:10px;fill:#A32D2D;paint-order:stroke;stroke:#fff;stroke-width:3px">drain</text>')
     else:
-        box(0,36,0,74.5625,T,'Wet bath','36 x 24 in, fixed pan, curtains on three sides',yy(68),0.08)
+        box(0,36,0,74.0625,T,'Wet bath','36 x 24 in, fixed pan, curtains on three sides',yy(68),0.08)
         a(f'<rect x="{xx(0):.1f}" y="{yy(3.8):.1f}" width="{S*36:.1f}" height="{S*3.8:.1f}" fill="#D9ECF7" fill-opacity="0.95" stroke="#185FA5" stroke-width="1.6"/>')
         a(f'<text class="ts" x="{xx(8):.1f}" y="{yy(1.4):.1f}" text-anchor="middle" style="font-size:9.5px;fill:#185FA5">fixed pan, 3 in curb</text>')
         box(TOILET_X[0],TOILET_X[1],3.8,18.3,K,'Toilet','Fold-To-Go 14 1/2',yy(11),0.16)
@@ -1074,7 +1076,7 @@ def passenger_items(tank=False):
     a(f'<text class="ts" x="{xx(PAN_W-CUR_IN-2.25):.1f}" y="{yy(62):.1f}" text-anchor="middle" style="font-size:9.5px;fill:#7B3FA0;paint-order:stroke;stroke:#fff;stroke-width:3px">curtains</text><text class="ts" x="{xx(PAN_W-CUR_IN-2.25):.1f}" y="{yy(62)+11:.1f}" text-anchor="middle" style="font-size:9.5px;fill:#7B3FA0;paint-order:stroke;stroke:#fff;stroke-width:3px">pulled aside</text>')
     grp('fwalls3','Floor-to-ceiling wall (counter side of the fridge)')
     for _w0,_w1,_n in ((58,58.75,'W4'),):
-        a(f'<rect x="{xx(_w0):.1f}" y="{yy(74.5625):.1f}" width="{S*(_w1-_w0):.1f}" height="{S*74.5625:.1f}" fill="#8A6B4D" fill-opacity="0.6" stroke="#3E230B" stroke-width="1.2"/>')
+        a(f'<rect x="{xx(_w0):.1f}" y="{yy(74.0625):.1f}" width="{S*(_w1-_w0):.1f}" height="{S*74.0625:.1f}" fill="#8A6B4D" fill-opacity="0.6" stroke="#3E230B" stroke-width="1.2"/>')
         a(f'<text class="th" x="{xx(_w0)-3:.1f}" y="{yy(60):.1f}" text-anchor="end" style="font-size:10.5px;font-weight:700;fill:#5A3A00;paint-order:stroke;stroke:#fff;stroke-width:3px">{_n}</text>')
     grp('cabs','Cabinets and countertop')
     box(58,103,0,38,C,'',None,yy(31),0.08)

@@ -118,59 +118,43 @@ def fig_window():
     return _svg(760, 362, ''.join(o), 'Side window reveal and trim')
 
 # ---- 6  the top edge at the ceiling: a section looking along the wall, the wall at the left ------------------------------------------
-def fig_top():
+def _top_edge(mir):
+    """the top edge at the ceiling, a section across the van near a wall (between two ribs): the roof steel with the 2 in of wool or air under it, the 1/2 in furring strip (CB1 on the driver side, CB2 on the passenger side)
+    screwed to the bottoms of the ribs, the 3/16 plywood screwed to it, the slat, and the trim with its screw up through the plywood into the strip. mir draws the passenger side: the wall on the right."""
     import math
     o = []; a = o.append
-    lean = math.tan(math.radians(5)); yCe = 150; xt = 170; h = 150                                                         # the ceiling plywood's underside, the wall face at the ceiling, the part of the wall drawn
-    S = 40
-    a(_r(xt - 40, yCe - 7.5, 560, 7.5, '#D9C7A5', '#8A6B4D', 1)); a(_t(xt + 330, yCe - 14, '3/16 ceiling plywood', 12, 'start', '#5F5E5A'))
-    a(_r(xt + 60, yCe, 300, 30, '#DDC397', '#8A6B4D', 1)); a(_t(xt + 370, yCe + 20, 'cedar slat 3/4', 12, 'start', '#5F5E5A'))
-    a(_p([(xt - 15, yCe), (xt, yCe), (xt - h * lean, yCe + h), (xt - 15 - h * lean, yCe + h)], PLY))                       # the wall sheet leans in toward the right as it rises
+    M = (lambda x: 760 - x) if mir else (lambda x: x)
+    R = (lambda x, y, w, h, f, st=INK, sw=1.1: _r(M(x + w), y, w, h, f, st, sw)) if mir else _r
+    P = lambda pts, f, st=INK, sw=1.1, ex='': _p([(M(x), y) for x, y in pts], f, st, sw, ex)
+    an = 'end' if mir else 'start'; TX = 430 if mir else 330; TT = 422 if mir else 338
+    lean = math.tan(math.radians(5)); yCe = 190; xt = 170; h = 150; S = 40
+    st_t = .5 * S; yTop = yCe - 7.5 - st_t                                                                                  # the top of the strip: the bottoms of the ribs
+    yRoof = yTop - 2 * S                                                                                                     # the roof steel, 2 in above them
+    a(R(xt - 40, yRoof - 5, 560, 5, '#9AA0A8', INK, 1)); a(_t(M(xt + (60 if not mir else 60)), yRoof - 12, 'steel roof: the ribs hang 2 in below it', 12, an, '#5F5E5A'))
+    a(R(xt - 40, yRoof, 560, 2 * S, '#F1E6C8', '#D8C9A0', .8)); a(_t(M(xt + 330), yRoof + 24, 'wool, 2 in, between the ribs', 12, an, '#7A6A3A'))
+    a(f'<rect x="{M(xt + 520) if mir else xt - 40}" y="{yRoof:.1f}" width="560" height="{2 * S}" fill="none" stroke="#8F959C" stroke-width="1.2" stroke-dasharray="6 4"/>')   # the rib behind this section
+    a(_t(M(xt + 330), yRoof + 42, 'rib behind: the strip is screwed to it', 12, an, '#5F5E5A'))
+    a(R(xt - 40, yCe - 7.5, 560, 7.5, '#D9C7A5', '#8A6B4D', 1)); a(_t(M(xt + 330), yCe - 14, '3/16 ceiling plywood', 12, an, '#5F5E5A'))
+    a(R(xt + 60, yCe, 300, 30, '#DDC397', '#8A6B4D', 1)); a(_t(M(xt + 370), yCe + 20, 'cedar slat 3/4', 12, an, '#5F5E5A'))
+    a(P([(xt - 15, yCe), (xt, yCe), (xt - h * lean, yCe + h), (xt - 15 - h * lean, yCe + h)], PLY))                       # the wall sheet leans in as it rises
     tw, th = 30, 60
-    a(_p([(xt, yCe), (xt + tw, yCe), (xt + tw, yCe + th), (xt - th * lean, yCe + th)], HARD, INK, 1.2))                   # the trim: 3/4 along the ceiling, 1 1/2 down the wall, back edge ripped to the lean
-    # the ceiling blocking CB1/CB2: 1 1/2 x 1 1/2 wood above the plywood edge, between the roof ribs, flush with the rib bottoms; the roof steel above it (the ribs hang 2 in)
-    bk = 1.5 * S; yb = yCe - 7.5 - bk
-    a(_r(xt - 40, yb - .5 * S - 5, 560, 5, '#9AA0A8', INK, 1)); a(_t(xt + 60, yb - .5 * S - 12, 'steel roof; orange: the Sikaflex bead that bonds the blocking to it', 12, 'start', '#5F5E5A'))
-    a(_r(xt, yb - .5 * S, bk, .5 * S, '#E0842A', '#8A4A10', .8))                                                             # the Sikaflex bead between the roof steel and the blocking
-    a(_r(xt, yb, bk, bk, '#B8895A', INK, 1.2))
-    a(f'<line x1="{xt + 15}" y1="{yCe + th - 3}" x2="{xt + 15}" y2="{yb + 14}" stroke="{INK}" stroke-width="2.2" stroke-dasharray="6 3"/>')   # the trim's screw: up through the trim and the plywood into the blocking
+    a(P([(xt, yCe), (xt + tw, yCe), (xt + tw, yCe + th), (xt - th * lean, yCe + th)], HARD, INK, 1.2))                      # the trim: 3/4 along the ceiling, 1 1/2 down the wall, back edge ripped to the lean
+    bk = 1.5 * S
+    a(R(xt, yTop, bk, st_t, '#B8895A', INK, 1.2))                                                                           # the furring strip: 1/2 thick, 1 1/2 wide
+    a(f'<line x1="{M(xt + 15)}" y1="{yCe + th - 3}" x2="{M(xt + 15)}" y2="{yTop + 8}" stroke="{INK}" stroke-width="2.2" stroke-dasharray="6 3"/>')   # the trim's screw: up through the trim and the plywood into the strip
     cx = xt + tw - 22; cy = yCe + th + 2
-    a(_r(cx, cy, 22, 11, '#B9BCC2', INK, 1)); a(_r(cx + 4, cy + 7, 14, 3, LED, '#8A5A00', .6))
-    a(_p([(cx + 4, cy + 10), (cx + 18, cy + 10), (cx + 40, cy + 52), (cx - 18, cy + 52)], '#FFE9A8', 'none', 0, 'fill-opacity=".6"'))
-    a(_call(xt + tw / 2, yCe + 34, 330, yCe + 116, 'trim 3/4 x 1 1/2, back edge ripped to the 5 degree lean', 'start'))
-    a(_call(cx + 11, cy + 6, 330, yCe + 158, 'LED strip in an aluminum channel', 'start', '#8A5A00'))
-    a(_call(xt - 40, yCe + 60, 40, yCe + 80, '3/8 wall sheet, leaning in 5 degrees', 'start'))
-    a(_call(xt + 15, yCe + 20, 330, yCe + 56, 'screw up through the trim and the plywood', 'start')); a(_t(338, yCe + 74, 'into the blocking (2 1/2 in screw)', 12, 'start', INK))
-    a(_call(xt + bk / 2, yb + bk / 2 - 8, 330, yb + 6, 'ceiling blocking CB1 (CB2 on the other wall)', 'start', '#5A2E0A')); a(_t(338, yb + 26, '1 1/2 x 1 1/2, flush with the rib bottoms,', 12, 'start', '#5A2E0A')); a(_t(338, yb + 42, 'bottom bevelled to the roof tilt (16 degrees)', 12, 'start', '#5A2E0A'))
-    a(_t(20, 24, 'Top edge at the ceiling: a section along the wall (the wall on the left)', 14, 'start', INK, 700))
-    return _svg(760, 360, ''.join(o), 'Top edge trim with the LED strip and the ceiling blocking')
-
-# ---- 8  the top edge at the ceiling on the passenger side: the mirror of 6, the wall at the right, with the blocking CB2 ---------------------------
-def fig_top_pass():
-    import math
-    o = []; a = o.append
-    M = lambda x: 760 - x                                                                                                     # mirror: the wall is on the right, the aisle on the left
-    lean = math.tan(math.radians(5)); yCe = 150; xt = 170; h = 150; S = 40
-    a(_r(M(xt + 520), yCe - 7.5, 560, 7.5, '#D9C7A5', '#8A6B4D', 1)); a(_t(M(xt + 330), yCe - 14, '3/16 ceiling plywood', 12, 'end', '#5F5E5A'))
-    a(_r(M(xt + 360), yCe, 300, 30, '#DDC397', '#8A6B4D', 1)); a(_t(M(xt + 370), yCe + 20, 'cedar slat 3/4', 12, 'end', '#5F5E5A'))
-    a(_p([(M(xt - 15), yCe), (M(xt), yCe), (M(xt - h * lean), yCe + h), (M(xt - 15 - h * lean), yCe + h)], PLY))             # the wall sheet leans in toward the left as it rises
-    tw, th = 30, 60
-    a(_p([(M(xt), yCe), (M(xt + tw), yCe), (M(xt + tw), yCe + th), (M(xt - th * lean), yCe + th)], HARD, INK, 1.2))
-    bk = 1.5 * S; yb = yCe - 7.5 - bk
-    a(_r(M(xt + 520), yb - .5 * S - 5, 560, 5, '#9AA0A8', INK, 1)); a(_t(M(xt + 60), yb - .5 * S - 12, 'steel roof; orange: the Sikaflex bead that bonds the blocking to it', 12, 'end', '#5F5E5A'))
-    a(_r(M(xt + bk), yb - .5 * S, bk, .5 * S, '#E0842A', '#8A4A10', .8))
-    a(_r(M(xt + bk), yb, bk, bk, '#B8895A', INK, 1.2))
-    a(f'<line x1="{M(xt + 15)}" y1="{yCe + th - 3}" x2="{M(xt + 15)}" y2="{yb + 14}" stroke="{INK}" stroke-width="2.2" stroke-dasharray="6 3"/>')
-    cx = xt + tw - 22; cy = yCe + th + 2
-    a(_r(M(cx + 22), cy, 22, 11, '#B9BCC2', INK, 1)); a(_r(M(cx + 18), cy + 7, 14, 3, LED, '#8A5A00', .6))
-    a(_p([(M(cx + 4), cy + 10), (M(cx + 18), cy + 10), (M(cx + 40), cy + 52), (M(cx - 18), cy + 52)], '#FFE9A8', 'none', 0, 'fill-opacity=".6"'))
-    a(_call(M(xt + tw / 2), yCe + 34, 430, yCe + 116, 'trim 3/4 x 1 1/2, back edge ripped to the 5 degree lean', 'end'))
-    a(_call(M(cx + 11), cy + 6, 430, yCe + 158, 'LED strip in an aluminum channel', 'end', '#8A5A00'))
-    a(_call(603, yCe + 60, 720, yCe + 175, '3/8 wall sheet, leaning in 5 degrees', 'end'))
-    a(_call(M(xt + 15), yCe + 20, 430, yCe + 56, 'screw up through the trim and the plywood', 'end')); a(_t(422, yCe + 74, 'into the blocking (2 1/2 in screw)', 12, 'end', INK))
-    a(_call(M(xt + bk / 2), yb + bk / 2 - 8, 430, yb - 4, 'ceiling blocking CB2 (CB1 on the other wall)', 'end', '#5A2E0A')); a(_t(422, yb + 14, '1 1/2 x 1 1/2, flush with the rib bottoms,', 12, 'end', '#5A2E0A')); a(_t(422, yb + 30, 'bottom bevelled to the roof tilt (16 degrees)', 12, 'end', '#5A2E0A'))
-    a(_t(20, 24, 'Passenger side top edge (the wall on the right)', 14, 'start', INK, 700))
-    return _svg(760, 360, ''.join(o), 'Top edge trim on the passenger side with the ceiling blocking CB2')
+    a(R(cx, cy, 22, 11, '#B9BCC2', INK, 1)); a(R(cx + 4, cy + 7, 14, 3, LED, '#8A5A00', .6))
+    a(P([(cx + 4, cy + 10), (cx + 18, cy + 10), (cx + 40, cy + 52), (cx - 18, cy + 52)], '#FFE9A8', 'none', 0, 'fill-opacity=".6"'))
+    a(_call(M(xt + tw / 2), yCe + 34, TX, yCe + 116, 'trim 3/4 x 1 1/2, back edge ripped to the 5 degree lean', an))
+    a(_call(M(cx + 11), cy + 6, TX, yCe + 158, 'LED strip in an aluminum channel', an, '#8A5A00'))
+    a(_call(M(xt - 13), yCe + 60, 720 if mir else 40, yCe + 175 if mir else yCe + 80, '3/8 wall sheet, leaning in 5 degrees', an))
+    a(_call(M(xt + 15), yCe + 20, TX, yCe + 56, 'screw up through the trim and the plywood', an)); a(_t(TT, yCe + 74, 'into the strip (2 in screw)', 12, an, INK))
+    a(_call(M(xt + bk / 2), yTop + st_t / 2, TX, yTop - 22, 'furring strip %s (%s on the other wall)' % (('CB2', 'CB1') if mir else ('CB1', 'CB2')), an, '#5A2E0A'))
+    a(_t(TT, yTop - 8, '1/2 x 1 1/2, under the ribs, screwed to the bottom of every rib', 12, an, '#5A2E0A'))
+    a(_t(20, 24, 'Passenger side top edge (the wall on the right)' if mir else 'Driver side top edge (the wall on the left)', 14, 'start', INK, 700))
+    return _svg(760, 400, ''.join(o), 'Top edge trim on the %s side with the furring strip %s' % (('passenger', 'CB2') if mir else ('driver', 'CB1')))
+def fig_top(): return _top_edge(False)
+def fig_top_pass(): return _top_edge(True)
 
 # ---- 7  the floor edge: a section looking along the wall --------------------------------------------------------------------------------
 def fig_floor():
@@ -191,9 +175,9 @@ FIGS = [
     ('3', 'Outside corners', fig_outside, 'The wheel well box and the ends of the closet, shower and counter walls: a solid hardwood corner post that the sheets stop against, with the outer edges rounded 1/8 in.'),
     ('4', 'Visible plywood edges', fig_edge, 'The sliding door opening, shelf and nook edges: iron on 1/2 in birch veneer tape, trim it flush and sand it, then finish it with the sheets.'),
     ('5', 'The side window', fig_window, 'The cutout is framed with J1 to J4 behind the sheet; line the reveal with 1/4 in strips and mitre a 3/4 x 1 1/2 in picture-frame trim over the sheet\'s cut edge.'),
-    ('6', 'The top edge at the ceiling', fig_top, 'A 3/4 x 1 1/2 in hardwood strip covers the sheet\'s top edge and the 1 1/2 in gap beside the slats; its back edge is ripped to the lean and the LED strip sits in a channel behind its lower edge. It is screwed up through the plywood into the ceiling blocking (CB1 on the driver side, CB2 on the passenger side), the 1 1/2 in wood between the roof ribs.'),
+    ('6', 'The top edge at the ceiling', fig_top, 'A 3/4 x 1 1/2 in hardwood strip covers the sheet\'s top edge and the 1 1/2 in gap beside the slats; its back edge is ripped to the lean and the LED strip sits in a channel behind its lower edge. It is screwed up through the plywood into the furring strip (CB1 on the driver side, CB2 on the passenger side), the 1/2 in strip under the ribs.'),
     ('7', 'The bottom edge at the floor', fig_floor, 'Keep the sheet 1/4 in off the floor and fix a 3/4 in quarter round to the wall, with 1/16 in under it, so the floor can move.'),
-    ('8', 'The top edge at the ceiling, passenger side', fig_top_pass, 'The same on the passenger side, the mirror of 6: the trim is screwed up through the plywood into the ceiling blocking CB2, at 63 1/2 to 65 in across from the driver wall, with the wall on the right. CB1 is on the driver side (6).')]
+    ('8', 'The top edge at the ceiling, passenger side', fig_top_pass, 'The same on the passenger side, the mirror of 6: the trim is screwed up through the plywood into the furring strip CB2, centered 64 1/4 in across from the driver wall, with the wall on the right. CB1 is on the driver side (6).')]
 
 CSS = '''<style>.trimgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:16px;margin:12px 0}
 .trimgrid figure{margin:0;border:1px solid #d9d5ca;border-radius:8px;padding:10px;background:#fff;min-width:0}

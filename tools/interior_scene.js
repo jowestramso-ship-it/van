@@ -94,7 +94,7 @@
 
   /* ---------- the roof: ceiling arc, plywood, slats ---------- */
   const rz = y => { const a = D.roofY, s = D.roofS; const i = Math.max(0, Math.min(a.length - 1, y / s)), i0 = Math.floor(i), i1 = Math.min(a.length - 1, i0 + 1); return a[i0] + (a[i1] - a[i0]) * (i - i0); };
-  const bare = z => rz(z), fin = z => rz(z) - L.lining, plyU = z => rz(z) - P.plyT;
+  const bare = z => rz(z), fin = z => rz(z) - L.lining, plyU = z => rz(z) - (P.blkOn ? P.blkT : 0) - P.plyT;   // the plywood is under the 1/2 in furring strips
   const XB = -6, XE = WEND;
   { // plywood underside plane in 2 in strips (shows through the gaps between the slats)
     for (let z = 0; z < VW; z += 2) { const z1 = Math.min(VW, z + 2); surf([V(XB, plyU(z), z), V(XE, plyU(z), z), V(XE, plyU(z1), z1), V(XB, plyU(z1), z1)], MT.ply, 36); }

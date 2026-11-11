@@ -222,10 +222,11 @@ const PD = [
   { k: 'lightD', g: 'Ceiling', l: 'Light flange diameter (Acegoo 12 V slim puck: 2 3/4 in across, 1/2 in thick, clips into the plywood)', d: 2.75, s: .25, a: 1, b: 8 },
   { k: 'lightHole', g: 'Ceiling', l: 'Light cutout hole in the plywood (the puck needs 2 1/4 in; two spring clips hold it in thin plywood only, not through a slat)', d: 2.25, s: .125, a: .5, b: 8 },
   { k: 'lightGap', g: 'Ceiling', l: 'Slat cut away at each light: length along the slat (the flange 2 3/4 in plus 1/8 in each side)', d: 3, s: .25, a: 0, b: 12 },
-  { k: 'blkOn', g: 'Ceiling', l: 'Ceiling blocking: wood between the roof ribs, flush with their bottoms, under the wall-top trim (CB1, CB2) and under the long plywood seam (CB3); untick to leave it out', d: true, t: 'c' },
-  { k: 'blkW', g: 'Ceiling', l: 'Ceiling blocking: width and height (a 2x2 is 1 1/2 x 1 1/2; the ribs hang 2 in)', d: 1.5, s: .125, a: .75, b: 2 },
-  { k: 'blkGap0', g: 'Ceiling', l: 'Ceiling blocking: the gap for the cables across the van starts at (inches from the rear doors)', d: 76, s: .5, a: 0, b: 160 },
-  { k: 'blkGap1', g: 'Ceiling', l: 'Ceiling blocking: the gap for the cables across the van ends at (inches from the rear doors)', d: 86, s: .5, a: 0, b: 160 },
+  { k: 'blkOn', g: 'Ceiling', l: 'Ceiling furring strips CB1 to CB6: six strips running the whole length of the ceiling, screwed to the bottoms of the steel ribs, under the plywood (untick to leave them out)', d: true, t: 'c' },
+  { k: 'blkW', g: 'Ceiling', l: 'Ceiling furring strips: width (1 1/2 assumed: not given)', d: 1.5, s: .125, a: .75, b: 4 },
+  { k: 'blkT', g: 'Ceiling', l: 'Ceiling furring strips: thickness (user: 1/2 in). They go under the ribs, so the finished ceiling is this much lower', d: .5, s: .0625, a: .25, b: 1.5 },
+  { k: 'blkYs', g: 'Ceiling', l: 'Ceiling furring strips: where they run, across from the driver wall (the six centers, in the order CB1, CB4, CB5, CB6, CB3, CB2)', d: '3.75, 14, 24.25, 43.6, 51, 64.25', t: 'x' },
+  { k: 'blkJoints', g: 'Ceiling', l: 'Ceiling furring strips: the joints along the van, each on the middle of a rib (from the rear doors); a 96 in stick is the longest piece', d: '23.125, 98.75', t: 'x' },
   { k: 'fanX', g: 'Ceiling', l: 'Roof fan cutout: along the van (from the back)', d: 13.25, s: .5, a: 0, b: 220 },
   { k: 'fanY', g: 'Ceiling', l: 'Fan cutout: across (from the driver wall; 34 is the middle of the van, over the aisle)', d: 34, s: .5, a: 0, b: 90 },
   { k: 'fanUnit', g: 'Ceiling', l: 'Roof fan unit on the roof: square footprint (2012 F36AR exhaust fan: 17.7 x 17.7 x 6.4 tall)', d: 17.75, s: .25, a: 6, b: 40 },
@@ -612,7 +613,7 @@ function layout(P0) {
   L.ribs = String(P.ribList || '').split(/[\s,;]+/).map(parseFloat).filter(v => isFinite(v) && v >= 0 && v <= P.ceilLen + 20).sort((a, b) => a - b);
   L.ribBands = L.ribs.map(r => P.ribRef === 'center' ? [r - P.ribW / 2, r + P.ribW / 2] : P.ribRef === 'front' ? [r - P.ribW, r] : [r, r + P.ribW]);
   L.ledgeTot = P.ledgeOff + P.ledgeLen;
-  L.lining = P.liningOn ? P.plyT + P.slatT : 0;
+  L.lining = P.liningOn ? P.plyT + P.slatT + (P.blkOn ? P.blkT : 0) : 0;   // the furring strips (under the ribs), the plywood and the slats
   L.ceilF = P.ceil - L.lining;
   L.slatLen = P.slatAuto ? P.ceilLen : P.slatLen;
   L.nSlats = Math.max(0, Math.floor((P.ceilW + P.slatGap) / (P.slatW + P.slatGap)));
@@ -653,15 +654,14 @@ function layout(P0) {
     { const rc = L.ribBands.map(b => (b[0] + b[1]) / 2); let x0 = 0, ok = true, g = 0;
       while (P.ceilLen - x0 > 96 && g++ < 12) { const c = rc.filter(v => v > x0 + 1 && v <= x0 + 96).pop(); if (c === undefined) { ok = false; break; } L.plyX.push(c); x0 = c; }
       if (!ok) { L.plyX = []; for (let x = P.ceilLen - 96; x > 1; x -= 96) L.plyX.unshift(x); } }
-    // the ceiling blocking: three rails along the van, each in pieces between the ribs (flush with the rib bottoms), with a gap where the cables cross the van: CB1 under the driver side trim, CB2 under the passenger side trim, CB3 under the long plywood seam
+    // the ceiling furring strips (user, 2026-11-11: 'going length wise ... held on via steel ribs ... 1/2 in ... 6 across the whole ceiling'): six strips along the whole length, under the ribs, each in pieces joined on the middle of a rib
     L.blocks = [];
     if (P.blkOn && P.liningOn) {
-      const w = P.blkW, y0 = L.ceilOff, y1 = L.ceilOff + P.ceilW, spans = []; let x = 0;
-      L.ribBands.filter(b => b[1] > 0 && b[0] < P.ceilLen).forEach(b => { if (b[0] > x + .01) spans.push([x, b[0]]); x = Math.max(x, b[1]); }); if (x < P.ceilLen - .01) spans.push([x, P.ceilLen]);
-      const pieces = []; spans.forEach(([a, b]) => { if (P.blkGap1 > P.blkGap0 && a < P.blkGap1 && b > P.blkGap0) { if (a < P.blkGap0) pieces.push([a, P.blkGap0]); if (b > P.blkGap1) pieces.push([P.blkGap1, b]); } else pieces.push([a, b]); });
-      const rails = [['CB1', 'driver side wall top, under the trim', y0, y0 + w], ['CB2', 'passenger side wall top, under the trim', y1 - w, y1]];
-      if (P.ceilW > 49) rails.push(['CB3', 'under the long plywood seam', y0 + 48 - w / 2, y0 + 48 + w / 2]);
-      rails.forEach(r => L.blocks.push({ id: r[0], nm: r[1], y0: r[2], y1: r[3], tilt: L.roofTilt((r[2] + r[3]) / 2), pieces }));
+      const ids = ['CB1', 'CB4', 'CB5', 'CB6', 'CB3', 'CB2'], nms = ['driver side wall top, under the trim', 'between CB1 and the openings', 'beside the openings, driver side', 'beside the openings, aisle side', 'under the long plywood seam', 'passenger side wall top, under the trim'];
+      const num = s => String(s || '').split(/[\s,;]+/).map(parseFloat).filter(v => isFinite(v));
+      const ys = num(P.blkYs).sort((a, b) => a - b), js = num(P.blkJoints).filter(v => v > 0 && v < P.ceilLen).sort((a, b) => a - b);
+      const edges = [0].concat(js, [P.ceilLen]), pieces = edges.slice(1).map((e, i) => [edges[i], e]);
+      ys.forEach((yc, i) => L.blocks.push({ id: ids[i] || 'CB' + (i + 1), nm: nms[i] || '', y0: yc - P.blkW / 2, y1: yc + P.blkW / 2, yc, pieces, t: P.blkT }));
     }
   }
   // the drawers and shelves under the counter (as planned plus dragged), the jar shelf in the nook and the microwave shelf above the fridge

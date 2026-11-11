@@ -41,7 +41,7 @@ def _map(FD, side):
     W = 154
     a(_t(X0, 22, ('Driver' if not flip else 'Passenger') + ' wall: every spacer block, seen from inside the van (' + ('rear doors on the left, cab on the right' if not flip else 'cab on the left, rear doors on the right') + ')', 14, 'start', INK, 700))
     a(_r(xx(0) if not flip else xx(W), yy(75.5), S * W, S * 75.5, '#F7F5EE', '#5F5E5A', 1.6))
-    a(_l(xx(0), yy(74.5625), xx(W), yy(74.5625), GRY, 1, '6 3')); a(_t(xx(W / 2), yy(74.5625) - 4, 'finished ceiling at the wall 74 9/16', 9.5, 'middle', '#5F5E5A'))
+    a(_l(xx(0), yy(74.0625), xx(W), yy(74.0625), GRY, 1, '6 3')); a(_t(xx(W / 2), yy(74.0625) - 4, 'finished ceiling at the wall 74 1/16', 9.5, 'middle', '#5F5E5A'))
     # the grid: ticks every 10 in along the wall and every 10 up
     for t in range(0, W + 1, 10):
         a(_l(xx(t), yy(0), xx(t), yy(75.5), '#D3D1C7', .7, '2 3')); a(_t(xx(t), FL + 14, str(t), 9.5, 'middle', BLU, 600))

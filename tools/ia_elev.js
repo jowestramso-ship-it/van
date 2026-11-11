@@ -19,10 +19,12 @@ function elevFrame(E, L, title) {
   o.push(GE());
   o.push(R(Math.min(xx(0), xx(P.cab)), yy(P.ceil), S * P.cab, S * P.ceil, { fill: '#F1EFE8', fo: .6, stroke: '#5F5E5A', sw: 1.2 }));
   o.push(GB('ceilcov', 'Ceiling and its covering'));
-  o.push(T(E.flip ? xx(0) - 4 : xx(0) + 4, yy(P.ceil) - (L.lining > 0 ? 17 : 5), 'ceiling (bare) ' + fmt(P.ceil) + (L.lining > 0 ? `; with the covering (${fmt(P.plyT)} plywood + ${fmt(P.slatT)} slats) it is ${fmt(L.ceilF)}` : ''), { anchor: E.flip ? 'end' : 'start', size: 11, fill: '#5F5E5A', halo: false }));
+  o.push(T(E.flip ? xx(0) - 4 : xx(0) + 4, yy(P.ceil) - (L.lining > 0 ? 17 : 5), 'ceiling (bare) ' + fmt(P.ceil) + (L.lining > 0 ? `; with the covering (${fmt(P.blkOn ? P.blkT : 0)} strips + ${fmt(P.plyT)} plywood + ${fmt(P.slatT)} slats) it is ${fmt(L.ceilF)}` : ''), { anchor: E.flip ? 'end' : 'start', size: 11, fill: '#5F5E5A', halo: false }));
   if (L.lining > 0) {
-    o.push(R(Math.min(xx(0), xx(P.cab)), yy(P.ceil), S * P.cab, S * P.plyT, { fill: '#D9C7A5', fo: .9, stroke: '#8A6B4D', sw: .8 }));
-    for (let x0 = -6; x0 < P.cab; x0 += L.slatLen + .25) { const a0 = Math.max(0, x0), a1 = Math.min(P.cab, x0 + L.slatLen); if (a1 > a0) o.push(R(Math.min(xx(a0), xx(a1)), yy(P.ceil - P.plyT), S * (a1 - a0), S * P.slatT, { fill: '#9A6B3A', fo: .85, stroke: '#5A3A00', sw: .8 })); }
+    const bT = P.blkOn ? P.blkT : 0;   // the furring strips under the ribs, then the plywood, then the slats
+    if (bT > 0) o.push(R(Math.min(xx(0), xx(P.cab)), yy(P.ceil), S * P.cab, S * bT, { fill: '#B8895A', fo: .9, stroke: '#5A2E0A', sw: .8 }));
+    o.push(R(Math.min(xx(0), xx(P.cab)), yy(P.ceil - bT), S * P.cab, S * P.plyT, { fill: '#D9C7A5', fo: .9, stroke: '#8A6B4D', sw: .8 }));
+    for (let x0 = -6; x0 < P.cab; x0 += L.slatLen + .25) { const a0 = Math.max(0, x0), a1 = Math.min(P.cab, x0 + L.slatLen); if (a1 > a0) o.push(R(Math.min(xx(a0), xx(a1)), yy(P.ceil - bT - P.plyT), S * (a1 - a0), S * P.slatT, { fill: '#9A6B3A', fo: .85, stroke: '#5A3A00', sw: .8 })); }
     [L.fan, L.ac].forEach(c => { const a0 = Math.max(0, c.x - 6 - c.w / 2), a1 = Math.min(P.cab, c.x - 6 + c.w / 2); if (a1 > a0) { o.push(R(Math.min(xx(a0), xx(a1)), yy(P.ceil), S * (a1 - a0), S * L.lining, { fill: '#2C2C2A', fo: .85 })); o.push(T((xx(a0) + xx(a1)) / 2, yy(P.ceil) - 4, c.nm, { size: 10, fill: '#2C2C2A', halo: false })); } });
     L.lights.forEach(l => { const px = l.x - 6; if (px > 0 && px < P.cab) o.push(`<circle cx="${f1(xx(px))}" cy="${f1(yy(L.ceilF) + 1.5)}" r="2.6" fill="#FFD84A" stroke="#B8860B" stroke-width=".8"/>`); });
   }

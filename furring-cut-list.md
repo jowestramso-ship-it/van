@@ -116,7 +116,7 @@ The wood blocks are the spacers that hold S4, S5, S6, the window frame (J1 to J4
 
 ## Things to check before you cut
 
-- **S8 (76 3/4 in up) is above the finished ceiling.** The ceiling covering ends at 74 9/16 in at the wall, so S8 (75 to 78 1/2 in as a 1x4) would sit above it, hidden in the roof curve. I did not change it; decide whether you still want it before cutting the two S8 pieces on each side.
+- **S8 (76 3/4 in up) is above the finished ceiling.** The ceiling covering ends at 74 1/16 in at the wall, so S8 (75 to 78 1/2 in as a 1x4) would sit above it, hidden in the roof curve. I did not change it; decide whether you still want it before cutting the two S8 pieces on each side.
 - **The side window position is an assumption, not a measurement.** The opening is already cut, but where it is on the wall is not in the plan: it is drawn 101 3/4 to 141 7/16 in from the back mark and 39 to 61 5/8 in up, centered over the dinette table. Measure the real hole's edges, put the numbers in the Side window sizes on the interactive page, rebuild, and cut S5, S6 and the four J pieces to what the real hole needs.
 - **The couch's wall blocks screw into S2** (12 in up) at 8, 20 (if needed) and 41 in from the back. S2's attachment dots are at 15, 30 3/4 and 40 in, so the block at 8 is 7 in from the nearest one: add a dot (an adhesive pad on solid steel, clear of the holes) behind it, or accept some flex.
 - **S3 fills its band of steel exactly.** S3 sits on the 3 3/4 in band above the L holes (19 1/2 to 23 in up), which is 3 1/2 in tall, and a 1x4 fills it: its center is 21 1/4, so it runs 19 1/2 to 23, flush with both edges of the band (you asked for it centered at 21 1/4).
