@@ -50,6 +50,9 @@ const fs = require('fs');
   <div class="bar"><button id="back" type="button">Step back</button><button id="fwd" type="button">Step forward</button></div>
   <div class="bar" id="railbar"><button id="rplay" type="button">Play</button><label class="sl">The gear shelf sliding out of its cabinet <input type="range" id="rs" min="0" max="100" value="0"></label></div>
   <p class="note" id="cap"></p>
+  <div class="bar"><button id="newc" type="button" aria-pressed="true">New couch idea: ON</button><span class="note" style="margin:0">The leaf hangs down over the front of the couch and swings up for the bed; the gear shelf no longer pulls out, it is reached through a loose lid in the deck that you lift off. A proposal, not yet in the plan: the button switches back to the plan as it is.</span></div>
+  <div class="bar" id="gearbar"><button id="gplay" type="button">Play</button><label class="sl">Opening the gear lid in the deck <input type="range" id="gs" min="0" max="100" value="0"></label></div>
+  <p class="note" id="gcap"></p>
   <div class="bar" id="bedbar"><button id="bplay" type="button">Play</button><label class="sl">The couch becomes a bed <input type="range" id="bs" min="0" max="100" value="0"></label></div>
   <p class="note" id="bcap"></p>
   <div class="bar" id="liftbar"><button id="lplay" type="button">Play</button><label class="sl">The couch/bed frame lifts out in one piece <input type="range" id="ls" min="0" max="100" value="0"></label></div>

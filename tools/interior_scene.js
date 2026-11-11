@@ -165,13 +165,16 @@
   // couch: the deck (with its leaf, legs and cushions) is lidG and the frame (back rail on the wall blocks, front rail and posts) is frameG; they are one piece and lift out together.
   // With the gear shelf but no cabinet the base is the old open frame; without the shelf, a solid box.
   const G = L.gear, SH = G && G.sh, DU = P.platform - 1.5, DT = P.platform - .75, HY = P.bedD - .75, HZ = P.bedD, LWd = P.bedBack;
+  let newC = true;   // the NEW COUCH IDEA (user, 2026-11-11: the leaf folds down over the front of the couch instead of lying back under the seat cushion; the gear shelf no longer pulls out, it is reached from the top): a proposal, not yet in the plan; the page has a button to switch it off
+  const LHn = Math.min(LWd, DT - .75 - .25);   // the hanging leaf: hinged on the underside, so it can be at most the height of its hinge above the floor, less 1/4 in
   const lidG = new THREE.Group(), frameG = new THREE.Group(); scene.add(lidG, frameG);
+  let deckOld = null;
   const into = (g, m) => { scene.remove(m); g.add(m); return m; };
   const bxIn = (g, ...a) => into(g, bx(...a));
   if (L.gcab) {
     // the gear cabinet (two floor-mounted side panels, no front, back or top) and the removable couch: a deck lid, a back rail on the wall blocks, a front rail on two posts west of the cabinet, an end rail and a cross rail
     const cb = L.gcab, cm = L.cmod, BH = 3.5;
-    bxIn(lidG, 0, P.bedLen, DU, DT, 0, P.bedD, MT.wood, 36);                  // the deck lid
+    deckOld = bxIn(lidG, 0, P.bedLen, DU, DT, 0, P.bedD, MT.wood, 36);        // the deck lid
     bxIn(frameG, 0, P.bedLen, DU - BH, DU, 0, .75, MT.wood, 36);              // the back rail, full length, on the wall blocks
     bxIn(frameG, 0, cm.west, DU - BH, DU, P.bedD - .75, P.bedD, MT.wood, 36); // the front rail, west of the cabinet only
     bxIn(frameG, 0, .75, DU - BH, DU, .75, P.bedD - .75, MT.wood, 36); bxIn(frameG, cm.west / 2, cm.west / 2 + .75, DU - BH, DU, .75, P.bedD - .75, MT.wood, 36);   // the end rail and the cross rail
@@ -198,6 +201,20 @@
       const bar = new THREE.Mesh(new THREE.BoxGeometry(1.25, .375, 12.625), MT.steel); bar.position.set(0, 0, 6.3125); bar.castShadow = true; g.add(bar);
       const FL = Math.max(2, DT - .625 - 12.625 + .2), foot = new THREE.Mesh(new THREE.CylinderGeometry(.5, .5, FL, 14), MT.black); foot.rotation.x = Math.PI / 2; foot.position.set(0, 0, 12.625 + FL / 2); foot.visible = false; g.add(foot);
       return { g, foot }; }); })();
+  // THE NEW COUCH IDEA: the deck with a loose lid over the gear that just sits in its opening (lifted up and off after the seat cushion is lifted), and a leaf that hangs down over the front of the couch (hinged on its underside) and swings up level for the bed
+  const deckN = new THREE.Group(); lidG.add(deckN); const hatchG = new THREE.Group();
+  { const q = SH || { x0: 24, x1: 46, y0: 8, y1: 25 }, hx0 = q.x0 + 1, hx1 = q.x1 - 1, hz0 = Math.max(1.5, q.y0 - 1), hz1 = Math.min(P.bedD - 1.5, q.y1 + .75);   // the gear tray's depth runs y0 to y1 in the plan data (z is its height)
+    [[0, hx0, 0, P.bedD], [hx1, P.bedLen, 0, P.bedD], [hx0, hx1, 0, hz0], [hx0, hx1, hz1, P.bedD]].forEach(r => bxIn(deckN, r[0], r[1], DU, DT, r[2], r[3], MT.wood, 36));
+    hatchG.position.set(0, DT, hz0); deckN.add(hatchG);
+    { const m = bx(hx0 + .06, hx1 - .06, DU, DT, hz0 + .06, hz1 - .06, MT.woodH, 36); scene.remove(m); m.position.sub(hatchG.position); hatchG.add(m);
+      const f = bx((hx0 + hx1) / 2 - 3, (hx0 + hx1) / 2 + 3, DT, DT + .06, hz1 - 2.4, hz1 - 1.8, MT.black, 4, { cast: false }); scene.remove(f); f.position.sub(hatchG.position); hatchG.add(f); } }
+  const leafN = new THREE.Group(); leafN.position.set(0, DT - .75, HZ); lidG.add(leafN);
+  { const m = bx(.3, P.bedLen - .3, DT - .75, DT, HZ, HZ + LHn, MT.woodH, 36); scene.remove(m); m.position.sub(leafN.position); leafN.add(m); }
+  const legsN = (() => { const k = (P.bedLen - 3.25) / 3, xs = [1, 1 + k, 1 + 2 * k, P.bedLen - 2.25];
+    return xs.map(lx => { const g = new THREE.Group(); g.position.set(lx + .625, 0, LHn - 3); leafN.add(g);
+      const bar = new THREE.Mesh(new THREE.BoxGeometry(1.25, .375, 12.625), MT.steel); bar.position.set(0, -.19, -6.3125); bar.castShadow = true; g.add(bar);
+      const FL = Math.max(2, DT - .75 - .375 - 12.625 + .2), foot = new THREE.Mesh(new THREE.CylinderGeometry(.5, .5, FL, 14), MT.black); foot.rotation.x = Math.PI / 2; foot.position.set(0, -.19, -12.625 - FL / 2); foot.visible = false; g.add(foot);
+      return { g, foot }; }); })();
   // the cushions: they come off for the night, and go back in their night places (the seat cushion on the deck, the back cushion lying on the leaf)
   const seatMat = MT.fabric.clone(), backMat = MT.fabric.clone(); seatMat.transparent = backMat.transparent = true;
   const seatG = new THREE.Group(), backG = new THREE.Group(), pilG = new THREE.Group(); lidG.add(seatG, backG, pilG);
@@ -208,7 +225,33 @@
   const ease3 = t => t * t * (3 - 2 * t), cl3 = v => Math.max(0, Math.min(1, v));
   // the bed makes up in four moves: the cushions come off, the leaf flips over the front edge, the legs fold down, the cushions go back (seat on the deck, back lying on the leaf: 26 + 20 = 46 in wide)
   const BEDCAPS = [[.2, '1. The seat cushion and the back cushion come off.'], [.62, '2. The leaf flips forward over the deck\'s front edge, level with the deck.'], [.82, '3. The four legs fold down out of their slots in the leaf and their feet screw out to the floor.'], [1.01, '4. The seat cushion goes back on the deck and the back cushion lies on the leaf: a 46 in wide bed.']];
+  const BEDCAPS_N = [[.5, '1. The leaf, hanging down over the front of the couch, swings up on its hinge until it is level with the deck. The seat cushion stays where it is.'], [.72, '2. The four legs fold down out of the leaf and their feet screw out to the floor.'], [1.01, '3. The back cushion comes off the wall and lies on the leaf: the bed is 26 + ' + (Math.round(LHn * 4) / 4) + ' in wide, and the 20 in back cushion hangs over the leaf\'s edge.']];
+  const lerp3 = (a, b, t) => a + (b - a) * t;
+  function applyBedN(s) {
+    const ph = (Math.PI / 2) * (1 - ease3(cl3(s / .5))), psi = (Math.PI / 2) * ease3(cl3((s - .45) / .25)), t = ease3(cl3((s - .72) / .28));
+    leafN.rotation.x = ph; legsN.forEach(l => { l.g.rotation.x = -psi; l.foot.visible = psi > 1.3; });
+    seatMat.opacity = backMat.opacity = 1; seatG.visible = backG.visible = true; seatG.position.y = -.75; pilG.visible = s < .72; pilG.position.y = -.75;
+    backG.position.set(0, lerp3(yb - .75, DT + 5.05, t) + 18 * Math.sin(Math.PI * t), lerp3(.3, HZ + .2, t)); backG.rotation.x = (Math.PI / 2) * t;
+    const cap = document.getElementById('bcap'); if (cap) cap.textContent = (BEDCAPS_N.find(c => s < c[0]) || BEDCAPS_N[BEDCAPS_N.length - 1])[1];
+    const bs = document.getElementById('bs'); if (bs && +bs.value !== Math.round(s * 100)) bs.value = Math.round(s * 100);
+    draw();
+  }
+  const GEARCAPS = [[.3, '1. Lift the seat cushion off the deck.'], [.8, '2. The lid in the deck, over the gear, just sits in its opening: lift it straight up and off and set it aside.'], [1.01, '3. The inverter, the DC-DC charger and the shore charger are in reach from the top: the shelf stays where it is, and the front of the couch stays closed.']];
+  function applyGear(s) {
+    if (newC) { applyBedN(0); } const c = cl3(s / .3), th = (Math.PI * 100 / 180) * ease3(cl3((s - .3) / .45));
+    seatG.visible = true; seatMat.opacity = 1 - c; seatG.visible = c < .99; seatG.position.y = -.75 + 12 * c; hatchG.position.y = DT + 20 * ease3(cl3((s - .3) / .45)); hatchG.rotation.x = -.35 * ease3(cl3((s - .3) / .45)); pilG.visible = c < .01;
+    const cap = document.getElementById('gcap'); if (cap) cap.textContent = (GEARCAPS.find(x => s < x[0]) || GEARCAPS[GEARCAPS.length - 1])[1];
+    const gs = document.getElementById('gs'); if (gs && +gs.value !== Math.round(s * 100)) gs.value = Math.round(s * 100);
+    draw();
+  }
+  function setNew(on) {
+    newC = !!on; if (deckOld) deckOld.visible = !newC; deckN.visible = newC; leafG.visible = !newC; leafN.visible = newC; hatchG.rotation.x = 0; hatchG.position.y = DT;
+    ['railbar', 'cap'].forEach(i => { const e = document.getElementById(i); if (e) e.style.display = newC ? 'none' : ''; }); ['gearbar', 'gcap'].forEach(i => { const e = document.getElementById(i); if (e) e.style.display = newC ? '' : 'none'; });
+    const nb = document.getElementById('newc'); if (nb) { nb.setAttribute('aria-pressed', String(newC)); nb.textContent = newC ? 'New couch idea: ON' : 'New couch idea: off (the plan as it is)'; }
+    if (G) applyStep(0); applyBed(0); if (newC) applyGear(0); draw();
+  }
   function applyBed(s) {
+    if (newC) return applyBedN(s);
     const c1 = cl3(s / .2), c2 = cl3((s - .8) / .2), ph = Math.PI * ease3(cl3((s - .2) / .45)), psi = (Math.PI / 2) * ease3(cl3((s - .6) / .22)), night = s >= .8, op = night ? c2 : 1 - c1;
     leafG.rotation.x = ph; legs.forEach(l => { l.g.rotation.x = -psi; l.foot.visible = psi > 1.3; });
     seatMat.opacity = backMat.opacity = Math.max(0, op); seatG.visible = backG.visible = op > .01; pilG.visible = s < .14; pilG.position.y = 10 * c1;
@@ -408,6 +451,7 @@
     rail: { n: 'Gear cabinet and shelf', p: [12, 36, 39], t: [58, 14, 24], fov: 66 },
     under: { n: 'Under the couch', p: [26, 6, 46], t: [24, 9, 4], fov: 80 },
     bed: { n: 'Couch and bed', p: [-2, 46, 40], t: [44, 14, 14], fov: 70 },
+    lid: { n: 'Gear lid in the deck', p: [36, 66, 52], t: [36, 22, 10], fov: 62 },
   };
   let yaw = 0, pitch = 0, fov = 72, cur = 'rear';
   function setView(k) { cur = k; const v = VIEWS[k], p = V(...v.p), t = V(...v.t), d = t.clone().sub(p); camera.position.copy(p); yaw = Math.atan2(d.z, d.x); pitch = Math.atan2(d.y, Math.hypot(d.x, d.z)); fov = v.fov || 72; draw(); document.querySelectorAll('[data-v]').forEach(b => b.setAttribute('aria-pressed', b.dataset.v === k)); }
@@ -432,7 +476,8 @@
     rs.oninput = () => { ps = rs.value / 100; fn(ps); };
     b.onclick = () => { if (playing) { playing = false; b.textContent = 'Play'; return; } if (ps >= 1) ps = 0; playing = true; b.textContent = 'Pause'; setView(view); const from = ps, t0 = performance.now(), dur = secs * 1000 * (1 - from);
       (function tick(now) { if (!playing) return; ps = Math.min(1, from + (1 - from) * ((now - t0) / dur)); fn(ps); if (ps >= 1) { playing = false; b.textContent = 'Play again'; return; } requestAnimationFrame(tick); })(t0); }; };
-  player('bs', 'bplay', applyBed, 'bed', 10); player('ls', 'lplay', applyLift, 'bed', 9);
-  window.addEventListener('resize', size); window.__setView = setView; window.__step = applyStep; window.__bed = applyBed; window.__lift = applyLift; window.__ready = true;
+  player('bs', 'bplay', applyBed, 'bed', 10); player('ls', 'lplay', applyLift, 'bed', 9); player('gs', 'gplay', applyGear, 'rail', 7);
+  { const nb = document.getElementById('newc'); if (nb) nb.onclick = () => setNew(!newC); }
+  window.addEventListener('resize', size); window.__setView = setView; window.__step = applyStep; window.__bed = applyBed; window.__lift = applyLift; window.__gear = applyGear; window.__newc = setNew; setNew(true); window.__ready = true;
   size(); applyStep(0); setView((location.hash || '').slice(1) in VIEWS ? location.hash.slice(1) : 'rear');
 })();
