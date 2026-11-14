@@ -22,7 +22,7 @@ const fs = require('fs');
       cabLights: [P.bedLen / 2, (L.bA[0] + L.bA[1]) / 2 + 6, (L.bB[0] + L.bB[1]) / 2 - 6].map(f), cabLightsZ: [P.cabBotC, P.cabBot, P.cabBot],
       L: {
         cabs: L.cabs, doors: L.doors.map(d => ({x0: f(d.x0), x1: f(d.x1), z0: f(d.z0), z1: f(d.z1)})), cabBots: L.cabBots.map(f), c0: L.c0, c1: L.c1, bA: L.bA, bB: L.bB, tbl: L.tbl.map(f), tableLen: f(L.tableLen),
-        fr: L.fr, microX: L.microX.map(f), microZ: L.microZ.map(f), cabS: L.cabS, angS: L.angS, sinkS: L.sinkS, sinkE: L.sinkE,
+        fr: L.fr, microX: L.microX.map(f), microBody: L.microBody.map(f), microZ: L.microZ.map(f), cabS: L.cabS, angS: L.angS, sinkS: L.sinkS, sinkE: L.sinkE,
         parts: L.parts.map(p => ({id: p.id, kind: p.kind, x0: f(p.x0), x1: f(p.x1), z0: f(p.z0), z1: f(p.z1)})),
         lights: L.lights.map(l => ({x: f(l.x), y: f(l.y), k: l.k})), ceilF: f(L.ceilF), lining: f(L.lining), slatY: L.slatY.map(f),
         fan: {x: L.fan.x, y: L.fan.y, w: L.fan.w}, ac: {x: L.ac.x, y: L.ac.y, w: L.ac.w},

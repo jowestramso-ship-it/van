@@ -185,7 +185,7 @@ function drawPlan(L, V) {
   // ---------- passenger side ----------
   o.push(GB('pan', 'Shower'));
   o.push(ip(0, P.panW, 0, P.panD, COL.T, '', null, { fo: .08, dash: '6 4' }));
-  { const cx = xx((L.toilet ? L.toilet.x0 : P.panW) / 2), cy = yp(P.panD * .72); o.push(T(cx, cy - 14, 'Shower', { size: 11, fill: COL.T, w: 500 })); o.push(T(cx, cy, `${fmt(P.panW)} x ${fmt(P.panD)}, fixed pan`, { size: 9.5, fill: COL.T })); o.push(T(cx, cy + 12, 'curtains on 3 sides', { size: 9, fill: COL.T })); }
+  { const cx = xx((L.toilet ? L.toilet.x0 : P.panW) / 2), cy = yp(P.panD * .72); o.push(T(cx, cy - 14, 'Shower', { size: 11, fill: COL.T, w: 500 })); o.push(T(cx, cy, `${fmt(P.panW)} x ${fmt(P.panD)}, fixed pan`, { size: 9.5, fill: COL.T })); o.push(T(cx, cy + 12, L.curtain && L.curtain.wallEnd ? 'wall W5 on the cab end, curtains on 2 sides' : 'curtains on 3 sides', { size: 9, fill: COL.T })); }
   o.push(ip(L.pdr.x - 1.2, L.pdr.x + 1.2, L.pdr.y - 1.2, L.pdr.y + 1.2, '#185FA5', '', null, { fo: .45 })); o.push(T(xx(L.pdr.x), yp(L.pdr.y) + 3, 'drain', { size: 8.5, fill: '#185FA5' }));
   o.push(GE());
   if (L.liner) { const ln = L.liner; o.push(GB('liner', 'Waterproof liner')); o.push(ip(ln.x0, ln.x1, 0, .7, '#2A9D8F', '', null, { fo: .85 })); o.push(GE()); }
@@ -252,8 +252,8 @@ function drawPlan(L, V) {
     o.push(GE());
   }
   o.push(GB('Micro', 'Microwave'));
-  o.push(ip(L.microX[0] + 1.75, L.microX[1] - 1.75, P.microIn, P.microIn + 12, COL.G, '', null, { fo: .2, dash: '4 3' }));
-  o.push(T(xx((L.microX[0] + L.microX[1]) / 2), yp(5.5 + P.microIn), 'Microwave 18.5 x 12', { size: 9, fill: COL.G, w: 500 }));
+  o.push(ip(L.microBody[0], L.microBody[1], P.microIn, P.microIn + 12, COL.G, '', null, { fo: .2, dash: '4 3' }));
+  o.push(T(xx((L.microBody[0] + L.microBody[1]) / 2), yp(5.5 + P.microIn), 'Microwave 18.5 x 12', { size: 9, fill: COL.G, w: 500 }));
   o.push(GE());
   o.push(GB('wellp', 'Passenger side wheel well'));
   o.push(ip(42, 76, 0, 7, COL.W2, '', null, { fo: .3 }));
@@ -362,7 +362,7 @@ function drawPlan(L, V) {
   Object.values(cols).forEach(c => o.push(HIT(c.ids[0], xx(c.x0), yp(20), S * (c.x1 - c.x0), S * 20, [c.ids.map(id => 'dx' + id).join(','), 1 / S, '', 0], c.ids.some(id => L.coll.ids.has(id)), c.ids.length > 1 ? `The ${c.ids.length} drawers in this column (along the wall)` : cap(L.partById[c.ids[0]].n) + ' (along the wall)', '', 'drawers')));
   if (L.chairs) o.push(HIT('Chairs', xx(L.chairs.x0), yy(L.chairs.d0), S * (L.chairs.x1 - L.chairs.x0), S * (L.chairs.d1 - L.chairs.d0), ['dxChairs', 1 / S, 'dyChairs', 1 / S], L.coll.ids.has('Chairs'), 'The lawn chairs under the couch (along the wall and out from the driver wall)'));
   if (L.can) o.push(HIT('Can', xx(L.can.x0), yp(L.can.y1 + P.canTravel * (V.can || 0)), S * P.canW, S * P.canD, ['dxCan', 1 / S, 'dyCan', -1 / S], L.coll.ids.has('Can'), 'The trash can (along the wall and out from it; the top drawer above it is moved on the Passenger side tab)'));
-  o.push(HIT('Micro', xx(L.microX[0] + 1.75), yp(P.microIn + 12), S * (L.microX[1] - L.microX[0] - 3.5), S * 12, ['dxMicro', 1 / S, 'microIn', -1 / S], L.coll.ids.has('Micro'), 'The microwave (along the wall and out from it)'));
+  o.push(HIT('Micro', xx(L.microBody[0]), yp(P.microIn + 12), S * (L.microBody[1] - L.microBody[0]), S * 12, ['dxMicro', 1 / S, 'microIn', -1 / S], L.coll.ids.has('Micro'), 'The microwave (along the wall and out from it)'));
   o.push(HIT('fresh', xx(L.tankX[0]), yp(P.tankBack + P.tankD), S * L.tankLen, S * P.tankD, ['tankShift', -1 / S, 'tankBack', -1 / S], L.coll.ids.has('fresh'), 'Fresh water tank (along the wall and out from it)'));
   // after the tank, which is under it
   if (L.jug) o.push(HIT('Jug', xx(L.jug.x0), yp(L.jug.y1), S * P.jugD, S * P.jugD, ['dxJug', 1 / S, 'dyJug', -1 / S], L.coll.ids.has('Jug'), 'The drain jug (along the wall and out from it)'));

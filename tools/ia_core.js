@@ -672,7 +672,9 @@ function layout(P0) {
   // the drawers and shelves under the counter (as planned plus dragged), the jar shelf in the nook and the microwave shelf above the fridge
   L.parts = cabinetParts(L); L.partById = {}; L.parts.forEach(p => { L.partById[p.id] = p; });
   L.nookZ = P.counterH + 7.5 + P.dzNook; L.nookX = [NK(P)[0] + P.dxNook, NK(P)[1] + P.dxNook];
-  L.microX = [L.fr[0] + P.dxMicro, L.fr[1] + P.dxMicro];
+  // the microwave's shelf spans the fridge bay, but starts at the face of the wall W5 when it stands there (user, 2026-11-14: the shelf overlapped W5 by 3/4 in); the microwave itself (18.5 wide) stays centered in the full bay, 1 3/4 in in from each end
+  { const w5 = L.walls.find(w => w.id === 'W5'), x0 = Math.max(L.fr[0], w5 ? w5.x1 : L.fr[0]);
+    L.microX = [x0 + P.dxMicro, L.fr[1] + P.dxMicro]; L.microBody = [L.fr[0] + 1.75 + P.dxMicro, L.fr[1] - 1.75 + P.dxMicro]; }
   L.microZ = [8.25 + P.fridgeH + 2.75 + P.dzMicro, 8.25 + P.fridgeH + 12.75 + P.dzMicro];   // the microwave bottom and top; its shelf is the 3/4 in under it, 2 in over the fridge top
   // the dish towel hook on the wall strip between the end of the nook (93 1/4) and the sliding door opening, under the TV; the folded towel (8 in wide) hangs from it
   L.hook = null;
