@@ -1053,7 +1053,7 @@ def passenger_items(tank=False):
         a(f'<line x1="{xx(0):.1f}" y1="{yy(9.5):.1f}" x2="{xx(36):.1f}" y2="{yy(9.5):.1f}" stroke="{T}" stroke-width="4"/>')
         a(f'<line x1="{xx(29):.1f}" y1="{yy(9.5):.1f}" x2="{xx(29):.1f}" y2="{yy(6.5):.1f}" stroke="#A32D2D" stroke-width="2" marker-end="url(#arq)"/><text class="ts" x="{xx(29):.1f}" y="{yy(11.6):.1f}" text-anchor="middle" style="font-size:10px;fill:#A32D2D;paint-order:stroke;stroke:#fff;stroke-width:3px">drain</text>')
     else:
-        box(0,36,0,74.0625,T,'Wet bath','36 x 24 in, fixed pan, curtains on three sides',yy(68),0.08)
+        box(0,36,0,74.0625,T,'Wet bath','36 x 24 in, fixed pan, wall W5 on the cab end, curtains on the other two sides',yy(68),0.08)
         a(f'<rect x="{xx(0):.1f}" y="{yy(3.8):.1f}" width="{S*36:.1f}" height="{S*3.8:.1f}" fill="#D9ECF7" fill-opacity="0.95" stroke="#185FA5" stroke-width="1.6"/>')
         a(f'<text class="ts" x="{xx(8):.1f}" y="{yy(1.4):.1f}" text-anchor="middle" style="font-size:9.5px;fill:#185FA5">fixed pan, 3 in curb</text>')
         box(TOILET_X[0],TOILET_X[1],3.8,18.3,K,'Toilet','Fold-To-Go 14 1/2',yy(11),0.16)
@@ -1071,13 +1071,13 @@ def passenger_items(tank=False):
         a(f'<rect x="{xx(_bx):.1f}" y="{yy(43.75+_h):.1f}" width="{S*_w:.1f}" height="{S*_h:.1f}" rx="2" fill="{_c}" fill-opacity="0.75" stroke="#444441" stroke-width="0.9"/>'); _bx += _w + .5
     a(f'<text class="ts" x="{xx((_n0+_n1)/2):.1f}" y="{yy(35.5):.1f}" text-anchor="middle" style="font-size:9.5px;fill:#5A3510;paint-order:stroke;stroke:#fff;stroke-width:3px">shelf 43 3/4, paper under, bottles on it</text>')
     grp('curt','Shower curtains and rail')
-    a(f'<line x1="{xx(CUR_IN):.1f}" y1="{yy(74.0):.1f}" x2="{xx(PAN_W-CUR_IN):.1f}" y2="{yy(74.0):.1f}" stroke="#2C2C2A" stroke-width="2.6" stroke-dasharray="8 4"/>')
-    for _cx in (CUR_IN, PAN_W-CUR_IN-4.5): a(f'<rect x="{xx(_cx):.1f}" y="{yy(74.0):.1f}" width="{S*4.5:.1f}" height="{S*(74.0-2.3):.1f}" rx="2" fill="#7B3FA0" fill-opacity="0.16" stroke="#7B3FA0" stroke-width="1.1" stroke-dasharray="4 3"/>')
-    a(f'<text class="ts" x="{xx(PAN_W-CUR_IN-2.25):.1f}" y="{yy(62):.1f}" text-anchor="middle" style="font-size:9.5px;fill:#7B3FA0;paint-order:stroke;stroke:#fff;stroke-width:3px">curtains</text><text class="ts" x="{xx(PAN_W-CUR_IN-2.25):.1f}" y="{yy(62)+11:.1f}" text-anchor="middle" style="font-size:9.5px;fill:#7B3FA0;paint-order:stroke;stroke:#fff;stroke-width:3px">pulled aside</text>')
-    grp('fwalls3','Floor-to-ceiling wall (counter side of the fridge)')
-    for _w0,_w1,_n in ((58,58.75,'W4'),):
+    a(f'<line x1="{xx(CUR_IN):.1f}" y1="{yy(74.0):.1f}" x2="{xx(PAN_W-.5):.1f}" y2="{yy(74.0):.1f}" stroke="#2C2C2A" stroke-width="2.6" stroke-dasharray="8 4"/>')
+    for _cx in (CUR_IN, PAN_W-.5-4.5): a(f'<rect x="{xx(_cx):.1f}" y="{yy(74.0):.1f}" width="{S*4.5:.1f}" height="{S*(74.0-2.3):.1f}" rx="2" fill="#7B3FA0" fill-opacity="0.16" stroke="#7B3FA0" stroke-width="1.1" stroke-dasharray="4 3"/>')
+    a(f'<text class="ts" x="{xx(PAN_W-.5-2.25):.1f}" y="{yy(62):.1f}" text-anchor="middle" style="font-size:9.5px;fill:#7B3FA0;paint-order:stroke;stroke:#fff;stroke-width:3px">curtains</text><text class="ts" x="{xx(PAN_W-.5-2.25):.1f}" y="{yy(62)+11:.1f}" text-anchor="middle" style="font-size:9.5px;fill:#7B3FA0;paint-order:stroke;stroke:#fff;stroke-width:3px">pulled aside</text>')
+    grp('fwalls3','Floor-to-ceiling walls (the cab end of the shower, and the counter side of the fridge)')
+    for _w0,_w1,_n,_ty in ((36,36.75,'W5',45),(58,58.75,'W4',60)):
         a(f'<rect x="{xx(_w0):.1f}" y="{yy(74.0625):.1f}" width="{S*(_w1-_w0):.1f}" height="{S*74.0625:.1f}" fill="#8A6B4D" fill-opacity="0.6" stroke="#3E230B" stroke-width="1.2"/>')
-        a(f'<text class="th" x="{xx(_w0)-3:.1f}" y="{yy(60):.1f}" text-anchor="end" style="font-size:10.5px;font-weight:700;fill:#5A3A00;paint-order:stroke;stroke:#fff;stroke-width:3px">{_n}</text>')
+        a(f'<text class="th" x="{xx(_w0)-3:.1f}" y="{yy(_ty):.1f}" text-anchor="end" style="font-size:10.5px;font-weight:700;fill:#5A3A00;paint-order:stroke;stroke:#fff;stroke-width:3px">{_n}</text>')
     grp('cabs','Cabinets and countertop')
     box(58,103,0,38,C,'',None,yy(31),0.08)
     box(103,123,0,38,C,'Sink cabinet','20 wide, 17 deep',yy(35.3),0.08)   # label up under the countertop, over the sink, so the drain jug below does not cover it

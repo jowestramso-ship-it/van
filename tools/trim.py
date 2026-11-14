@@ -60,7 +60,7 @@ def fig_inside():
         return xp, yT
     xp, yT = side(20, False); xq, _ = side(330, True)
     a(_t(20, 24, 'A  3/4 x 3/4 in hardwood strip', 14, 'start', INK, 700)); a(_t(330, 24, 'B  flexible sealant line', 14, 'start', INK, 700))
-    a(_call(xp - 24, yT - 24, 60, 70, 'corner strip, glued and pinned', 'start')); a(_call(xp + 24, 60, xp + 40, 52, '3/4 in wall (W1 to W4)', 'start'))
+    a(_call(xp - 24, yT - 24, 60, 70, 'corner strip, glued and pinned', 'start')); a(_call(xp + 24, 60, xp + 40, 52, '3/4 in wall (W1 to W5)', 'start'))
     a(_call(xp - 2, yT + 12, 150, 232, '1/16 gap, covered by the strip', 'start')); a(_call(60, yT + 12, 40, 214, '3/8 sheet', 'start'))
     a(_call(xq - 13, yT - 8, 370, 70, 'flexible sealant, color matched', 'start', '#2F5E3F'))
     a(_t(20, 276, 'a plan view from above: the van wall at the bottom, the 3/4 wall standing out of it toward the top', 11.5, 'start', '#5F5E5A'))
@@ -171,7 +171,7 @@ def fig_floor():
 
 FIGS = [
     ('1', 'Sheet joints', fig_joint, 'Leave the 1/16 in gap and ease both edges with a 1/16 in chamfer so each joint reads as a clean V line, or hide the joint under a 1/4 x 1 1/2 in hardwood batten.'),
-    ('2', 'Inside corners', fig_inside, 'Where a sheet meets a floor-to-ceiling wall (W1 to W4), the rear door frame or the cab end: stop the sheet 1/16 in short and glue a 3/4 x 3/4 in hardwood strip into the corner, or run a flexible sealant line.'),
+    ('2', 'Inside corners', fig_inside, 'Where a sheet meets a floor-to-ceiling wall (W1 to W5), the rear door frame or the cab end: stop the sheet 1/16 in short and glue a 3/4 x 3/4 in hardwood strip into the corner, or run a flexible sealant line.'),
     ('3', 'Outside corners', fig_outside, 'The wheel well box and the ends of the closet, shower and counter walls: a solid hardwood corner post that the sheets stop against, with the outer edges rounded 1/8 in.'),
     ('4', 'Visible plywood edges', fig_edge, 'The sliding door opening, shelf and nook edges: iron on 1/2 in birch veneer tape, trim it flush and sand it, then finish it with the sheets.'),
     ('5', 'The side window', fig_window, 'The cutout is framed with J1 to J4 behind the sheet; line the reveal with 1/4 in strips and mitre a 3/4 x 1 1/2 in picture-frame trim over the sheet\'s cut edge.'),

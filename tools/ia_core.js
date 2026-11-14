@@ -7,7 +7,7 @@ const PD = [
   { k: 'ceil', g: 'Van', l: 'Ceiling height at the wall (bare, to the rib)', d: 75.5, s: .5, a: 60, b: 90 },
   { k: 'numLbl', g: 'Take items out', l: 'Number the items in the side views and list their names and sizes under the drawing (untick to write them on the drawing)', d: true, t: 'c' },
   { k: 'showerOn', g: 'Take items out', l: 'Shower head and valve in the wet bath', d: true, t: 'c' },
-  { k: 'linerOn', g: 'Take items out', l: 'Waterproof liner (PVC paneling over the plywood) on the back wall of the shower and inside the shower nook; the other three sides are curtains', d: true, t: 'c' },
+  { k: 'linerOn', g: 'Take items out', l: 'Waterproof liner (PVC paneling over the plywood) on the back wall of the shower and inside the shower nook; the cab end is the wall W5 and the other two sides are curtains', d: true, t: 'c' },
   { k: 'microOn', g: 'Take items out', l: 'Microwave and its shelf (untick to take it out of the diagram and the checks)', d: true, t: 'c' },
   { k: 'tvOn', g: 'Take items out', l: 'TV over the nook', d: true, t: 'c' },
   { k: 'towelOn', g: 'Take items out', l: 'Paper towel roll in its recess in the angled front', d: true, t: 'c' },
@@ -491,7 +491,7 @@ function layout(P0) {
   // the closet: the clothes hang from the rod (the garment's shoulder is hangDrop below it), the longest one ends cloClear above the drawers, and the drawers fill the space under it
   L.hangBot = P.rodHi - P.hangDrop - P.cloLen; L.drawTop = Math.max(3, L.hangBot - P.cloClear); L.split = L.drawTop + .15;
   { const n = Math.max(1, Math.round(P.cloDrawN)), gap = .125, h = (L.drawTop - 1 - (n - 1) * gap) / n; L.cloDr = []; for (let i = 0; i < n; i++) L.cloDr.push({ z0: 1 + i * (h + gap), z1: 1 + i * (h + gap) + h }); L.cloDrH = h; L.cloDrW = P.closetW - 1.5 - 1; L.cloPull = Math.max(0, P.cloDrawD - 1); }
-  // the toilet: sideways at the cab end of the wet bath, its back a half inch short of the cab-end curtain (there is no wall W3 now), centered across the stall (y = out from the passenger wall)
+  // the toilet: sideways at the cab end of the wet bath, its back 2 in short of the cab-end wall W5 (it was a half inch short of the curtain; the toilet did not move), centered across the stall (y = out from the passenger wall)
   { const x1 = P.panW - P.curIn - .5, y0 = (P.panD - P.toiletW) / 2; L.toilet = P.toiletOn ? { x0: x1 - P.toiletD, x1, y0, y1: y0 + P.toiletW, z1: P.toiletH } : null; }
   // the shower nook contents: a towel bar bay at the rear end, then a shelf board with the bottles on it and the toilet paper rolls under it
   {
@@ -506,7 +506,7 @@ function layout(P0) {
   }
   // the waterproof liner: PVC paneling over the plywood on the back wall of the stall, 0 to the pan length, and lining the nook (the cut-outs are the nook's back). Stood on end, 8 ft long.
   // pvcSheet (default): ONE solid 4 x 8 ft sheet (48 wide), so the whole 36 in wall is one piece with no joints and 12 in of the sheet's width is left over; otherwise tongue and groove planks that start at the cab end (the nook's edges are cut lengthwise out of the planks they fall in).
-  // the other three sides of the stall are curtains, so there is no end wall and no corner; the paneling stops a little above the pan edge
+  // the cab end of the stall is the wall W5 and the other two sides are curtains, so there is no corner to line; the paneling stops a little above the pan edge
   // the valve door: a small hinged door in the paneling carries the shower valve; its opening runs from the top of furring rail S4 to the bottom of S5 (so both rails back the sheet's edges) and from 1 1/2 in past the nook (the nook frame V2 is its rear jamb) vdoorW wide; the door overlaps the opening by 1/2 in all round on a gasket,
   // is held shut by 4 stainless screws at its corners, and hangs on a hinge on the cab side, screwed through the paneling into a wood jamb behind the sheet
   { const x1 = P.panW, pz = 3.8, z0 = pz + P.linerGap, z1 = Math.min(P.linerTop, L.ceilF || P.linerTop), hh = z1 - z0;
@@ -522,15 +522,18 @@ function layout(P0) {
     L.liner = P.linerOn ? { x0: 0, x1, z0, z1, h: hh, t: P.linerT, nook: { x0: nk0, x1: nkx, z0: nb, z1: nt }, sheet, sheetOk: sheet ? (plankLen > 0 && x1 <= 48) : true, planks: plankLen && (!sheet || x1 <= 48) ? (sheet ? 1 : planks) : 99, joints, left: total - pieces - nookSides, nookSides, lbs: sheet ? (pieces + nookSides) * P.linerT * .05 : (pieces + nookSides) / 144 * .4, door: vd } : null;
     L.vdoor = L.liner ? vd : null;
     L.pdr = { x: P.pdrX, y: P.pdrY }; }
-  // the shower curtains: two flexible curtains hang from one bent rail on the ceiling that runs round the three open sides, curIn inside the pan's edge (so the hems hang inside the curb); they overlap 6 in in the middle of the front
-  L.curtain = P.showerOn ? { x0: P.curIn, x1: P.panW - P.curIn, y: P.panD - P.curIn, z: (L.ceilF || 74.5) - .5, over: 6, len: (L.ceilF || 74.5) - 1.5 } : null;
+  // the shower curtains: two flexible curtains hang from one bent rail on the ceiling that runs round the open sides (an L when the wall W5 closes the cab end), curIn inside the pan's edge (so the hems hang inside the curb); they overlap 6 in in the middle of the front
+  // the cab end of the stall is the wall W5 (user, 2026-11-14: 'put up a wall between the fridge/microwave and the shower'): the rail is then an L, round the rear end and along the front, and ends 1/2 in short of the wall, so the curtain sits against it
+  const w5 = !!(P.wallsOn && P.showerOn);
+  L.curtain = P.showerOn ? { x0: P.curIn, x1: w5 ? P.panW - .5 : P.panW - P.curIn, y: P.panD - P.curIn, z: (L.ceilF || 74.5) - .5, over: 6, len: (L.ceilF || 74.5) - 1.5, wallEnd: w5 } : null;
   // floor-to-ceiling walls. Driver side (y = out from the driver wall): the closet's cab-side panel carried out to the bench depth, which the back of the rear bench leans on,
   // and the wall behind the driver seat (face at the cab wall mark, body behind it), which the back of the cab-end bench leans on. Passenger side (y = out from the passenger wall):
-  // one on the counter side of the fridge, taken out of the counter cabinet so that no other position moves, as deep as the cabinet (the shower side of the fridge has no wall: the stall's cab end is a curtain)
+  // one on the counter side of the fridge, taken out of the counter cabinet so that no other position moves, as deep as the cabinet (W5 on the shower side of the fridge is the stall's cab end, taken out of the fridge bay)
   L.walls = !P.wallsOn ? [] : [
     { id: 'W1', side: 'd', x0: L.c1 - P.fwT, x1: L.c1, d: P.benchD, n: 'wall behind the rear dinette seat (closet end)' },
     { id: 'W2', side: 'd', x0: P.cab, x1: P.cab + P.fwT, d: P.benchD, n: 'wall behind the driver seat' },
     { id: 'W4', side: 'p', x0: P.panW + P.fridgeW, x1: P.panW + P.fridgeW + P.fwT, d: Math.max(P.cabD, 2 + P.fridgeD), n: 'wall between the fridge and the counter cabinet' },
+    ...(P.showerOn ? [{ id: 'W5', side: 'p', x0: P.panW, x1: P.panW + P.fwT, d: P.panD, n: 'wall between the shower and the fridge' }] : []),   // user, 2026-11-14: the stall's cab end, as deep as the stall; taken out of the fridge bay (the bay is wider than the fridge) so no other position moves
   ];
   L.gap = L.bB[0] - L.bA[1];
   L.tableLen = P.tableAuto ? Math.max(0, L.gap) : P.tableLen;

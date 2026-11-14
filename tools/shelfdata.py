@@ -27,7 +27,7 @@ CN_MAXTILT = _m.degrees(_m.atan(CN_D / (BACK_T - CN_OZ0)))        # the tilt tha
 SEAT_DEPTH = 26 - CN_SETOUT - CUSH / _m.cos(_m.radians(CN_TILT))   # the seat cushion's clear depth in front of the back (about 19 in)
 # the shower stall (user: 'the nook is offcenter to the right' ... 'Valve under the nook's rear end (recommended)' ... 'The back wall will be lined with pvc paneling, including the nook. Then the other 3 sides will have shower curtains that cover sides and meet in the front center. They will be hung up from a rail on the ceiling'):
 # the same numbers as the sizes and layout() in ia_core.js (panW, panD, snookLen, snookTop, snookH, headX, headZ, valveX, valveZ, linerT, pvcW, curIn), so change both
-PAN_W, PAN_D = 36, 24                                # the bought pan; the stall runs 0 to 36 along the wall, with no end wall W3 (the cab end is a curtain)
+PAN_W, PAN_D = 36, 24                                # the bought pan; the stall runs 0 to 36 along the wall; the cab end is the wall W5 (36 to 36 3/4, 24 out; user 2026-11-14), which replaced the curtain there (W3 was the end wall before)
 SN_LEN, SN_Z0, SN_Z1 = 12, 38, 54                         # the nook is 12 wide (user: 'the nook will be not as wide'; it was 17 1/4): two toilet paper rolls under the shelf need 9 1/2
 SN_X0, SN_X1 = (PAN_W - SN_LEN) / 2, (PAN_W + SN_LEN) / 2   # the shower nook, centered on the pan (12 to 24); its frames V1 (10 1/2 to 12) and V2 (24 to 25 1/2) stand outside it, on the full-depth steel past 6 in
 HEAD_X, HEAD_Z = 29, 70                              # the shower plumbing is to the left of the nook in the passenger-wall view (user: 'to the left of the nook', then 'around 30 in' for the head and the valve), so on the cab side of it, over the toilet end; 29 so that the wall run passes between the blocks of S4 to S7 (at 17 3/4 and 31 1/4); the feed rises straight up from the valve
@@ -44,7 +44,7 @@ VD_Z0, VD_Z1 = 32, 41.75                             # the opening runs from the
 VD_OV = .5                                           # the door overlaps the opening by 1/2 in all round, on a closed-cell foam gasket: it is 9 x 10 3/4 in
 VD_JAMB = (VD_X1, VD_X1 + 1.5)                       # the cab-side wood jamb (3/4 x 1 1/2 in, screwed to S4 and S5) 33 1/2 to 35: the hinge leaf on the wall is screwed through the sheet into it
 VD_SCREWS = 4                                        # four stainless pan-head screws at the door's corners hold it shut (not latches: user, 'go ahead, screws')
-CUR_IN = 1.5                                         # the curtain rail runs this far inside the pan's edge on the three open sides
+CUR_IN = 1.5                                         # the curtain rail runs this far inside the pan's edge at the rear end and along the front (the cab end is the wall W5; the rail ends 1/2 in short of it)
 TOILET_X = (PAN_W - CUR_IN - .5 - 14.5, PAN_W - CUR_IN - .5)    # the toilet's back half an inch short of the cab-end curtain
 SH_G, SH_T = 1.0, .5             # gap over the battery (9 1/2) and the tray's plywood
 SH_Z0 = 9.5 + SH_G; SH_Z1 = SH_Z0 + SH_T

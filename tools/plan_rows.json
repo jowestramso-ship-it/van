@@ -156,13 +156,13 @@
 "Shower (fixed pan)",
 "0 to 36",
 "36 x 24",
-"fixed pan with a 3 in curb; the back wall is paneled with PVC and the other three sides are curtains",
+"fixed pan with a 3 in curb; the back wall is paneled with PVC, the cab end is the wall W5 and the other two sides (the rear end and the front) are curtains",
 "the pan does not tip; it is bought (36 x 24, you said), not built; the drain hole is at the middle of the rear-door end (5 in from the rear end, as you said, and 12 out, the middle of the depth: assumed, check it on the pan) and runs straight down through the floor to the grey water tank under the van; how to set it and line the back wall: the Shower pan page of the build guide"
 ],
 [
 "Passenger",
 "Shower wall paneling (PVC, waterproof)",
-"0 to 36 on the back wall (no end wall); inside the nook (12 to 24)",
+"0 to 36 on the back wall (the cab end is the wall W5); inside the nook (12 to 24)",
 "ONE solid PVC paneling sheet, 4 x 8 ft (48 x 96 in), 5/16 in (8 mm) thick, stood on end on the wall (36 of its 48 in width, 70 of its 96 in length: no joints); the nook cut out of it (12 to 24 in along, 38 to 54 up) and lined from the cut-out and the offcuts; the valve door cut out of it (below)",
 "4 1/16 to 74 up (it stops 1/4 in above the pan edge at 3.8 up; flexible sealant fills the gap)",
 "glued over the 3/8 in plywood with the panel maker's adhesive (you chose plywood with a waterproof lining over it, and PVC paneling for the lining); about 9 lb of sheet; 1/8 in expansion gaps at the ends and the top, end trim at the rear edge and the cab edge, a flexible sealant joint at the pan, every screw and hole below the splash line sealed; the hole for the shower arm (1 1/8 in) is in the sheet, the hole for the valve (2 1/4 in) is in the valve door; both are placeholders until you measure the real parts, each hidden under its flange or plate with a ring of sealant behind; the maker and the adhesive are not chosen yet"
@@ -181,7 +181,7 @@
 "19.5 to 34",
 "14 1/2 deep x 14 1/2 wide",
 "seat about 14 1/2 up (it stands on the pan, 3.8 up)",
-"left set up in the stall, sideways, its back half an inch short of the cab-end curtain, next to the fridge; 19 1/2 in of floor in front, 4 3/4 in each side; a folding seat on four legs holding a bag, so no tank, vent or drain"
+"left set up in the stall, sideways, its back about 2 in short of the cab-end wall W5 (it was half an inch short of the curtain), next to the fridge; 19 1/2 in of floor in front, 4 3/4 in each side; a folding seat on four legs holding a bag, so no tank, vent or drain"
 ],
 [
 "Passenger",
@@ -194,10 +194,18 @@
 [
 "Passenger",
 "Shower curtains and rail",
-"0 to 36 (the rail runs 1 1/2 in inside the pan edge)",
-"two curtains, about 40 to 50 in wide x 73 in long; one rail bent to a U: 33 in across the front, 22 1/2 in down each end",
+"0 to 35 1/2 (the rail runs 1 1/2 in inside the pan edge at the rear end and ends 1/2 in short of the wall W5)",
+"two curtains, about 40 to 50 in wide x 73 in long; one rail bent to an L: 34 in along the front, 22 1/2 in down the rear end (the cab end is a wall)",
 "rail on the ceiling at 74 up; hems about 2 in above the pan floor, inside the 3 in curb",
-"hung from a rail on the ceiling round the three open sides (the rear end, the front and the cab end, where there is no wall: the fridge stands beside the curtain); they overlap 6 in in the middle of the front; no rod in the hem, small weights instead; hold them aside with a loop while driving; diagram E3"
+"hung from a rail on the ceiling round the two open sides (the rear end and the front; the cab end is the wall W5, which replaced the cab-end curtain on 2026-11-14); they overlap 6 in in the middle of the front; no rod in the hem, small weights instead; hold them aside with a loop while driving; diagram E3"
+],
+[
+"Passenger",
+"Floor-to-ceiling wall W5 (shower and fridge)",
+"36 to 36.75",
+"3/4 thick x 24 out from the wall (as deep as the stall)",
+"floor to the finished ceiling",
+"the cab end of the shower stall, between the stall and the fridge and microwave (user, 2026-11-14); taken out of the fridge bay, which is 22 wide for an 18 1/2 in fridge, so nothing else moves; the curtain rail ends 1/2 in short of it; stand it on the finished floor beside the pan's cab end (the pan ends at 36) and fix it to the furring and the ceiling like W4; the PVC liner stops at 36, so it needs no cut"
 ],
 [
 "Passenger",

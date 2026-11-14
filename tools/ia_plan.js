@@ -202,12 +202,12 @@ function drawPlan(L, V) {
   o.push(ip(nk0, nkx, 0, 4.5, '#7A4A1E', '', null, { fo: .3, dash: '3 2' }));
   o.push(T(xx((nk0 + nkx) / 2), yp(1.3), 'shower nook 4.5 deep', { size: 8.5, fill: '#5A3510' }));
   o.push(GE());
-  if (L.curtain) {      // the ceiling rail (dashed) round the three open sides and the two curtains that overlap in the middle of the front
+  if (L.curtain) {      // the ceiling rail (dashed) round the open sides (the rear end and the front: the cab end is the wall W5) and the two curtains that overlap in the middle of the front
     const cu = L.curtain, yF = P.panD - P.curIn, m = P.panW / 2, PUR = '#7B3FA0', seg = (a, b, c, d, st) => o.push(Ln(xx(a), yp(b), xx(c), yp(d), st));
     o.push(GB('curtain', 'Shower curtains'));
-    seg(cu.x0, 0, cu.x0, yF, { stroke: '#2C2C2A', sw: 2.2, dash: '7 3' }); seg(cu.x0, yF, cu.x1, yF, { stroke: '#2C2C2A', sw: 2.2, dash: '7 3' }); seg(cu.x1, yF, cu.x1, 0, { stroke: '#2C2C2A', sw: 2.2, dash: '7 3' });
+    seg(cu.x0, 0, cu.x0, yF, { stroke: '#2C2C2A', sw: 2.2, dash: '7 3' }); seg(cu.x0, yF, cu.x1, yF, { stroke: '#2C2C2A', sw: 2.2, dash: '7 3' }); if (!cu.wallEnd) seg(cu.x1, yF, cu.x1, 0, { stroke: '#2C2C2A', sw: 2.2, dash: '7 3' });
     seg(cu.x0, .8, cu.x0, yF + .3, { stroke: PUR, sw: 3.6, so: .8 }); seg(cu.x0, yF + .3, m + cu.over / 2, yF + .3, { stroke: PUR, sw: 3.6, so: .8 });
-    seg(cu.x1, .8, cu.x1, yF - .9, { stroke: '#B07ACB', sw: 3.6, so: .85 }); seg(cu.x1, yF - .9, m - cu.over / 2, yF - .9, { stroke: '#B07ACB', sw: 3.6, so: .85 });
+    if (!cu.wallEnd) seg(cu.x1, .8, cu.x1, yF - .9, { stroke: '#B07ACB', sw: 3.6, so: .85 }); seg(cu.x1, yF - .9, m - cu.over / 2, yF - .9, { stroke: '#B07ACB', sw: 3.6, so: .85 });
     o.push(T(xx(m), yp(P.panD) - 4, 'two curtains on a ceiling rail, overlapping 6 in', { size: 9, fill: PUR }));
     o.push(GE());
   }

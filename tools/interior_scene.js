@@ -330,11 +330,12 @@
   const zf = d => VW - d;                          // z of a face that is d in out from the passenger wall
   { // wet bath: curtain along the front of the stall, rod above
     const zc = zf(P.panD), ci = P.curIn, zr = zf(P.panD - ci), yR = hw - .7;   // the pan's front edge, and the curtain rail 1 1/2 in inside it
-    // one curtain rail bent to a U on the ceiling round the three open sides, with two curtains on it, pulled aside to the two front corners so the stall shows
+    // one curtain rail bent to a U (an L when the wall W5 closes the cab end) on the ceiling round the open sides, with two curtains on it, pulled aside to the two front corners so the stall shows
     { const rail = (x0, x1, z0, z1) => { const len = Math.hypot(x1 - x0, z1 - z0), r = new THREE.Mesh(new THREE.CylinderGeometry(.4, .4, len, 12), MT.steel); r.position.set((x0 + x1) / 2, yR, (z0 + z1) / 2); if (x1 !== x0) r.rotation.z = Math.PI / 2; else r.rotation.x = Math.PI / 2; add(r); };
-      rail(ci, P.panW - ci, zr, zr); rail(ci, ci, zr, VW); rail(P.panW - ci, P.panW - ci, zr, VW);
+      const cuw = L.curtain && L.curtain.wallEnd, rx1 = cuw ? L.curtain.x1 : P.panW - ci;   // with the wall W5 on the cab end the rail is an L and ends 1/2 in short of the wall
+      rail(ci, rx1, zr, zr); rail(ci, ci, zr, VW); if (!cuw) rail(P.panW - ci, P.panW - ci, zr, VW);
       const gw = 7, ch = yR - 3.5;
-      [ci + 1, P.panW - ci - 1 - gw].forEach(cx => { const cur = new THREE.Mesh(new THREE.PlaneGeometry(gw, ch, 30, 1), MT.curtain); cur.position.set(cx + gw / 2, 2.6 + ch / 2, zr); const cp = cur.geometry.attributes.position; for (let i = 0; i < cp.count; i++) cp.setZ(i, Math.sin(cp.getX(i) * 2.6) * 1.4); cur.geometry.computeVertexNormals(); cur.castShadow = true; cur.receiveShadow = true; add(cur); }); }
+      [ci + 1, rx1 - 1 - gw].forEach(cx => { const cur = new THREE.Mesh(new THREE.PlaneGeometry(gw, ch, 30, 1), MT.curtain); cur.position.set(cx + gw / 2, 2.6 + ch / 2, zr); const cp = cur.geometry.attributes.position; for (let i = 0; i < cp.count; i++) cp.setZ(i, Math.sin(cp.getX(i) * 2.6) * 1.4); cur.geometry.computeVertexNormals(); cur.castShadow = true; cur.receiveShadow = true; add(cur); }); }
     bx(0, P.panW, 0, 3, zc - .2, zc + .2, MT.white, 12);          // the pan's 3 in curb across the front
     bx(0, P.panW, 0, .8, zc, VW, MT.white, 24, { cast: false });   // the fixed pan
     const T0 = D.L.toilet;
