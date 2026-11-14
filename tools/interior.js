@@ -50,6 +50,8 @@ const fs = require('fs');
   <p class="lead">A 3D model built from the plan's own sizes: the walls and the cabinets in a light wood stain, the countertop medium grey, a light grey plywood ceiling under light wood planks. Drag to look around, scroll or pinch to zoom, and use the buttons to jump to a viewpoint or to step along the van. Under the couch, the inverter and the two chargers sit on one pull-out shelf over the battery: the shelf is the sliding top of a gear cabinet (two floor-mounted panels, the battery on the floor under it): press Play (or drag the slider) to see it slide out into the aisle. The couch above is a removable frame on three wall blocks with its deck on top, lifting out in one piece. In the wet bath the back wall is one solid PVC sheet with the nook cut out of it, and the shower valve is on a small hinged door in it (four screws, the hinge on the cab side); the curtains hang on one U-shaped rail and are drawn pulled aside.</p>
   <div class="stage"><canvas id="c" width="1280" height="720"></canvas></div>
   <div class="bar" id="views"></div>
+  <div class="bar" id="looks"><button data-look="natural" type="button" aria-pressed="true">Look: the plan's colours</button><button data-look="dark" type="button" aria-pressed="false">Look: dark modern</button></div>
+  <p class="note" id="lookcap"></p>
   <div class="bar"><button id="back" type="button">Step back</button><button id="fwd" type="button">Step forward</button></div>
   <div class="bar" id="railbar"><button id="rplay" type="button">Play</button><label class="sl">The gear shelf sliding out of its cabinet <input type="range" id="rs" min="0" max="100" value="0"></label></div>
   <p class="note" id="cap"></p>

@@ -74,6 +74,9 @@
     sky: new THREE.MeshBasicMaterial({ map: canvasTex(8, 256, (g, w, h) => { const gr = g.createLinearGradient(0, 0, 0, h); gr.addColorStop(0, '#8fb6e0'); gr.addColorStop(.5, '#dbe9f6'); gr.addColorStop(.58, '#e9efe6'); gr.addColorStop(.6, '#8fa27c'); gr.addColorStop(1, '#6f8160'); g.fillStyle = gr; g.fillRect(0, 0, w, h); }) }),
     ground: std({ color: 0x7d8a6e, roughness: 1 }),
   };
+  // THE LOOKS (user, 2026-11-14: 'Show me the dark modern look in 3D', one of three looks offered): the lower cabinets (couch base, gear shelf, dinette benches, fridge base, the counter run) have their own materials, so a look can colour them apart from the wood uppers; the plan keeps its colours
+  MT.low = std({ map: MT.wood.map, roughness: .62 }); MT.lowH = std({ map: MT.woodH.map, roughness: .62 });
+  const wallMats = [], ptLights = []; let hemiL = null, sunL = null;
   const add = m => { scene.add(m); return m; };
   // box between coordinates, with UVs scaled so one texture tile is T inches
   function bx(x0, x1, y0, y1, z0, z1, mat, T, o) {
@@ -88,7 +91,7 @@
     o = o || {}; const g = new THREE.BufferGeometry(), A = pts[0], B = pts[1], C = pts[2], Dd = pts[3], ab = A.distanceTo(B) / T, bc = B.distanceTo(C) / T;
     g.setAttribute('position', new THREE.Float32BufferAttribute([A, B, C, A, C, Dd].flatMap(p => [p.x, p.y, p.z]), 3));
     g.setAttribute('uv', new THREE.Float32BufferAttribute([0, 0, ab, 0, ab, bc, 0, 0, ab, bc, 0, bc], 2)); g.computeVertexNormals();
-    const m = new THREE.Mesh(g, mat.clone ? Object.assign(mat.clone(), { side: THREE.DoubleSide }) : mat); m.receiveShadow = true; m.castShadow = o.cast !== false; return add(m);
+    const sm = mat.clone ? Object.assign(mat.clone(), { side: THREE.DoubleSide }) : mat; if (mat === MT.wall) wallMats.push(sm); const m = new THREE.Mesh(g, sm); m.receiveShadow = true; m.castShadow = o.cast !== false; return add(m);
   }
   const V = (x, y, z) => new THREE.Vector3(x, y, z);
 
@@ -120,7 +123,7 @@
     sh.moveTo(XB, 0); sh.lineTo(XE, 0); sh.lineTo(XE, hw); sh.lineTo(XB, hw); sh.lineTo(XB, 0);
     hole.moveTo(w.cx0, w.cz0); hole.lineTo(w.cx1, w.cz0); hole.lineTo(w.cx1, w.cz1); hole.lineTo(w.cx0, w.cz1); hole.lineTo(w.cx0, w.cz0); sh.holes.push(hole);
     const g = new THREE.ShapeGeometry(sh), pos = g.attributes.position, uv = g.attributes.uv; for (let i = 0; i < pos.count; i++) uv.setXY(i, pos.getX(i) / 48, pos.getY(i) / 48);
-    const m = new THREE.Mesh(g, Object.assign(MT.wall.clone(), { side: THREE.DoubleSide })); m.castShadow = true; m.receiveShadow = true; add(m);
+    const wm = Object.assign(MT.wall.clone(), { side: THREE.DoubleSide }); wallMats.push(wm); const m = new THREE.Mesh(g, wm); m.castShadow = true; m.receiveShadow = true; add(m);
     // the reveal (the inside faces of the 1 1/2 in frame strips, 3 5/8 in of blocks plus the planks), the black slider frame and the glass behind them
     const RD = 4.5, FW = 1.1, FD = 1.4, zi = -RD - FD;
     bx(w.cx0, w.cx1, w.cz0 - .75, w.cz0, -RD, 0, MT.wood, 24); bx(w.cx0, w.cx1, w.cz1, w.cz1 + .75, -RD, 0, MT.wood, 24);
@@ -139,7 +142,7 @@
     const nk = D.nook; const hole = new THREE.Path(); hole.moveTo(nk[0], P.counterH); hole.lineTo(nk[1], P.counterH); hole.lineTo(nk[1], P.counterH + P.nookH); hole.lineTo(nk[0], P.counterH + P.nookH); hole.lineTo(nk[0], P.counterH); sh.holes.push(hole);
     { const sx0 = L.snx[0], sx1 = L.snx[1], sy0 = P.snookTop - P.snookH, sy1 = P.snookTop, h2 = new THREE.Path(); h2.moveTo(sx0, sy0); h2.lineTo(sx1, sy0); h2.lineTo(sx1, sy1); h2.lineTo(sx0, sy1); h2.lineTo(sx0, sy0); sh.holes.push(h2); }
     const g = new THREE.ShapeGeometry(sh), pos = g.attributes.position, uv = g.attributes.uv; for (let i = 0; i < pos.count; i++) uv.setXY(i, pos.getX(i) / 48, pos.getY(i) / 48);
-    const m = new THREE.Mesh(g, Object.assign(MT.wall.clone(), { side: THREE.DoubleSide })); m.position.z = VW; m.castShadow = true; m.receiveShadow = true; add(m);
+    const wm = Object.assign(MT.wall.clone(), { side: THREE.DoubleSide }); wallMats.push(wm); const m = new THREE.Mesh(g, wm); m.position.z = VW; m.castShadow = true; m.receiveShadow = true; add(m);
   }
   // sheet joints every 48 in
   for (let x = XB + 48; x < WEND; x += 48) { bx(x - .04, x + .04, 0, hw - .1, -.02, .02, MT.gap, 8, { cast: false }); if (x < P.doorX - 1 || x > WEND) bx(x - .04, x + .04, 0, hw - .1, VW - .02, VW + .02, MT.gap, 8, { cast: false }); }
@@ -174,28 +177,28 @@
   if (L.gcab) {
     // the gear cabinet (two floor-mounted side panels, no front, back or top) and the removable couch: a deck lid, a back rail on the wall blocks, a front rail on two posts west of the cabinet, an end rail and a cross rail
     const cb = L.gcab, cm = L.cmod, BH = 3.5;
-    deckOld = bxIn(lidG, 0, P.bedLen, DU, DT, 0, P.bedD, MT.wood, 36);        // the deck lid
-    bxIn(frameG, 0, P.bedLen, DU - BH, DU, 0, .75, MT.wood, 36);              // the back rail, full length, on the wall blocks
-    bxIn(frameG, 0, cm.west, DU - BH, DU, P.bedD - .75, P.bedD, MT.wood, 36); // the front rail, west of the cabinet only
-    bxIn(frameG, 0, .75, DU - BH, DU, .75, P.bedD - .75, MT.wood, 36); bxIn(frameG, cm.west / 2, cm.west / 2 + .75, DU - BH, DU, .75, P.bedD - .75, MT.wood, 36);   // the end rail and the cross rail
-    cm.posts.forEach(px => { bxIn(frameG, px, px + 1.5, .6, DU - BH, P.bedD - 1.5, P.bedD, MT.wood, 36); bxIn(frameG, px + .15, px + 1.35, 0, .6, P.bedD - 1.35, P.bedD - .15, MT.black, 6); });   // the posts with their screw-out feet
-    bxIn(frameG, cb.x0 + .75, cb.x1, DU - BH, DU, .75, 1.5, MT.wood, 36);     // the back rail doubled over the cabinet
-    if (cm.fr) bxIn(frameG, cm.fr.x0, cm.fr.x1, cm.fr.z0, cm.fr.z1, cm.fr.y0, cm.fr.y1, MT.wood, 36);   // the 3/4 in front rail across the cabinet's front, between the posts' rail and the closet's side
-    bx(cb.x0 + .75, cb.x0 + 1.5, DU - BH - 1.5, DU - BH, 0, 3, MT.wood, 36); bx(cb.x1 - .75, cb.x1, DU - BH - 1.5, DU - BH, 0, 3, MT.wood, 36);   // a ledger on each panel under the doubled part
-    bx(cb.x0, cb.x0 + .75, 0, DU, 0, P.bedD, MT.wood, 36);                    // the cabinet's west panel
-    bx(cb.x0 - 1.5, cb.x0, 0, .75, 0, P.bedD, MT.wood, 36);                   // its floor cleat
-    bx(cb.x1, cb.x1 + .75, 0, DU, P.closetD, P.bedD, MT.wood, 36);            // the east panel is the closet's side, with a 1 in strip so it is 26 deep (the closet 25)
+    deckOld = bxIn(lidG, 0, P.bedLen, DU, DT, 0, P.bedD, MT.low, 36);        // the deck lid
+    bxIn(frameG, 0, P.bedLen, DU - BH, DU, 0, .75, MT.low, 36);              // the back rail, full length, on the wall blocks
+    bxIn(frameG, 0, cm.west, DU - BH, DU, P.bedD - .75, P.bedD, MT.low, 36); // the front rail, west of the cabinet only
+    bxIn(frameG, 0, .75, DU - BH, DU, .75, P.bedD - .75, MT.low, 36); bxIn(frameG, cm.west / 2, cm.west / 2 + .75, DU - BH, DU, .75, P.bedD - .75, MT.low, 36);   // the end rail and the cross rail
+    cm.posts.forEach(px => { bxIn(frameG, px, px + 1.5, .6, DU - BH, P.bedD - 1.5, P.bedD, MT.low, 36); bxIn(frameG, px + .15, px + 1.35, 0, .6, P.bedD - 1.35, P.bedD - .15, MT.black, 6); });   // the posts with their screw-out feet
+    bxIn(frameG, cb.x0 + .75, cb.x1, DU - BH, DU, .75, 1.5, MT.low, 36);     // the back rail doubled over the cabinet
+    if (cm.fr) bxIn(frameG, cm.fr.x0, cm.fr.x1, cm.fr.z0, cm.fr.z1, cm.fr.y0, cm.fr.y1, MT.low, 36);   // the 3/4 in front rail across the cabinet's front, between the posts' rail and the closet's side
+    bx(cb.x0 + .75, cb.x0 + 1.5, DU - BH - 1.5, DU - BH, 0, 3, MT.low, 36); bx(cb.x1 - .75, cb.x1, DU - BH - 1.5, DU - BH, 0, 3, MT.low, 36);   // a ledger on each panel under the doubled part
+    bx(cb.x0, cb.x0 + .75, 0, DU, 0, P.bedD, MT.low, 36);                    // the cabinet's west panel
+    bx(cb.x0 - 1.5, cb.x0, 0, .75, 0, P.bedD, MT.low, 36);                   // its floor cleat
+    bx(cb.x1, cb.x1 + .75, 0, DU, P.closetD, P.bedD, MT.low, 36);            // the east panel is the closet's side, with a 1 in strip so it is 26 deep (the closet 25)
     L.cblk.forEach(b => bx(b.x0, b.x1, b.z0, b.z1, 0, b.y1, MT.gap, 12));     // the wall blocks the back rail rests on
   } else if (G) {
-    bx(0, P.bedLen, DU, DT, 0, P.bedD, MT.wood, 36);                         // the deck
-    bx(0, P.bedLen, DU - 1.5, DU, 0, 1.5, MT.wood, 36);                      // the wall ledger
-    bx(L.c0, L.c0 + .75, 0, DU, P.closetD, P.bedD, MT.wood, 36);             // a 1 in strip: the couch's end panel next to the closet is 26 deep, the closet 25
-    bx(SH.div, SH.div + .75, 0, DU, 0, P.bedD, MT.wood, 36);                 // the slide divider, west of the wheel well
-    bx(0, SH.div, DU - 1.5, DU, HY, P.bedD, MT.wood, 36);                   // the front rail west of the divider: nothing else covers the front under the deck
-  } else bx(0, P.bedLen, 0, P.platform, 0, P.bedD, MT.wood, 36);
+    bx(0, P.bedLen, DU, DT, 0, P.bedD, MT.low, 36);                         // the deck
+    bx(0, P.bedLen, DU - 1.5, DU, 0, 1.5, MT.low, 36);                      // the wall ledger
+    bx(L.c0, L.c0 + .75, 0, DU, P.closetD, P.bedD, MT.low, 36);             // a 1 in strip: the couch's end panel next to the closet is 26 deep, the closet 25
+    bx(SH.div, SH.div + .75, 0, DU, 0, P.bedD, MT.low, 36);                 // the slide divider, west of the wheel well
+    bx(0, SH.div, DU - 1.5, DU, HY, P.bedD, MT.low, 36);                   // the front rail west of the divider: nothing else covers the front under the deck
+  } else bx(0, P.bedLen, 0, P.platform, 0, P.bedD, MT.low, 36);
   // the leaf: hinged on the top faces of the deck's front edge; folded back on the deck face down by day (x), flipped over the edge level with the deck at night
   const leafG = new THREE.Group(); leafG.position.set(0, DT, HZ); lidG.add(leafG);
-  { const m = bx(.3, P.bedLen - .3, DT, P.platform, HZ - LWd, HZ - .3, MT.woodH, 36); scene.remove(m); m.position.sub(leafG.position); leafG.add(m); }
+  { const m = bx(.3, P.bedLen - .3, DT, P.platform, HZ - LWd, HZ - .3, MT.lowH, 36); scene.remove(m); m.position.sub(leafG.position); leafG.add(m); }
   const legs = (() => { const k = (P.bedLen - 3.25) / 3, xs = [1, 1 + k, 1 + 2 * k, P.bedLen - 2.25];
     return xs.map(lx => { const g = new THREE.Group(); g.position.set(lx + .625, .375, -(LWd - 3)); leafG.add(g);
       const bar = new THREE.Mesh(new THREE.BoxGeometry(1.25, .375, 12.625), MT.steel); bar.position.set(0, 0, 6.3125); bar.castShadow = true; g.add(bar);
@@ -204,12 +207,12 @@
   // THE NEW COUCH IDEA: the deck with a loose lid over the gear that just sits in its opening (lifted up and off after the seat cushion is lifted), and a leaf that hangs down over the front of the couch (hinged on its underside) and swings up level for the bed
   const deckN = new THREE.Group(); lidG.add(deckN); const hatchG = new THREE.Group();
   { const q = SH || { x0: 24, x1: 46, y0: 8, y1: 25 }, hx0 = q.x0 + 1, hx1 = q.x1 - 1, hz0 = Math.max(1.5, q.y0 - 1), hz1 = Math.min(P.bedD - 1.5, q.y1 + .75);   // the gear tray's depth runs y0 to y1 in the plan data (z is its height)
-    [[0, hx0, 0, P.bedD], [hx1, P.bedLen, 0, P.bedD], [hx0, hx1, 0, hz0], [hx0, hx1, hz1, P.bedD]].forEach(r => bxIn(deckN, r[0], r[1], DU, DT, r[2], r[3], MT.wood, 36));
+    [[0, hx0, 0, P.bedD], [hx1, P.bedLen, 0, P.bedD], [hx0, hx1, 0, hz0], [hx0, hx1, hz1, P.bedD]].forEach(r => bxIn(deckN, r[0], r[1], DU, DT, r[2], r[3], MT.low, 36));
     hatchG.position.set(0, DT, hz0); deckN.add(hatchG);
-    { const m = bx(hx0 + .06, hx1 - .06, DU, DT, hz0 + .06, hz1 - .06, MT.woodH, 36); scene.remove(m); m.position.sub(hatchG.position); hatchG.add(m);
+    { const m = bx(hx0 + .06, hx1 - .06, DU, DT, hz0 + .06, hz1 - .06, MT.lowH, 36); scene.remove(m); m.position.sub(hatchG.position); hatchG.add(m);
       const f = bx((hx0 + hx1) / 2 - 3, (hx0 + hx1) / 2 + 3, DT, DT + .06, hz1 - 2.4, hz1 - 1.8, MT.black, 4, { cast: false }); scene.remove(f); f.position.sub(hatchG.position); hatchG.add(f); } }
   const leafN = new THREE.Group(); leafN.position.set(0, DT - .75, HZ); lidG.add(leafN);
-  { const m = bx(.3, P.bedLen - .3, DT - .75, DT, HZ, HZ + LHn, MT.woodH, 36); scene.remove(m); m.position.sub(leafN.position); leafN.add(m); }
+  { const m = bx(.3, P.bedLen - .3, DT - .75, DT, HZ, HZ + LHn, MT.lowH, 36); scene.remove(m); m.position.sub(leafN.position); leafN.add(m); }
   const legsN = (() => { const k = (P.bedLen - 3.25) / 3, xs = [1, 1 + k, 1 + 2 * k, P.bedLen - 2.25];
     return xs.map(lx => { const g = new THREE.Group(); g.position.set(lx + .625, 0, LHn - 3); leafN.add(g);
       const bar = new THREE.Mesh(new THREE.BoxGeometry(1.25, .375, 12.625), MT.steel); bar.position.set(0, -.19, -6.3125); bar.castShadow = true; g.add(bar);
@@ -287,11 +290,11 @@
     const GW = SH.div + .75, GE = L.c0, zc = SH.z0 + 1.25, sl = (x0, x1, g) => (g ? bxg.bind(null, g) : bx)(x0, x1, zc - .875, zc + .875, SH.y1 - 18, SH.y1, MU.rail, 6);
     sl(GW, GW + .25); sl(GE - .25, GE); bxg(shG, SH.x0 - .4, SH.x0, zc - .875, zc + .875, SH.y1 - 18, SH.y1, MU.rail, 6); bxg(shG, SH.x1, SH.x1 + .4, zc - .875, zc + .875, SH.y1 - 18, SH.y1, MU.rail, 6);
     // the shelf: tray, end rails, rear lip, the face with louvers and a finger slot, slide members, the three units
-    bxg(shG, SH.x0 + .75, SH.x1 - .75, SH.z0, SH.z1, SH.y0, SH.y1, MT.woodH, 24);
-    bxg(shG, SH.x0, SH.x0 + .75, SH.z0, SH.z0 + 2.5, SH.y0, SH.y1, MT.wood, 24); bxg(shG, SH.x1 - .75, SH.x1, SH.z0, SH.z0 + 2.5, SH.y0, SH.y1, MT.wood, 24);
-    bxg(shG, SH.x0 + .75, SH.x1 - .75, SH.z1, SH.z1 + .75, SH.y0, SH.y0 + .75, MT.wood, 24);
+    bxg(shG, SH.x0 + .75, SH.x1 - .75, SH.z0, SH.z1, SH.y0, SH.y1, MT.lowH, 24);
+    bxg(shG, SH.x0, SH.x0 + .75, SH.z0, SH.z0 + 2.5, SH.y0, SH.y1, MT.low, 24); bxg(shG, SH.x1 - .75, SH.x1, SH.z0, SH.z0 + 2.5, SH.y0, SH.y1, MT.low, 24);
+    bxg(shG, SH.x0 + .75, SH.x1 - .75, SH.z1, SH.z1 + .75, SH.y0, SH.y0 + .75, MT.low, 24);
     const fz0 = SH.z0 - .25, fz1 = DU - 1.5 - .25;
-    bxg(shG, SH.x0, SH.x1, fz0, fz1, SH.y1, SH.y1 + .75, MT.wood, 36);
+    bxg(shG, SH.x0, SH.x1, fz0, fz1, SH.y1, SH.y1 + .75, MT.low, 36);
     bxg(shG, (SH.x0 + SH.x1) / 2 - 3, (SH.x0 + SH.x1) / 2 + 3, fz1 - 1, fz1 - .6, SH.y1 + .74, SH.y1 + .8, MT.black, 4, { cast: false });
     const U = u => [u.x0, u.x1, u.z0, u.z1, u.y0, u.y1];
     bxg(shG, ...U(G.dc), MU.dc, 12); for (let i = 0; i < 12; i++) bxg(shG, G.dc.x0 + .6 + i * 1.28, G.dc.x0 + .8 + i * 1.28, G.dc.z1, G.dc.z1 + .3, G.dc.y0 + .4, G.dc.y1 - .4, MT.black, 4, { cast: false });
@@ -316,7 +319,7 @@
     dr.forEach((r, i) => { bx(L.c0 + .1, L.c1 - .1, r[0] - .15, r[1] + .15, P.closetD - .05, P.closetD + .1, MT.gap, 8, { cast: false }); bx(L.c0 + .3, L.c1 - .3, r[0], r[1], P.closetD + .08, P.closetD + .75, MT.wood, 36); if (i) handle((L.c0 + L.c1) / 2 - .15, (r[0] + r[1]) / 2 + 1.4, P.closetD + .75, 5, false, 1); else handle(L.c1 - 2.2, r[0] + 8, P.closetD + .75, 5, true, 1); });
   }
   // dinette benches, table
-  [L.bA, L.bB].forEach((b, i) => { bx(b[0], b[1], 0, P.seatH - 3.2, 0, P.benchD, MT.wood, 36); bx(b[0] + .2, b[1] - .2, P.seatH - 3.2, P.seatH, .4, P.benchD - .2, MT.fabric, 24); if (i) bx(b[1] - P.pillowT, b[1] - .2, P.seatH, P.backH, .2, P.benchD - .2, MT.fabric, 24); else bx(b[0] + .2, b[0] + P.pillowT, P.seatH, P.backH, .2, P.benchD - .2, MT.fabric, 24); });   // the backrests stand at the ends, against the walls
+  [L.bA, L.bB].forEach((b, i) => { bx(b[0], b[1], 0, P.seatH - 3.2, 0, P.benchD, MT.low, 36); bx(b[0] + .2, b[1] - .2, P.seatH - 3.2, P.seatH, .4, P.benchD - .2, MT.fabric, 24); if (i) bx(b[1] - P.pillowT, b[1] - .2, P.seatH, P.backH, .2, P.benchD - .2, MT.fabric, 24); else bx(b[0] + .2, b[0] + P.pillowT, P.seatH, P.backH, .2, P.benchD - .2, MT.fabric, 24); });   // the backrests stand at the ends, against the walls
   // floor-to-ceiling walls: their tops follow the arched ceiling, so they are built of 2 in strips; the passenger ones stand .05 proud of the cabinet fronts so the faces do not flicker
   const colWall = (x0, x1, z0, z1) => { for (let z = z0; z < z1 - 1e-6; z += 2) { const e = Math.min(z1, z + 2); bx(x0, x1, 0, fin((z + e) / 2) - .05, z, e, MT.wall, 48); } };
   L.walls.forEach(w => w.side === 'd' ? colWall(w.x0, w.x1, 0, w.d) : colWall(w.x0, w.x1, VW - w.d - .05, VW));
@@ -384,7 +387,7 @@
     }
   }
   const fz = zf(2 + P.fridgeD);                     // fridge front
-  bx(L.fr[0], L.fr[1], 0, 8.25, fz, VW - 1, MT.wood, 36);
+  bx(L.fr[0], L.fr[1], 0, 8.25, fz, VW - 1, MT.low, 36);
   bx(L.fr[0] + .15, L.fr[1] - .15, 8.25, 8.25 + P.fridgeH, fz, VW - 2, [MT.black, MT.black, MT.black, MT.black, MT.black, MT.greyFront], 24);
   bx(L.fr[1] - 2.6, L.fr[1] - 2, 8.25 + P.fridgeH - 30, 8.25 + P.fridgeH - 8, fz - .9, fz, MT.steel, 8, { cast: false });
   bx(L.fr[0] + .15, L.fr[1] - .15, 8.25 + P.fridgeH * .27, 8.25 + P.fridgeH * .275, fz - .02, fz + .03, MT.gap, 4, { cast: false });
@@ -396,18 +399,18 @@
   extrude(P.counterH - 1.2, 0, MT.wood); extrude(1.2, P.counterH - 1.2, MT.counter);
   { // the counter's front: drawers on the flat part, doors on the rest
     const fzf = zf(cD), pf = .35;
-    const fronts = (x0, x1, y0, y1, face, z, angled) => { const m = bx(x0, x1, y0, y1, 0, 1, MT.woodH, 36); m.scale.z = 1; return m; };
+    const fronts = (x0, x1, y0, y1, face, z, angled) => { const m = bx(x0, x1, y0, y1, 0, 1, MT.lowH, 36); m.scale.z = 1; return m; };
     bx(cS + .1, aS - .1, 0, 8.4, fzf - .06, fzf + .02, MT.gap, 8, { cast: false });
-    (L.parts || []).filter(p => p.kind === 'drawer').forEach(p => { bx(p.x0 - .2, p.x1 + .2, p.z0 - .2, p.z1 + .2, fzf - .03, fzf + .05, MT.gap, 8, { cast: false }); bx(p.x0, p.x1, p.z0, p.z1, fzf - pf, fzf - .02, MT.woodH, 36); bx((p.x0 + p.x1) / 2 - 2.2, (p.x0 + p.x1) / 2 + 2.2, p.z1 - 1.3, p.z1 - .95, fzf - pf - .5, fzf - pf, MT.black, 4, { cast: false }); });
+    (L.parts || []).filter(p => p.kind === 'drawer').forEach(p => { bx(p.x0 - .2, p.x1 + .2, p.z0 - .2, p.z1 + .2, fzf - .03, fzf + .05, MT.gap, 8, { cast: false }); bx(p.x0, p.x1, p.z0, p.z1, fzf - pf, fzf - .02, MT.lowH, 36); bx((p.x0 + p.x1) / 2 - 2.2, (p.x0 + p.x1) / 2 + 2.2, p.z1 - 1.3, p.z1 - .95, fzf - pf - .5, fzf - pf, MT.black, 4, { cast: false }); });
     // the cab-side column under the top drawer: the tall door with the trash can behind it
-    const dm = cS + 14.75; bx(dm + .3, aS - .4, .6, 30.5, fzf - pf, fzf - .02, MT.wood, 36); bx(dm + .1, aS - .2, .3, 30.7, fzf - .03, fzf + .05, MT.gap, 8, { cast: false }); bx(dm + 3.5, dm + 3.9, 24, 29, fzf - pf - .55, fzf - pf, MT.black, 4, { cast: false });
+    const dm = cS + 14.75; bx(dm + .3, aS - .4, .6, 30.5, fzf - pf, fzf - .02, MT.low, 36); bx(dm + .1, aS - .2, .3, 30.7, fzf - .03, fzf + .05, MT.gap, 8, { cast: false }); bx(dm + 3.5, dm + 3.9, 24, 29, fzf - pf - .55, fzf - pf, MT.black, 4, { cast: false });
     // angled front with the paper towel recess
     const ax = (aS + sS) / 2, az = (zf(cD) + zf(sD)) / 2, ang = Math.atan2(zf(sD) - zf(cD), sS - aS), len = Math.hypot(sS - aS, zf(sD) - zf(cD));
-    const ap = bx(-len / 2, len / 2, .4, P.counterH - 1.3, -.2, .2, MT.wood, 36); ap.position.set(ax, (.4 + P.counterH - 1.3) / 2, az - .05); ap.rotation.y = -ang;
+    const ap = bx(-len / 2, len / 2, .4, P.counterH - 1.3, -.2, .2, MT.low, 36); ap.position.set(ax, (.4 + P.counterH - 1.3) / 2, az - .05); ap.rotation.y = -ang;
     const rc = bx(-5, 5, 29.75, 35.25, -.5, .5, MT.dark, 8, { cast: false }); rc.position.set(ax - 1, 32.5, az - .35); rc.rotation.y = -ang;
     // sink cabinet doors
-    const sz = zf(sD); [[sS + .2, (sS + sE) / 2 - .1], [(sS + sE) / 2 + .1, sE - .8]].forEach((r, i) => { bx(r[0], r[1], .6, P.counterH - 1.4, sz - pf, sz - .02, MT.wood, 36); handle(i ? r[0] + 2 : r[1] - 2, P.counterH - 6, sz - pf - .55, 4, true, 0); });
-    bx(sE - .8, sE, 0, P.counterH, sz, VW, MT.wood, 36);
+    const sz = zf(sD); [[sS + .2, (sS + sE) / 2 - .1], [(sS + sE) / 2 + .1, sE - .8]].forEach((r, i) => { bx(r[0], r[1], .6, P.counterH - 1.4, sz - pf, sz - .02, MT.low, 36); handle(i ? r[0] + 2 : r[1] - 2, P.counterH - 6, sz - pf - .55, 4, true, 0); });
+    bx(sE - .8, sE, 0, P.counterH, sz, VW, MT.low, 36);
     // sink and faucet
     const sx = (sS + sE) / 2 - .4, szz = zf(sD / 2 + .2); bx(sx - 8, sx + 8, P.counterH + .02, P.counterH + .1, szz - 6, szz + 6, MT.steel, 8, { cast: false }); bx(sx - 6.8, sx + 6.8, P.counterH + .11, P.counterH + .15, szz - 5, szz + 5, MT.dark, 8, { cast: false });
     const fa = new THREE.Mesh(new THREE.CylinderGeometry(.5, .6, 7, 12), MT.steel); fa.position.set(sx, P.counterH + 3.6, zf(2.6)); fa.castShadow = true; add(fa);
@@ -425,10 +428,10 @@
   bx(123 - .8, 123, 0, 0.01, 0, 0.01, MT.dark, 4, { cast: false });
 
   /* ---------- lights ---------- */
-  scene.add(new THREE.HemisphereLight(0xe8f0f8, 0x7a6850, .38));
-  const sun = new THREE.DirectionalLight(0xfff1dc, 1.0); sun.position.set(150, 130, VW + 120); sun.target.position.set(110, 0, 30); sun.castShadow = true;
+  hemiL = new THREE.HemisphereLight(0xe8f0f8, 0x7a6850, .38); scene.add(hemiL);
+  const sun = new THREE.DirectionalLight(0xfff1dc, 1.0); sunL = sun; sun.position.set(150, 130, VW + 120); sun.target.position.set(110, 0, 30); sun.castShadow = true;
   sun.shadow.mapSize.set(2048, 2048); Object.assign(sun.shadow.camera, { left: -160, right: 160, top: 160, bottom: -160, near: 20, far: 520 }); sun.shadow.bias = -.0006; scene.add(sun, sun.target);
-  const pl = (x, y, z, c, i, dist, shadow) => { const l = new THREE.PointLight(c, i, dist, 2); l.position.set(x, y, z); if (shadow) { l.castShadow = true; l.shadow.mapSize.set(512, 512); l.shadow.bias = -.002; } scene.add(l); return l; };
+  const pl = (x, y, z, c, i, dist, shadow) => { const l = new THREE.PointLight(c, i, dist, 2); l.position.set(x, y, z); if (shadow) { l.castShadow = true; l.shadow.mapSize.set(512, 512); l.shadow.bias = -.002; } scene.add(l); ptLights.push([l, i]); return l; };
   L.lights.forEach(l => {   // each puck sits in the plywood (flange 2 3/4 across, about 1/8 in proud of its underside), behind the slat faces, in the gap cut in the slat
     const yp = plyU(l.y), sl = (plyU(l.y + 1) - plyU(l.y - 1)) / 2, d = new THREE.Mesh(new THREE.CylinderGeometry(P.lightD / 2, P.lightD / 2, .15, 28), MT.glow);
     d.position.set(l.x - 6, yp - .07, l.y); d.rotation.x = -Math.atan(sl); add(d); pl(l.x - 6, fin(l.y) - 4, l.y, 0xffe1b0, .85, 200, true); });
@@ -477,6 +480,25 @@
     b.onclick = () => { if (playing) { playing = false; b.textContent = 'Play'; return; } if (ps >= 1) ps = 0; playing = true; b.textContent = 'Pause'; setView(view); const from = ps, t0 = performance.now(), dur = secs * 1000 * (1 - from);
       (function tick(now) { if (!playing) return; ps = Math.min(1, from + (1 - from) * ((now - t0) / dur)); fn(ps); if (ps >= 1) { playing = false; b.textContent = 'Play again'; return; } requestAnimationFrame(tick); })(t0); }; };
   player('bs', 'bplay', applyBed, 'bed', 10); player('ls', 'lplay', applyLift, 'bed', 9); player('gs', 'gplay', applyGear, 'rail', 7);
+  /* ---------- looks: the colours (the plan's own, or the dark modern proposal) ---------- */
+  const NAT = { low: MT.wood.map, lowH: MT.woodH.map, wall: MT.wall.map, counter: MT.counter.map, floor: MT.floor.map, fabric: MT.fabric.map, pillow: MT.pillow.map, pillow2: MT.pillow2.map, fridge: [MT.fridge.color.getHex(), MT.fridge.metalness, MT.fridge.roughness], gap: MT.gap.color.getHex(), sheet: MT.sheet.color.getHex() };
+  let DK = null;
+  function setLook(name) {
+    const dark = name === 'dark';
+    if (dark && !DK) DK = { low: woodTex(0x373a40, true), lowH: woodTex(0x373a40, false), wall: woodTex(0x585b61, true), counter: stoneTex(0x1f2124), floor: plankTex(0x6b645b), fabric: fabricTex(0x4a4d53), pillow: fabricTex(0xc08a3e), pillow2: fabricTex(0x9c5a3c) };
+    const T = dark ? DK : NAT, tex = (m, t) => { m.map = t; m.needsUpdate = true; };
+    tex(MT.low, T.low); tex(MT.lowH, T.lowH); tex(MT.wall, T.wall); wallMats.forEach(m => tex(m, T.wall)); tex(MT.counter, T.counter); tex(MT.floor, T.floor); tex(MT.fabric, T.fabric); tex(seatMat, T.fabric); tex(backMat, T.fabric); tex(MT.pillow, T.pillow); tex(MT.pillow2, T.pillow2);
+    MT.counter.roughness = dark ? .3 : .38;
+    const f = dark ? [0x2e3136, .5, .3] : NAT.fridge; MT.fridge.color.setHex(f[0]); MT.fridge.metalness = f[1]; MT.fridge.roughness = f[2];
+    MT.gap.color.setHex(dark ? 0x131417 : NAT.gap); MT.sheet.color.setHex(dark ? 0x42464d : NAT.sheet);
+    if (hemiL) hemiL.intensity = dark ? .2 : .38; if (sunL) sunL.intensity = dark ? .6 : 1.0;
+    ptLights.forEach(a => { a[0].intensity = a[1] * (dark ? 1.8 : 1); });
+    document.querySelectorAll('[data-look]').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.look === name)));
+    const lc = document.getElementById('lookcap'); if (lc) lc.textContent = dark ? 'Dark modern: charcoal lower cabinets and counter, the wall cabinets, closet, table and ceiling in wood, a dark floor and walls, black pulls, a darker fridge, warm 2700 K lights brought up. A proposal: the plan keeps its colours.' : 'The plan\'s own colours: light wood everywhere, a grey counter, oatmeal fabric.';
+    draw();
+  }
+  document.querySelectorAll('[data-look]').forEach(b => { b.onclick = () => setLook(b.dataset.look); });
+  window.__look = setLook;
   { const nb = document.getElementById('newc'); if (nb) nb.onclick = () => setNew(!newC); }
   window.addEventListener('resize', size); window.__setView = setView; window.__step = applyStep; window.__bed = applyBed; window.__lift = applyLift; window.__gear = applyGear; window.__newc = setNew; setNew(true); window.__ready = true;
   size(); applyStep(0); setView((location.hash || '').slice(1) in VIEWS ? location.hash.slice(1) : 'rear');
