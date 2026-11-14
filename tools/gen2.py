@@ -166,10 +166,10 @@ BA(f'<line x1="{X(WIN_GX0+28.625)}" y1="{Y(WIN_GZ1)}" x2="{X(WIN_GX0+28.625)}" y
 BA(f'<text class="th" x="{X((WIN_CX0+WIN_CX1)/2)}" y="{Y(WIN_CZ0+4.4)}" text-anchor="middle" style="fill:#0C447C;font-size:12px;paint-order:stroke;stroke:#fff;stroke-width:3px">Side window cutout {fr16(WIN_CW)} x {fr16(WIN_CH)}, sill {fr8(WIN_CZ0)} in up</text>')
 BA(f'<text class="ts" x="{X((WIN_CX0+WIN_CX1)/2)}" y="{Y(WIN_CZ0+4.4)+15}" text-anchor="middle" style="fill:#0C447C;font-size:10.5px;paint-order:stroke;stroke:#fff;stroke-width:3px">dashed: the glass outside, {fr16(WIN_GW)} x {fr16(WIN_GH)}</text>')
 BG('wallcab','Wall cabinets')
-item(0,74,CAB_BOT,CAB_TOP,P,'',None,Y((CAB_BOT+CAB_TOP)/2))
+item(0,74,CAB_BOT_C,CAB_TOP,P,'',None,Y((CAB_BOT_C+CAB_TOP)/2))
 item(89,154,CAB_BOT,CAB_TOP,P,'',None,Y((CAB_BOT+CAB_TOP)/2))
-BA(f'<text class="th" x="{X(37)}" y="{Y(CAB_BOT-2.4)}" text-anchor="middle" style="fill:{P};font-size:12px;paint-order:stroke;stroke:#fff;stroke-width:3px">Wall cabinet, 74 long x 14 deep x 11 9/16 tall (63 to 74 9/16 in up)</text>')
-BA(f'<text class="th" x="{X(121.5)}" y="{Y(CAB_BOT-2.4)}" text-anchor="middle" style="fill:{P};font-size:12px;paint-order:stroke;stroke:#fff;stroke-width:3px">Wall cabinet, 65 long x 14 deep x 11 9/16 tall (63 to 74 9/16 in up)</text>')
+BA(f'<text class="th" x="{X(37)}" y="{Y(CAB_BOT_C-2.4)}" text-anchor="middle" style="fill:{P};font-size:12px;paint-order:stroke;stroke:#fff;stroke-width:3px">Wall cabinet, 74 long x 14 deep x 9 1/16 tall (65 to 74 1/16 in up)</text>')
+BA(f'<text class="th" x="{X(121.5)}" y="{Y(CAB_BOT-2.4)}" text-anchor="middle" style="fill:{P};font-size:12px;paint-order:stroke;stroke:#fff;stroke-width:3px">Wall cabinet, 65 long x 14 deep x 11 1/16 tall (63 to 74 1/16 in up)</text>')
 BG('pockets','Closet door pockets')
 # pockets on the inside of the upper closet door (dashed: they face into the closet): 2 columns x 3 rows
 for _z0,_z1 in ((34.65,41.65),(42.15,49.15),(49.65,56.65)):
@@ -178,9 +178,9 @@ for _z0,_z1 in ((34.65,41.65),(42.15,49.15),(49.65,56.65)):
 BA(f'<text class="ts" x="{X(81.5)}" y="{Y(60)}" text-anchor="middle" style="fill:#8A5A00;font-size:9.5px;paint-order:stroke;stroke:#fff;stroke-width:3px">dashed: door pockets inside</text>')
 BG('doors','Cabinet doors')
 # doors, 12 tall (landscape, flip-up), three per cabinet, trimmed in width: 24 1/2 on the bed side, 21 1/2 on the dinette side, 1/8 in gaps
-for _d0,_w,_t in ((0.125,24.5,'door 24 1/2 x 10'),(24.75,24.5,'door 24 1/2 x 10'),(49.375,24.5,'door 24 1/2 x 10'),(89.125,21.5,'door 21 1/2 x 10'),(110.75,21.5,'door 21 1/2 x 10'),(132.375,21.5,'door 21 1/2 x 10')):
-    BA(box(_d0,_d0+_w,DOOR_Z0,DOOR_Z1,f'rx="3" fill="{P}" fill-opacity="0.18" stroke="{P}" stroke-width="1.6"'))
-    BA(f'<text class="th" x="{X(_d0+_w/2)}" y="{Y((DOOR_Z0+DOOR_Z1)/2-.2)}" text-anchor="middle" style="fill:{P};font-size:12px;paint-order:stroke;stroke:#fff;stroke-width:3px">{_t}</text>')
+for _d0,_w,_t,_z0,_z1 in ((0.125,24.5,'door 24 1/2 x 8',DOOR_Z0_C,DOOR_Z1_C),(24.75,24.5,'door 24 1/2 x 8',DOOR_Z0_C,DOOR_Z1_C),(49.375,24.5,'door 24 1/2 x 8',DOOR_Z0_C,DOOR_Z1_C),(89.125,21.5,'door 21 1/2 x 10',DOOR_Z0,DOOR_Z1),(110.75,21.5,'door 21 1/2 x 10',DOOR_Z0,DOOR_Z1),(132.375,21.5,'door 21 1/2 x 10',DOOR_Z0,DOOR_Z1)):
+    BA(box(_d0,_d0+_w,_z0,_z1,f'rx="3" fill="{P}" fill-opacity="0.18" stroke="{P}" stroke-width="1.6"'))
+    BA(f'<text class="th" x="{X(_d0+_w/2)}" y="{Y((_z0+_z1)/2-.2)}" text-anchor="middle" style="fill:{P};font-size:12px;paint-order:stroke;stroke:#fff;stroke-width:3px">{_t}</text>')
 BG('bed','Bed / couch')
 item(COUCH_X0,74,PLAT,SEAT_T,P,f'Seat cushion, top at {fr8(SEAT_T)} in (deck at {fr8(DECK_T)}, leaf folded on it)',None,Y((PLAT+SEAT_T)/2-.8))
 item(COUCH_X0,74,SEAT_T,BACK_T,P,'Back cushion, upright (20 tall)',None,Y((SEAT_T+BACK_T)/2))

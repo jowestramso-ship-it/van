@@ -217,7 +217,7 @@ def pages(root):
         kick='Last of the big pieces: they are the ones most likely to need small adjustments.',
         intro=f'<p>{H.escape(body("cabinets"))}</p>' + table(['Overhead cabinets', 'Cabinet doors', 'Fold-out table', 'Foot ledge', 'Entry']),
         steps=['<b>Scribe the cabinet backs to the leaning wall</b> (or fill the wedge) and cut their tops to the finished ceiling at the wall.',
-               '<b>Doors:</b> three per cabinet, 10 in tall (63 1/2 to 73 1/2 in up), flip-up, with 1/8 in gaps; the pulls are black.',
+               '<b>Doors:</b> three per cabinet, flip-up, with 1/8 in gaps; over the couch 8 in tall (65 1/2 to 73 1/2 in up), on the dinette side 10 in tall (63 1/2 to 73 1/2 in up); the pulls are black.',
                '<b>Fold-out table</b> at the cab-side end of the sink cabinet, with its foot ledge hinged under it.'],
         blocks=[]))
     P.append(dict(slug='finish', nav='Finish and test', title='Finishing and checking',

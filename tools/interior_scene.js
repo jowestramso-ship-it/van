@@ -160,8 +160,8 @@
   /* ---------- driver side: couch, closet, dinette, wall cabinets ---------- */
   const handle = (x, y, z, len, vertical, face) => { const h = bx(x - (vertical ? .22 : len / 2), x + (vertical ? .22 : len / 2), y - (vertical ? len / 2 : .22), y + (vertical ? len / 2 : .22), z, z + .55 * face, MT.black, 4, { cast: false }); return h; };
   // wall cabinets (front faces the aisle at z = depth); doors with gaps and pulls
-  L.cabs.forEach(c => bx(c[0], c[1], P.cabBot, hw - .05, 0, P.cabDepth, MT.wood, 36));
-  L.doors.forEach(d => { const dz = P.cabDepth, y0 = L.doorZ[0], y1 = L.doorZ[1]; bx(d.x0 - .2, d.x1 + .2, y0 - .2, y1 + .2, dz - .05, dz + .12, MT.gap, 8, { cast: false }); bx(d.x0, d.x1, y0, y1, dz + .1, dz + .75, MT.woodH, 36); handle((d.x0 + d.x1) / 2, y0 + 1.6, dz + .75, 4, false, 1); });
+  L.cabs.forEach((c, i) => bx(c[0], c[1], L.cabBots[i], hw - .05, 0, P.cabDepth, MT.wood, 36));
+  L.doors.forEach(d => { const dz = P.cabDepth, y0 = d.z0, y1 = d.z1; bx(d.x0 - .2, d.x1 + .2, y0 - .2, y1 + .2, dz - .05, dz + .12, MT.gap, 8, { cast: false }); bx(d.x0, d.x1, y0, y1, dz + .1, dz + .75, MT.woodH, 36); handle((d.x0 + d.x1) / 2, y0 + 1.6, dz + .75, 4, false, 1); });
   // couch: the deck (with its leaf, legs and cushions) is lidG and the frame (back rail on the wall blocks, front rail and posts) is frameG; they are one piece and lift out together.
   // With the gear shelf but no cabinet the base is the old open frame; without the shelf, a solid box.
   const G = L.gear, SH = G && G.sh, DU = P.platform - 1.5, DT = P.platform - .75, HY = P.bedD - .75, HZ = P.bedD, LWd = P.bedBack;
@@ -432,7 +432,7 @@
   L.lights.forEach(l => {   // each puck sits in the plywood (flange 2 3/4 across, about 1/8 in proud of its underside), behind the slat faces, in the gap cut in the slat
     const yp = plyU(l.y), sl = (plyU(l.y + 1) - plyU(l.y - 1)) / 2, d = new THREE.Mesh(new THREE.CylinderGeometry(P.lightD / 2, P.lightD / 2, .15, 28), MT.glow);
     d.position.set(l.x - 6, yp - .07, l.y); d.rotation.x = -Math.atan(sl); add(d); pl(l.x - 6, fin(l.y) - 4, l.y, 0xffe1b0, .85, 200, true); });
-  D.cabLights.forEach(x => { const d = new THREE.Mesh(new THREE.CylinderGeometry(1.05, 1.05, .3, 18), MT.glow); d.position.set(x, P.cabBot - .2, P.cabDepth / 2); add(d); pl(x, P.cabBot - 3, P.cabDepth / 2 + 3, 0xffd9a0, .5, 90, false); });
+  D.cabLights.forEach((x, i) => { const cz = D.cabLightsZ[i], d = new THREE.Mesh(new THREE.CylinderGeometry(1.05, 1.05, .3, 18), MT.glow); d.position.set(x, cz - .2, P.cabDepth / 2); add(d); pl(x, cz - 3, P.cabDepth / 2 + 3, 0xffd9a0, .5, 90, false); });
   [[20, 1.5], [95, 1.5], [20, VW - 1.5], [95, VW - 1.5]].forEach(p => pl(p[0], hw - 3, p[1], 0xffcf90, .28, 130, false)); pl(-3, hw - 3, VW / 2, 0xffcf90, .25, 100, false);
 
   /* ---------- camera, viewpoints, controls ---------- */

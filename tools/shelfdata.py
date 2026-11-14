@@ -84,7 +84,9 @@ RL_X0, RL_X1 = CB_X0 + CB_T, CB_X1          # between the panels
 RL_Y0, RL_Y1 = CB_Y1 - RL_T, CB_Y1
 POST_X = (COUCH_X0, SH_DIV - POST)      # two posts (the rear one at the rear end of the couch, 5): they are 30 5/8 in apart clear, less than the 34 1/2 in lawn chairs, which go in from the rear doors along the wall (they sit behind the posts, under the rear rail)
 # the wall cabinets: the bottom was 61, raised 2 in to 63 (user: 'make the wall cabinets be 2 in higher'); the top stays at the finished ceiling at the wall
-CAB_BOT = 63; CAB_TOP = 74.0625; DOOR_H = 10; DOOR_Z0 = CAB_BOT + .5; DOOR_Z1 = DOOR_Z0 + DOOR_H
+CAB_BOT = 63; CAB_TOP = 74.0625; DOOR_H = 10; DOOR_Z0 = CAB_BOT + .5; DOOR_Z1 = DOOR_Z0 + DOOR_H   # the dinette side cabinet (89 to 154)
+# the cabinet over the couch (0 to 74) is 2 in higher again (user, 2026-11-14: 'Raise the wall cabinets over the couch to 65'), so a seated head clears the taller couch: 9 1/16 tall, doors 8 in
+CAB_BOT_C = 65; DOOR_H_C = 8; DOOR_Z0_C = CAB_BOT_C + .5; DOOR_Z1_C = DOOR_Z0_C + DOOR_H_C
 # the side window over the dinette: Van Windows Direct TL201-SE, driver side forward slider (the numbers of window.py and wtemplate.py)
 WIN_CX0, WIN_CZ0 = 101.75, 39.0       # the cutout's left edge from the back, and its bottom edge up from the floor (centered on the table, sill 1 in over the backrests)
 WIN_CW, WIN_CH = 39.6875, 22.625      # the cutout (the slider frame's outline)

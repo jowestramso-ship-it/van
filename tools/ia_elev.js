@@ -103,9 +103,10 @@ function drawDriver(L, V) {
   }
   // wall cabinets
   o.push(GB('wallcab', 'Wall cabinets'));
-  L.cabs.forEach(c => {
-    o.push(box(c[0], c[1], P.cabBot, L.ceilF, { fill: COL.P, fo: .12, stroke: COL.P, sw: 1.4, rx: 3 }));
-    o.push(LBL(X((c[0] + c[1]) / 2), Y(P.cabBot - 2.4), 'Wall cabinet', `${fmt(c[1] - c[0])} long x ${fmt(P.cabDepth)} deep x ${fmt(L.ceilF - P.cabBot)} tall (${fmt(P.cabBot)} to ${fmt(L.ceilF)} in up)`, { size: 12, fill: COL.P }));
+  L.cabs.forEach((c, ci) => {
+    const cb = L.cabBots[ci];
+    o.push(box(c[0], c[1], cb, L.ceilF, { fill: COL.P, fo: .12, stroke: COL.P, sw: 1.4, rx: 3 }));
+    o.push(LBL(X((c[0] + c[1]) / 2), Y(cb - 2.4), 'Wall cabinet', `${fmt(c[1] - c[0])} long x ${fmt(P.cabDepth)} deep x ${fmt(L.ceilF - cb)} tall (${fmt(cb)} to ${fmt(L.ceilF)} in up)`, { size: 12, fill: COL.P }));
   });
   o.push(GE());
   // the nook in the wall behind the couch: an opening in the covering from the top edge of S4 to the bottom edge of S6 (S5 is cut away there), over the pans; the back cushion tilts back into it
@@ -249,12 +250,12 @@ function drawDriver(L, V) {
   // wall cabinet doors: flip up (hinged on the top edge), shown from the front so the door gets shorter as it swings up
   o.push(GB('cabdoors', 'Wall cabinet doors'));
   L.doors.forEach(d => {
-    const s = V[d.id] || 0, th = s * Math.PI / 2, h = P.doorH * Math.cos(th), zb = L.doorZ[0], zt = L.doorZ[1];
+    const s = V[d.id] || 0, th = s * Math.PI / 2, h = d.h * Math.cos(th), zb = d.z0, zt = d.z1;
     let g = '';
     if (s > 0.02) g += box(d.x0, d.x1, zb, zt, { fill: '#2C2C2A', fo: .12 + .3 * Math.min(1, s * 1.5) });
     g += box(d.x0, d.x1, zt - h, zt, { fill: COL.P, fo: .18 + .2 * s, stroke: COL.P, sw: 1.6, rx: 3 });
-    if (s < .3) g += LBL(X((d.x0 + d.x1) / 2), Y((zb + zt) / 2 + .3), 'Cabinet door', `${fmt(d.w)} x ${fmt(P.doorH)}`, { size: 12, fill: COL.P, op: 1 - s / .3 });
-    o.push(MV(d.id, g, HITR(Math.min(X(d.x0), X(d.x1)), Y(zt), S * d.w, S * P.doorH)));
+    if (s < .3) g += LBL(X((d.x0 + d.x1) / 2), Y((zb + zt) / 2 + .3), 'Cabinet door', `${fmt(d.w)} x ${fmt(d.h)}`, { size: 12, fill: COL.P, op: 1 - s / .3 });
+    o.push(MV(d.id, g, HITR(Math.min(X(d.x0), X(d.x1)), Y(zt), S * d.w, S * d.h)));
   });
   o.push(GE());
   // battery in front of the wheel well
@@ -654,7 +655,7 @@ function drawCross(L, V) {
   o.push(GE());
   // width at the two measured heights, at the cabinet bottom and at the finished ceiling
   o.push(GB('widths', 'Width measurements'));
-  [[P.leanZ1, 'measured'], [P.leanZ2, 'measured'], [P.cabBot, 'cabinet bottom']].forEach(([z, nm], i) => { const l = lean(z), x0 = xx(l), x1 = xx(W - l); o.push(Ln(x0, yy(z), x1, yy(z), { stroke: '#A32D2D', sw: 1.2, mk: true })); o.push(T(xx(W / 2) + (i === 2 ? 0 : 0), yy(z) - 4, `${fmt(W - 2 * l)} wide at ${fmt(z)} up (${nm})`, { size: 10.5, fill: '#A32D2D' })); });
+  [[P.leanZ1, 'measured'], [P.leanZ2, 'measured'], [P.cabBotC, 'cabinet bottom']].forEach(([z, nm], i) => { const l = lean(z), x0 = xx(l), x1 = xx(W - l); o.push(Ln(x0, yy(z), x1, yy(z), { stroke: '#A32D2D', sw: 1.2, mk: true })); o.push(T(xx(W / 2) + (i === 2 ? 0 : 0), yy(z) - 4, `${fmt(W - 2 * l)} wide at ${fmt(z)} up (${nm})`, { size: 10.5, fill: '#A32D2D' })); });
   o.push(GE());
   // driver side: couch and the wall cabinets; passenger side: counter, fridge, microwave shelf
   o.push(GB('bed', 'Couch'));
@@ -671,10 +672,10 @@ function drawCross(L, V) {
   // wall cabinets and the closet have open backs: the side panels run against the leaning wall, front edge vertical
   o.push(GB('wallcab', 'Wall cabinets'));
   {
-    const bk = P.cabBackIn, yf = bk + P.cabDepth, b0 = Math.max(bk, lean(P.cabBot)), b1 = Math.max(bk, lean(L.ceilF));
-    o.push(Poly([[xx(b0), yy(P.cabBot)], [xx(yf), yy(P.cabBot)], [xx(yf), yy(L.ceilF)], [xx(b1), yy(L.ceilF)]], { fill: '#534AB7', fo: .16, stroke: '#534AB7', sw: 1.6, dash: '5 3' }));
+    const bk = P.cabBackIn, yf = bk + P.cabDepth, b0 = Math.max(bk, lean(P.cabBotC)), b1 = Math.max(bk, lean(L.ceilF));
+    o.push(Poly([[xx(b0), yy(P.cabBotC)], [xx(yf), yy(P.cabBotC)], [xx(yf), yy(L.ceilF)], [xx(b1), yy(L.ceilF)]], { fill: '#534AB7', fo: .16, stroke: '#534AB7', sw: 1.6, dash: '5 3' }));
   }
-  o.push(T(xx(P.cabBackIn + P.cabDepth / 2 + 1.5), yy((P.cabBot + L.ceilF) / 2), 'wall cabinet', { size: 11, fill: '#3C3489' })); o.push(T(xx(P.cabBackIn + P.cabDepth / 2 + 1.5), yy((P.cabBot + L.ceilF) / 2) + 13, `${fmt(P.cabDepth)} deep`, { size: 10, fill: '#3C3489' }));
+  o.push(T(xx(P.cabBackIn + P.cabDepth / 2 + 1.5), yy((P.cabBotC + L.ceilF) / 2), 'wall cabinet', { size: 11, fill: '#3C3489' })); o.push(T(xx(P.cabBackIn + P.cabDepth / 2 + 1.5), yy((P.cabBotC + L.ceilF) / 2) + 13, `${fmt(P.cabDepth)} deep`, { size: 10, fill: '#3C3489' }));
   o.push(GE());
   o.push(GB('closet', 'Closet and its doors'));
   {

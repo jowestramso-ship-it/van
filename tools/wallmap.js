@@ -59,7 +59,7 @@ async function grab(page, side) {
         add('Side window frame (furring: two jambs, sill and head)', w.cx0 - 1.5, w.cx1 + 1.5, w.cz0 - 1.5, w.cz1 + 1.5, `3/4 x 1 1/2 in furring rail all round the cutout; S5 and S6 stop at it`);
       }
       L.walls.filter(w => w.side === 'd').forEach(w => add('Floor-to-ceiling wall', w.x0, w.x1, 0, L.ceilF, `${w.id}: ${F(P.fwT)} thick, ${F(w.d)} out from the wall, ${w.id === 'W1' ? 'the back of the rear bench leans on it' : 'behind the driver seat, the back of the cab-end bench leans on it'}`));
-      L.cabs.forEach((c, i) => add('Wall cabinet', c[0], c[1], P.cabBot, L.ceilF, `${F(c[1] - c[0])} long x ${F(P.cabDepth)} deep, 3 doors ${F(L.doors[i * 3].w)} wide`));
+      L.cabs.forEach((c, i) => add('Wall cabinet', c[0], c[1], L.cabBots[i], L.ceilF, `${F(c[1] - c[0])} long x ${F(P.cabDepth)} deep, 3 doors ${F(L.doors[i * 3].w)} wide`));
     } else {
       add('Wet bath (shower)', 0, P.panW, 0, L.ceilF, `${F(P.panW)} x ${F(P.panD)}`);
       { const nk0 = L.snx[0], nkx = L.snx[1]; add('Shower nook', nk0, nkx, P.snookTop - P.snookH, P.snookTop, `${F(P.snookLen)} wide x ${F(P.snookH)} tall, 4 1/2 deep`); }

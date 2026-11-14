@@ -81,10 +81,12 @@ const PD = [
   { k: 'tableLen', g: 'Dinette', l: 'Table length', d: 26, s: .5, a: 10, b: 70 },
   { k: 'tableD', g: 'Dinette', l: 'Table depth', d: 28, s: .5, a: 10, b: 45 },
   { k: 'tableH', g: 'Dinette', l: 'Table height', d: 29, s: .5, a: 20, b: 40 },
-  { k: 'cabBot', g: 'Wall cabinets', l: 'Bottom, up from floor (63 since they were raised 2 in; the top stays at the finished ceiling, so they are 2 in shorter)', d: 63, s: .5, a: 40, b: 80 },
+  { k: 'cabBot', g: 'Wall cabinets', l: 'Bottom of the dinette side cabinet, up from floor (63 since they were raised 2 in; the top stays at the finished ceiling, so they are 2 in shorter)', d: 63, s: .5, a: 40, b: 80 },
+  { k: 'cabBotC', g: 'Wall cabinets', l: 'Bottom of the cabinet over the couch, up from floor (65: raised another 2 in, user 2026-11-14, so a seated head clears the couch with the 20 in leaf hanging: the cabinet is then 9 1/16 tall)', d: 65, s: .5, a: 40, b: 80 },
   { k: 'cabBackIn', g: 'Wall cabinets', l: 'Set a solid back of the cabinets in from the wall (0 = open backs: the sides are cut to follow the leaning wall)', d: 0, s: .5, a: 0, b: 8 },
   { k: 'cabDepth', g: 'Wall cabinets', l: 'Depth', d: 14, s: .5, a: 6, b: 24 },
-  { k: 'doorH', g: 'Wall cabinets', l: 'Door height (3 doors a side, widths follow the cabinet; 10 now the cabinets are 2 in shorter)', d: 10, s: .5, a: 6, b: 24 },
+  { k: 'doorH', g: 'Wall cabinets', l: 'Door height on the dinette side (3 doors a side, widths follow the cabinet; 10 now the cabinets are 2 in shorter)', d: 10, s: .5, a: 6, b: 24 },
+  { k: 'doorHC', g: 'Wall cabinets', l: 'Door height on the couch side (8: the cabinet over the couch is 2 in shorter again)', d: 8, s: .5, a: 6, b: 24 },
   { k: 'panW', g: 'Passenger side', l: 'Shower pan length', d: 36, s: .5, a: 20, b: 50 },
   { k: 'panD', g: 'Passenger side', l: 'Shower pan depth', d: 24, s: .5, a: 16, b: 36 },
   { k: 'snookLen', g: 'Passenger side', l: 'Shower nook length along the wall (12: you asked for a narrower nook, so the shower plumbing is to the left of it; it is centered on the pan, so a longer or shorter nook grows or shrinks at both ends; 21 is the longest that keeps its rear frame on the full-depth steel, past 6 in; two toilet paper rolls under the shelf need 9 1/2)', d: 12, s: .25, a: 6, b: 21 },
@@ -537,12 +539,12 @@ function layout(P0) {
   L.tbl = [tx, tx + L.tableLen];
   L.tableLow = Math.max(3, P.seatH - P.pillowT);
   L.cabs = [[0, P.bedX1], [L.c1, P.cab]];
+  L.cabBots = [P.cabBotC, P.cabBot];   // the cabinet over the couch (0 to 74) is 2 in higher than the dinette side one
   L.doors = [];
   L.cabs.forEach((c, ci) => {
-    const len = c[1] - c[0], w = Math.max(1, (len - 0.5) / 3);
-    for (let i = 0; i < 3; i++) { const x0 = c[0] + 0.125 + i * (w + 0.125); L.doors.push({ id: 'dc' + (ci * 3 + i), x0, x1: x0 + w, w }); }
+    const len = c[1] - c[0], w = Math.max(1, (len - 0.5) / 3), dh = ci === 0 ? P.doorHC : P.doorH, z0 = L.cabBots[ci] + 0.5;
+    for (let i = 0; i < 3; i++) { const x0 = c[0] + 0.125 + i * (w + 0.125); L.doors.push({ id: 'dc' + (ci * 3 + i), x0, x1: x0 + w, w, h: dh, z0, z1: z0 + dh }); }
   });
-  L.doorZ = [P.cabBot + 0.5, P.cabBot + 0.5 + P.doorH];
   L.batt = [L.c0 - 1 - 21, L.c0 - 1];
   // the charging gear on ONE pull-out shelf over the battery (y = out from the driver wall; the couch front over the gear is the shelf's own face, 3/4 in thick, at bedD - 3/4):
   // a 1/2 in plywood tray between two 3/4 in end rails on two 18 in full-extension slides, one on the closet's end panel and one on a plywood divider west of the wheel well, 1 in over the battery top for the terminals and lugs;
