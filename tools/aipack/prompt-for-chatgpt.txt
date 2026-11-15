@@ -1,0 +1,64 @@
+HOW TO USE THIS WITH CHATGPT
+============================
+1. Unzip this folder first (ChatGPT makes better pictures from loose images than from a zip).
+2. Start a NEW chat for each look (so the look stays the same across all the pictures).
+3. Attach TWO things to your first message:
+   - ALL-VIEWS-contact-sheet.jpg  (shows the whole van, so ChatGPT understands the layout)
+   - one picture from the "pictures" folder, for example 1-from-the-rear-doors.jpg
+4. Paste PART A, then ONE look from PART B. Send.
+5. For the next picture in the same chat, attach the next picture and write:
+   "Same look, same materials and colors as the last image. Now this view." (no need to paste the prompt again)
+6. If something is wrong, use the fixes in PART C.
+
+The pictures are 3D renders of a real, planned conversion of a Ford Transit 350 high-roof van. They show where everything is. They are NOT photographs: the colors, the flat green outside the windows and the plain white cab end are placeholders. The measurements are real, so the layout must not change.
+
+
+PART A  (paste this first, every time)
+======================================
+I'm attaching a 3D render of the inside of my custom Ford Transit 350 high-roof camper van conversion (a very narrow space: 68 in wide, aisle only 18 to 23 in, ceiling about 74 in at the walls), plus a contact sheet of six views of the whole van. Redraw the attached single picture as a PHOTOREALISTIC INTERIOR PHOTOGRAPH.
+
+KEEP EXACTLY: the camera position, angle and perspective; the layout; every cabinet, door, drawer, window, appliance, wall and the TV where they are; the proportions and the narrow aisle; the ceiling slats and the four small round ceiling lights.
+DO NOT: add or remove furniture, cabinets, windows, doors or walls; widen the space; change the perspective or the crop.
+CHANGE ONLY: materials, colors, textures and lighting (the look below), and add realistic detail: real wood grain, fabric weave, soft shadows, reflections on glossy surfaces, slight wear, and a few small props that do not hide anything (a mug, a plant, a folded throw).
+The outside seen through the windows and the open sliding door is a placeholder: show [a quiet forest campsite] [or: a calm coastline] instead.
+Style of picture: real interior photograph, 24 mm wide-angle lens, natural exposure, high dynamic range, sharp, 16:9, no text, no people, no watermark.
+
+What is in the van (so you do not invent things):
+- 160 in long x 68 wide. Rear doors at one end, the cab (front seats) at the other. Driver side is the LEFT wall as seen from the rear doors.
+- Ceiling: narrow light wood slats (3 in wide, narrow gaps), 4 small round recessed warm lights, a white roof fan grille near the rear, a white air conditioner grille further along, a soft warm LED strip around the ceiling edge. Floor: wide plank vinyl.
+- Left (driver) side from the rear: a COUCH (seat about 26 in high, a tall back cushion, two pillows; its front below the seat is ONE plain flat panel down to the floor) with a wall cabinet above (three flip-up doors, a small light under it); then a floor-to-ceiling CLOSET (one door above, four drawers below); then a DINETTE: two bench seats facing each other with a small table between them under a sliding side window, and a wall cabinet above.
+- Right (passenger) side from the rear: a shower stall closed with two light curtains on its rear end and aisle side, and a plain solid wall at its cab end; then a tall FRIDGE with a MICROWAVE on a shelf above it; then the KITCHEN counter (38 in high, drawers, a pull-out trash cabinet, a sink with a single-lever tap, cabinet doors below) with a flat TV on the wall above it; then the big SLIDING SIDE DOOR, shown open.
+- Hardware: slim horizontal bar pulls on the cabinets.
+
+
+PART B  (paste ONE look after Part A)
+=====================================
+A. DARK MODERN
+Lower cabinets (couch front panel, dinette bench bases, kitchen base cabinets and drawers, fridge surround): matte charcoal (#37393f), fine laminate or lacquer with a faint grain. Counter: near-black matte solid surface (#1f2124). Walls: charcoal grey-brown vertical wood panel (#585b61). Wall cabinets, closet, dinette table and the ceiling slats: warm natural light oak, clear satin finish, slats with narrow dark gaps. Floor: darker grey-brown wide-plank vinyl (#6b645b), matte. Upholstery: charcoal woven fabric (#4a4d53); throw pillows ochre (#c08a3e) and terracotta (#9c5a3c). Fridge: dark graphite stainless; microwave black. Hardware: slim matte-black bar pulls, black tap. Lighting: warm 2700 K only: the round ceiling lights, a soft warm LED strip glowing around the ceiling edge, small warm lights under the wall cabinets; dim ambient daylight; moody but readable, soft shadows.
+
+B. CABIN
+Honey-oak and pine tones everywhere: walls and cabinets in warm honey stain (#d9bb8a) with visible grain, closet and table the same; counter dark soapstone or butcher-block; ceiling slats warm cedar. Floor: medium oak plank. Upholstery: deep forest green (#2f4a3a) with rust (#a4532f) and mustard pillows and a wool plaid throw. Fridge: cream or stainless. Hardware: aged brass pulls and tap. Lighting: warm 2700 K lamplight from the ceiling lights, the LED strip and the under-cabinet lights; golden evening daylight through the windows. Cozy, lived in.
+
+C. LIGHT SCANDI
+Wall cabinets and closet painted soft white (#f3f1ec); lower cabinets pale birch (#e6cfa5); walls whitewashed birch panel or soft white vertical boards; counter white quartz or light concrete; ceiling slats pale ash (#e9d7b6); floor pale oak plank. Upholstery: oatmeal linen with sage and soft grey pillows and a wool throw. Fridge and microwave white. Hardware: thin matte-black pulls. Lighting: bright, airy daylight with soft warm (2700 to 3000 K) lamp glow, gentle shadows. A small potted plant on the counter.
+
+D. COASTAL
+Wall cabinets and closet white, flat shaker style; lower cabinets navy blue (#1f3a5f) satin; counter white with fine grey veins; walls white shiplap-style vertical boards; ceiling slats whitewashed cedar; floor light driftwood-grey plank. Upholstery: natural linen with navy-and-white stripe pillows. Fridge white or brushed steel. Hardware: brushed brass or rope-wrapped pulls. Lighting: bright daylight, cool white (4000 K) from the windows with warm (3000 K) accents. Calm blue sea and sky outside.
+
+E. FOREST GREEN AND BRASS
+Lower cabinets deep forest green (#24402f) matte lacquer; counter cream terrazzo with ochre and green chips (or honed white marble); wall cabinets and closet walnut (#6b4a32) with slim vertical slats; ceiling slats dark-stained cedar; walls warm off-white plaster look; floor dark oak. Upholstery: cognac leather (#a8683a) with cream bouclé pillows. Fridge: dark steel. Hardware: polished brass pulls and tap. Lighting: warm 2700 K, small brass-toned glow, a rich evening mood.
+
+F. WARM MINIMAL (JAPANDI)
+Walls matte warm beige (#d8cbb8); wall cabinets, closet, table and ceiling slats light oak, flat panels with no visible frames; lower cabinets matte warm taupe (#8c7a68); counter honed light-beige stone or microcement; floor pale oak or cork. Upholstery: natural linen in oatmeal with charcoal accent cushions. Fridge: matte off-white. Hardware: very thin black pulls or finger grooves. Lighting: soft diffuse 2700 K glow, like paper shades, no hard shadows. Almost no decoration: one branch in a vase, one wooden bowl.
+
+
+PART C  (if the result is wrong, reply with one of these)
+=========================================================
+- Too wide: "The van is only 68 in wide with a narrow aisle. Make the aisle as narrow as in the attached image."
+- Extra things: "Remove the extra [cabinet / window / seat / wall]: it is not in the attached image."
+- Something moved: "You moved the [fridge / TV / sink / couch]. Put it back exactly where it is in the attached image."
+- Wrong lights: "Only four small round recessed lights in the ceiling, plus the warm LED strip along the ceiling edge."
+- Plastic look: "More realistic materials: visible wood grain, matte finishes, slight edge wear, soft contact shadows."
+- Another version: "Same layout and look, but with golden-hour light" (or "on a rainy day", "at night with only the lamps on").
+
+(AI pictures ignore real measurements, so use them to CHOOSE a look, not to measure.)
